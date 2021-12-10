@@ -1,0 +1,8 @@
+{
+    "/": {
+        "target": "http://52.66.140.120:8080",
+        "secure": false,
+        "changeOrigin": true,
+        "logLevel": "debug"
+    }
+}

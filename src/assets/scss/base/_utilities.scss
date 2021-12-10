@@ -1,0 +1,30 @@
+/* Define common styling here */
+.hover {
+    &:hover{
+        cursor: pointer;
+    }
+}
+
+.required {
+    &::after, &::before {
+        content: '*';
+        color: darkred;
+    }
+}
+
+.bg-default-color {
+    background-color: $default-bg-color;
+}
+
+.width-filled {
+    width: -moz-available !important;          /* WebKit-based browsers will ignore this. */
+    width: -webkit-fill-available !important;  /* Mozilla-based browsers will ignore this. */
+    width: stretch !important;
+}
+
+.warningBox{
+    z-index: 100;
+    position: fixed;
+    top: 10px;
+    right: 10px;
+}

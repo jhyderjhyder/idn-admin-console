@@ -1,0 +1,85 @@
+<div class="container" *ngIf="currentUser">
+  <br>
+  <a class="navbar-brand" href="#">
+    <img src="./assets/images/sp_logo.png" alt="IdentityNow" class="navbar-brand-image">
+  </a>
+  <nav class="navbar navbar-custom navbar-dark navbar-expand-lg">
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar" *ngIf="currentUser">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="collapsibleNavbar" *ngIf="currentUser">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item" routerLinkActive="active">
+          <a class="nav-link" routerLink="/patient-search">Duplicate Accounts</a>
+        </li>
+      </ul>
+      <a class="btn btn-link text-white" (click)="logout()"><i class="fa fa-sign-out" aria-hidden="true">Logout</i></a>
+      <small>
+      <span class="text-white">
+        Tenant: {{currentUser.tenant}}
+      </span>
+      &nbsp;&nbsp;
+      <span class="text-white">
+        Client Id: {{currentUser.clientId}}
+      </span>
+    </small>
+    </div>
+  </nav>
+</div>
+<div class="container" style="margin-top:30px" *ngIf="currentUser">
+  <div class="row">
+    <div class="col-sm-12">
+      <app-messages></app-messages>
+    </div>
+    <div class="col-sm-12">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>
+<div class="container" *ngIf="currentUser == null">
+  <a class="navbar-brand" href="#">
+    <img src="./assets/images/sp_logo.png" alt="IdentityNow" class="navbar-brand-image">
+  </a>
+  <div class="row">
+    <div class="col-sm-12">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>
+<div class="container" *ngIf="!launchedFromIframe || currentUser">
+  <nav class="navbar navbar-custom navbar-expand-lg">
+    <div class="col-sm-12 text-center py-3 text-white">
+      <small>@Copyright 2021 SailPoint Technologies - All rights reserved.</small>
+    </div>
+  </nav>
+  <br>
+</div>
+
+<div bsModal #childModal="bs-modal" class="modal fade" tabindex="-1"
+     role="dialog" aria-labelledby="dialog-child-name">
+  <div class="modal-dialog modal-md">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 id="dialog-child-name" class="modal-title pull-left">You Have Been Idle!</h4>
+        <button type="button" class="close pull-right" aria-label="Close" (click)="hideChildModal()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+         {{idleState}}
+        <div class="row mrgbtm">
+          <div class="col-md-6 text-left">
+              <button type="button" (click)="logout()" class="btn btn-danger">Logout</button>
+          </div>
+          <div class="col-md-6 text-right">
+              <button type="button" (click)="stay()" class="btn btn-success">Stay</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
