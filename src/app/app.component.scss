@@ -1,0 +1,17 @@
+
+@import './../assets/scss/abstracts/variables';
+
+$navbar-height: 65px;
+$nav-item-width: 180px;
+$nav-item-height: 67px;
+$padding-left: 60px;
+
+.navbar-custom {
+    background-color: $light-blue-background;
+    .navbar-brand {
+        margin-right: 85.4px;
+        padding-top: 6px;
+        padding-bottom: 16px;
+        
+    }
+}

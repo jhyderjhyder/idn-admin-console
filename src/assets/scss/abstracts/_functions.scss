@@ -1,0 +1,5 @@
+/* Create scss functions here */
+@function set-full-height-function($viewport) {
+    $size: calc(100vh - #{$viewport});
+    @return $size;
+}

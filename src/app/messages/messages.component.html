@@ -1,0 +1,17 @@
+<div *ngIf="messageService.messages.length">
+  <div *ngFor='let message of messageService.messages'> 
+      <div class="alert alert-success alert-dismissible">
+          <button type="button" (click)="messageService.clear()" class="close" data-dismiss="alert">&times;</button>
+          {{message}}
+        </div>
+  </div>
+</div>
+<div *ngIf="messageService.errors.length">
+  <div *ngFor='let error of messageService.errors'> 
+      <div class="alert alert-danger alert-dismissible">
+          <button type="button" (click)="messageService.clearError()" class="close" data-dismiss="alert">&times;</button>
+          {{error}}
+        </div>
+  </div>
+</div>
+

@@ -1,0 +1,40 @@
+<div class="col-md-6 offset-md-3 mt-5">
+    <div class="card">
+        <h4 class="card-header text-center">Please Sign In</h4>
+        <div *ngIf="error" class="alert alert-danger mt-3 mb-0">{{error}}</div>
+        <div class="card-body">
+            <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+                <div class="form-group">
+                    <label for="tenant">Tenant</label>
+                    <input type="text" formControlName="tenant" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.tenant.errors }" />
+                    <div *ngIf="submitted && f.tenant.errors" class="invalid-feedback">
+                        <div *ngIf="f.tenant.errors.required">Tenant is required</div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="clientId">Client Id</label>
+                    <input type="text" formControlName="clientId" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.clientId.errors }" />
+                    <div *ngIf="submitted && f.clientId.errors" class="invalid-feedback">
+                        <div *ngIf="f.clientId.errors.required">Client Id is required</div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="clientSecret">Client Secret</label>
+                    <input type="password" formControlName="clientSecret" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.clientSecret.errors }" />
+                    <div *ngIf="submitted && f.clientSecret.errors" class="invalid-feedback">
+                        <div *ngIf="f.clientSecret.errors.required">Client Secret is required</div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="text-right">
+                        <button [disabled]="loading" class="btn btn-info text-right">
+                            <span *ngIf="loading" class="spinner-border spinner-border-sm mr-1"></span>
+                            Login
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<br>
