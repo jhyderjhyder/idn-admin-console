@@ -10,19 +10,22 @@
     <div class="collapse navbar-collapse" id="collapsibleNavbar" *ngIf="currentUser">
       <ul class="navbar-nav mr-auto">
         <li class="nav-item" routerLinkActive="active">
-          <a class="nav-link" routerLink="/patient-search">Duplicate Accounts</a>
+          <a class="nav-link" routerLink="/duplicate-account">Duplicate Accounts</a>
+        </li>
+        <li class="nav-item" routerLinkActive="active">
+          <a class="nav-link" routerLink="/manage-aggregation">Aggregation Schedules</a>
         </li>
       </ul>
       <a class="btn btn-link text-white" (click)="logout()"><i class="fa fa-sign-out" aria-hidden="true">Logout</i></a>
       <small>
-      <span class="text-white">
-        Tenant: {{currentUser.tenant}}
-      </span>
-      &nbsp;&nbsp;
-      <span class="text-white">
-        Client Id: {{currentUser.clientId}}
-      </span>
-    </small>
+        <span class="text-white">
+          Tenant: {{currentUser.tenant}}
+        </span>
+        &nbsp;&nbsp;
+        <span class="text-white">
+          Client Id: {{currentUser.clientId}}
+        </span>
+      </small>
     </div>
   </nav>
 </div>

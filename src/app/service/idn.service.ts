@@ -82,6 +82,33 @@ export class IDNService {
     );
   }
 
+  searchAggregationSources(): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    let url = `https://${currentUser.tenant}.api.identitynow.com/beta/sources`;
+
+    return this.http.get(url, this.httpOptions).pipe(
+      catchError(this.handleError(`getAggregationSources`))
+    );
+  }
+
+  getAggregationSchedules(cloudExternalID: string): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    let url = `https://${currentUser.tenant}.api.identitynow.com/cc/api/source/getAggregationSchedules/${cloudExternalID}`;
+
+    return this.http.get(url).pipe(
+      catchError(this.handleError(`getAggregationSchedules`))
+    );
+  }
+
+  getEntitlementAggregationSchedules(cloudExternalID: string): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    let url = `https://${currentUser.tenant}.api.identitynow.com/cc/api/source/getEntitlementAggregationSchedules/${cloudExternalID}`;
+
+    return this.http.get(url).pipe(
+      catchError(this.handleError(`getEntitlementAggregationSchedules`))
+    );
+  }
+
    /** Log a HeroService message with the MessageService */
    private log(message: string) {
      this.messageService.add(`${message}`);

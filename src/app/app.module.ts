@@ -9,6 +9,7 @@ import { MomentModule } from 'angular2-moment';
 
 import { AppComponent } from './app.component';
 import { DuplicatedAccountsComponent } from './duplicated-accounts/duplicated-accounts.component';
+import { AggregationManagementComponent} from './aggregation-management/aggregation-management.component';
 import { AppRoutingModule } from './app-routing.module';
 import { MessagesComponent } from './messages/messages.component';
 import { SearchFilterPipe } from './shared/search-filter.pipe';
@@ -22,6 +23,7 @@ import { ModalModule } from "ngx-bootstrap";
   declarations: [
     AppComponent,
     DuplicatedAccountsComponent,
+    AggregationManagementComponent,
     MessagesComponent,
     LoginComponent,
     SearchFilterPipe
