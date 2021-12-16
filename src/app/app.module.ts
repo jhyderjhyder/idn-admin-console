@@ -18,6 +18,7 @@ import { BasicAuthInterceptor } from './helper/basic-auth.interceptor';
 import { ErrorInterceptor } from './helper/error.interceptor';
 import { LoginComponent } from './login/login.component';
 import { ModalModule } from "ngx-bootstrap";
+import { NgSelectModule } from '@ng-select/ng-select';
 
 @NgModule({
   declarations: [
@@ -34,6 +35,7 @@ import { ModalModule } from "ngx-bootstrap";
     ReactiveFormsModule,
     HttpClientModule,
     NgbModule,
+    NgSelectModule,
     AppRoutingModule,
     NgIdleKeepaliveModule.forRoot(),
     MomentModule,

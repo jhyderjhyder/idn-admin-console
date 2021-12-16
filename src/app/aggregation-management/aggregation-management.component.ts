@@ -1,7 +1,10 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { BsModalRef } from 'ngx-bootstrap/modal';
+import { ModalDirective } from 'ngx-bootstrap/modal';
 import { Source } from '../model/source';
 import { Schedule } from '../model/schedule';
 import { IDNService } from '../service/idn.service';
+import { MessageService } from '../service/message.service';
 
 @Component({
   selector: 'app-aggregation-management',
@@ -13,24 +16,38 @@ export class AggregationManagementComponent implements OnInit {
   sourcesToShow: Source[];
   bulkAction: string;
   selectAll: boolean;
+  atLeastOneSelected: boolean;
+  cronExpSecified: boolean;
   cronExpAll: string;
   errorMessage: string;
+  successMessage: string;
   searchText: string;
 
-  constructor(private idnService: IDNService) { }
+  public modalRef: BsModalRef;
+  
+  @ViewChild('submitConfirmModal', { static: false }) submitConfirmModal: ModalDirective;
+
+  constructor(private idnService: IDNService, 
+    private messageService: MessageService) {
+  }
 
   ngOnInit() {
-    this.reset();
+    this.reset(true);
     this.search();
   }
 
-  reset() {
+  reset(clearMsg: boolean) {
     this.sources = null;
     this.sourcesToShow = null;
     this.selectAll = false;
+    this.atLeastOneSelected = false;
+    this.cronExpSecified = true;
     this.bulkAction = null;
     this.cronExpAll = null;
-    this.errorMessage = null;
+    if (clearMsg) {
+      this.errorMessage = null;
+      this.successMessage = null;
+    } 
   }
 
   search() {
@@ -60,9 +77,9 @@ export class AggregationManagementComponent implements OnInit {
               this.idnService.getEntitlementAggregationSchedules(source.cloudExternalID)
                 .subscribe(searchResult => { 
                   if (searchResult.length > 0) {
-                    source.entitlementAggregationSchedule = new Schedule();
-                    source.entitlementAggregationSchedule.enable = true;
-                    source.entitlementAggregationSchedule.cronExp = searchResult[0].cronExpressions;
+                    source.entAggregationSchedule = new Schedule();
+                    source.entAggregationSchedule.enable = true;
+                    source.entAggregationSchedule.cronExp = searchResult[0].cronExpressions;
                   }
               });
               
@@ -79,41 +96,150 @@ export class AggregationManagementComponent implements OnInit {
     }
   }
 
-  showOnlyAggScheduledSources() {
+  changeOnBulkAction($event) {
     this.resetSourcesToShow();
-    this.sourcesToShow = this.sourcesToShow.filter(each => ( each.accountAggregationSchedule && each.accountAggregationSchedule.enable) );
-    this.bulkAction = "EnableAggSchedule";
-    this.unselectAll();
-  }
-
-  showOnlyAggUnscheduledSources() {
-    this.resetSourcesToShow();
-    this.sourcesToShow = this.sourcesToShow.filter(each => ( each.accountAggregationSchedule == null || !each.accountAggregationSchedule.enable) );
-    this.bulkAction = "DisableAggSchedule";
-    this.unselectAll();
-  }
-
-  showOnlyEntAggScheduledSources() {
-    this.resetSourcesToShow();
-    this.sourcesToShow = this.sourcesToShow.filter(each => ( each.entitlementAggregationSchedule && each.entitlementAggregationSchedule.enable) );
-    this.bulkAction = "EnableEntAggSchedule";
-    this.unselectAll();
-  }
-
-  showOnlyEntAggUnscheduledSources() {
-    this.resetSourcesToShow();
-    this.sourcesToShow = this.sourcesToShow.filter(each => ( each.entitlementAggregationSchedule == null || !each.entitlementAggregationSchedule.enable) );
-    this.bulkAction = "DisableEntAggSchedule";
+    if ($event && $event != '') {
+      this.bulkAction = $event;
+      if (this.bulkAction === 'DisableAggSchedule') {
+        this.sourcesToShow = this.sourcesToShow.filter(each => ( each.accountAggregationSchedule && each.accountAggregationSchedule.enable) );
+      } else if (this.bulkAction === 'DisableEntAggSchedule') {
+        this.sourcesToShow = this.sourcesToShow.filter(each => ( each.entAggregationSchedule && each.entAggregationSchedule.enable) );
+      } else if (this.bulkAction === 'EnableAggSchedule') {
+        this.sourcesToShow = this.sourcesToShow.filter(each => ( each.accountAggregationSchedule == null || !each.accountAggregationSchedule.enable) );
+      } else if (this.bulkAction === 'EnableEntAggSchedule') {
+        this.sourcesToShow = this.sourcesToShow.filter(each => ( each.entAggregationSchedule == null || !each.entAggregationSchedule.enable) );
+      }
+    } else {
+      this.bulkAction = null;
+    }
     this.unselectAll();
   }
 
   unselectAll() {
     this.selectAll = false;
+    this.atLeastOneSelected = false;
     this.sourcesToShow.forEach(each => each.selected = false);
   }
 
   changeOnSelectAll() {
     this.sourcesToShow.forEach(each => each.selected = !this.selectAll);
   }
+
+  showSubmitConfirmModal() {
+    this.atLeastOneSelected = false;
+    this.cronExpSecified = true;
+    for (let each of this.sourcesToShow) {
+      if (each.selected) {
+        this.atLeastOneSelected = true;
+        if (this.bulkAction == 'EnableAggSchedule') {
+          if (!each.accountAggCronExp || each.accountAggCronExp == '') {
+            this.cronExpSecified = false;
+          }
+        } else if (this.bulkAction == 'EnableEntAggSchedule') {
+          if (!each.entAggCronExp || each.entAggCronExp == '') {
+            this.cronExpSecified = false;
+          }
+        }
+      }
+    }
+    this.submitConfirmModal.show();
+  }
+
+  hideSubmitConfirmModal() {
+    this.submitConfirmModal.hide();
+  }
+
+  getSelectedAggSchedules(isEntitlement: boolean, enabled: boolean): Source[] {
+    let arr = [];
+    for (let each of this.sourcesToShow) {
+      if (each.selected) {
+        if (!isEntitlement && !enabled && each.accountAggregationSchedule.cronExp.length == 1) {
+          each.accountAggCronExp = each.accountAggregationSchedule.cronExp[0];
+        } 
+        else if (isEntitlement && !enabled && each.entAggregationSchedule.cronExp.length == 1) {
+          each.entAggCronExp = each.entAggregationSchedule.cronExp[0];
+        } 
+        arr.push(each);
+      }
+    }
+    return arr;
+  }
+
+  closeModalDisplayMsg() {
+    if (this.errorMessage != null) {
+      this.messageService.setError(this.errorMessage);
+    } else {
+      this.messageService.add("Changes saved successfully.");
+    }
+    this.submitConfirmModal.hide();
+  }
+
+  updateAccountAggSchedules(enabled: boolean) {
+    let arr = this.getSelectedAggSchedules(false, enabled);
+    let processedCount = 0;
+    for (let each of arr) {
+      this.idnService.updateAggregationSchedules(each, enabled)
+          .subscribe(searchResult => {
+            processedCount++;
+            if (processedCount == arr.length) {
+             this.closeModalDisplayMsg();
+             this.reset(false);
+             this.search();
+            }
+          },
+          err => {
+            this.errorMessage = "Error to submit the changes.";
+            processedCount++;
+            if (processedCount == arr.length) {
+              this.closeModalDisplayMsg();
+              this.reset(false);
+              this.search();
+            }
+          }
+        );
+    }
+
+  }
+
+  updateEntAggSchedules(enabled: boolean) {
+    let arr = this.getSelectedAggSchedules(true, enabled);
+    let processedCount = 0;
+    for (let each of arr) {
+      this.idnService.updateEntAggregationSchedules(each, enabled)
+          .subscribe(searchResult => {
+            processedCount++;
+            if (processedCount == arr.length) {
+             this.closeModalDisplayMsg();
+             this.reset(false);
+             this.search();
+            }
+          },
+          err => {
+            this.errorMessage = "Error to submit the changes.";
+            processedCount++;
+            if (processedCount == arr.length) {
+              this.closeModalDisplayMsg();
+              this.reset(false);
+              this.search();
+            }
+          }
+        );
+    }
+  }
+
+  applyCronExpToAll() {
+    // if (this.cronExpAll && this.cronExpAll != null) {
+      for (let each of this.sourcesToShow) {
+        if (each.selected) {
+          if (this.bulkAction == 'EnableAggSchedule') {
+            each.accountAggCronExp = this.cronExpAll;
+          } else if (this.bulkAction == 'EnableEntAggSchedule') {
+            each.entAggCronExp = this.cronExpAll;
+          }
+        }
+      }
+    // }
+  }
+
 
 }

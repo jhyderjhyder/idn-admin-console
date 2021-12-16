@@ -7,8 +7,8 @@ export class Source {
   description: string;
   type: string;
   accountAggregationSchedule: Schedule;
-  entitlementAggregationSchedule: Schedule;
+  entAggregationSchedule: Schedule;
   selected: boolean;
-  newAccountAggCronExp: string;
-  newEntitlmentAggCronExp: string;
+  accountAggCronExp: string;
+  entAggCronExp: string;
 }
