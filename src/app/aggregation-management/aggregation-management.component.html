@@ -12,6 +12,11 @@
       <input class="form-control py-2 border-left-0 border" type="text" name="search" [(ngModel)]="searchText" autocomplete="off" 
         placeholder="Click Search button to fetch the data. Type Source Name, description, cloudExternalID or type to filter the result.">
     </div>
+    <div class="col-sm-1 text-right">
+      <button type="button" (click)="ngOnInit()" class="btn btn-info">
+        Refresh
+      </button>
+    </div>
   </div>
 </form>
 <div class="form-group row">
@@ -24,11 +29,7 @@
         <ng-option value="EnableEntAggSchedule">Bulk Enable Entitlement Aggregation Schedule</ng-option>
     </ng-select>
   </div>
-  <div class="col-sm-1 text-right">
-    <button type="button" (click)="ngOnInit()" class="btn btn-info">
-      Refresh
-    </button>
-  </div>
+  
 </div>
 <div class="form-group row" *ngIf="bulkAction == 'DisableAggSchedule' || bulkAction == 'DisableEntAggSchedule'">
   <div class="col-sm-8 text-left">

@@ -73,7 +73,11 @@ export class LoginComponent implements OnInit {
                 if (response.body && response.body.access_token) {
                     authUser.accessToken = response.body.access_token;
                     this.authenticationService.afterLogin(authUser);
-                    this.router.navigate([this.returnUrl]);
+                    // this.router.navigate([this.returnUrl]);
+
+                    this.router.navigate(['/']);
+                    window.location.reload();
+
                 } else {
                     console.log('error onSubmit');
                     this.error = "Failed to authenticate.";
