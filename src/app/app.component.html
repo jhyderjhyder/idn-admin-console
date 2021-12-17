@@ -1,4 +1,4 @@
-<div class="container" *ngIf="currentUser">
+<div class="container" *ngIf="!launchedFromIframe || currentUser">
   <br>
   <a class="navbar-brand" href="#">
     <img src="./assets/images/sp_logo.png" alt="IdentityNow" class="navbar-brand-image">
@@ -29,7 +29,7 @@
     </div>
   </nav>
 </div>
-<div class="container" style="margin-top:30px" *ngIf="currentUser">
+<div class="container" style="margin-top:30px" *ngIf="!launchedFromIframe || currentUser">
   <div class="row">
     <div class="col-sm-12">
       <app-messages></app-messages>
@@ -39,10 +39,7 @@
     </div>
   </div>
 </div>
-<div class="container" *ngIf="currentUser == null">
-  <a class="navbar-brand" href="#">
-    <img src="./assets/images/sp_logo.png" alt="IdentityNow" class="navbar-brand-image">
-  </a>
+<div class="container" *ngIf="launchedFromIframe && currentUser == null">
   <div class="row">
     <div class="col-sm-12">
       <router-outlet></router-outlet>
@@ -57,7 +54,6 @@
   </nav>
   <br>
 </div>
-
 <div bsModal #childModal="bs-modal" class="modal fade" tabindex="-1"
      role="dialog" aria-labelledby="dialog-child-name">
   <div class="modal-dialog modal-md">
