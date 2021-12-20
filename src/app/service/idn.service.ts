@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders} from '@angular/common/http';
+import { HttpClient, HttpHeaders, HttpUrlEncodingCodec} from '@angular/common/http';
 import { catchError } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
 import { MessageService } from './message.service';
+import { Source } from '../model/source';
 import { AuthenticationService } from '../service/authentication-service.service';
 
 @Injectable({
@@ -16,6 +17,8 @@ export class IDNService {
       'Content-Type': 'application/json'
     })
   };
+
+  codec = new HttpUrlEncodingCodec;
 
   constructor(
         private http: HttpClient,
@@ -82,6 +85,59 @@ export class IDNService {
     );
   }
 
+  searchAggregationSources(): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    let url = `https://${currentUser.tenant}.api.identitynow.com/beta/sources`;
+
+    return this.http.get(url, this.httpOptions).pipe(
+      catchError(this.handleError(`getAggregationSources`))
+    );
+  }
+
+  getAggregationSchedules(cloudExternalID: string): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    let url = `https://${currentUser.tenant}.api.identitynow.com/cc/api/source/getAggregationSchedules/${cloudExternalID}`;
+
+    return this.http.get(url).pipe(
+      catchError(this.handleError(`getAggregationSchedules`))
+    );
+  }
+
+  getEntitlementAggregationSchedules(cloudExternalID: string): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    let url = `https://${currentUser.tenant}.api.identitynow.com/cc/api/source/getEntitlementAggregationSchedules/${cloudExternalID}`;
+
+    return this.http.get(url).pipe(
+      catchError(this.handleError(`getEntitlementAggregationSchedules`))
+    );
+  }
+
+  updateAggregationSchedules(source: Source, enable: boolean): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    let encodedCronExp = this.codec.encodeValue(source.accountAggCronExp);
+    encodedCronExp = encodedCronExp.replace('?', '%3F');
+    let url = `https://${currentUser.tenant}.api.identitynow.com/cc/api/source/scheduleAggregation/${source.cloudExternalID}?enable=${enable}&cronExp=${encodedCronExp}`;
+    
+    let myHttpOptions = {
+      headers: new HttpHeaders({
+      })
+    };
+    return this.http.post(url, null, myHttpOptions);
+  }
+
+  updateEntAggregationSchedules(source: Source, enable: boolean): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    let encodedCronExp = this.codec.encodeValue(source.entAggCronExp);
+    encodedCronExp = encodedCronExp.replace('?', '%3F');
+    let url = `https://${currentUser.tenant}.api.identitynow.com/cc/api/source/scheduleEntitlementAggregation/${source.cloudExternalID}?enable=${enable}&cronExp=${encodedCronExp}`;
+    
+    let myHttpOptions = {
+      headers: new HttpHeaders({
+      })
+    };
+    return this.http.post(url, null, myHttpOptions);
+  }
+
    /** Log a HeroService message with the MessageService */
    private log(message: string) {
      this.messageService.add(`${message}`);
@@ -90,7 +146,6 @@ export class IDNService {
    private logError(error: string) {
       this.messageService.addError(`${error}`);
    }
-   
 
    /**
     * Handle Http operation that failed.
@@ -113,10 +168,13 @@ export class IDNService {
      };
    }
 
-   private handleException<T> (operation = 'operation', errorMessage?: string) {
+   private handleException<T> (operation = 'operation', errorMessage?: string , propagateAPIError?:boolean) {
     return (error: any): Observable<T> => {
       console.error(error); // log to console instead
-      if (error.toUpperCase() == "OK") {
+      if (propagateAPIError) {
+        throw new Error(error);
+      }
+      else if (error.toUpperCase() == "OK") {
         return of(error as T);
       }
       else if (errorMessage) {

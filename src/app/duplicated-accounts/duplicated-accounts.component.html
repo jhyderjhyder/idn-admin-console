@@ -49,11 +49,25 @@
     <tr *ngFor="let a of accounts | filter:searchText:['identityName', 'displayName', 'sourceName']">
       <td class="col-1">{{ a.identityName }}</td>
       <td class="col-2">{{ a.displayName }}</td>
-      <td class="col-1">{{ a.inactive }}</td>
+      <td class="col-1">
+        <span *ngIf="a.inactive">
+          Yes
+        </span>
+        <span *ngIf="a.inactive == null || !a.inactive ">
+          No
+        </span>
+      </td>
       <td class="col-1">{{ a.sourceName }}</td>
       <td class="col-2">{{ a.accountId }}</td>
       <td class="col-2">{{ a.accountName }}</td>
-      <td class="col-1">{{ a.accountDisabled }}</td>
+      <td class="col-1">  
+          <span *ngIf="a.accountDisabled">
+            Yes
+          </span>
+          <span *ngIf="a.accountDisabled == null || !a.accountDisabled ">
+            No
+          </span>
+      </td>
       <td class="col-2">{{ a.accountCreated | date:'yyyy-MM-dd HH:mm' }}</td>
     </tr>
   </tbody>

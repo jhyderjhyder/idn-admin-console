@@ -2,7 +2,7 @@ import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { DuplicatedAccountsComponent } from './duplicated-accounts.component';
 
-describe('PatientSearchComponent', () => {
+describe('DuplicatedAccountsComponent', () => {
   let component: DuplicatedAccountsComponent;
   let fixture: ComponentFixture<DuplicatedAccountsComponent>;
 

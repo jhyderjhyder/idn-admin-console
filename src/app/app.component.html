@@ -1,32 +1,38 @@
-<div class="container" *ngIf="currentUser">
+<div class="container">
   <br>
   <a class="navbar-brand" href="#">
     <img src="./assets/images/sp_logo.png" alt="IdentityNow" class="navbar-brand-image">
   </a>
   <nav class="navbar navbar-custom navbar-dark navbar-expand-lg">
+    <div class="col-sm-12 text-center text-white" *ngIf="!currentUser">
+      IdentityNow Admin Console
+    </div>
     <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar" *ngIf="currentUser">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="collapsibleNavbar" *ngIf="currentUser">
       <ul class="navbar-nav mr-auto">
         <li class="nav-item" routerLinkActive="active">
-          <a class="nav-link" routerLink="/patient-search">Duplicate Accounts</a>
+          <a class="nav-link" routerLink="/duplicate-account">Duplicate Accounts</a>
+        </li>
+        <li class="nav-item" routerLinkActive="active">
+          <a class="nav-link" routerLink="/manage-aggregation">Aggregation Schedules</a>
         </li>
       </ul>
       <a class="btn btn-link text-white" (click)="logout()"><i class="fa fa-sign-out" aria-hidden="true">Logout</i></a>
       <small>
-      <span class="text-white">
-        Tenant: {{currentUser.tenant}}
-      </span>
-      &nbsp;&nbsp;
-      <span class="text-white">
-        Client Id: {{currentUser.clientId}}
-      </span>
-    </small>
+        <span class="text-white">
+          Tenant: {{currentUser.tenant}}
+        </span>
+        &nbsp;&nbsp;
+        <span class="text-white">
+          Client Id: {{currentUser.clientId}}
+        </span>
+      </small>
     </div>
   </nav>
 </div>
-<div class="container" style="margin-top:30px" *ngIf="currentUser">
+<div class="container" style="margin-top:30px">
   <div class="row">
     <div class="col-sm-12">
       <app-messages></app-messages>
@@ -36,25 +42,14 @@
     </div>
   </div>
 </div>
-<div class="container" *ngIf="currentUser == null">
-  <a class="navbar-brand" href="#">
-    <img src="./assets/images/sp_logo.png" alt="IdentityNow" class="navbar-brand-image">
-  </a>
-  <div class="row">
-    <div class="col-sm-12">
-      <router-outlet></router-outlet>
-    </div>
-  </div>
-</div>
-<div class="container" *ngIf="!launchedFromIframe || currentUser">
+<div class="container">
   <nav class="navbar navbar-custom navbar-expand-lg">
-    <div class="col-sm-12 text-center py-3 text-white">
+    <div class="col-sm-12 text-center text-white">
       <small>@Copyright 2021 SailPoint Technologies - All rights reserved.</small>
     </div>
   </nav>
   <br>
 </div>
-
 <div bsModal #childModal="bs-modal" class="modal fade" tabindex="-1"
      role="dialog" aria-labelledby="dialog-child-name">
   <div class="modal-dialog modal-md">
