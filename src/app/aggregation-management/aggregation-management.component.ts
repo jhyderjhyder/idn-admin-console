@@ -1,10 +1,12 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
+import { AngularCsv } from 'angular-csv-ext/dist/Angular-csv';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { Source } from '../model/source';
 import { Schedule } from '../model/schedule';
 import { IDNService } from '../service/idn.service';
 import { MessageService } from '../service/message.service';
+import { AuthenticationService } from '../service/authentication-service.service';
 
 @Component({
   selector: 'app-aggregation-management',
@@ -28,7 +30,8 @@ export class AggregationManagementComponent implements OnInit {
   @ViewChild('submitConfirmModal', { static: false }) submitConfirmModal: ModalDirective;
 
   constructor(private idnService: IDNService, 
-    private messageService: MessageService) {
+    private messageService: MessageService,
+    private authenticationService: AuthenticationService) {
   }
 
   ngOnInit() {
@@ -44,6 +47,7 @@ export class AggregationManagementComponent implements OnInit {
     this.cronExpSecified = true;
     this.bulkAction = null;
     this.cronExpAll = null;
+    this.searchText = null;
     if (clearMsg) {
       this.errorMessage = null;
       this.successMessage = null;
@@ -122,6 +126,7 @@ export class AggregationManagementComponent implements OnInit {
   }
 
   changeOnSelectAll() {
+    this.searchText = null;
     this.sourcesToShow.forEach(each => each.selected = !this.selectAll);
   }
 
@@ -239,6 +244,41 @@ export class AggregationManagementComponent implements OnInit {
         }
       }
     // }
+  }
+
+  saveInCsv() {
+    var options = { 
+      fieldSeparator: ',',
+      quoteStrings: '"',
+      decimalseparator: '.',
+      showLabels: true,
+      useHeader: true,
+      headers: ["name", "description", "type", "cloudExternalID", "accountAggregationScheduled", 
+        "accountAggregationScheduleCronExp", "entilementAggregationScheduled", "entilementAggregationScheduleCronExp"],
+      nullToEmptyString: true,
+    };
+
+    const currentUser = this.authenticationService.currentUserValue;
+    let fileName = `${currentUser.tenant}-Sources`;
+    let arr = [];
+    for (let each of this.sources) {
+      let record = Object.assign(each);
+      if (each.accountAggregationSchedule) {
+        record.accountAggregationScheduled = "Yes";
+        record.accountAggregationScheduleCronExp = each.accountAggregationSchedule.cronExp.toString();
+      } else {
+        record.accountAggregationScheduled = "No";
+      }
+      if (each.entAggregationSchedule) {
+        record.entilementAggregationScheduled = "Yes";
+        record.entilementAggregationScheduleCronExp = each.entAggregationSchedule.cronExp.toString();
+      } else {
+        record.entilementAggregationScheduled = "No";
+      }
+      arr.push(record);
+    }
+
+    let angularCsv: AngularCsv = new AngularCsv(arr, fileName, options);
   }
 
 

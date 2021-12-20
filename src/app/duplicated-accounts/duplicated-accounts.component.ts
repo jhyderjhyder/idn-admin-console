@@ -3,6 +3,7 @@ import { AngularCsv } from 'angular-csv-ext/dist/Angular-csv';
 import { AccountSearchCondition } from '../model/accountSearchCondition';
 import { Account } from '../model/account';
 import { IDNService } from '../service/idn.service';
+import { AuthenticationService } from '../service/authentication-service.service';
 
 @Component({
   selector: 'app-duplicated-accounts',
@@ -15,7 +16,8 @@ export class DuplicatedAccountsComponent implements OnInit {
   errorMessage: string;
   searchText: string;
 
-  constructor(private idnService: IDNService) { }
+  constructor(private idnService: IDNService, 
+    private authenticationService: AuthenticationService) { }
 
   ngOnInit() {
     this.reset();
@@ -93,7 +95,26 @@ export class DuplicatedAccountsComponent implements OnInit {
       nullToEmptyString: true,
     };
 
-    let angularCsv: AngularCsv = new AngularCsv(this.accounts, 'DuplicatedAccounts', options);
+    const currentUser = this.authenticationService.currentUserValue;
+    let fileName = `${currentUser.tenant}-Duplicate-Accounts`;
+
+    let arr = [];
+    for (let each of this.accounts) {
+      let record = Object.assign(each);
+      if (each.inactive) {
+        record.inactive = "Yes";
+      } else {
+        record.inactive = "No";
+      }
+      if (each.accountDisabled) {
+        record.accountDisabled = "Yes";
+      } else {
+        record.accountDisabled = "No";
+      }
+      arr.push(record);
+    }
+
+    let angularCsv: AngularCsv = new AngularCsv(arr, fileName, options);
   }
 
 }

@@ -1,4 +1,4 @@
-<div class="container" *ngIf="!launchedFromIframe || currentUser">
+<div class="container">
   <br>
   <a class="navbar-brand" href="#">
     <img src="./assets/images/sp_logo.png" alt="IdentityNow" class="navbar-brand-image">
@@ -29,7 +29,7 @@
     </div>
   </nav>
 </div>
-<div class="container" style="margin-top:30px" *ngIf="!launchedFromIframe || currentUser">
+<div class="container" style="margin-top:30px">
   <div class="row">
     <div class="col-sm-12">
       <app-messages></app-messages>
@@ -39,14 +39,7 @@
     </div>
   </div>
 </div>
-<div class="container" *ngIf="launchedFromIframe && currentUser == null">
-  <div class="row">
-    <div class="col-sm-12">
-      <router-outlet></router-outlet>
-    </div>
-  </div>
-</div>
-<div class="container" *ngIf="!launchedFromIframe || currentUser">
+<div class="container">
   <nav class="navbar navbar-custom navbar-expand-lg">
     <div class="col-sm-12 text-center py-3 text-white">
       <small>@Copyright 2021 SailPoint Technologies - All rights reserved.</small>
