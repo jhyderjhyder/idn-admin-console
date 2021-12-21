@@ -1,5 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { AngularCsv } from 'angular-csv-ext/dist/Angular-csv';
+import { Papa } from 'ngx-papaparse';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { Source } from '../model/source';
@@ -29,7 +30,8 @@ export class AggregationManagementComponent implements OnInit {
   
   @ViewChild('submitConfirmModal', { static: false }) submitConfirmModal: ModalDirective;
 
-  constructor(private idnService: IDNService, 
+  constructor(private papa: Papa,
+    private idnService: IDNService, 
     private messageService: MessageService,
     private authenticationService: AuthenticationService) {
   }
@@ -281,5 +283,42 @@ export class AggregationManagementComponent implements OnInit {
     let angularCsv: AngularCsv = new AngularCsv(arr, fileName, options);
   }
 
+  handleFileSelect(evt) {
+    let cronExpMap = {}; //key is source cloudExternalID, value is cronExp
+    var files = evt.target.files; // FileList object
+    var file = files[0];
+    var reader = new FileReader();
+    reader.readAsText(file);
+    reader.onload = (event: any) => {
+      var csv = event.target.result; // Content of CSV file
+      this.papa.parse(csv, {
+        skipEmptyLines: true,
+        header: true,
+        complete: (results) => {
+          for (let i = 0; i < results.data.length; i++) {
+            let cloudExternalID = results.data[i].cloudExternalID;
+            if (this.bulkAction == 'EnableAggSchedule') {
+              cronExpMap[cloudExternalID] = results.data[i].accountAggregationScheduleCronExp;
+            } else if (this.bulkAction == 'EnableEntAggSchedule') {
+              cronExpMap[cloudExternalID] = results.data[i].entilementAggregationScheduleCronExp;
+            }
+          }
+
+          for (let each of this.sourcesToShow) {
+            if (each.selected) {
+              let cronExp = cronExpMap[each.cloudExternalID];
+              if (cronExp && cronExp != '') {
+                if (this.bulkAction == 'EnableAggSchedule') {
+                  each.accountAggCronExp = cronExp;
+                } else if (this.bulkAction == 'EnableEntAggSchedule') {
+                  each.entAggCronExp = cronExp;
+                }
+              }
+            }
+          }
+        }
+      });
+    }
+  }
 
 }
