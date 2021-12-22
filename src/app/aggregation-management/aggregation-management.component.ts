@@ -96,6 +96,7 @@ export class AggregationManagementComponent implements OnInit {
   }
 
   resetSourcesToShow() {
+    this.cronExpAll = null;
     if (this.sources) {
       this.sourcesToShow = [];
       this.sources.forEach(each => this.sourcesToShow.push(each));
@@ -130,6 +131,12 @@ export class AggregationManagementComponent implements OnInit {
   changeOnSelectAll() {
     this.searchText = null;
     this.sourcesToShow.forEach(each => each.selected = !this.selectAll);
+  }
+
+  changeOnSelect($event) {
+    if (!$event.currentTarget.checked) {
+      this.selectAll = false;
+    }
   }
 
   showSubmitConfirmModal() {

@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { AngularCsv } from 'angular-csv-ext/dist/Angular-csv';
-import { AccountSearchCondition } from '../model/accountSearchCondition';
 import { Account } from '../model/account';
 import { IDNService } from '../service/idn.service';
 import { AuthenticationService } from '../service/authentication-service.service';
@@ -11,7 +10,6 @@ import { AuthenticationService } from '../service/authentication-service.service
   styleUrls: ['./duplicated-accounts.component.css']
 })
 export class DuplicatedAccountsComponent implements OnInit {
-  accountSearchCondition: AccountSearchCondition;
   accounts: Account[];
   errorMessage: string;
   searchText: string;
@@ -21,11 +19,12 @@ export class DuplicatedAccountsComponent implements OnInit {
 
   ngOnInit() {
     this.reset();
+    this.search();
   }
 
   reset() {
-    this.accountSearchCondition = new AccountSearchCondition();
     this.accounts = null;
+    this.searchText = null;
     this.errorMessage = null;
   }
 
