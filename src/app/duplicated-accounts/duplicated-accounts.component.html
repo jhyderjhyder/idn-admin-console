@@ -3,7 +3,7 @@
     <li class="breadcrumb-item active" aria-current="page">Find Duplicate Accounts</li>
   </ol>
 </nav>
-<form name="form" (ngSubmit)="search()" #f="ngForm" novalidate contactRequired>
+<form name="form" #f="ngForm" novalidate contactRequired>
   <div class="form-group row">
     <div class="input-group col-md-10">
       <span class="input-group-prepend">
@@ -12,14 +12,9 @@
       <input class="form-control py-2 border-left-0 border" type="text" name="search" [(ngModel)]="searchText" autocomplete="off" 
         placeholder="Click Search button to fetch the data. Type Identity Name, Display Name or Source Name to filter the result.">
     </div>
-    <div class="col-sm-1 text-right">
-      <button type="button" (click)="reset()" class="btn btn-secondary btn-sm">
-        Clear
-      </button>
-    </div>
-    <div class="col-sm-1 text-right">            
-      <button type="submit" class="btn btn-primary btn-info btn-sm">
-        Search
+    <div class="col-sm-2 text-right">
+      <button type="button" (click)="ngOnInit()" class="btn btn-info btn-sm">
+        Refresh
       </button>
     </div>
   </div>
