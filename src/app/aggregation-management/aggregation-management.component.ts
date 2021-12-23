@@ -8,6 +8,7 @@ import { Schedule } from '../model/schedule';
 import { IDNService } from '../service/idn.service';
 import { MessageService } from '../service/message.service';
 import { AuthenticationService } from '../service/authentication-service.service';
+import { ThrowStmt } from '@angular/compiler';
 
 @Component({
   selector: 'app-aggregation-management',
@@ -25,6 +26,9 @@ export class AggregationManagementComponent implements OnInit {
   errorMessage: string;
   successMessage: string;
   searchText: string;
+  accntAggScheduleLoaded: boolean;
+  entAggScheduleLoaded: boolean;
+  loading: boolean;
 
   public modalRef: BsModalRef;
   
@@ -50,6 +54,7 @@ export class AggregationManagementComponent implements OnInit {
     this.bulkAction = null;
     this.cronExpAll = null;
     this.searchText = null;
+    this.loading = false;
     if (clearMsg) {
       this.errorMessage = null;
       this.successMessage = null;
@@ -57,11 +62,17 @@ export class AggregationManagementComponent implements OnInit {
   }
 
   search() {
+    this.accntAggScheduleLoaded = false;
+    this.entAggScheduleLoaded = false;
+    this.loading = true;
     this.idnService.searchAggregationSources()
           .subscribe(searchResult => {
             this.sources = [];
             this.sourcesToShow = [];
             let allSources = searchResult.filter(each => (each.type && each.type != 'DelimitedFile'));
+            let count = allSources.length;
+            let processedAccntAggScheduleCount = 0;
+            let processedEntAggScheduleCount = 0;
 
             for (let each of allSources) {
               let source = new Source();
@@ -78,6 +89,10 @@ export class AggregationManagementComponent implements OnInit {
                     source.accountAggregationSchedule.enable = true;
                     source.accountAggregationSchedule.cronExp = searchResult[0].cronExpressions;
                   }
+                  processedAccntAggScheduleCount++;
+                  if (processedAccntAggScheduleCount == count) {
+                    this.accntAggScheduleLoaded = true;
+                  }
               });
         
               this.idnService.getEntitlementAggregationSchedules(source.cloudExternalID)
@@ -87,11 +102,16 @@ export class AggregationManagementComponent implements OnInit {
                     source.entAggregationSchedule.enable = true;
                     source.entAggregationSchedule.cronExp = searchResult[0].cronExpressions;
                   }
+                  processedEntAggScheduleCount++;
+                  if (processedEntAggScheduleCount == count) {
+                    this.entAggScheduleLoaded = true;
+                  }
               });
               
               this.sources.push(source);
               this.sourcesToShow.push(source);
             }
+            this.loading = false;
           });
   }
 
@@ -99,7 +119,12 @@ export class AggregationManagementComponent implements OnInit {
     this.cronExpAll = null;
     if (this.sources) {
       this.sourcesToShow = [];
-      this.sources.forEach(each => this.sourcesToShow.push(each));
+      this.sources.forEach(each => {
+        let copy = new Source();
+        Object.assign(copy, each);
+        this.sourcesToShow.push(copy); 
+      
+      }) ;
     }
   }
 
@@ -312,7 +337,7 @@ export class AggregationManagementComponent implements OnInit {
           }
 
           for (let each of this.sourcesToShow) {
-            if (each.selected) {
+            // if (each.selected) {
               let cronExp = cronExpMap[each.cloudExternalID];
               if (cronExp && cronExp != '') {
                 if (this.bulkAction == 'EnableAggSchedule') {
@@ -321,7 +346,7 @@ export class AggregationManagementComponent implements OnInit {
                   each.entAggCronExp = cronExp;
                 }
               }
-            }
+            // }
           }
         }
       });
