@@ -38,15 +38,15 @@
 </div>
 <div class="form-group row" *ngIf="!loading && allOwnersFetched">
   <div class="col-sm-12 text-left">
-    <span class="font-weight-bold">To change the owner, select the items, enter the new owner account name and click the 'Submit to Change' button. </span>
-    <span class="font-weight-bold">To apply new owner in bulk, select the items, enter the new owner account name in the text field below and then click the 'Apply to Selected' button.</span>
+    <span class="font-weight-bold">To change the owner, select the items, enter the new owner account ID and click the 'Submit to Change' button. </span>
+    <span class="font-weight-bold">To apply new owner in bulk, select the items, enter the new owner account ID in the text field below and then click the 'Apply to Selected' button.</span>
   </div>
 </div>
 
 <div class="form-group row" *ngIf="!loading && allOwnersFetched">
   <div class="col-sm-3 text-left">
     <input class="form-control py-2 border-left-0 border" type="text" [(ngModel)]="newOwnerAll"
-          placeholder="Enter Owner account name">
+          placeholder="Enter Owner account ID">
   </div>
   <div class="col-sm-2 text-right">
     <button type="button" (click)="applyNewOwnerToAllSelected()" class="btn btn-info btn-sm">
@@ -72,7 +72,7 @@
       <th scope="col">Source Description</th>
       <th scope="col">Type</th>
       <th scope="col">cloudExternalID</th>
-      <th scope="col" class="col-sm-3">Owner Account Name</th>
+      <th scope="col" class="col-sm-3">Owner Account ID</th>
       <th scope="col">Owner Display Name</th>
     </tr>
   </thead>
@@ -91,7 +91,7 @@
         </span>
         <span *ngIf="s.selected">
           <input class="form-control py-2 border-left-0 border" type="text" [(ngModel)]="s.newOwner.accountName"
-              placeholder="Enter Owner account name">
+              placeholder="Enter Owner account ID">
         </span>
       </td>
       <td style="word-wrap: break-word;min-width: 160px;max-width: 160px;">
