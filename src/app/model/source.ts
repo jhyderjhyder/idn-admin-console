@@ -1,4 +1,6 @@
 import { Schedule } from ".././model/schedule";
+import { SourceOwner } from ".././model/source-owner";
+
 
 export class Source {
   id: string;
@@ -11,4 +13,6 @@ export class Source {
   selected: boolean;
   accountAggCronExp: string;
   entAggCronExp: string;
+  owner: SourceOwner;
+  newOwner: SourceOwner;
 }

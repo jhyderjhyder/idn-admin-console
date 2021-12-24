@@ -4,6 +4,7 @@ import { catchError } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
 import { MessageService } from './message.service';
 import { Source } from '../model/source';
+import { SimpleQueryCondition } from '../model/simple-query-condition';
 import { AuthenticationService } from '../service/authentication-service.service';
 
 @Injectable({
@@ -136,6 +137,51 @@ export class IDNService {
       })
     };
     return this.http.post(url, null, myHttpOptions);
+  }
+
+  searchAccounts(query: SimpleQueryCondition): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    let url = `https://${currentUser.tenant}.api.identitynow.com/beta/search/`;
+
+    let payload = {
+      "query": {
+          "query": `${query.attribute}:${query.value}`
+      }
+    };
+
+    return this.http.post(url, payload, this.httpOptions).pipe(
+      catchError(this.handleError(`searchAccounts`))
+    );
+  }
+
+  updateSourceOwner(source: Source): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    let encodedCronExp = this.codec.encodeValue(source.entAggCronExp);
+    encodedCronExp = encodedCronExp.replace('?', '%3F');
+    let url = `https://${currentUser.tenant}.api.identitynow.com/beta/sources/${source.id}`;
+    
+    let myHttpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json-patch+json'
+      })
+    };
+
+    let payload = [
+      {
+          "op": "replace",
+          "path": "/owner",
+          "value": {
+              "type": "IDENTITY",
+              "id": null,
+              "name": null
+          }
+      }
+    ];
+
+    payload[0].value.id = source.newOwner.accountId;
+    payload[0].value.name = source.newOwner.displayName;
+
+    return this.http.patch(url, payload, myHttpOptions);
   }
 
    /** Log a HeroService message with the MessageService */

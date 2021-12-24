@@ -15,9 +15,16 @@
         <li class="nav-item" routerLinkActive="active">
           <a class="nav-link" routerLink="/duplicate-account">Duplicate Accounts</a>
         </li>
-        <li class="nav-item" routerLinkActive="active">
-          <a class="nav-link" routerLink="/manage-aggregation">Aggregation Schedules</a>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarManagerSource" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Manage Source
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarManagerSource">
+            <a class="dropdown-item" routerLink="/manage-aggregation">Manage Aggregation Schedule</a>
+            <a class="dropdown-item" routerLink="/change-source-owner">Change Source Owner</a>
+          </div>
         </li>
+
       </ul>
       <a class="btn btn-link text-white" (click)="logout()"><i class="fa fa-sign-out" aria-hidden="true">Logout</i></a>
       <small>
