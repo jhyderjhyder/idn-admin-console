@@ -8,7 +8,6 @@ import { Schedule } from '../model/schedule';
 import { IDNService } from '../service/idn.service';
 import { MessageService } from '../service/message.service';
 import { AuthenticationService } from '../service/authentication-service.service';
-import { ThrowStmt } from '@angular/compiler';
 
 @Component({
   selector: 'app-aggregation-management',
@@ -24,7 +23,6 @@ export class AggregationManagementComponent implements OnInit {
   cronExpSecified: boolean;
   cronExpAll: string;
   errorMessage: string;
-  successMessage: string;
   searchText: string;
   accntAggScheduleLoaded: boolean;
   entAggScheduleLoaded: boolean;
@@ -56,8 +54,8 @@ export class AggregationManagementComponent implements OnInit {
     this.searchText = null;
     this.loading = false;
     if (clearMsg) {
+      this.messageService.clearAll();
       this.errorMessage = null;
-      this.successMessage = null;
     } 
   }
 
@@ -71,8 +69,8 @@ export class AggregationManagementComponent implements OnInit {
             this.sourcesToShow = [];
             let allSources = searchResult.filter(each => (each.type && each.type != 'DelimitedFile'));
             let count = allSources.length;
-            let processedAccntAggScheduleCount = 0;
-            let processedEntAggScheduleCount = 0;
+            let fetchAccntAggScheduleCount = 0;
+            let fetchEntAggScheduleCount = 0;
 
             for (let each of allSources) {
               let source = new Source();
@@ -89,8 +87,8 @@ export class AggregationManagementComponent implements OnInit {
                     source.accountAggregationSchedule.enable = true;
                     source.accountAggregationSchedule.cronExp = searchResult[0].cronExpressions;
                   }
-                  processedAccntAggScheduleCount++;
-                  if (processedAccntAggScheduleCount == count) {
+                  fetchAccntAggScheduleCount++;
+                  if (fetchAccntAggScheduleCount == count) {
                     this.accntAggScheduleLoaded = true;
                   }
               });
@@ -102,8 +100,8 @@ export class AggregationManagementComponent implements OnInit {
                     source.entAggregationSchedule.enable = true;
                     source.entAggregationSchedule.cronExp = searchResult[0].cronExpressions;
                   }
-                  processedEntAggScheduleCount++;
-                  if (processedEntAggScheduleCount == count) {
+                  fetchEntAggScheduleCount++;
+                  if (fetchEntAggScheduleCount == count) {
                     this.entAggScheduleLoaded = true;
                   }
               });
@@ -116,6 +114,7 @@ export class AggregationManagementComponent implements OnInit {
   }
 
   resetSourcesToShow() {
+    this.messageService.clearError();
     this.cronExpAll = null;
     if (this.sources) {
       this.sourcesToShow = [];
@@ -154,28 +153,31 @@ export class AggregationManagementComponent implements OnInit {
   }
 
   changeOnSelectAll() {
+    this.messageService.clearError();
     this.searchText = null;
     this.sourcesToShow.forEach(each => each.selected = !this.selectAll);
   }
 
   changeOnSelect($event) {
+    this.messageService.clearError();
     if (!$event.currentTarget.checked) {
       this.selectAll = false;
     }
   }
 
   showSubmitConfirmModal() {
+    this.messageService.clearError();
     this.atLeastOneSelected = false;
     this.cronExpSecified = true;
     for (let each of this.sourcesToShow) {
       if (each.selected) {
         this.atLeastOneSelected = true;
         if (this.bulkAction == 'EnableAggSchedule') {
-          if (!each.accountAggCronExp || each.accountAggCronExp == '') {
+          if (!each.accountAggCronExp || each.accountAggCronExp.trim() == '') {
             this.cronExpSecified = false;
           }
         } else if (this.bulkAction == 'EnableEntAggSchedule') {
-          if (!each.entAggCronExp || each.entAggCronExp == '') {
+          if (!each.entAggCronExp || each.entAggCronExp.trim() == '') {
             this.cronExpSecified = false;
           }
         }
@@ -237,7 +239,6 @@ export class AggregationManagementComponent implements OnInit {
           }
         );
     }
-
   }
 
   updateEntAggSchedules(enabled: boolean) {
@@ -267,7 +268,9 @@ export class AggregationManagementComponent implements OnInit {
   }
 
   applyCronExpToAll() {
-    // if (this.cronExpAll && this.cronExpAll != null) {
+    this.messageService.clearError();
+    if (this.cronExpAll && this.cronExpAll != null) {
+      let anythingSelected = false;
       for (let each of this.sourcesToShow) {
         if (each.selected) {
           if (this.bulkAction == 'EnableAggSchedule') {
@@ -275,9 +278,15 @@ export class AggregationManagementComponent implements OnInit {
           } else if (this.bulkAction == 'EnableEntAggSchedule') {
             each.entAggCronExp = this.cronExpAll;
           }
+          anythingSelected = true;
         }
       }
-    // }
+      if (!anythingSelected) {
+        this.messageService.setError("No item is selected to apply the Cron Job Expression.");
+      }
+    } else {
+      this.messageService.setError("Enter Cron Job Expression to apply to the selected items.");
+    }
   }
 
   saveInCsv() {
