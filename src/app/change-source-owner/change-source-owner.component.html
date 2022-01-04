@@ -28,7 +28,6 @@
 </div>
 <div class="form-group row" *ngIf="!loading && allOwnersFetched">
   <div class="col-sm-5">
-  
   </div>
   <div class="col-sm-7 text-right" *ngIf="sources">
     <button type="button" (click)="saveInCsv()" class="btn btn-link">
@@ -39,27 +38,35 @@
 <div class="form-group row" *ngIf="!loading && allOwnersFetched">
   <div class="col-sm-12 text-left">
     <span class="font-weight-bold">To change the owner, select the items, enter the new owner account ID and click the 'Submit to Change' button. </span>
-    <span class="font-weight-bold">To apply new owner in bulk, select the items, enter the new owner account ID in the text field below and then click the 'Apply to Selected' button.</span>
+    <span class="font-weight-bold">To apply change in bulk:
+      <br>
+      &nbsp;&nbsp;&nbsp;&nbsp; 1) either select the items, enter the new owner account name in the text field below and then click the 'Apply to Selected' button,
+      <br>
+      &nbsp;&nbsp;&nbsp;&nbsp; 2) or select the items and then upload the saved csv file by clicking 'Choose file' button.
+    </span>
   </div>
 </div>
-
 <div class="form-group row" *ngIf="!loading && allOwnersFetched">
   <div class="col-sm-3 text-left">
     <input class="form-control py-2 border-left-0 border" type="text" [(ngModel)]="newOwnerAll"
-          placeholder="Enter Owner account ID">
+          placeholder="Enter Owner account name">
   </div>
   <div class="col-sm-2 text-right">
     <button type="button" (click)="applyNewOwnerToAllSelected()" class="btn btn-info btn-sm">
       Apply to Selected
     </button>
   </div>
-  <div class="col-sm-7 text-right">
+  <div class="col-sm-5 text-left">
+    <input #fileInput type="file" accept=".csv" (change)="handleFileSelect($event)" class="btn btn-info btn-sm">
+    &nbsp;&nbsp;
+    <button (click)="clearFileSelect()" class="btn btn-info btn-sm">Clear file</button>
+  </div>
+  <div class="col-sm-2 text-right">
     <button type="button" (click)="showSubmitConfirmModal()" class="btn btn-info btn-sm">
       Submit to Change
     </button>
   </div>
 </div>
-
 <table class="table table-striped table-bordered">
   <thead class="thead-light">
     <tr>
@@ -91,7 +98,7 @@
         </span>
         <span *ngIf="s.selected">
           <input class="form-control py-2 border-left-0 border" type="text" [(ngModel)]="s.newOwner.accountName"
-              placeholder="Enter Owner account ID">
+              placeholder="Enter Owner account name">
         </span>
       </td>
       <td style="word-wrap: break-word;min-width: 160px;max-width: 160px;">

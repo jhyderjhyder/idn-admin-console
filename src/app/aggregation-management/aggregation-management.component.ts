@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { AngularCsv } from 'angular-csv-ext/dist/Angular-csv';
 import { Papa } from 'ngx-papaparse';
 import { BsModalRef } from 'ngx-bootstrap/modal';
@@ -31,6 +31,8 @@ export class AggregationManagementComponent implements OnInit {
   public modalRef: BsModalRef;
   
   @ViewChild('submitConfirmModal', { static: false }) submitConfirmModal: ModalDirective;
+
+  @ViewChild('fileInput', {static: false}) fileInput: ElementRef;
 
   constructor(private papa: Papa,
     private idnService: IDNService, 
@@ -324,7 +326,13 @@ export class AggregationManagementComponent implements OnInit {
     let angularCsv: AngularCsv = new AngularCsv(arr, fileName, options);
   }
 
+  clearFileSelect() {
+    this.messageService.clearError();
+    this.fileInput.nativeElement.value = "";
+  }
+
   handleFileSelect(evt) {
+    this.messageService.clearError();
     let cronExpMap = {}; //key is source cloudExternalID, value is cronExp
     var files = evt.target.files; // FileList object
     var file = files[0];
@@ -345,6 +353,8 @@ export class AggregationManagementComponent implements OnInit {
             }
           }
 
+          let anythingMatched = false;
+
           for (let each of this.sourcesToShow) {
             // if (each.selected) {
               let cronExp = cronExpMap[each.cloudExternalID];
@@ -354,8 +364,13 @@ export class AggregationManagementComponent implements OnInit {
                 } else if (this.bulkAction == 'EnableEntAggSchedule') {
                   each.entAggCronExp = cronExp;
                 }
+                anythingMatched = true;
               }
             // }
+          }
+
+          if (!anythingMatched) {
+            this.messageService.setError("No source record in uploaded file is matched with the selected items.");
           }
         }
       });
