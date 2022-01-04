@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { AngularCsv } from 'angular-csv-ext/dist/Angular-csv';
 import { Papa } from 'ngx-papaparse';
 import { BsModalRef } from 'ngx-bootstrap/modal';
@@ -29,6 +29,8 @@ export class ChangeSourceOwnerComponent implements OnInit {
   public modalRef: BsModalRef;
   
   @ViewChild('submitConfirmModal', { static: false }) submitConfirmModal: ModalDirective;
+
+  @ViewChild('fileInput', {static: false}) fileInput: ElementRef;
 
   constructor(private papa: Papa,
     private idnService: IDNService, 
@@ -206,22 +208,6 @@ export class ChangeSourceOwnerComponent implements OnInit {
     this.submitConfirmModal.hide();
   }
 
-  getSelectedAggSchedules(isEntitlement: boolean, enabled: boolean): Source[] {
-    let arr = [];
-    for (let each of this.sources) {
-      if (each.selected) {
-        if (!isEntitlement && !enabled && each.accountAggregationSchedule.cronExp.length == 1) {
-          each.accountAggCronExp = each.accountAggregationSchedule.cronExp[0];
-        } 
-        else if (isEntitlement && !enabled && each.entAggregationSchedule.cronExp.length == 1) {
-          each.entAggCronExp = each.entAggregationSchedule.cronExp[0];
-        } 
-        arr.push(each);
-      }
-    }
-    return arr;
-  }
-
   closeModalDisplayMsg() {
     if (this.errorMessage != null) {
       this.messageService.setError(this.errorMessage);
@@ -265,7 +251,7 @@ export class ChangeSourceOwnerComponent implements OnInit {
       decimalseparator: '.',
       showLabels: true,
       useHeader: true,
-      headers: ["name", "description", "type", "cloudExternalID", "ownerAccountName", "ownerDisplayName"],
+      headers: ["name", "description", "type", "cloudExternalID", "ownerAccountID", "ownerDisplayName"],
       nullToEmptyString: true,
     };
 
@@ -275,13 +261,59 @@ export class ChangeSourceOwnerComponent implements OnInit {
     for (let each of this.sources) {
       let record = Object.assign(each);
       if (each.owner) {
-        record.ownerAccountName = each.owner.accountName;
+        record.ownerAccountID = each.owner.accountName;
         record.ownerDisplayName = each.owner.displayName;
       }
       arr.push(record);
     }
 
     let angularCsv: AngularCsv = new AngularCsv(arr, fileName, options);
+  }
+
+  clearFileSelect() {
+    this.messageService.clearError();
+    this.fileInput.nativeElement.value = "";
+  }
+
+  handleFileSelect(evt) {
+    this.messageService.clearError();
+    let newOwnerAccountNameMap = {}; //key is source cloudExternalID, value is new owner account name
+    var files = evt.target.files; // FileList object
+    var file = files[0];
+    var reader = new FileReader();
+    reader.readAsText(file);
+    reader.onload = (event: any) => {
+      var csv = event.target.result; // Content of CSV file
+      this.papa.parse(csv, {
+        skipEmptyLines: true,
+        header: true,
+        complete: (results) => {
+          for (let i = 0; i < results.data.length; i++) {
+            let cloudExternalID = results.data[i].cloudExternalID;
+            newOwnerAccountNameMap[cloudExternalID] = results.data[i].ownerAccountID;
+          }
+
+          let anythingSelected = false;
+          let anythingMatched = false;
+          
+          for (let each of this.sources) {
+            if (each.selected) {
+              let newOwnerAccountName = newOwnerAccountNameMap[each.cloudExternalID];
+              if (newOwnerAccountName && newOwnerAccountName != '') {
+                each.newOwner.accountName = newOwnerAccountName;
+                anythingMatched = true;
+              }
+              anythingSelected = true;
+            }
+          }
+          if (!anythingSelected) {
+            this.messageService.setError("No item is selected to apply the change.");
+          } else if (!anythingMatched) {
+            this.messageService.setError("No source record in uploaded file is matched with the selected items.");
+          }
+        }
+      });
+    }
   }
 
 }
