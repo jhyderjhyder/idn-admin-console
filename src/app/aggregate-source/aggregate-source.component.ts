@@ -1,0 +1,239 @@
+import { Component, OnInit, ViewChild} from '@angular/core';
+import {interval} from "rxjs/internal/observable/interval";
+import {startWith, switchMap, takeWhile} from "rxjs/operators";
+import { BsModalRef } from 'ngx-bootstrap/modal';
+import { ModalDirective } from 'ngx-bootstrap/modal';
+import { Source } from '../model/source';
+import { AggregationTask } from "../model/aggregation-task";
+import { IDNService } from '../service/idn.service';
+import { MessageService } from '../service/message.service';
+
+@Component({
+  selector: 'app-aggregate-source',
+  templateUrl: './aggregate-source.component.html',
+  styleUrls: ['./aggregate-source.component.css']
+})
+export class AggregateSourceComponent implements OnInit {
+  sources: Source[];
+  selectAll: boolean;
+  validToSubmit: boolean;
+  invalidMessage: string[];
+  errorMessage: string;
+  searchText: string;
+  loading: boolean;
+
+  uploadError: string;
+  uploadFilePath: string;
+  submitted = false;
+
+  public modalRef: BsModalRef;
+  
+  @ViewChild('submitConfirmModal', { static: false }) submitConfirmModal: ModalDirective;
+
+  constructor(
+    private idnService: IDNService, 
+    private messageService: MessageService) {
+  }
+
+  ngOnInit() {
+    this.reset(true);
+    this.search();
+  }
+
+  reset(clearMsg: boolean) {
+    this.sources = null;
+    this.selectAll = false;
+    this.searchText = null;
+    this.loading = false;
+    this.invalidMessage = [];
+    if (clearMsg) {
+      this.messageService.clearAll();
+      this.errorMessage = null;
+    } 
+  }
+
+  search() {
+    this.loading = true;
+    this.idnService.searchAggregationSources()
+          .subscribe(allSources => {
+            this.sources = [];
+            for (let each of allSources) {
+              let source = new Source();
+              source.id = each.id;
+              source.cloudExternalID = each.connectorAttributes.cloudExternalId;
+              source.name = each.name;
+              source.description = each.description;
+              source.type = each.type;
+              let aggTaskPollingStatus = this.idnService.getAggTaskPolling(source.cloudExternalID);
+              if (aggTaskPollingStatus && aggTaskPollingStatus.completed) {
+                source.aggTask = new AggregationTask();
+                source.aggTask.id = aggTaskPollingStatus.taskId;
+                this.pollAggTaskStatus(source);
+              }
+          
+              this.sources.push(source);
+            }
+            this.loading = false;
+          });
+  }
+
+  changeOnSelectAll() {
+    this.messageService.clearError();
+    this.searchText = null;
+    this.sources.forEach(each => {
+      each.selected = !this.selectAll;
+      if (!each.selected) {
+        each.aggregateSourceFormData = null;
+      }
+    });
+  }
+
+  changeOnSelect($event, index: number) {
+    this.messageService.clearError();
+    if (!$event.currentTarget.checked) {
+      this.selectAll = false;
+      this.sources[index].aggregateSourceFormData = null;
+    }
+  }
+
+  showSubmitConfirmModal() {
+    this.messageService.clearError();
+    this.validToSubmit = true;
+    let selectedSources = [];
+    this.invalidMessage = [];
+    for (let each of this.sources) {
+      if (each.selected) {
+        if (each.type == 'DelimitedFile' ) {
+          if (each.aggregateSourceFormData == null || each.aggregateSourceFormData.get("file") == null) {
+            this.invalidMessage.push(`CSV file of Source (name: ${each.name}) needs to be uploaded.`);
+            this.validToSubmit = false;
+          }
+        }
+        selectedSources.push(each);
+      }
+    }
+    if (selectedSources.length == 0) {
+      this.invalidMessage.push("Select at least one item to submit.");
+      this.validToSubmit = false;
+    }
+    this.submitConfirmModal.show();
+  }
+
+  hideSubmitConfirmModal() {
+    this.submitConfirmModal.hide();
+  }
+
+  closeModalDisplayMsg() {
+    if (this.errorMessage != null) {
+      this.messageService.setError(this.errorMessage);
+    } else {
+      this.messageService.add("Source Aggregation request was submitted successfully.");
+    }
+    this.submitConfirmModal.hide();
+  }
+
+  aggregateSource() {
+    let arr = this.sources.filter(each => each.selected);
+    let processedCount = 0;
+    for (let each of arr) {
+      if (each.aggregateSourceFormData == null) {
+        each.aggregateSourceFormData = new FormData();
+      }
+      if (each.aggSourceDisableOptimization) {
+        each.aggregateSourceFormData.append("disableOptimization", "true");
+      } else {
+        each.aggregateSourceFormData.append("disableOptimization", "false");
+      }
+      this.idnService.aggregateSourceOwner(each.cloudExternalID, each.aggregateSourceFormData)
+          .subscribe(searchResult => {
+            processedCount++;
+            each.aggTask = new AggregationTask();
+            each.aggTask.id = searchResult.task.id;
+            this.idnService.startAggTaskPolling(each.cloudExternalID, each.aggTask.id);
+
+            if (processedCount == arr.length) {
+              this.closeModalDisplayMsg();
+              this.checkAggTaskStatus(arr);
+            //  this.reset(false);
+            //  this.search();
+            }
+          },
+          err => {
+            this.errorMessage = "Error to send request to aggregate the source.";
+            processedCount++;
+            if (processedCount == arr.length) {
+              this.closeModalDisplayMsg();
+              // this.reset(false);
+              // this.search();
+            }
+          }
+        );
+    }
+  }
+
+  onFileChange(event, index: number) {
+    this.messageService.clearError();
+    if (event.target.files.length > 0) {
+      const file: File = event.target.files[0];
+      if (this.validateFile(file.name)) {
+        this.sources[index].aggregateSourceFormData = new FormData();
+        this.sources[index].aggregateSourceFormData.append('file', file);
+
+        this.cleanup();
+      } else {
+        this.messageService.setError("Only CSV files are allowed.");
+      }
+      this.uploadFilePath = file.name;
+    }
+  }
+
+  private cleanup() {
+    this.uploadFilePath = null;
+    this.uploadError = null;
+    this.submitted = false;
+  }
+
+  validateFile(name: String) {
+    var ext = name.substring(name.lastIndexOf('.') + 1);
+    return ext.toLowerCase() === 'csv';
+  }
+
+  populateAggTaskStatus(response, source: Source) {
+    if (response) {
+      if (source.aggTask == null) {
+        source.aggTask = new AggregationTask();
+      }
+      source.aggTask.status = response.status;
+      source.aggTask.startTime = response.start;
+      source.aggTask.totalAccounts = response.totalAccounts;
+      source.aggTask.processedAccounts = response.processedAccounts;
+    }
+    if (response && response.status != 'COMPLETED') {
+      return true;
+    } else {
+      this.idnService.finishAggTaskPolling(source.cloudExternalID);
+      return false;
+    }
+  }
+
+  checkAggTaskStatus(sources: Source[]) {
+    let index : number = 0;
+    for (let source of sources) {
+      index++;
+      setTimeout(() => {
+        this.pollAggTaskStatus(source);
+      }, 1000 * index);
+    }
+  }
+
+  pollAggTaskStatus(source: Source) {
+    interval(5000)
+    .pipe(
+        startWith(0),
+        switchMap(() => this.idnService.getAccountAggregationStatus(source.aggTask.id)),
+        takeWhile( (response) => this.populateAggTaskStatus(response, source))
+    )
+    .subscribe();
+  }
+
+}

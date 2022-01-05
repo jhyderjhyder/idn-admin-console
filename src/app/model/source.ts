@@ -1,6 +1,6 @@
 import { Schedule } from ".././model/schedule";
 import { SourceOwner } from ".././model/source-owner";
-
+import { AggregationTask } from ".././model/aggregation-task";
 
 export class Source {
   id: string;
@@ -15,4 +15,7 @@ export class Source {
   entAggCronExp: string;
   owner: SourceOwner;
   newOwner: SourceOwner;
+  aggregateSourceFormData: FormData;
+  aggSourceDisableOptimization: boolean;
+  aggTask: AggregationTask;
 }
