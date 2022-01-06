@@ -5,6 +5,7 @@ import { Observable, of } from 'rxjs';
 import { MessageService } from './message.service';
 import { Source } from '../model/source';
 import { SimpleQueryCondition } from '../model/simple-query-condition';
+import { AggTaskPollingStatus } from '../model/agg-task-polling-status';
 import { AuthenticationService } from '../service/authentication-service.service';
 
 @Injectable({
@@ -21,10 +22,29 @@ export class IDNService {
 
   codec = new HttpUrlEncodingCodec;
 
+  //Keep track of source aggregation task ID and its polling (calling IDN API to fetch Task completed status) status. 
+  aggTaskPollingStatusMap = {};
+
   constructor(
         private http: HttpClient,
         private messageService: MessageService,
         private authenticationService: AuthenticationService) { 
+  }
+
+  startAggTaskPolling(cloudExternalID: string, taskId: string) {
+    let aggTaskPollingStatus = new AggTaskPollingStatus();
+    aggTaskPollingStatus.taskId = taskId;
+    this.aggTaskPollingStatusMap[cloudExternalID] = aggTaskPollingStatus;
+  }
+
+  getAggTaskPolling(cloudExternalID: string): AggTaskPollingStatus {
+    return this.aggTaskPollingStatusMap[cloudExternalID];
+  }
+
+  finishAggTaskPolling(cloudExternalID: string): AggTaskPollingStatus {
+    let aggTaskPollingStatus: AggTaskPollingStatus  = this.aggTaskPollingStatusMap[cloudExternalID];
+    aggTaskPollingStatus.completed = true; 
+    return aggTaskPollingStatus;
   }
 
   searchDuplicatedAccounts(): Observable<any> {
@@ -156,8 +176,6 @@ export class IDNService {
 
   updateSourceOwner(source: Source): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let encodedCronExp = this.codec.encodeValue(source.entAggCronExp);
-    encodedCronExp = encodedCronExp.replace('?', '%3F');
     let url = `https://${currentUser.tenant}.api.identitynow.com/beta/sources/${source.id}`;
     
     let myHttpOptions = {
@@ -182,6 +200,27 @@ export class IDNService {
     payload[0].value.name = source.newOwner.displayName;
 
     return this.http.patch(url, payload, myHttpOptions);
+  }
+
+  aggregateSourceOwner(cloudExternalID: string, formData: FormData): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    let url = `https://${currentUser.tenant}.api.identitynow.com/cc/api/source/loadAccounts/${cloudExternalID}`;
+    
+    let myHttpOptions = {
+      headers: new HttpHeaders({
+      })
+    };
+    
+    return this.http.post(url, formData, myHttpOptions);
+  }
+
+  getAccountAggregationStatus(taskId: string): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    let url = `https://${currentUser.tenant}.api.identitynow.com/beta/account-aggregations/${taskId}/status`;
+
+    return this.http.get(url).pipe(
+      catchError(this.handleError(`getAccountAggregationStatus`))
+    );
   }
 
    /** Log a HeroService message with the MessageService */

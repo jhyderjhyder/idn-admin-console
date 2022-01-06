@@ -11,6 +11,7 @@ import { AppComponent } from './app.component';
 import { DuplicatedAccountsComponent } from './duplicated-accounts/duplicated-accounts.component';
 import { AggregationManagementComponent} from './aggregation-management/aggregation-management.component';
 import { ChangeSourceOwnerComponent} from './change-source-owner/change-source-owner.component';
+import { AggregateSourceComponent} from './aggregate-source/aggregate-source.component';
 import { AppRoutingModule } from './app-routing.module';
 import { MessagesComponent } from './messages/messages.component';
 import { SearchFilterPipe } from './shared/search-filter.pipe';
@@ -27,6 +28,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
     DuplicatedAccountsComponent,
     AggregationManagementComponent,
     ChangeSourceOwnerComponent,
+    AggregateSourceComponent,
     MessagesComponent,
     LoginComponent,
     SearchFilterPipe
