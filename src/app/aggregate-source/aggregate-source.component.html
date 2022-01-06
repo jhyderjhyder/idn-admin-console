@@ -49,7 +49,6 @@
           <input type="checkbox" [(ngModel)]="selectAll" (click)="changeOnSelectAll()" id="selectAll">
       </th>
       <th scope="col" class="col-sm-1">Source Name</th>
-      <th scope="col" class="col-sm-2">Source Description</th>
       <th scope="col" class="col-sm-1">Type</th>
       <th scope="col" class="col-sm-1">cloudExternalID</th>
       <th scope="col" class="col-sm-1">Disable Optimization</th>
@@ -59,34 +58,54 @@
     </tr>
   </thead>
   <tbody *ngIf="sources">
-    <tr *ngFor="let s of sources | filter:searchText:['cloudExternalID', 'name', 'description', 'type']">
-      <td class="col-sm-1">
-        <input type="checkbox" [(ngModel)]="s.selected" (click)="changeOnSelect($event, sources.indexOf(s))" [disabled]="s.aggTask && s.aggTask.status != 'COMPLETED' ">
-      </td>
-      <td class="col-sm-1">{{ s.name }}</td>
-      <td class="col-sm-2">{{ s.description }}</td>
-      <td class="col-sm-1">{{ s.type }}</td>
-      <td class="col-sm-1">{{ s.cloudExternalID }}</td>
-      <td class="col-sm-1 text-center">
-        <span *ngIf="s.selected">
-          <input type="checkbox" [(ngModel)]="s.aggSourceDisableOptimization" [disabled]="s.aggTask && s.aggTask.status != 'COMPLETED' ">
-        </span>
-      </td>
-      <td class="col-sm-3">
-        <span *ngIf="s.selected && s.type == 'DelimitedFile' ">
-          <input type="file" accept=".csv" (change)="onFileChange($event, sources.indexOf(s))" [disabled]="s.aggTask && s.aggTask.status != 'COMPLETED' " class="btn btn-info btn-sm">
-        </span>
-      </td>
-      <td class="col-sm-1">
-        <div *ngIf="s.aggTask == null">
-          <span class="font-weight-bold">Status: </span>Not Started
-        </div>
-        <div *ngIf="s.aggTask">
-          <span class="font-weight-bold">Status: </span>{{ s.aggTask.status }}
-        </div>
-      </td>
-     
-    </tr>
+    <ng-container *ngFor="let s of sources | filter:searchText:['cloudExternalID', 'name', 'description', 'type']">
+      <!--
+      <tr data-toggle="collapse" [attr.data-target]="'#collapseRow' + s.cloudExternalID" class="accordion-toggle">
+      -->
+      <tr>
+        <td class="col-sm-1">
+          <input type="checkbox" [(ngModel)]="s.selected" (click)="changeOnSelect($event, sources.indexOf(s))" [disabled]="s.aggTask && s.aggTask.status != 'COMPLETED' ">
+        </td>
+        <td class="col-sm-1">{{ s.name }}</td>
+        <td class="col-sm-1">{{ s.type }}</td>
+        <td class="col-sm-1">{{ s.cloudExternalID }}</td>
+        <td class="col-sm-1 text-center">
+          <span *ngIf="s.selected">
+            <input type="checkbox" [(ngModel)]="s.aggSourceDisableOptimization" [disabled]="s.aggTask && s.aggTask.status != 'COMPLETED' ">
+          </span>
+        </td>
+        <td class="col-sm-3">
+          <span *ngIf="s.selected && s.type == 'DelimitedFile' ">
+            <input type="file" accept=".csv" (change)="onFileChange($event, sources.indexOf(s))" [disabled]="s.aggTask && s.aggTask.status != 'COMPLETED' " class="btn btn-info btn-sm">
+          </span>
+        </td>
+        <td class="col-sm-1">
+          <div *ngIf="s.aggTask == null">
+            Not Started
+          </div>
+          <div *ngIf="s.aggTask">
+            {{ s.aggTask.status }}
+            <br>
+            <a class="btn btn-link" data-toggle="collapse" href="#collapseRow{{s.cloudExternalID}}" role="button" aria-expanded="false" >
+              More...
+            </a>
+          </div>
+        </td>
+      </tr>
+      <tr class="bg-light collapse" id="collapseRow{{s.cloudExternalID}}">
+        <td colspan="5">
+        </td>
+        <td colspan="2">
+          <div *ngIf="s.aggTask">
+            <span class="font-weight-bold">Start Time: </span>{{ s.aggTask.startTime | date:'yyyy-MM-dd HH:mm:ss' }}
+            <br>
+            <span class="font-weight-bold">Total Accounts: </span>{{ s.aggTask.totalAccounts }}
+            <br>
+            <span class="font-weight-bold">Processed Accounts: </span>{{ s.aggTask.processedAccounts }}
+          </div>
+        </td>
+      </tr>
+    </ng-container>
   </tbody>
 </table>
 <br>

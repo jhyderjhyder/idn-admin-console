@@ -163,6 +163,7 @@ export class AggregateSourceComponent implements OnInit {
             processedCount++;
             if (processedCount == arr.length) {
               this.closeModalDisplayMsg();
+              this.checkAggTaskStatus(arr);
               // this.reset(false);
               // this.search();
             }
@@ -218,11 +219,12 @@ export class AggregateSourceComponent implements OnInit {
 
   checkAggTaskStatus(sources: Source[]) {
     let index : number = 0;
+    let waitMillSeconds = 3000; 
     for (let source of sources) {
-      index++;
       setTimeout(() => {
         this.pollAggTaskStatus(source);
-      }, 1000 * index);
+      }, (waitMillSeconds + 1000 * index) );
+      index++;
     }
   }
 
