@@ -4,4 +4,5 @@ export class AggregationTask {
   status: string;
   totalAccounts: number;
   processedAccounts: number;
+  processedPct: number; 
 }
