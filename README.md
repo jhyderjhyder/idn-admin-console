@@ -5,6 +5,8 @@ The application can be run as a standalone web application, inside docker contai
 ### Run as Standalone App ###
 * Prerequisites
     * Install nodejs 
+    * Install Angular CLI
+        * npm install -g @angular/cli
     * Run command in root directory:
         * npm install
 * Run in local

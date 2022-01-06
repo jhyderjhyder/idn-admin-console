@@ -1,6 +1,6 @@
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb">
-    <li class="breadcrumb-item"><a href="#">Home</a></li>
+    <li class="breadcrumb-item"><a routerLink="/duplicate-account">Home</a></li>
     <li class="breadcrumb-item">Manage Source</li>
     <li class="breadcrumb-item active" aria-current="page">Aggregate Source</li>
   </ol>
@@ -75,7 +75,7 @@
           </span>
         </td>
         <td class="col-sm-3">
-          <span *ngIf="s.selected && s.type == 'DelimitedFile' ">
+          <span *ngIf="s.selected && (s.type == 'DelimitedFile' || s.type == 'Non-Employee') ">
             <input type="file" accept=".csv" (change)="onFileChange($event, sources.indexOf(s))" [disabled]="s.aggTask && s.aggTask.status != 'COMPLETED' " class="btn btn-info btn-sm">
           </span>
         </td>

@@ -103,7 +103,7 @@ export class AggregateSourceComponent implements OnInit {
     this.invalidMessage = [];
     for (let each of this.sources) {
       if (each.selected) {
-        if (each.type == 'DelimitedFile' ) {
+        if (each.type == 'DelimitedFile' || each.type == 'Non-Employee') {
           if (each.aggregateSourceFormData == null || each.aggregateSourceFormData.get("file") == null) {
             this.invalidMessage.push(`CSV file of Source (name: ${each.name}) needs to be uploaded.`);
             this.validToSubmit = false;
