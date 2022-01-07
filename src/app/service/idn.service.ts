@@ -236,7 +236,19 @@ export class IDNService {
       headers: new HttpHeaders({
       })
     };
-    return this.http.post(url, null, myHttpOptions);
+
+    let payload = {
+      "name": `${rule.name}`,
+      "type": `${rule.type}`,
+      "sourceCode": {
+        "version": "1.0",
+        "script": `${rule.script}`
+      },
+      "description": `${rule.description}`,
+      "attributes": {}
+    };
+    
+    return this.http.post(url, payload, myHttpOptions);
   }
 
    /** Log a HeroService message with the MessageService */

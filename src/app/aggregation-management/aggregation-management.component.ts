@@ -96,7 +96,7 @@ export class AggregationManagementComponent implements OnInit {
                     }
                   },
                   err => {
-                    this.messageService.addError(`Error to retrieve Aggregation Schedule for Source (${source.name}`);
+                    this.messageService.addError(`Error to retrieve Aggregation Schedule for Source (${source.name})`);
                     fetchAccntAggScheduleCount++;
                     if (fetchAccntAggScheduleCount == count) {
                       this.accntAggScheduleLoaded = true;
@@ -118,7 +118,7 @@ export class AggregationManagementComponent implements OnInit {
                     }
                   },
                   err => {
-                    this.messageService.addError(`Error to retrieve Entitlement Aggregation Schedule for Source (${source.name}`);
+                    this.messageService.addError(`Error to retrieve Entitlement Aggregation Schedule for Source (${source.name})`);
                     fetchEntAggScheduleCount++;
                     if (fetchEntAggScheduleCount == count) {
                       this.entAggScheduleLoaded = true;

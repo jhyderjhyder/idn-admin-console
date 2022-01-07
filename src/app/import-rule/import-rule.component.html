@@ -6,8 +6,6 @@
   </ol>
 </nav>
 
-
-
 <div class="form-group row" *ngIf="!loading && allOwnersFetched">
   <div class="col-sm-12 text-left">
     <span class="font-weight-bold">To change the owner, select the items, enter the new owner account ID and click the 'Submit to Change' button. </span>
@@ -20,15 +18,6 @@
   </div>
 </div>
 <div class="form-group row" *ngIf="!loading && allOwnersFetched">
-  <div class="col-sm-3 text-left">
-    <input class="form-control py-2 border-left-0 border" type="text" [(ngModel)]="newOwnerAll"
-          placeholder="Enter Owner account ID">
-  </div>
-  <div class="col-sm-2 text-right">
-    <button type="button" (click)="applyNewOwnerToAllSelected()" class="btn btn-info btn-sm">
-      Apply to Selected
-    </button>
-  </div>
   <div class="col-sm-5 text-left">
     <input #fileInput type="file" accept=".xml" (change)="handleFileSelect($event)" class="btn btn-info btn-sm">
     &nbsp;&nbsp;
@@ -36,7 +25,7 @@
   </div>
   <div class="col-sm-2 text-right">
     <button type="button" (click)="showSubmitConfirmModal()" class="btn btn-info btn-sm">
-      Submit to Change
+      Import Rule
     </button>
   </div>
 </div>
@@ -48,10 +37,10 @@
       <div class="modal-header">
         <h6 id="dialog-child-name" class="modal-title pull-left">
           <span *ngIf="validToSubmit">
-            Are you sure to change the owner of the selected sources?
+            Ready to import rule?
           </span>
           <div *ngIf="!validToSubmit">
-            <span class="font-weight-bold">Please fix the following error (errors) before submitting the changes: </span><br>
+            <span class="font-weight-bold">Please fix the following error(s) before importing the rule: </span><br>
             <span *ngFor="let err of invalidMessage">
               {{ err }}
               <br>
@@ -69,8 +58,8 @@
               <button type="button" (click)="hideSubmitConfirmModal()" class="btn btn-danger btn-sm">Cancel</button>
               &nbsp;&nbsp;&nbsp;
               <span *ngIf="validToSubmit">
-                <button type="button" class="btn btn-success btn-sm" (click)="updateSourceOwner()">
-                  Save
+                <button type="button" class="btn btn-success btn-sm" (click)="importRule()">
+                  Import
                 </button>
               </span>
             </div>

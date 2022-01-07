@@ -159,6 +159,7 @@ export class ImportRuleComponent implements OnInit {
     this.validToSubmit = true;
     let selectedSources = [];
     this.invalidMessage = [];
+    /*
     for (let each of this.sources) {
       if (each.selected) {
         if (each.newOwner == null || each.newOwner.accountName == null || each.newOwner.accountName.trim() == '') {
@@ -178,8 +179,14 @@ export class ImportRuleComponent implements OnInit {
       this.invalidMessage.push("Select at least one item to submit.");
       this.validToSubmit = false;
     }
+    */
+
+    this.invalidMessage.push("No rule man!");
+    this.validToSubmit = true;
 
     if (this.validToSubmit) {
+      this.submitConfirmModal.show();
+      /*
       let count = 0;
       //check if account name of new owner is valid
       for (let each of selectedSources) {
@@ -202,6 +209,7 @@ export class ImportRuleComponent implements OnInit {
             }
         });
       }
+      */
     } else {
       this.submitConfirmModal.show();
     }
@@ -215,7 +223,7 @@ export class ImportRuleComponent implements OnInit {
     if (this.errorMessage != null) {
       this.messageService.setError(this.errorMessage);
     } else {
-      this.messageService.add("Changes saved successfully.");
+      this.messageService.add("Rule imported successfully.");
     }
     this.submitConfirmModal.hide();
   }
@@ -245,6 +253,14 @@ export class ImportRuleComponent implements OnInit {
         );
     }
 
+  }
+
+  importRule() {
+    this.idnService.createConnectorRule(this.rule)
+      .subscribe(
+        searchResult => {this.closeModalDisplayMsg()},
+        err => {this.closeModalDisplayMsg()}
+      );
   }
 
   saveInCsv() {
@@ -286,6 +302,7 @@ export class ImportRuleComponent implements OnInit {
     reader.readAsText(file);
     reader.onload = (event: any) => {
       var ruleXML = event.target.result; // Content of Rule XML file
+      console.log("ruleXML=>" + ruleXML);
       const parser = new xml2js.Parser({ strict: false, trim: true });
       parser.parseString(ruleXML, (err, result) => {
         if (result.RULE && result.RULE.$) {
@@ -310,8 +327,9 @@ export class ImportRuleComponent implements OnInit {
         }
 
       });
-
+      console.log("this.rule=>" + JSON.stringify(this.rule));
     }
+
   }
 
 }
