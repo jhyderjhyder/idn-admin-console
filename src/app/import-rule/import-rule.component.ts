@@ -1,9 +1,11 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { AngularCsv } from 'angular-csv-ext/dist/Angular-csv';
+import xml2js from 'xml2js';
 import { Papa } from 'ngx-papaparse';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { Source } from '../model/source';
+import { Rule } from '../model/rule';
 import { SimpleQueryCondition } from '../model/simple-query-condition';
 import { SourceOwner } from '../model/source-owner';
 import { IDNService } from '../service/idn.service';
@@ -16,6 +18,7 @@ import { AuthenticationService } from '../service/authentication-service.service
   styleUrls: ['./import-rule.component.css']
 })
 export class ImportRuleComponent implements OnInit {
+  rule: Rule;
   sources: Source[];
   selectAll: boolean;
   newOwnerAll: string;
@@ -277,42 +280,37 @@ export class ImportRuleComponent implements OnInit {
 
   handleFileSelect(evt) {
     this.messageService.clearError();
-    let newOwnerAccountNameMap = {}; //key is source cloudExternalID, value is new owner account name
     var files = evt.target.files; // FileList object
     var file = files[0];
     var reader = new FileReader();
     reader.readAsText(file);
     reader.onload = (event: any) => {
-      var csv = event.target.result; // Content of CSV file
-      this.papa.parse(csv, {
-        skipEmptyLines: true,
-        header: true,
-        complete: (results) => {
-          for (let i = 0; i < results.data.length; i++) {
-            let cloudExternalID = results.data[i].cloudExternalID;
-            newOwnerAccountNameMap[cloudExternalID] = results.data[i].ownerAccountID;
-          }
-
-          let anythingSelected = false;
-          let anythingMatched = false;
-          
-          for (let each of this.sources) {
-            if (each.selected) {
-              let newOwnerAccountName = newOwnerAccountNameMap[each.cloudExternalID];
-              if (newOwnerAccountName && newOwnerAccountName != '') {
-                each.newOwner.accountName = newOwnerAccountName;
-                anythingMatched = true;
-              }
-              anythingSelected = true;
+      var ruleXML = event.target.result; // Content of Rule XML file
+      const parser = new xml2js.Parser({ strict: false, trim: true });
+      parser.parseString(ruleXML, (err, result) => {
+        if (result.RULE && result.RULE.$) {
+          if (result.RULE.$.NAME) {
+            this.rule = new Rule();
+            this.rule.name = result.RULE.$.NAME;
+            this.rule.type = result.RULE.$.TYPE;
+            if (result.RULE.DESCRITION && result.RULE.DESCRITION.length == 1) {
+              this.rule.type = result.RULE.DESCRITION[0];
             }
+            if (result.RULE.SOURCE && result.RULE.SOURCE.length == 1) {
+              this.rule.script = result.RULE.SOURCE[0];
+            } else {
+              this.rule = null;
+              this.errorMessage = "Invalid Rule XML file: source is not specified."
+            }
+          } else {
+            this.errorMessage = "Invalid Rule XML file: rule name is not specified."
           }
-          if (!anythingSelected) {
-            this.messageService.setError("No item is selected to apply the change.");
-          } else if (!anythingMatched) {
-            this.messageService.setError("No source record in uploaded file is matched with the selected items.");
-          }
+        } else {
+          this.errorMessage = "Invalid Rule XML file."
         }
+
       });
+
     }
   }
 
