@@ -119,19 +119,23 @@ export class IDNService {
   getAggregationSchedules(cloudExternalID: string): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
     let url = `https://${currentUser.tenant}.api.identitynow.com/cc/api/source/getAggregationSchedules/${cloudExternalID}`;
-
+    return this.http.get(url);
+    /*
     return this.http.get(url).pipe(
       catchError(this.handleError(`getAggregationSchedules`))
     );
+    */
   }
 
   getEntitlementAggregationSchedules(cloudExternalID: string): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
     let url = `https://${currentUser.tenant}.api.identitynow.com/cc/api/source/getEntitlementAggregationSchedules/${cloudExternalID}`;
-
+    return this.http.get(url);
+    /*
     return this.http.get(url).pipe(
       catchError(this.handleError(`getEntitlementAggregationSchedules`))
     );
+    */
   }
 
   updateAggregationSchedules(source: Source, enable: boolean): Observable<any> {

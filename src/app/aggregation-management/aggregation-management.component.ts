@@ -83,30 +83,49 @@ export class AggregationManagementComponent implements OnInit {
               source.type = each.type;
 
               this.idnService.getAggregationSchedules(source.cloudExternalID)
-                .subscribe(searchResult => { 
-                  if (searchResult.length > 0) {
-                    source.accountAggregationSchedule = new Schedule();
-                    source.accountAggregationSchedule.enable = true;
-                    source.accountAggregationSchedule.cronExp = searchResult[0].cronExpressions;
+                .subscribe(
+                  searchResult => {
+                    if (searchResult.length > 0) {
+                      source.accountAggregationSchedule = new Schedule();
+                      source.accountAggregationSchedule.enable = true;
+                      source.accountAggregationSchedule.cronExp = searchResult[0].cronExpressions;
+                    }
+                    fetchAccntAggScheduleCount++;
+                    if (fetchAccntAggScheduleCount == count) {
+                      this.accntAggScheduleLoaded = true;
+                    }
+                  },
+                  err => {
+                    this.messageService.addError(`Error to retrieve Aggregation Schedule for Source (${source.name}`);
+                    fetchAccntAggScheduleCount++;
+                    if (fetchAccntAggScheduleCount == count) {
+                      this.accntAggScheduleLoaded = true;
+                    }
                   }
-                  fetchAccntAggScheduleCount++;
-                  if (fetchAccntAggScheduleCount == count) {
-                    this.accntAggScheduleLoaded = true;
-                  }
-              });
+              );
         
               this.idnService.getEntitlementAggregationSchedules(source.cloudExternalID)
-                .subscribe(searchResult => { 
-                  if (searchResult.length > 0) {
-                    source.entAggregationSchedule = new Schedule();
-                    source.entAggregationSchedule.enable = true;
-                    source.entAggregationSchedule.cronExp = searchResult[0].cronExpressions;
+                .subscribe(
+                  searchResult => {
+                    if (searchResult.length > 0) {
+                      source.entAggregationSchedule = new Schedule();
+                      source.entAggregationSchedule.enable = true;
+                      source.entAggregationSchedule.cronExp = searchResult[0].cronExpressions;
+                    }
+                    fetchEntAggScheduleCount++;
+                    if (fetchEntAggScheduleCount == count) {
+                      this.entAggScheduleLoaded = true;
+                    }
+                  },
+                  err => {
+                    this.messageService.addError(`Error to retrieve Entitlement Aggregation Schedule for Source (${source.name}`);
+                    fetchEntAggScheduleCount++;
+                    if (fetchEntAggScheduleCount == count) {
+                      this.entAggScheduleLoaded = true;
+                    }
                   }
-                  fetchEntAggScheduleCount++;
-                  if (fetchEntAggScheduleCount == count) {
-                    this.entAggScheduleLoaded = true;
-                  }
-              });
+              
+              );
               
               this.sources.push(source);
               this.sourcesToShow.push(source);
