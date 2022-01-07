@@ -1,0 +1,82 @@
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a routerLink="/duplicate-account">Home</a></li>
+    <li class="breadcrumb-item">Manage Rule</li>
+    <li class="breadcrumb-item active" aria-current="page">Import Rule</li>
+  </ol>
+</nav>
+
+
+
+<div class="form-group row" *ngIf="!loading && allOwnersFetched">
+  <div class="col-sm-12 text-left">
+    <span class="font-weight-bold">To change the owner, select the items, enter the new owner account ID and click the 'Submit to Change' button. </span>
+    <span class="font-weight-bold">To apply change in bulk:
+      <br>
+      &nbsp;&nbsp;&nbsp;&nbsp; 1) either select the items, enter the new owner account name in the text field below and then click the 'Apply to Selected' button,
+      <br>
+      &nbsp;&nbsp;&nbsp;&nbsp; 2) or select the items and then upload the saved csv file by clicking 'Choose file' button.
+    </span>
+  </div>
+</div>
+<div class="form-group row" *ngIf="!loading && allOwnersFetched">
+  <div class="col-sm-3 text-left">
+    <input class="form-control py-2 border-left-0 border" type="text" [(ngModel)]="newOwnerAll"
+          placeholder="Enter Owner account ID">
+  </div>
+  <div class="col-sm-2 text-right">
+    <button type="button" (click)="applyNewOwnerToAllSelected()" class="btn btn-info btn-sm">
+      Apply to Selected
+    </button>
+  </div>
+  <div class="col-sm-5 text-left">
+    <input #fileInput type="file" accept=".csv" (change)="handleFileSelect($event)" class="btn btn-info btn-sm">
+    &nbsp;&nbsp;
+    <button (click)="clearFileSelect()" class="btn btn-info btn-sm">Clear file</button>
+  </div>
+  <div class="col-sm-2 text-right">
+    <button type="button" (click)="showSubmitConfirmModal()" class="btn btn-info btn-sm">
+      Submit to Change
+    </button>
+  </div>
+</div>
+<br>
+
+<div bsModal #submitConfirmModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="dialog-child-name">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h6 id="dialog-child-name" class="modal-title pull-left">
+          <span *ngIf="validToSubmit">
+            Are you sure to change the owner of the selected sources?
+          </span>
+          <div *ngIf="!validToSubmit">
+            <span class="font-weight-bold">Please fix the following error (errors) before submitting the changes: </span><br>
+            <span *ngFor="let err of invalidMessage">
+              {{ err }}
+              <br>
+            </span>
+          </div>
+        </h6>
+        <button type="button" class="close pull-right" aria-label="Close" (click)="hideSubmitConfirmModal()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form name="form" novalidate>
+          <div class="row mrgbtm small">
+            <div class="col-md-12 text-center">
+              <button type="button" (click)="hideSubmitConfirmModal()" class="btn btn-danger btn-sm">Cancel</button>
+              &nbsp;&nbsp;&nbsp;
+              <span *ngIf="validToSubmit">
+                <button type="button" class="btn btn-success btn-sm" (click)="updateSourceOwner()">
+                  Save
+                </button>
+              </span>
+            </div>
+          </div>
+      </form>
+      </div>
+    </div>
+  </div>
+</div>

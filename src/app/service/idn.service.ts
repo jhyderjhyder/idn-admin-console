@@ -4,6 +4,7 @@ import { catchError } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
 import { MessageService } from './message.service';
 import { Source } from '../model/source';
+import { Rule } from '../model/rule';
 import { SimpleQueryCondition } from '../model/simple-query-condition';
 import { AggTaskPollingStatus } from '../model/agg-task-polling-status';
 import { AuthenticationService } from '../service/authentication-service.service';
@@ -221,6 +222,17 @@ export class IDNService {
     return this.http.get(url).pipe(
       catchError(this.handleError(`getAccountAggregationStatus`))
     );
+  }
+
+  createConnectorRule(rule: Rule): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    let url = `https://${currentUser.tenant}.api.identitynow.com/beta/connector-rules`;
+    
+    let myHttpOptions = {
+      headers: new HttpHeaders({
+      })
+    };
+    return this.http.post(url, null, myHttpOptions);
   }
 
    /** Log a HeroService message with the MessageService */

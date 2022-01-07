@@ -16,16 +16,23 @@
           <a class="nav-link" routerLink="/duplicate-account">Duplicate Accounts</a>
         </li>
         <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="navbarManagerSource" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarManageSource" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             Manage Source
           </a>
-          <div class="dropdown-menu" aria-labelledby="navbarManagerSource">
+          <div class="dropdown-menu" aria-labelledby="navbarManageSource">
             <a class="dropdown-item" routerLink="/manage-aggregation">Manage Aggregation Schedule</a>
             <a class="dropdown-item" routerLink="/change-source-owner">Change Source Owner</a>
             <a class="dropdown-item" routerLink="/aggregate-source">Aggregate Source</a>
           </div>
         </li>
-
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarManageRule" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Manage Rule
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarManageRule">
+            <a class="dropdown-item" routerLink="/import-rule">Import Rule</a>
+          </div>
+        </li>
       </ul>
       <a class="btn btn-link text-white" (click)="logout()"><i class="fa fa-sign-out" aria-hidden="true">Logout</i></a>
       <small>
