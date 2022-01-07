@@ -53,7 +53,7 @@
       <th scope="col" class="col-sm-1">cloudExternalID</th>
       <th scope="col" class="col-sm-1">Disable Optimization</th>
       <th scope="col" class="col-sm-3">CSV File</th>
-      <th scope="col" class="col-sm-1">Aggregation Status</th>
+      <th scope="col" class="col-sm-1">Aggregation Progress</th>
       
     </tr>
   </thead>
@@ -84,8 +84,18 @@
             Not Started
           </div>
           <div *ngIf="s.aggTask">
-            {{ s.aggTask.status }}
+            <span *ngIf="s.aggTask.status == 'COMPLETED'">
+              Completed
+            </span>
+            <span *ngIf="s.aggTask.status != 'COMPLETED'">
+              In Progress
+            </span>
             <br>
+            <div class="progress">
+              <div class="progress-bar progress-bar-striped progress-bar-animated bg-success" role="progressbar" [style.width.%]="s.aggTask.processedPct" aria-valuenow="25" aria-valuemin="1" aria-valuemax="100">
+                {{s.aggTask.processedPct}}%
+              </div>
+            </div>
             <a class="btn btn-link" data-toggle="collapse" href="#collapseRow{{s.cloudExternalID}}" role="button" aria-expanded="false" >
               More...
             </a>
@@ -97,11 +107,38 @@
         </td>
         <td colspan="2">
           <div *ngIf="s.aggTask">
-            <span class="font-weight-bold">Start Time: </span>{{ s.aggTask.startTime | date:'yyyy-MM-dd HH:mm:ss' }}
-            <br>
-            <span class="font-weight-bold">Total Accounts: </span>{{ s.aggTask.totalAccounts }}
-            <br>
-            <span class="font-weight-bold">Processed Accounts: </span>{{ s.aggTask.processedAccounts }}
+            <div class="row">
+              <div class="col-sm-6 font-weight-bold">
+                Aggregation Task Status:
+              </div>
+              <div class="col-sm-6">
+                {{ s.aggTask.status }}
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-6 font-weight-bold">
+                Start Time:
+              </div>
+              <div class="col-sm-6">
+                {{ s.aggTask.startTime | date:'yyyy-MM-dd HH:mm:ss' }}
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-6 font-weight-bold">
+                Total Accounts:
+              </div>
+              <div class="col-sm-6">
+                {{ s.aggTask.totalAccounts }}
+              </div>
+            </div>
+            <div class="row">
+              <div class="col-sm-6 font-weight-bold">
+                Processed Accounts:
+              </div>
+              <div class="col-sm-6">
+                {{ s.aggTask.processedAccounts }}
+              </div>
+            </div>
           </div>
         </td>
       </tr>

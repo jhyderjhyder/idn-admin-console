@@ -208,6 +208,18 @@ export class AggregateSourceComponent implements OnInit {
       source.aggTask.startTime = response.start;
       source.aggTask.totalAccounts = response.totalAccounts;
       source.aggTask.processedAccounts = response.processedAccounts;
+      if (response.processedAccounts && response.totalAccounts && response.totalAccounts > 0) {
+        source.aggTask.processedPct = Math.round(100 * response.processedAccounts / response.totalAccounts);
+        if (source.aggTask.processedPct == 0) {
+          source.aggTask.processedPct = 1;
+        }
+      } else {
+        if (response.status == 'COMPLETED') {
+          source.aggTask.processedPct = 100;
+        } else {
+          source.aggTask.processedPct = 1;
+        }
+      }
     }
     if (response && response.status != 'COMPLETED') {
       return true;

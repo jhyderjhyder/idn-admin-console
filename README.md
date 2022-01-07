@@ -22,9 +22,11 @@ The application can be run as a standalone web application, inside docker contai
     * brew install --cask wine-stable
 * Run in local
     * npm run electron-build
-* Build electron package for Mac OS ###
+* Build electron package for Mac OS
+    * npm run electron-build
     * electron-packager . --platform=darwin --overwrite
-* Build electron package for Windows ###
+* Build electron package for Windows
+    * npm run electron-build
     * electron-packager . --platform=win32 --overwrite
 
 ### Run as container app ###
