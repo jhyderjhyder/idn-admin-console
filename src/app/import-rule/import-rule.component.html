@@ -31,7 +31,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h6 id="dialog-child-name" class="modal-title pull-left">
-          <span *ngIf="validToSubmit">
+          <span *ngIf="rule && validToSubmit">
             Ready to import rule?
             <br/><br/><span class="font-weight-bold">Name:</span>&nbsp;{{ rule.name }}<br>
             <span class="font-weight-bold">Type:</span>&nbsp;{{ rule.type }}<br>

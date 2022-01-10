@@ -23,6 +23,22 @@ export class MessageService {
       this.errors.push(error);
     }
 
+    handleIDNError(errResponse) {
+      let errMsg = "";
+      if (errResponse.error) {
+        if (errResponse.error.messages && errResponse.error.messages.length > 0 && errResponse.error.messages[0].text) {
+          errMsg += "Error message: " + errResponse.error.messages[0].text;
+        }
+        if (errResponse.error.detailCode) {
+          errMsg += " (Error code: " + errResponse.error.detailCode + ")";
+        }
+      } else {
+        errMsg += "Error to invoke IDN API. Please contact the system adminstrator.";
+      }
+      this.clearError();
+      this.errors.push(errMsg);
+    }
+
     clear() {
       this.messages = [];
     }

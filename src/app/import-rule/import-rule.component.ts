@@ -1,5 +1,4 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { AngularCsv } from 'angular-csv-ext/dist/Angular-csv';
 import xml2js from 'xml2js';
 import { saveAs } from 'file-saver';
 import { Papa } from 'ngx-papaparse';
@@ -29,10 +28,8 @@ export class ImportRuleComponent implements OnInit {
   rule: Rule;
   sources: Source[];
   selectAll: boolean;
-  newOwnerAll: string;
   validToSubmit: boolean;
   invalidMessage: string[];
-  errorMessage: string;
   searchText: string;
   allOwnersFetched: boolean;
   loading: boolean;
@@ -58,14 +55,12 @@ export class ImportRuleComponent implements OnInit {
     this.rule = null;
     this.sources = null;
     this.selectAll = false;
-    this.newOwnerAll = null;
     this.searchText = null;
     this.loading = false;
     this.allOwnersFetched = false;
     this.invalidMessage = [];
     if (clearMsg) {
       this.messageService.clearAll();
-      this.errorMessage = null;
     } 
   }
 
@@ -109,24 +104,6 @@ export class ImportRuleComponent implements OnInit {
           });
   }
 
-  changeOnSelectAll() {
-    this.messageService.clearError();
-    this.searchText = null;
-    this.sources.forEach(each => {
-      each.selected = !this.selectAll;
-      if (each.selected) {
-        if (each.newOwner == null) {
-          each.newOwner = new SourceOwner();
-        }
-        each.newOwner.accountName = each.owner.accountName;
-      } else {
-        if (each.newOwner) {
-          each.newOwner.accountName = null;
-        }
-      }
-    });
-  }
-
   changeOnSelect($event, index: number) {
     this.messageService.clearError();
     if (!$event.currentTarget.checked) {
@@ -142,54 +119,11 @@ export class ImportRuleComponent implements OnInit {
     }
   }
 
-  applyNewOwnerToAllSelected() {
-    this.messageService.clearError();
-    if (this.newOwnerAll && this.newOwnerAll.trim() != '') {
-      let anythingSelected = false;
-      for (let each of this.sources) {
-        if (each.selected) {
-          if (each.newOwner == null) {
-            each.newOwner = new SourceOwner();
-          }
-          each.newOwner.accountName = this.newOwnerAll;
-          anythingSelected = true;
-        }
-      }
-      if (!anythingSelected) {
-        this.messageService.setError("No item is selected to apply the new owner account name.");
-      }
-    } else {
-      this.messageService.setError("Owner account name is required to apply to the selected items.");
-    }
-  }
-
   showSubmitConfirmModal() {
     this.messageService.clearError();
     this.validToSubmit = true;
-    let selectedSources = [];
     this.invalidMessage = [];
-    /*
-    for (let each of this.sources) {
-      if (each.selected) {
-        if (each.newOwner == null || each.newOwner.accountName == null || each.newOwner.accountName.trim() == '') {
-          this.invalidMessage.push(`Owner of Source (name: ${each.name}) can not be empty.`);
-          this.validToSubmit = false;
-        }
-        else if (each.newOwner.accountName == each.owner.accountName) {
-          this.invalidMessage.push(`Owner of Source (name: ${each.name}) is not changed.`);
-          this.validToSubmit = false;
-        }
-
-        selectedSources.push(each);
-      }
-    }
-
-    if (selectedSources.length == 0) {
-      this.invalidMessage.push("Select at least one item to submit.");
-      this.validToSubmit = false;
-    }
-    */
-
+    
     if (this.rule == null) {
       this.invalidMessage.push("No rule man!");
       this.validToSubmit = false;
@@ -197,30 +131,6 @@ export class ImportRuleComponent implements OnInit {
 
     if (this.validToSubmit) {
       this.submitConfirmModal.show();
-      /*
-      let count = 0;
-      //check if account name of new owner is valid
-      for (let each of selectedSources) {
-        let query = new SimpleQueryCondition();
-        query.attribute = "name";
-        query.value = each.newOwner.accountName;
-
-        this.idnService.searchAccounts(query)
-          .subscribe(searchResult => { 
-            if (searchResult && searchResult.length == 1) {
-              each.newOwner.accountId = searchResult[0].id;
-              each.newOwner.displayName = searchResult[0].displayName;
-            } else {
-              this.validToSubmit = false;
-              this.invalidMessage.push(`New owner's account name (${each.newOwner.accountName}) of Source (${each.name}) is invalid.`);
-            }
-            count++;
-            if (count == selectedSources.length) {
-              this.submitConfirmModal.show();
-            }
-        });
-      }
-      */
     } else {
       this.submitConfirmModal.show();
     }
@@ -231,39 +141,7 @@ export class ImportRuleComponent implements OnInit {
   }
 
   closeModalDisplayMsg() {
-    if (this.errorMessage != null) {
-      this.messageService.setError(this.errorMessage);
-    } else {
-      this.messageService.add("Rule imported successfully.");
-    }
     this.submitConfirmModal.hide();
-  }
-
-  updateSourceOwner() {
-    let arr = this.sources.filter(each => each.selected);
-    let processedCount = 0;
-    for (let each of arr) {
-      this.idnService.updateSourceOwner(each)
-          .subscribe(searchResult => {
-            processedCount++;
-            if (processedCount == arr.length) {
-             this.closeModalDisplayMsg();
-             this.reset(false);
-             this.search();
-            }
-          },
-          err => {
-            this.errorMessage = "Error to submit the changes.";
-            processedCount++;
-            if (processedCount == arr.length) {
-              this.closeModalDisplayMsg();
-              this.reset(false);
-              this.search();
-            }
-          }
-        );
-    }
-
   }
 
   importRule() {
@@ -271,44 +149,19 @@ export class ImportRuleComponent implements OnInit {
       .subscribe(
         searchResult => {
           this.closeModalDisplayMsg();
+          this.messageService.add("Rule imported successfully.");
           this.rule = null;
         },
         err => {
           this.closeModalDisplayMsg();
           this.rule = null;
-          this.messageService.clearAll();
-          this.messageService.setError("There is an error but we will figure out what later...");
+          this.messageService.handleIDNError(err);
         }
       );
   }
 
-  saveInCsv() {
-    var options = { 
-      fieldSeparator: ',',
-      quoteStrings: '"',
-      decimalseparator: '.',
-      showLabels: true,
-      useHeader: true,
-      headers: ["name", "description", "type", "cloudExternalID", "ownerAccountID", "ownerDisplayName"],
-      nullToEmptyString: true,
-    };
-
-    const currentUser = this.authenticationService.currentUserValue;
-    let fileName = `${currentUser.tenant}-Source-Owners`;
-    let arr = [];
-    for (let each of this.sources) {
-      let record = Object.assign(each);
-      if (each.owner) {
-        record.ownerAccountID = each.owner.accountName;
-        record.ownerDisplayName = each.owner.displayName;
-      }
-      arr.push(record);
-    }
-
-    let angularCsv: AngularCsv = new AngularCsv(arr, fileName, options);
-  }
-
   clearFileSelect() {
+    this.rule = null;
     this.messageService.clearError();
     this.fileInput.nativeElement.value = "";
   }
