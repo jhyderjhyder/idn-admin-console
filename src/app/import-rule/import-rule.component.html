@@ -8,20 +8,15 @@
 
 <div class="form-group row" *ngIf="!loading && allOwnersFetched">
   <div class="col-sm-12 text-left">
-    <span class="font-weight-bold">To change the owner, select the items, enter the new owner account ID and click the 'Submit to Change' button. </span>
-    <span class="font-weight-bold">To apply change in bulk:
-      <br>
-      &nbsp;&nbsp;&nbsp;&nbsp; 1) either select the items, enter the new owner account name in the text field below and then click the 'Apply to Selected' button,
-      <br>
-      &nbsp;&nbsp;&nbsp;&nbsp; 2) or select the items and then upload the saved csv file by clicking 'Choose file' button.
-    </span>
+    <span class="font-weight-bold">- To import a rule, click 'Choose File' button to select a rule file from your local directory and click 'Import Rule' button to import it.</span>
+    <br/><span class="font-weight-bold">- To clear selected rule file, click 'Clear File' button.</span>
   </div>
 </div>
 <div class="form-group row" *ngIf="!loading && allOwnersFetched">
   <div class="col-sm-5 text-left">
     <input #fileInput type="file" accept=".xml" (change)="handleFileSelect($event)" class="btn btn-info btn-sm">
     &nbsp;&nbsp;
-    <button (click)="clearFileSelect()" class="btn btn-info btn-sm">Clear file</button>
+    <button (click)="clearFileSelect()" class="btn btn-info btn-sm">Clear File</button>
   </div>
   <div class="col-sm-2 text-right">
     <button type="button" (click)="showSubmitConfirmModal()" class="btn btn-info btn-sm">
@@ -38,6 +33,9 @@
         <h6 id="dialog-child-name" class="modal-title pull-left">
           <span *ngIf="validToSubmit">
             Ready to import rule?
+            <br/><br/><span class="font-weight-bold">Name:</span>&nbsp;{{ rule.name }}<br>
+            <span class="font-weight-bold">Type:</span>&nbsp;{{ rule.type }}<br>
+            <span class="font-weight-bold">Description:</span>&nbsp;{{ rule.description }}<br>
           </span>
           <div *ngIf="!validToSubmit">
             <span class="font-weight-bold">Please fix the following error(s) before importing the rule: </span><br>

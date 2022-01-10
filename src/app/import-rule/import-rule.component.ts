@@ -13,11 +13,18 @@ import { IDNService } from '../service/idn.service';
 import { MessageService } from '../service/message.service';
 import { AuthenticationService } from '../service/authentication-service.service';
 
+const ValidRuleTypes = ["BuildMap", "ConnectorAfterCreate", "ConnectorAfterDelete", "ConnectorAfterModify", "ConnectorBeforeCreate", 
+                        "ConnectorBeforeDelete", "ConnectorBeforeModify", "JDBCBuildMap", "JDBCOperationProvisioning", "JDBCProvision",
+                        "PeopleSoftHRMSBuildMap", "PeopleSoftHRMSOperationProvisioning", "PeopleSoftHRMSProvision", "RACFPermissionCustomization", "SAPBuildMap", 
+                        "SapHrManagerRule", "SapHrOperationProvisioning", "SapHrProvision", "SuccessFactorsOperationProvisioning", "WebServiceAfterOperationRule",
+                        "WebServiceBeforeOperationRule"];
+
 @Component({
   selector: 'app-import-rule',
   templateUrl: './import-rule.component.html',
   styleUrls: ['./import-rule.component.css']
 })
+
 export class ImportRuleComponent implements OnInit {
   rule: Rule;
   sources: Source[];
@@ -182,8 +189,10 @@ export class ImportRuleComponent implements OnInit {
     }
     */
 
-    this.invalidMessage.push("No rule man!");
-    this.validToSubmit = true;
+    if (this.rule == null) {
+      this.invalidMessage.push("No rule man!");
+      this.validToSubmit = false;
+    }
 
     if (this.validToSubmit) {
       this.submitConfirmModal.show();
@@ -260,7 +269,11 @@ export class ImportRuleComponent implements OnInit {
     this.idnService.createConnectorRule(this.rule)
       .subscribe(
         searchResult => {this.closeModalDisplayMsg()},
-        err => {this.closeModalDisplayMsg()}
+        err => {
+          this.closeModalDisplayMsg();
+          this.messageService.clearAll();
+          this.messageService.setError("There is an error but we will figure out what later...");
+        }
       );
   }
 
@@ -303,14 +316,12 @@ export class ImportRuleComponent implements OnInit {
     reader.readAsText(file);
     reader.onload = (event: any) => {
       var ruleXML = event.target.result; // Content of Rule XML file
-      console.log("ruleXML=>" + ruleXML);
       const parser = new xml2js.Parser({ strict: false, trim: true });
       parser.parseString(ruleXML, (err, result) => {
         if (result.RULE && result.RULE.$) {
           if (result.RULE.$.NAME) {
             this.rule = new Rule();
             this.rule.name = result.RULE.$.NAME;
-            this.rule.type = result.RULE.$.TYPE;
             if (result.RULE.DESCRIPTION && result.RULE.DESCRIPTION.length == 1) {
               this.rule.description = result.RULE.DESCRIPTION[0];
             }
@@ -321,16 +332,22 @@ export class ImportRuleComponent implements OnInit {
               this.messageService.setError("Invalid Rule XML file: source is not specified.");
             }
           } else {
-            this.errorMessage = "Invalid Rule XML file: rule name is not specified."
+            this.messageService.setError("Invalid Rule XML file: rule name is not specified.");
+          }
+          if (result.RULE.$.TYPE) {
+            if (ValidRuleTypes.includes(result.RULE.$.TYPE)) {
+              this.rule.type = result.RULE.$.TYPE;
+            } else {
+              this.messageService.setError("Invalid Rule XML file: rule type '" + result.RULE.$.TYPE + "' is invalid.");
+            }
+          } else {
+            this.messageService.setError("Invalid Rule XML file: rule type is not specified.");
           }
         } else {
-          this.errorMessage = "Invalid Rule XML file."
+          this.messageService.setError("Invalid Rule XML file.");
         }
-
       });
-      console.log("this.rule=>" + JSON.stringify(this.rule));
     }
-
   }
 
   convertRuleToXML(rule: Rule) {
