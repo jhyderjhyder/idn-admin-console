@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { AngularCsv } from 'angular-csv-ext/dist/Angular-csv';
 import xml2js from 'xml2js';
+import { saveAs } from 'file-saver';
 import { Papa } from 'ngx-papaparse';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { ModalDirective } from 'ngx-bootstrap/modal';
@@ -310,14 +311,14 @@ export class ImportRuleComponent implements OnInit {
             this.rule = new Rule();
             this.rule.name = result.RULE.$.NAME;
             this.rule.type = result.RULE.$.TYPE;
-            if (result.RULE.DESCRITION && result.RULE.DESCRITION.length == 1) {
-              this.rule.type = result.RULE.DESCRITION[0];
+            if (result.RULE.DESCRIPTION && result.RULE.DESCRIPTION.length == 1) {
+              this.rule.description = result.RULE.DESCRIPTION[0];
             }
             if (result.RULE.SOURCE && result.RULE.SOURCE.length == 1) {
               this.rule.script = result.RULE.SOURCE[0];
             } else {
               this.rule = null;
-              this.errorMessage = "Invalid Rule XML file: source is not specified."
+              this.messageService.setError("Invalid Rule XML file: source is not specified.");
             }
           } else {
             this.errorMessage = "Invalid Rule XML file: rule name is not specified."
@@ -329,6 +330,35 @@ export class ImportRuleComponent implements OnInit {
       });
       console.log("this.rule=>" + JSON.stringify(this.rule));
     }
+
+  }
+
+  convertRuleToXML(rule: Rule) {
+    let ruleDesc = null;
+    if (rule.description) {
+      ruleDesc = rule.description;
+    }
+
+    // const builder = new xml2js.Builder({xmldec: {standalone: false, encoding: 'UTF-8'}});
+    // const builder = new xml2js.Builder({cdata: true});
+    const builder = new xml2js.Builder();
+    let xmlObject = {Rule: {$: 
+                              {name: rule.name,
+                               type: rule.type  
+                              },
+                            _: 
+                              {Description: ruleDesc,
+                               Source: rule.script
+                              }
+                            }
+                    };
+
+    let xml = builder.buildObject(xmlObject);
+    console.log("xml: " + xml);
+    
+    var blob = new Blob([xml], {type: "application/xml"});
+    let fileName = rule.name + " - " + rule.type + ".xml";
+    saveAs(blob, fileName);
 
   }
 
