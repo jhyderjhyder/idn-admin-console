@@ -55,6 +55,7 @@ export class ImportRuleComponent implements OnInit {
   }
 
   reset(clearMsg: boolean) {
+    this.rule = null;
     this.sources = null;
     this.selectAll = false;
     this.newOwnerAll = null;
@@ -268,9 +269,13 @@ export class ImportRuleComponent implements OnInit {
   importRule() {
     this.idnService.createConnectorRule(this.rule)
       .subscribe(
-        searchResult => {this.closeModalDisplayMsg()},
+        searchResult => {
+          this.closeModalDisplayMsg();
+          this.rule = null;
+        },
         err => {
           this.closeModalDisplayMsg();
+          this.rule = null;
           this.messageService.clearAll();
           this.messageService.setError("There is an error but we will figure out what later...");
         }
@@ -318,6 +323,7 @@ export class ImportRuleComponent implements OnInit {
       var ruleXML = event.target.result; // Content of Rule XML file
       const parser = new xml2js.Parser({ strict: false, trim: true });
       parser.parseString(ruleXML, (err, result) => {
+        let valid: boolean = true;
         if (result.RULE && result.RULE.$) {
           if (result.RULE.$.NAME) {
             this.rule = new Rule();
@@ -328,23 +334,30 @@ export class ImportRuleComponent implements OnInit {
             if (result.RULE.SOURCE && result.RULE.SOURCE.length == 1) {
               this.rule.script = result.RULE.SOURCE[0];
             } else {
-              this.rule = null;
+              valid = false;
               this.messageService.setError("Invalid Rule XML file: source is not specified.");
             }
           } else {
+            valid = false;
             this.messageService.setError("Invalid Rule XML file: rule name is not specified.");
           }
           if (result.RULE.$.TYPE) {
             if (ValidRuleTypes.includes(result.RULE.$.TYPE)) {
               this.rule.type = result.RULE.$.TYPE;
             } else {
+              valid = false;
               this.messageService.setError("Invalid Rule XML file: rule type '" + result.RULE.$.TYPE + "' is invalid.");
             }
           } else {
+            valid = false;
             this.messageService.setError("Invalid Rule XML file: rule type is not specified.");
           }
         } else {
+          valid = false;
           this.messageService.setError("Invalid Rule XML file.");
+        }
+        if (!valid) {
+          this.rule = null;
         }
       });
     }
@@ -357,26 +370,29 @@ export class ImportRuleComponent implements OnInit {
     }
 
     // const builder = new xml2js.Builder({xmldec: {standalone: false, encoding: 'UTF-8'}});
-    // const builder = new xml2js.Builder({cdata: true});
-    const builder = new xml2js.Builder();
+    const builder = new xml2js.Builder({cdata: true, doctype: {sysID: "sailpoint.dtd sailpoint.dtd"}});
+    // const builder = new xml2js.Builder();
     let xmlObject = {Rule: {$: 
                               {name: rule.name,
                                type: rule.type  
                               },
-                            _: 
-                              {Description: ruleDesc,
-                               Source: rule.script
-                              }
-                            }
+                            'Description': {
+                                _: ruleDesc
+                              },
+                            'Source': {
+                                _: rule.script
+                              }   
+                           }
                     };
 
-    let xml = builder.buildObject(xmlObject);
+    let xml: string = builder.buildObject(xmlObject);
+    xml = xml.replace("Rule SYSTEM \"sailpoint.dtd sailpoint.dtd\"", "Rule PUBLIC \"sailpoint.dtd\" \"sailpoint.dtd\"");
+    xml = xml.replace(" standalone=\"yes\"?>", "?>");
     console.log("xml: " + xml);
     
     var blob = new Blob([xml], {type: "application/xml"});
     let fileName = rule.name + " - " + rule.type + ".xml";
     saveAs(blob, fileName);
-
   }
 
 }
