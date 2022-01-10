@@ -22,7 +22,7 @@ export class AggregationManagementComponent implements OnInit {
   atLeastOneSelected: boolean;
   cronExpSecified: boolean;
   cronExpAll: string;
-  errorMessage: string;
+  errorInvokeApi: boolean;
   searchText: string;
   accntAggScheduleLoaded: boolean;
   entAggScheduleLoaded: boolean;
@@ -57,7 +57,7 @@ export class AggregationManagementComponent implements OnInit {
     this.loading = false;
     if (clearMsg) {
       this.messageService.clearAll();
-      this.errorMessage = null;
+      this.errorInvokeApi = false;
     } 
   }
 
@@ -96,7 +96,8 @@ export class AggregationManagementComponent implements OnInit {
                     }
                   },
                   err => {
-                    this.messageService.addError(`Error to retrieve Aggregation Schedule for Source (${source.name})`);
+                    // this.messageService.addError(`Error to retrieve Aggregation Schedule for Source (${source.name})`);
+                    this.messageService.handleIDNError(err);
                     fetchAccntAggScheduleCount++;
                     if (fetchAccntAggScheduleCount == count) {
                       this.accntAggScheduleLoaded = true;
@@ -118,7 +119,8 @@ export class AggregationManagementComponent implements OnInit {
                     }
                   },
                   err => {
-                    this.messageService.addError(`Error to retrieve Entitlement Aggregation Schedule for Source (${source.name})`);
+                    // this.messageService.addError(`Error to retrieve Entitlement Aggregation Schedule for Source (${source.name})`);
+                    this.messageService.handleIDNError(err);
                     fetchEntAggScheduleCount++;
                     if (fetchEntAggScheduleCount == count) {
                       this.entAggScheduleLoaded = true;
@@ -228,9 +230,7 @@ export class AggregationManagementComponent implements OnInit {
   }
 
   closeModalDisplayMsg() {
-    if (this.errorMessage != null) {
-      this.messageService.setError(this.errorMessage);
-    } else {
+    if (!this.errorInvokeApi) {
       this.messageService.add("Changes saved successfully.");
     }
     this.submitConfirmModal.hide();
@@ -250,7 +250,8 @@ export class AggregationManagementComponent implements OnInit {
             }
           },
           err => {
-            this.errorMessage = "Error to submit the changes.";
+            this.errorInvokeApi = true;
+            this.messageService.handleIDNError(err);
             processedCount++;
             if (processedCount == arr.length) {
               this.closeModalDisplayMsg();
@@ -276,7 +277,8 @@ export class AggregationManagementComponent implements OnInit {
             }
           },
           err => {
-            this.errorMessage = "Error to submit the changes.";
+            this.errorInvokeApi = true;
+            this.messageService.handleIDNError(err);
             processedCount++;
             if (processedCount == arr.length) {
               this.closeModalDisplayMsg();

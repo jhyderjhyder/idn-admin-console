@@ -30,21 +30,25 @@ export class MessageService {
       if (errResponse.error) {
         if (errStatusCode === 400 || errStatusCode === 403 || errStatusCode === 404 || errStatusCode === 500) {
           if (errResponse.error.messages && errResponse.error.messages.length > 0 && errResponse.error.messages[0].text) {
-            errMsg += "Error message: " + errResponse.error.messages[0].text;
+            errMsg +=  errResponse.error.messages[0].text;
+          } else if (errResponse.error.formatted_msg) {
+            errMsg +=  errResponse.error.formatted_msg;
           }
           if (errResponse.error.detailCode) {
             errMsg += " (Error code: " + errResponse.error.detailCode + ")";
-          }
+          } else if (errResponse.error.error_code) {
+            errMsg += " (Error code: " + errResponse.error.error_code + ")";
+          } 
         }
         else if (errStatusCode === 429) {
           if (errResponse.error.message) {
-            errMsg += "Error message: " + errResponse.error.message;
+            errMsg += errResponse.error.message;
           }
         }
       } else {
         errMsg += "Error to invoke IDN API. Please contact the system adminstrator.";
       }
-      this.clearError();
+      // this.clearError();
       this.errors.push(errMsg);
     }
 

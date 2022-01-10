@@ -145,6 +145,7 @@ export class ImportRuleComponent implements OnInit {
   }
 
   importRule() {
+    this.messageService.clearAll();
     this.idnService.createConnectorRule(this.rule)
       .subscribe(
         searchResult => {
