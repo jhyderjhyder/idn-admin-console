@@ -156,20 +156,25 @@
           <span *ngIf="bulkAction == 'DisableAggSchedule' && atLeastOneSelected">
             Are you sure to disable Account Aggregation Schedule of the selected sources?
           </span>
-          <span *ngIf="bulkAction == 'EnableAggSchedule' && atLeastOneSelected && cronExpSecified">
+          <span *ngIf="bulkAction == 'EnableAggSchedule' && atLeastOneSelected && cronExpValid">
             Are you sure to enable Account Aggregation Schedule of the selected sources?
           </span>
           <span *ngIf="bulkAction == 'DisableEntAggSchedule' && atLeastOneSelected">
             Are you sure to disable Entitlement Aggregation Schedule of the selected sources?
           </span>
-          <span *ngIf="bulkAction == 'EnableEntAggSchedule' && atLeastOneSelected && cronExpSecified">
+          <span *ngIf="bulkAction == 'EnableEntAggSchedule' && atLeastOneSelected && cronExpValid">
             Are you sure to enable Entitlement Aggregation Schedule of the selected sources?
           </span>
-          <span *ngIf="!atLeastOneSelected">
-            Select at least one item to submit.
-          </span>
-          <span *ngIf="!cronExpSecified">
-            Enter Cron Job Expression in the selected items.
+          
+          <span *ngIf="!cronExpValid || !atLeastOneSelected">
+            <span class="font-weight-bold">Please fix the following error (errors) before submitting the changes: </span><br>
+            <span *ngIf="!atLeastOneSelected">
+              Select at least one item to submit.
+            </span>
+            <span *ngFor="let err of invalidMessage">
+              {{ err }}
+              <br>
+            </span>
           </span>
         </h6>
         <button type="button" class="close pull-right" aria-label="Close" (click)="hideSubmitConfirmModal()">
@@ -187,7 +192,7 @@
                   Disable
                 </button>
               </span>
-              <span *ngIf="bulkAction == 'EnableAggSchedule' && atLeastOneSelected && cronExpSecified">
+              <span *ngIf="bulkAction == 'EnableAggSchedule' && atLeastOneSelected && cronExpValid">
                 <button type="button" class="btn btn-success btn-sm" (click)="updateAccountAggSchedules(true)">
                   Enable
                 </button>
@@ -197,7 +202,7 @@
                   Disable
                 </button>
               </span>
-              <span *ngIf="bulkAction == 'EnableEntAggSchedule' && atLeastOneSelected && cronExpSecified">
+              <span *ngIf="bulkAction == 'EnableEntAggSchedule' && atLeastOneSelected && cronExpValid">
                 <button type="button" class="btn btn-success btn-sm" (click)="updateEntAggSchedules(true)">
                   Enable
                 </button>
