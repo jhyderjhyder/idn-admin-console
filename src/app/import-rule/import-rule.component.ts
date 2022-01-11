@@ -12,12 +12,6 @@ import { IDNService } from '../service/idn.service';
 import { MessageService } from '../service/message.service';
 import { AuthenticationService } from '../service/authentication-service.service';
 
-const ValidRuleTypes = ["BuildMap", "ConnectorAfterCreate", "ConnectorAfterDelete", "ConnectorAfterModify", "ConnectorBeforeCreate", 
-                        "ConnectorBeforeDelete", "ConnectorBeforeModify", "JDBCBuildMap", "JDBCOperationProvisioning", "JDBCProvision",
-                        "PeopleSoftHRMSBuildMap", "PeopleSoftHRMSOperationProvisioning", "PeopleSoftHRMSProvision", "RACFPermissionCustomization", "SAPBuildMap", 
-                        "SapHrManagerRule", "SapHrOperationProvisioning", "SapHrProvision", "SuccessFactorsOperationProvisioning", "WebServiceAfterOperationRule",
-                        "WebServiceBeforeOperationRule"];
-
 @Component({
   selector: 'app-import-rule',
   templateUrl: './import-rule.component.html',
@@ -195,13 +189,9 @@ export class ImportRuleComponent implements OnInit {
             valid = false;
             this.messageService.setError("Invalid Rule XML file: rule name is not specified.");
           }
+          
           if (result.RULE.$.TYPE) {
-            if (ValidRuleTypes.includes(result.RULE.$.TYPE)) {
               this.rule.type = result.RULE.$.TYPE;
-            } else {
-              valid = false;
-              this.messageService.setError("Invalid Rule XML file: rule type '" + result.RULE.$.TYPE + "' is invalid.");
-            }
           } else {
             valid = false;
             this.messageService.setError("Invalid Rule XML file: rule type is not specified.");
