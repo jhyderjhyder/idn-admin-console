@@ -12,6 +12,8 @@ import { IDNService } from '../service/idn.service';
 import { MessageService } from '../service/message.service';
 import { AuthenticationService } from '../service/authentication-service.service';
 
+const RuleDescriptionMaxLength = 50;
+
 @Component({
   selector: 'app-import-rule',
   templateUrl: './import-rule.component.html',
@@ -20,6 +22,7 @@ import { AuthenticationService } from '../service/authentication-service.service
 
 export class ImportRuleComponent implements OnInit {
   rule: Rule;
+  rules: Rule[];
   sources: Source[];
   selectAll: boolean;
   validToSubmit: boolean;
@@ -42,7 +45,7 @@ export class ImportRuleComponent implements OnInit {
 
   ngOnInit() {
     this.reset(true);
-    this.search();
+    this.getConnectorRules();
   }
 
   reset(clearMsg: boolean) {
@@ -58,41 +61,27 @@ export class ImportRuleComponent implements OnInit {
     } 
   }
 
-  search() {
+  getConnectorRules() {
     this.allOwnersFetched = false;
     this.loading = true;
-    this.idnService.searchAggregationSources()
-          .subscribe(allSources => {
-            this.sources = [];
-            let sourceCount = allSources.length;
-            let fetchedOwnerCount = 0;
-            for (let each of allSources) {
-              let source = new Source();
-              source.id = each.id;
-              source.cloudExternalID = each.connectorAttributes.cloudExternalId;
-              source.name = each.name;
-              source.description = each.description;
-              source.type = each.type;
+    this.idnService.getConnectorRules()
+          .subscribe(results => {
+            this.rules = [];
+            for (let each of results) {
+              let rule = new Rule();
+              rule.id = each.id;
+              rule.name = each.name;
+              if (each.description) {
+                if (each.description.length > RuleDescriptionMaxLength) {
+                  rule.description = each.description.substring(0, RuleDescriptionMaxLength) + "...";
+                }
+                else {
+                  rule.description = each.description;
+                }
+              }
+              rule.type = each.type;
               
-              let query = new SimpleQueryCondition();
-              query.attribute = "id";
-              query.value = each.owner.id;
-
-              this.idnService.searchAccounts(query)
-                .subscribe(searchResult => { 
-                  if (searchResult.length > 0) {
-                    source.owner = new SourceOwner();
-                    source.owner.accountId = searchResult[0].id;
-                    source.owner.accountName = searchResult[0].name;
-                    source.owner.displayName = searchResult[0].displayName;
-                  }
-                  fetchedOwnerCount++;
-                  if (fetchedOwnerCount == sourceCount) {
-                    this.allOwnersFetched = true;
-                  }
-              });
-          
-              this.sources.push(source);
+              this.rules.push(rule);
             }
             this.loading = false;
           });
