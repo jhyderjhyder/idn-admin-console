@@ -3,6 +3,7 @@ import { AngularCsv } from 'angular-csv-ext/dist/Angular-csv';
 import { Papa } from 'ngx-papaparse';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { ModalDirective } from 'ngx-bootstrap/modal';
+import cron from 'cron-validate'
 import { Source } from '../model/source';
 import { Schedule } from '../model/schedule';
 import { IDNService } from '../service/idn.service';
@@ -20,13 +21,15 @@ export class AggregationManagementComponent implements OnInit {
   bulkAction: string;
   selectAll: boolean;
   atLeastOneSelected: boolean;
-  cronExpSecified: boolean;
+  cronExpValid: boolean;
   cronExpAll: string;
   errorInvokeApi: boolean;
   searchText: string;
   accntAggScheduleLoaded: boolean;
   entAggScheduleLoaded: boolean;
   loading: boolean;
+
+  invalidMessage: string[];
 
   public modalRef: BsModalRef;
   
@@ -50,11 +53,12 @@ export class AggregationManagementComponent implements OnInit {
     this.sourcesToShow = null;
     this.selectAll = false;
     this.atLeastOneSelected = false;
-    this.cronExpSecified = true;
+    this.cronExpValid = true;
     this.bulkAction = null;
     this.cronExpAll = null;
     this.searchText = null;
     this.loading = false;
+    this.invalidMessage = [];
     if (clearMsg) {
       this.messageService.clearAll();
       this.errorInvokeApi = false;
@@ -188,20 +192,47 @@ export class AggregationManagementComponent implements OnInit {
     }
   }
 
+  validateCronExp(cronExp: string, sourceName: string) :boolean {
+    const cronResult = cron(cronExp, {
+        override: {
+          useSeconds: true,
+          useBlankDay: true,
+        },
+      }
+    );
+    if (!cronResult.isValid()) {
+      this.invalidMessage.push(`Invalid Cron Job Expression (${cronExp}) of the selected source (name: ${sourceName}).`);
+      return false;
+    } else {
+      return true;
+    }
+  }
+
   showSubmitConfirmModal() {
     this.messageService.clearError();
+    this.invalidMessage = [];
     this.atLeastOneSelected = false;
-    this.cronExpSecified = true;
+    this.cronExpValid = true;
     for (let each of this.sourcesToShow) {
       if (each.selected) {
         this.atLeastOneSelected = true;
         if (this.bulkAction == 'EnableAggSchedule') {
           if (!each.accountAggCronExp || each.accountAggCronExp.trim() == '') {
-            this.cronExpSecified = false;
+            this.invalidMessage.push(`Enter Cron Job Expression of the selected source (name: ${each.name}).`);
+            this.cronExpValid = false;
+          } else {
+            if (!this.validateCronExp(each.accountAggCronExp, each.name)) {
+              this.cronExpValid = false;
+            }
           }
         } else if (this.bulkAction == 'EnableEntAggSchedule') {
           if (!each.entAggCronExp || each.entAggCronExp.trim() == '') {
-            this.cronExpSecified = false;
+            this.invalidMessage.push(`Enter Cron Job Expression of the selected source (name: ${each.name}).`);
+            this.cronExpValid = false;
+          } else {
+            if (!this.validateCronExp(each.entAggCronExp, each.name)) {
+              this.cronExpValid = false;
+            }
           }
         }
       }
