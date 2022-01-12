@@ -328,7 +328,7 @@ export class ImportRuleComponent implements OnInit {
     console.log("xml: " + xml);
     
     var blob = new Blob([xml], {type: "application/xml"});
-    let fileName = rule.name + " - " + rule.type + ".xml";
+    let fileName = "Rule - " + rule.type + " - " + rule.name + ".xml";
     saveAs(blob, fileName);
   }
 
