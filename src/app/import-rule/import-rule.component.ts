@@ -3,7 +3,7 @@ import xml2js from 'xml2js';
 import { saveAs } from 'file-saver';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { ModalDirective } from 'ngx-bootstrap/modal';
-import { Rule } from '../model/rule';
+import { Rule, RuleAttribute } from '../model/rule';
 import { IDNService } from '../service/idn.service';
 import { MessageService } from '../service/message.service';
 import { AuthenticationService } from '../service/authentication-service.service';
@@ -21,6 +21,9 @@ export class ImportRuleComponent implements OnInit {
   rule: Rule;
   //rule to update
   ruleToUpdate: Rule;
+  //rule to delete
+  ruleToDelete: Rule;
+  validToDelete: boolean;
   rules: Rule[];
   validToSubmit: boolean;
   invalidMessage: string[];
@@ -31,7 +34,7 @@ export class ImportRuleComponent implements OnInit {
   
   @ViewChild('submitConfirmModal', { static: false }) submitConfirmModal: ModalDirective;
   @ViewChild('updateRuleModal', { static: false }) updateRuleModal: ModalDirective;
-  
+  @ViewChild('deleteRuleModal', { static: false }) deleteRuleModal: ModalDirective;
   @ViewChild('fileInput', {static: false}) fileInput: ElementRef;
   @ViewChild('fileInputRuleUpdate', {static: false}) fileInputRuleUpdate: ElementRef;
 
@@ -103,9 +106,17 @@ export class ImportRuleComponent implements OnInit {
     this.submitConfirmModal.hide();
   }
 
-  showUpdateRuleModal(ruleId: string) {
+  showUpdateRuleModal(selectedRule: Rule) {
     this.fileInputRuleUpdate.nativeElement.value = "";
     this.invalidMessage = [];
+    this.ruleToUpdate = new Rule();
+    this.ruleToUpdate.id = selectedRule.id;
+    this.ruleToUpdate.name = selectedRule.name;
+    this.ruleToUpdate.type = selectedRule.type;
+    this.ruleToUpdate.description = selectedRule.description;
+    this.validToSubmit = false;
+    this.updateRuleModal.show();
+    /*
     this.idnService.retrieveConnectorRule(ruleId)
       .subscribe(
         result => {
@@ -115,10 +126,45 @@ export class ImportRuleComponent implements OnInit {
         },
         err => this.messageService.handleIDNError(err)
       );
+    */
   }
 
   hideUpdateRuleModal() {
     this.updateRuleModal.hide();
+  }
+
+  showDeleteRuleModal(selectedRule: Rule) {
+    this.ruleToDelete = new Rule();
+    this.ruleToDelete.id = selectedRule.id;
+    this.ruleToDelete.name = selectedRule.name;
+    this.ruleToDelete.type = selectedRule.type;
+    this.ruleToDelete.description = selectedRule.description;
+    this.validToDelete = true;
+    this.deleteRuleModal.show();
+  }
+
+  hideDeleteRuleModal() {
+    this.deleteRuleModal.hide();
+  }
+
+  deleteRule() {
+    this.messageService.clearAll();
+    this.idnService.deleteConnectorRule(this.ruleToDelete)
+      .subscribe(
+        result => {
+          //this.closeModalDisplayMsg();
+          this.deleteRuleModal.hide();
+          this.messageService.add("Rule deleted successfully.");
+          this.ruleToDelete = null;
+          this.reset(false);
+          this.getConnectorRules();
+        },
+        err => {
+          this.closeModalDisplayMsg();
+          this.ruleToDelete = null;
+          this.messageService.handleIDNError(err);
+        }
+      );
   }
 
   closeModalDisplayMsg() {
@@ -146,7 +192,7 @@ export class ImportRuleComponent implements OnInit {
 
   updatedRule() {
     this.messageService.clearAll();
-    this.idnService.createConnectorRule(this.ruleToUpdate)
+    this.idnService.updateConnectorRule(this.ruleToUpdate)
       .subscribe(
         searchResult => {
           this.closeModalDisplayMsg();
@@ -217,11 +263,32 @@ export class ImportRuleComponent implements OnInit {
           if (result.RULE.DESCRIPTION && result.RULE.DESCRIPTION.length == 1) {
             this.rule.description = result.RULE.DESCRIPTION[0];
           } 
+          this.rule.attributes = this.processRuleAttributes(result);
         } else {
           this.rule = null;
         }
       });
     }
+  }
+
+  processRuleAttributes(result):RuleAttribute {
+    if (result.RULE.ATTRIBUTES && result.RULE.ATTRIBUTES.length > 0) {
+      let attrMap = result.RULE.ATTRIBUTES[0].MAP;
+      if (attrMap && attrMap.length > 0) {
+        let entry = attrMap[0];
+        let ruleAttr = new RuleAttribute();
+        if (entry && entry.ENTRY && entry.ENTRY.length > 0) {
+          for (let each of entry.ENTRY) {
+            if (each.$.KEY == "ObjectOrientedScript") {
+              ruleAttr.ObjectOrientedScript = each.$.VALUE;
+            }
+          }
+        }
+        return ruleAttr;
+      }
+    }
+
+    return null;
   }
 
   selectFileToUpdatRule(evt) {

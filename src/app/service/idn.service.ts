@@ -251,6 +251,42 @@ export class IDNService {
     return this.http.post(url, payload, myHttpOptions);
   }
 
+  updateConnectorRule(rule: Rule): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    let url = `https://${currentUser.tenant}.api.identitynow.com/beta/connector-rules/${rule.id}`;
+    
+    let myHttpOptions = {
+      headers: new HttpHeaders({
+      })
+    };
+
+    let payload = {
+      "name": `${rule.name}`,
+      "type": `${rule.type}`,
+      "id": `${rule.id}`,
+      "sourceCode": {
+        "version": "1.0",
+        "script": `${rule.script}`
+      },
+      "description": `${rule.description}`,
+      "attributes": {}
+    };
+    
+    return this.http.put(url, payload, myHttpOptions);
+  }
+
+  deleteConnectorRule(rule: Rule): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    let url = `https://${currentUser.tenant}.api.identitynow.com/beta/connector-rules/${rule.id}`;
+    
+    let myHttpOptions = {
+      headers: new HttpHeaders({
+      })
+    };
+    
+    return this.http.delete(url, myHttpOptions);
+  }
+
   getConnectorRules(): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
     let url = `https://${currentUser.tenant}.api.identitynow.com/beta/connector-rules`;
