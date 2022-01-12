@@ -34,7 +34,7 @@
     <button (click)="clearFileSelect()" class="btn btn-info btn-sm">Clear File</button>
   </div>
   <div class="col-sm-2 text-right">
-    <button type="button" (click)="showSubmitConfirmModal()" class="btn btn-info btn-sm">
+    <button type="button" [disabled]="rule == null" (click)="showSubmitConfirmModal()" class="btn btn-info btn-sm">
       Import Rule
     </button>
   </div>
@@ -115,16 +115,13 @@
   </div>
 </div>
 
-<div *ngIf="ruleToUpdate" bsModal #updateRuleModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="dialog-child-name">
+<div bsModal #updateRuleModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="dialog-child-name">
   <div class="modal-dialog modal-dialog-centered modal-lg">
     <div class="modal-content">
       <div class="modal-header">
-        <h6 id="dialog-child-name" class="modal-title pull-left">
-          To modify the rule, click 'Choose File' button to select a rule file from your local directory and click 'Import Rule' button to submit. 
-          Please note you can not change rule name or rule type.
-          
-        </h6>
-
+        <h5 id="dialog-child-name" class="modal-title pull-left font-weight-bold">
+          Modify Rule
+        </h5>
         <button type="button" class="close pull-right" aria-label="Close" (click)="hideUpdateRuleModal()">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -132,13 +129,13 @@
       <div class="modal-body">
         <form name="form" novalidate>
           <div class="form-group row">
-            <div class="col-sm-12 text-left">
-              <span>
-                <br/><br/><span class="font-weight-bold">Name:</span>&nbsp;{{ ruleToUpdate.name }}<br>
+            <div class="col-sm-12 text-left" *ngIf="ruleToUpdate">
+                <span class="font-weight-bold">Name:</span>&nbsp;{{ ruleToUpdate.name }}<br>
                 <span class="font-weight-bold">Type:</span>&nbsp;{{ ruleToUpdate.type }}<br>
                 <span class="font-weight-bold">Description:</span>&nbsp;{{ ruleToUpdate.description }}<br>
-              </span>
-              <div *ngIf="!validToSubmit">
+              <div *ngIf="!validToSubmit && invalidMessage && invalidMessage.length > 0">
+                <br>
+                <span class="font-weight-bold">Please fix the following error(s) before importing the rule: </span><br>
                 <span *ngFor="let err of invalidMessage">
                   {{ err }}
                   <br>
@@ -148,18 +145,24 @@
           </div>
           <div class="form-group row">
             <div class="col-sm-12 text-left">
-              <input #fileInput type="file" accept=".xml" (change)="handleFileSelect($event)" class="btn btn-info btn-sm">
+              To modify the rule, click 'Choose File' button to select a rule file from your local directory and click 'Import Rule' button to submit. 
+              Please note you can not change rule name or rule type.
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-sm-12 text-left">
+              <input #fileInputRuleUpdate type="file" accept=".xml" (change)="selectFileToUpdatRule($event)" class="btn btn-info btn-sm">
               &nbsp;&nbsp;
-              <button (click)="clearFileSelect()" class="btn btn-info btn-sm">Clear File</button>
+              <button (click)="clearFileSelect4RuleUpdate()" class="btn btn-info btn-sm">Clear File</button>
             </div>
           </div>
 
           <div class="row mrgbtm small">
-            <div class="col-md-12 text-center">
+            <div class="col-md-12 text-right">
               <button type="button" (click)="hideUpdateRuleModal()" class="btn btn-danger btn-sm">Cancel</button>
               &nbsp;&nbsp;&nbsp;
               <span *ngIf="validToSubmit">
-                <button type="button" class="btn btn-success btn-sm" (click)="importRule()">
+                <button type="button" class="btn btn-success btn-sm" (click)="updatedRule()">
                   Import
                 </button>
               </span>

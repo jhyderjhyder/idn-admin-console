@@ -7,7 +7,6 @@ import { Rule } from '../model/rule';
 import { IDNService } from '../service/idn.service';
 import { MessageService } from '../service/message.service';
 import { AuthenticationService } from '../service/authentication-service.service';
-import { nlLocale } from 'idn-admin-console-win32-x64/resources/app/node_modules/ngx-bootstrap/ngx-bootstrap';
 
 const RuleDescriptionMaxLength = 50;
 
@@ -34,6 +33,7 @@ export class ImportRuleComponent implements OnInit {
   @ViewChild('updateRuleModal', { static: false }) updateRuleModal: ModalDirective;
   
   @ViewChild('fileInput', {static: false}) fileInput: ElementRef;
+  @ViewChild('fileInputRuleUpdate', {static: false}) fileInputRuleUpdate: ElementRef;
 
   constructor(
     private idnService: IDNService, 
@@ -104,10 +104,13 @@ export class ImportRuleComponent implements OnInit {
   }
 
   showUpdateRuleModal(ruleId: string) {
+    this.fileInputRuleUpdate.nativeElement.value = "";
+    this.invalidMessage = [];
     this.idnService.retrieveConnectorRule(ruleId)
       .subscribe(
         result => {
           this.ruleToUpdate = this.convertResponseToRule(result);
+          this.validToSubmit = false;
           this.updateRuleModal.show();
         },
         err => this.messageService.handleIDNError(err)
@@ -130,6 +133,25 @@ export class ImportRuleComponent implements OnInit {
           this.closeModalDisplayMsg();
           this.messageService.add("Rule imported successfully.");
           this.rule = null;
+          this.reset(false);
+          this.getConnectorRules();
+        },
+        err => {
+          this.closeModalDisplayMsg();
+          this.rule = null;
+          this.messageService.handleIDNError(err);
+        }
+      );
+  }
+
+  updatedRule() {
+    this.messageService.clearAll();
+    this.idnService.createConnectorRule(this.ruleToUpdate)
+      .subscribe(
+        searchResult => {
+          this.closeModalDisplayMsg();
+          this.messageService.add("Rule imported successfully.");
+          this.rule = null;
         },
         err => {
           this.closeModalDisplayMsg();
@@ -145,6 +167,11 @@ export class ImportRuleComponent implements OnInit {
     this.fileInput.nativeElement.value = "";
   }
 
+  clearFileSelect4RuleUpdate() {
+    this.messageService.clearError();
+    this.fileInputRuleUpdate.nativeElement.value = "";
+  }
+
   handleFileSelect(evt) {
     this.messageService.clearError();
     var files = evt.target.files; // FileList object
@@ -157,23 +184,15 @@ export class ImportRuleComponent implements OnInit {
       parser.parseString(ruleXML, (err, result) => {
         let valid: boolean = true;
         if (result.RULE && result.RULE.$) {
+          //verify rule name
           if (result.RULE.$.NAME) {
             this.rule = new Rule();
             this.rule.name = result.RULE.$.NAME;
-            if (result.RULE.DESCRIPTION && result.RULE.DESCRIPTION.length == 1) {
-              this.rule.description = result.RULE.DESCRIPTION[0];
-            }
-            if (result.RULE.SOURCE && result.RULE.SOURCE.length == 1) {
-              this.rule.script = result.RULE.SOURCE[0];
-            } else {
-              valid = false;
-              this.messageService.setError("Invalid Rule XML file: source is not specified.");
-            }
           } else {
             valid = false;
             this.messageService.setError("Invalid Rule XML file: rule name is not specified.");
           }
-          
+          //verify rule type
           if (result.RULE.$.TYPE) {
               this.rule.type = result.RULE.$.TYPE;
           } else {
@@ -184,9 +203,79 @@ export class ImportRuleComponent implements OnInit {
           valid = false;
           this.messageService.setError("Invalid Rule XML file.");
         }
-        if (!valid) {
+        //verify source
+        if (valid) {
+          if (result.RULE.SOURCE && result.RULE.SOURCE.length == 1) {
+            this.rule.script = result.RULE.SOURCE[0];
+          } else {
+            valid = false;
+            this.messageService.setError("Invalid Rule XML file: source is not specified.");
+          }
+        }
+        //now update description
+        if (valid) {
+          if (result.RULE.DESCRIPTION && result.RULE.DESCRIPTION.length == 1) {
+            this.rule.description = result.RULE.DESCRIPTION[0];
+          } 
+        } else {
           this.rule = null;
         }
+      });
+    }
+  }
+
+  selectFileToUpdatRule(evt) {
+    this.messageService.clearError();
+    var files = evt.target.files; // FileList object
+    var file = files[0];
+    var reader = new FileReader();
+    reader.readAsText(file);
+    reader.onload = (event: any) => {
+      var ruleXML = event.target.result; // Content of Rule XML file
+      const parser = new xml2js.Parser({ strict: false, trim: true });
+      parser.parseString(ruleXML, (err, result) => {
+        let valid: boolean = true;
+        if (result.RULE && result.RULE.$) {
+          //verify rule name
+          if (result.RULE.$.NAME) {
+            if (this.ruleToUpdate.name != result.RULE.$.NAME) {
+              valid = false;
+              this.invalidMessage.push("Invalid Rule XML file: rule name can not be changed.");
+            }
+          } else {
+            valid = false;
+            this.invalidMessage.push("Invalid Rule XML file: rule name is not specified.");
+          }
+          //verify rule type
+          if (result.RULE.$.TYPE) {
+            if (this.ruleToUpdate.type != result.RULE.$.TYPE) {
+              valid = false;
+              this.invalidMessage.push("Invalid Rule XML file: rule type can not be changed.");
+            }
+          } else {
+            valid = false;
+            this.invalidMessage.push("Invalid Rule XML file: rule type is not specified.");
+          }
+        } else {
+          valid = false;
+          this.invalidMessage.push("Invalid Rule XML file.");
+        }
+        //verify source
+        if (valid) {
+          if (result.RULE.SOURCE && result.RULE.SOURCE.length == 1) {
+            this.ruleToUpdate.script = result.RULE.SOURCE[0];
+          } else {
+            valid = false;
+            this.messageService.setError("Invalid Rule XML file: source is not specified.");
+          }
+        }
+        //now update description
+        if (valid) {
+          if (result.RULE.DESCRIPTION && result.RULE.DESCRIPTION.length == 1) {
+            this.ruleToUpdate.description = result.RULE.DESCRIPTION[0];
+          }
+        }
+        this.validToSubmit = valid;
       });
     }
   }
