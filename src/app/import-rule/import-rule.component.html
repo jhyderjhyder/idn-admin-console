@@ -5,7 +5,22 @@
     <li class="breadcrumb-item active" aria-current="page">Import Rule</li>
   </ol>
 </nav>
-
+<form name="form" #f="ngForm" novalidate contactRequired>
+  <div class="form-group row">
+    <div class="input-group col-md-10">
+      <span class="input-group-prepend">
+        <div class="input-group-text bg-transparent border-right-0"><i class="fa fa-search"></i></div>
+      </span>
+      <input class="form-control py-2 border-left-0 border" type="text" name="search" [(ngModel)]="searchText" autocomplete="off" 
+        placeholder="Type rule name or rule type to filter the result.">
+    </div>
+    <div class="col-sm-2 text-right">
+      <button type="button" [disabled]="loading" (click)="ngOnInit()" class="btn btn-info btn-sm">
+        Refresh
+      </button>
+    </div>
+  </div>
+</form>
 <div class="form-group row" *ngIf="!loading">
   <div class="col-sm-12 text-left">
     <span class="font-weight-bold">- To import a rule, click 'Choose File' button to select a rule file from your local directory and click 'Import Rule' button to import it.</span>
@@ -37,12 +52,23 @@
     </tr>
   </thead>
   <tbody *ngIf="rules">
-    <tr *ngFor="let r of rules | filter:searchText:['name', 'description', 'type']">
+    <tr *ngFor="let r of rules | filter:searchText:['name', 'type']">
       <td>{{ r.name }}</td>
       <td>{{ r.type }}</td>
       <td>{{ r.description }}</td>
       <td>{{ r.id }}</td>
-      <td>Download&nbsp;| Update&nbsp;|&nbsp;Delete</td>
+      <td>
+        <div class="btn-group" role="group">
+          <button id="btnGroupDrop1" type="button" class="btn btn-info btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Select
+          </button>
+          <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+            <a class="dropdown-item" (click)="downloadRule(r.id)">Download</a>
+            <a class="dropdown-item" (click)="showUpdateRuleModal(r.id)">Update</a>
+            <a class="dropdown-item" href="#">Delete</a>
+          </div>
+        </div>
+      </td>
     </tr>
   </tbody>
 </table>
@@ -88,3 +114,60 @@
     </div>
   </div>
 </div>
+
+<div *ngIf="ruleToUpdate" bsModal #updateRuleModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="dialog-child-name">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h6 id="dialog-child-name" class="modal-title pull-left">
+          To modify the rule, click 'Choose File' button to select a rule file from your local directory and click 'Import Rule' button to submit. 
+          Please note you can not change rule name or rule type.
+          
+        </h6>
+
+        <button type="button" class="close pull-right" aria-label="Close" (click)="hideUpdateRuleModal()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form name="form" novalidate>
+          <div class="form-group row">
+            <div class="col-sm-12 text-left">
+              <span>
+                <br/><br/><span class="font-weight-bold">Name:</span>&nbsp;{{ ruleToUpdate.name }}<br>
+                <span class="font-weight-bold">Type:</span>&nbsp;{{ ruleToUpdate.type }}<br>
+                <span class="font-weight-bold">Description:</span>&nbsp;{{ ruleToUpdate.description }}<br>
+              </span>
+              <div *ngIf="!validToSubmit">
+                <span *ngFor="let err of invalidMessage">
+                  {{ err }}
+                  <br>
+                </span>
+              </div>
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-sm-12 text-left">
+              <input #fileInput type="file" accept=".xml" (change)="handleFileSelect($event)" class="btn btn-info btn-sm">
+              &nbsp;&nbsp;
+              <button (click)="clearFileSelect()" class="btn btn-info btn-sm">Clear File</button>
+            </div>
+          </div>
+
+          <div class="row mrgbtm small">
+            <div class="col-md-12 text-center">
+              <button type="button" (click)="hideUpdateRuleModal()" class="btn btn-danger btn-sm">Cancel</button>
+              &nbsp;&nbsp;&nbsp;
+              <span *ngIf="validToSubmit">
+                <button type="button" class="btn btn-success btn-sm" (click)="importRule()">
+                  Import
+                </button>
+              </span>
+            </div>
+          </div>
+      </form>
+      </div>
+    </div>
+  </div>
+</div>
+

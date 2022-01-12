@@ -1,16 +1,13 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import xml2js from 'xml2js';
 import { saveAs } from 'file-saver';
-import { Papa } from 'ngx-papaparse';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { ModalDirective } from 'ngx-bootstrap/modal';
-import { Source } from '../model/source';
 import { Rule } from '../model/rule';
-import { SimpleQueryCondition } from '../model/simple-query-condition';
-import { SourceOwner } from '../model/source-owner';
 import { IDNService } from '../service/idn.service';
 import { MessageService } from '../service/message.service';
 import { AuthenticationService } from '../service/authentication-service.service';
+import { nlLocale } from 'idn-admin-console-win32-x64/resources/app/node_modules/ngx-bootstrap/ngx-bootstrap';
 
 const RuleDescriptionMaxLength = 50;
 
@@ -21,23 +18,24 @@ const RuleDescriptionMaxLength = 50;
 })
 
 export class ImportRuleComponent implements OnInit {
+  //rule to create
   rule: Rule;
+  //rule to update
+  ruleToUpdate: Rule;
   rules: Rule[];
-  sources: Source[];
-  selectAll: boolean;
   validToSubmit: boolean;
   invalidMessage: string[];
   searchText: string;
-  allOwnersFetched: boolean;
   loading: boolean;
 
   public modalRef: BsModalRef;
   
   @ViewChild('submitConfirmModal', { static: false }) submitConfirmModal: ModalDirective;
-
+  @ViewChild('updateRuleModal', { static: false }) updateRuleModal: ModalDirective;
+  
   @ViewChild('fileInput', {static: false}) fileInput: ElementRef;
 
-  constructor(private papa: Papa,
+  constructor(
     private idnService: IDNService, 
     private messageService: MessageService,
     private authenticationService: AuthenticationService) {
@@ -50,11 +48,9 @@ export class ImportRuleComponent implements OnInit {
 
   reset(clearMsg: boolean) {
     this.rule = null;
-    this.sources = null;
-    this.selectAll = false;
+    this.ruleToUpdate = null;
     this.searchText = null;
     this.loading = false;
-    this.allOwnersFetched = false;
     this.invalidMessage = [];
     if (clearMsg) {
       this.messageService.clearAll();
@@ -62,7 +58,6 @@ export class ImportRuleComponent implements OnInit {
   }
 
   getConnectorRules() {
-    this.allOwnersFetched = false;
     this.loading = true;
     this.idnService.getConnectorRules()
           .subscribe(results => {
@@ -87,21 +82,6 @@ export class ImportRuleComponent implements OnInit {
           });
   }
 
-  changeOnSelect($event, index: number) {
-    this.messageService.clearError();
-    if (!$event.currentTarget.checked) {
-      this.selectAll = false;
-      if (this.sources[index].newOwner) {
-        this.sources[index].newOwner.accountName = null;
-      }
-    } else {
-      if (this.sources[index].newOwner == null) {
-        this.sources[index].newOwner = new SourceOwner();
-      }
-      this.sources[index].newOwner.accountName = this.sources[index].owner.accountName;
-    }
-  }
-
   showSubmitConfirmModal() {
     this.messageService.clearError();
     this.validToSubmit = true;
@@ -121,6 +101,21 @@ export class ImportRuleComponent implements OnInit {
 
   hideSubmitConfirmModal() {
     this.submitConfirmModal.hide();
+  }
+
+  showUpdateRuleModal(ruleId: string) {
+    this.idnService.retrieveConnectorRule(ruleId)
+      .subscribe(
+        result => {
+          this.ruleToUpdate = this.convertResponseToRule(result);
+          this.updateRuleModal.show();
+        },
+        err => this.messageService.handleIDNError(err)
+      );
+  }
+
+  hideUpdateRuleModal() {
+    this.updateRuleModal.hide();
   }
 
   closeModalDisplayMsg() {
@@ -196,6 +191,26 @@ export class ImportRuleComponent implements OnInit {
     }
   }
 
+  convertResponseToRule(result): Rule {
+    if (result) {
+      let convertedRule = new Rule();
+      convertedRule.id = result.id;
+      convertedRule.type = result.type;
+      convertedRule.name = result.name;
+      convertedRule.description = result.description;
+      if (result.sourceCode && result.sourceCode.script) {
+        convertedRule.script = result.sourceCode.script;
+        return convertedRule;
+      } else {
+        this.messageService.addError("Invalid Rule as it doesn't have the source code.");
+        return null;
+      }
+    } else {
+      this.messageService.addError("Failed to download the Rule");
+      return null;
+    }
+  }
+
   convertRuleToXML(rule: Rule) {
     let ruleDesc = null;
     if (rule.description) {
@@ -226,6 +241,19 @@ export class ImportRuleComponent implements OnInit {
     var blob = new Blob([xml], {type: "application/xml"});
     let fileName = rule.name + " - " + rule.type + ".xml";
     saveAs(blob, fileName);
+  }
+
+  downloadRule(ruleId: string) {
+    this.idnService.retrieveConnectorRule(ruleId)
+      .subscribe(
+        result => {
+          let donwloadedRule = this.convertResponseToRule(result);
+          if (donwloadedRule != null) {
+            this.convertRuleToXML(donwloadedRule);
+          }
+        },
+        err => this.messageService.handleIDNError(err)
+      );
   }
 
 }

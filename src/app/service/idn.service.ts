@@ -255,9 +255,14 @@ export class IDNService {
     const currentUser = this.authenticationService.currentUserValue;
     let url = `https://${currentUser.tenant}.api.identitynow.com/beta/connector-rules`;
 
-    return this.http.get(url, this.httpOptions).pipe(
-      catchError(this.handleError(`getConnectorRules`))
-    );
+    return this.http.get(url, this.httpOptions);
+  }
+
+  retrieveConnectorRule(ruleId: string): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    let url = `https://${currentUser.tenant}.api.identitynow.com/beta/connector-rules/${ruleId}`;
+
+    return this.http.get(url, this.httpOptions);
   }
 
    /** Log a HeroService message with the MessageService */
