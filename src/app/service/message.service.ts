@@ -10,8 +10,19 @@ export class MessageService {
     //retain messages during route navigation?
     retainInNavigation: boolean = false;
 
-    add(message: string) {
+    //Message will be cleared after 5 seconds if the second parameter (clearAfterDisplay) is true.
+    //By default, it will be cleared.
+    add(message: string, clearAfterDisplay: boolean = true) {
       this.messages.push(message);
+
+      if (clearAfterDisplay) {
+        setTimeout(() => {
+          const index = this.messages.indexOf(message, 0);
+          if (index > -1) {
+            this.messages.splice(index, 1);
+          }
+        }, 5000 );
+      }
     }
 
     addError(error: string) {

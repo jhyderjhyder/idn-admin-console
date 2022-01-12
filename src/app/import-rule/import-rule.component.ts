@@ -6,7 +6,6 @@ import { ModalDirective } from 'ngx-bootstrap/modal';
 import { Rule, RuleAttribute } from '../model/rule';
 import { IDNService } from '../service/idn.service';
 import { MessageService } from '../service/message.service';
-import { AuthenticationService } from '../service/authentication-service.service';
 
 const RuleDescriptionMaxLength = 50;
 
@@ -23,7 +22,7 @@ export class ImportRuleComponent implements OnInit {
   ruleToUpdate: Rule;
   //rule to delete
   ruleToDelete: Rule;
-  validToDelete: boolean;
+  // validToDelete: boolean;
   rules: Rule[];
   validToSubmit: boolean;
   invalidMessage: string[];
@@ -32,16 +31,15 @@ export class ImportRuleComponent implements OnInit {
 
   public modalRef: BsModalRef;
   
-  @ViewChild('submitConfirmModal', { static: false }) submitConfirmModal: ModalDirective;
+  @ViewChild('createRuleConfirmModal', { static: false }) createRuleConfirmModal: ModalDirective;
   @ViewChild('updateRuleModal', { static: false }) updateRuleModal: ModalDirective;
-  @ViewChild('deleteRuleModal', { static: false }) deleteRuleModal: ModalDirective;
+  @ViewChild('deleteRuleConfirmModal', { static: false }) deleteRuleConfirmModal: ModalDirective;
   @ViewChild('fileInput', {static: false}) fileInput: ElementRef;
   @ViewChild('fileInputRuleUpdate', {static: false}) fileInputRuleUpdate: ElementRef;
 
   constructor(
     private idnService: IDNService, 
-    private messageService: MessageService,
-    private authenticationService: AuthenticationService) {
+    private messageService: MessageService) {
   }
 
   ngOnInit() {
@@ -52,6 +50,7 @@ export class ImportRuleComponent implements OnInit {
   reset(clearMsg: boolean) {
     this.rule = null;
     this.ruleToUpdate = null;
+    this.ruleToDelete = null;
     this.searchText = null;
     this.loading = false;
     this.invalidMessage = [];
@@ -85,7 +84,7 @@ export class ImportRuleComponent implements OnInit {
           });
   }
 
-  showSubmitConfirmModal() {
+  showCreateRuleConfirmModal() {
     this.messageService.clearError();
     this.validToSubmit = true;
     this.invalidMessage = [];
@@ -96,14 +95,14 @@ export class ImportRuleComponent implements OnInit {
     }
 
     if (this.validToSubmit) {
-      this.submitConfirmModal.show();
+      this.createRuleConfirmModal.show();
     } else {
-      this.submitConfirmModal.show();
+      this.createRuleConfirmModal.show();
     }
   }
 
-  hideSubmitConfirmModal() {
-    this.submitConfirmModal.hide();
+  hideCreateRuleConfirmModal() {
+    this.createRuleConfirmModal.hide();
   }
 
   showUpdateRuleModal(selectedRule: Rule) {
@@ -116,35 +115,24 @@ export class ImportRuleComponent implements OnInit {
     this.ruleToUpdate.description = selectedRule.description;
     this.validToSubmit = false;
     this.updateRuleModal.show();
-    /*
-    this.idnService.retrieveConnectorRule(ruleId)
-      .subscribe(
-        result => {
-          this.ruleToUpdate = this.convertResponseToRule(result);
-          this.validToSubmit = false;
-          this.updateRuleModal.show();
-        },
-        err => this.messageService.handleIDNError(err)
-      );
-    */
   }
 
   hideUpdateRuleModal() {
     this.updateRuleModal.hide();
   }
 
-  showDeleteRuleModal(selectedRule: Rule) {
+  showDeleteRuleConfirmModal(selectedRule: Rule) {
     this.ruleToDelete = new Rule();
     this.ruleToDelete.id = selectedRule.id;
     this.ruleToDelete.name = selectedRule.name;
     this.ruleToDelete.type = selectedRule.type;
     this.ruleToDelete.description = selectedRule.description;
-    this.validToDelete = true;
-    this.deleteRuleModal.show();
+    // this.validToDelete = true;
+    this.deleteRuleConfirmModal.show();
   }
 
-  hideDeleteRuleModal() {
-    this.deleteRuleModal.hide();
+  hideDeleteRuleConfirmModal() {
+    this.deleteRuleConfirmModal.hide();
   }
 
   deleteRule() {
@@ -153,22 +141,18 @@ export class ImportRuleComponent implements OnInit {
       .subscribe(
         result => {
           //this.closeModalDisplayMsg();
-          this.deleteRuleModal.hide();
+          this.deleteRuleConfirmModal.hide();
           this.messageService.add("Rule deleted successfully.");
           this.ruleToDelete = null;
           this.reset(false);
           this.getConnectorRules();
         },
         err => {
-          this.closeModalDisplayMsg();
+          this.deleteRuleConfirmModal.hide();
           this.ruleToDelete = null;
           this.messageService.handleIDNError(err);
         }
       );
-  }
-
-  closeModalDisplayMsg() {
-    this.submitConfirmModal.hide();
   }
 
   importRule() {
@@ -176,14 +160,14 @@ export class ImportRuleComponent implements OnInit {
     this.idnService.createConnectorRule(this.rule)
       .subscribe(
         searchResult => {
-          this.closeModalDisplayMsg();
+          this.createRuleConfirmModal.hide();
           this.messageService.add("Rule imported successfully.");
           this.rule = null;
           this.reset(false);
           this.getConnectorRules();
         },
         err => {
-          this.closeModalDisplayMsg();
+          this.createRuleConfirmModal.hide();
           this.rule = null;
           this.messageService.handleIDNError(err);
         }
@@ -195,12 +179,12 @@ export class ImportRuleComponent implements OnInit {
     this.idnService.updateConnectorRule(this.ruleToUpdate)
       .subscribe(
         searchResult => {
-          this.closeModalDisplayMsg();
+          this.updateRuleModal.hide();
           this.messageService.add("Rule imported successfully.");
           this.rule = null;
         },
         err => {
-          this.closeModalDisplayMsg();
+          this.updateRuleModal.hide();
           this.rule = null;
           this.messageService.handleIDNError(err);
         }

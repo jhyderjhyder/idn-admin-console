@@ -22,8 +22,9 @@
 </form>
 <div class="form-group row" *ngIf="!loading">
   <div class="col-sm-12 text-left">
-    <span class="font-weight-bold">- To import a rule, click 'Choose File' button to select a rule file from your local directory and click 'Import Rule' button to import it.</span>
+    <span class="font-weight-bold">- To creat a new rule, click 'Choose File' button below to select a rule file from your local directory and click 'Import Rule' button to import it.</span>
     <br/><span class="font-weight-bold">- To clear selected rule file, click 'Clear File' button.</span>
+    <br/><span class="font-weight-bold">- To download, update or delete an existing rule, locate the rule in the table below and select the dropdown option from the 'Actions' column.</span>
   </div>
 </div>
 <div class="form-group row" *ngIf="!loading">
@@ -33,7 +34,7 @@
     <button (click)="clearFileSelect()" class="btn btn-info btn-sm">Clear File</button>
   </div>
   <div class="col-sm-2 text-right">
-    <button type="button" [disabled]="rule == null" (click)="showSubmitConfirmModal()" class="btn btn-info btn-sm">
+    <button type="button" [disabled]="rule == null" (click)="showCreateRuleConfirmModal()" class="btn btn-info btn-sm">
       Import Rule
     </button>
   </div>
@@ -67,7 +68,7 @@
           <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
             <a class="dropdown-item" (click)="downloadRule(r.id)">Download</a>
             <a class="dropdown-item" (click)="showUpdateRuleModal(r)">Update</a>
-            <a class="dropdown-item" (click)="showDeleteRuleModal(r)">Delete</a>
+            <a class="dropdown-item" (click)="showDeleteRuleConfirmModal(r)">Delete</a>
           </div>
         </div>
       </td>
@@ -75,7 +76,7 @@
   </tbody>
 </table>
 
-<div bsModal #submitConfirmModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="dialog-child-name">
+<div bsModal #createRuleConfirmModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="dialog-child-name">
   <div class="modal-dialog modal-dialog-centered modal-lg">
     <div class="modal-content">
       <div class="modal-header">
@@ -94,7 +95,7 @@
             </span>
           </div>
         </h6>
-        <button type="button" class="close pull-right" aria-label="Close" (click)="hideSubmitConfirmModal()">
+        <button type="button" class="close pull-right" aria-label="Close" (click)="hideCreateRuleConfirmModal()">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
@@ -102,7 +103,7 @@
         <form name="form" novalidate>
           <div class="row mrgbtm small">
             <div class="col-md-12 text-center">
-              <button type="button" (click)="hideSubmitConfirmModal()" class="btn btn-danger btn-sm">Cancel</button>
+              <button type="button" (click)="hideCreateRuleConfirmModal()" class="btn btn-danger btn-sm">Cancel</button>
               &nbsp;&nbsp;&nbsp;
               <span *ngIf="validToSubmit">
                 <button type="button" class="btn btn-success btn-sm" (click)="importRule()">
@@ -176,15 +177,14 @@
   </div>
 </div>
 
-
-<div bsModal #deleteRuleModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="dialog-child-name">
+<div bsModal #deleteRuleConfirmModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="dialog-child-name">
   <div class="modal-dialog modal-dialog-centered modal-lg">
     <div class="modal-content">
       <div class="modal-header">
         <h5 id="dialog-child-name" class="modal-title pull-left font-weight-bold">
-          Delete Rule
+          Are you sure to delete the selected Rule?
         </h5>
-        <button type="button" class="close pull-right" aria-label="Close" (click)="hideDeleteRuleModal()">
+        <button type="button" class="close pull-right" aria-label="Close" (click)="hideDeleteRuleConfirmModal()">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
@@ -195,21 +195,13 @@
                 <span class="font-weight-bold">Name:</span>&nbsp;{{ ruleToDelete.name }}<br>
                 <span class="font-weight-bold">Type:</span>&nbsp;{{ ruleToDelete.type }}<br>
                 <span class="font-weight-bold">Description:</span>&nbsp;{{ ruleToDelete.description }}<br>
-              <div *ngIf="!validToDelete && invalidMessage && invalidMessage.length > 0">
-                <br>
-                <span class="font-weight-bold">Please fix the following error(s) before rule can be deleted: </span><br>
-                <span *ngFor="let err of invalidMessage">
-                  {{ err }}
-                  <br>
-                </span>
-              </div>
             </div>
           </div>
           <div class="row mrgbtm small">
             <div class="col-md-12 text-right">
-              <button type="button" (click)="hideDeleteRuleModal()" class="btn btn-danger btn-sm">Cancel</button>
+              <button type="button" (click)="hideDeleteRuleConfirmModal()" class="btn btn-danger btn-sm">Cancel</button>
               &nbsp;&nbsp;&nbsp;
-              <span *ngIf="validToDelete">
+              <span>
                 <button type="button" class="btn btn-success btn-sm" (click)="deleteRule()">
                   Delete
                 </button>
