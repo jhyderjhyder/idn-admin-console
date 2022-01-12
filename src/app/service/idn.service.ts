@@ -245,7 +245,15 @@ export class IDNService {
         "script": `${rule.script}`
       },
       "description": `${rule.description}`,
-      "attributes": {}
+      // TODO: how to check whether rule.attributes.ObjectOrientedScript exists before adding it to payload
+      "attributes": {
+        "ObjectOrientedScript": `${rule.attributes.ObjectOrientedScript}`,
+        "disabled": `${rule.attributes.disabled}`,
+        "extension": `${rule.attributes.extension}`,
+        "program": `${rule.attributes.program}`,
+        "timeout": `${rule.attributes.timeout}`,
+        "sourceVersion": `${rule.attributes.sourceVersion}`
+      }
     };
     
     return this.http.post(url, payload, myHttpOptions);

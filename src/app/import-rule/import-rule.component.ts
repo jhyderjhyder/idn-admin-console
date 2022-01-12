@@ -276,18 +276,36 @@ export class ImportRuleComponent implements OnInit {
       let attrMap = result.RULE.ATTRIBUTES[0].MAP;
       if (attrMap && attrMap.length > 0) {
         let entry = attrMap[0];
-        let ruleAttr = new RuleAttribute();
+        let ruleAttribute = new RuleAttribute();
         if (entry && entry.ENTRY && entry.ENTRY.length > 0) {
           for (let each of entry.ENTRY) {
-            if (each.$.KEY == "ObjectOrientedScript") {
-              ruleAttr.ObjectOrientedScript = each.$.VALUE;
+            switch (each.$.KEY) {
+              case 'ObjectOrientedScript':
+                ruleAttribute.ObjectOrientedScript = each.$.VALUE;
+                break;
+              case 'extension':
+                ruleAttribute.extension = each.$.VALUE;
+                break;
+              case 'disabled':
+                ruleAttribute.disabled = each.$.VALUE;
+                break;
+              case 'program':
+                ruleAttribute.program = each.$.VALUE;
+                break;
+              case 'timeout':
+                ruleAttribute.timeout = each.$.VALUE;
+                break;
+              case 'sourceVersion':
+                ruleAttribute.sourceVersion = each.$.VALUE;
+                break;              
             }
           }
         }
-        return ruleAttr;
+        return ruleAttribute;
       }
     }
 
+    // TODO: should return an empty object {} instead of null
     return null;
   }
 

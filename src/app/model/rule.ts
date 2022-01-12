@@ -16,14 +16,5 @@ export class RuleAttribute {
     disabled: string;
     program: string;
     timeout: string;
+    sourceVersion: string;
 }
-
-/*
-"attributes": {
-    "ObjectOrientedScript": "true",
-    "extension": ".ps1",
-    "disabled": "false",
-    "program": "powershell.exe",
-    "timeout": "300"
-}
-*/
