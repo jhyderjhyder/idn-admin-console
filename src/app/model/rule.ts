@@ -7,14 +7,5 @@ export class Rule {
     version: string;
     script: string;
     description: string;
-    attributes: RuleAttribute;
-}
-
-export class RuleAttribute {
-    ObjectOrientedScript: string;
-    extension: string;
-    disabled: string;
-    program: string;
-    timeout: string;
-    sourceVersion: string;
+    attributes: {};
 }

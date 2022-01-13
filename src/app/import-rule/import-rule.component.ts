@@ -3,7 +3,7 @@ import xml2js from 'xml2js';
 import { saveAs } from 'file-saver';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { ModalDirective } from 'ngx-bootstrap/modal';
-import { Rule, RuleAttribute } from '../model/rule';
+import { Rule } from '../model/rule';
 import { IDNService } from '../service/idn.service';
 import { MessageService } from '../service/message.service';
 
@@ -247,7 +247,12 @@ export class ImportRuleComponent implements OnInit {
           if (result.RULE.DESCRIPTION && result.RULE.DESCRIPTION.length == 1) {
             this.rule.description = result.RULE.DESCRIPTION[0];
           } 
-          this.rule.attributes = this.processRuleAttributes(result);
+
+          let ruleAttributes = this.processRuleAttributes(result);
+          if (ruleAttributes) {
+            this.rule.attributes = ruleAttributes;
+          }
+
         } else {
           this.rule = null;
         }
@@ -255,41 +260,21 @@ export class ImportRuleComponent implements OnInit {
     }
   }
 
-  processRuleAttributes(result):RuleAttribute {
+  processRuleAttributes(result) {
     if (result.RULE.ATTRIBUTES && result.RULE.ATTRIBUTES.length > 0) {
       let attrMap = result.RULE.ATTRIBUTES[0].MAP;
       if (attrMap && attrMap.length > 0) {
         let entry = attrMap[0];
-        let ruleAttribute = new RuleAttribute();
         if (entry && entry.ENTRY && entry.ENTRY.length > 0) {
+          let ruleAttributes = {};
           for (let each of entry.ENTRY) {
-            switch (each.$.KEY) {
-              case 'ObjectOrientedScript':
-                ruleAttribute.ObjectOrientedScript = each.$.VALUE;
-                break;
-              case 'extension':
-                ruleAttribute.extension = each.$.VALUE;
-                break;
-              case 'disabled':
-                ruleAttribute.disabled = each.$.VALUE;
-                break;
-              case 'program':
-                ruleAttribute.program = each.$.VALUE;
-                break;
-              case 'timeout':
-                ruleAttribute.timeout = each.$.VALUE;
-                break;
-              case 'sourceVersion':
-                ruleAttribute.sourceVersion = each.$.VALUE;
-                break;              
-            }
+            ruleAttributes[each.$.KEY] = each.$.VALUE;
           }
+          return ruleAttributes;
         }
-        return ruleAttribute;
       }
     }
 
-    // TODO: should return an empty object {} instead of null
     return null;
   }
 
