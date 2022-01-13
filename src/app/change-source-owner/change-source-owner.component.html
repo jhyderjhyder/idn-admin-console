@@ -73,7 +73,7 @@
       <th scope="col">
           Select All
           <br>
-          <input type="checkbox" [(ngModel)]="selectAll" (click)="changeOnSelectAll()" id="selectAll">
+          <input type="checkbox" [(ngModel)]="selectAll" (click)="changeOnSelectAll()" id="selectAll" [disabled]="searchText != null && searchText.trim() != ''">
       </th>
       <th scope="col">Source Name</th>
       <th scope="col">Source Description</th>
