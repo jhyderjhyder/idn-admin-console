@@ -13,6 +13,7 @@ export class DuplicatedAccountsComponent implements OnInit {
   accounts: Account[];
   errorMessage: string;
   searchText: string;
+  loading: boolean;
 
   constructor(private idnService: IDNService, 
     private authenticationService: AuthenticationService) { }
@@ -26,9 +27,11 @@ export class DuplicatedAccountsComponent implements OnInit {
     this.accounts = null;
     this.searchText = null;
     this.errorMessage = null;
+    this.loading = false;
   }
 
   search() {
+    this.loading = true;
     this.idnService.searchDuplicatedAccounts()
           .subscribe(searchResult => {
             this.accounts = [];
@@ -80,6 +83,7 @@ export class DuplicatedAccountsComponent implements OnInit {
                 });
               }
             }
+            this.loading = false;
           });
   }
 
