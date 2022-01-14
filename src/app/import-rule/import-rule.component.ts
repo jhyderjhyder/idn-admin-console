@@ -200,6 +200,7 @@ export class ImportRuleComponent implements OnInit {
   clearFileSelect4RuleUpdate() {
     this.messageService.clearError();
     this.fileInputRuleUpdate.nativeElement.value = "";
+    this.validToSubmit = false;
   }
 
   handleFileSelect(evt) {
@@ -328,7 +329,13 @@ export class ImportRuleComponent implements OnInit {
           if (result.RULE.DESCRIPTION && result.RULE.DESCRIPTION.length == 1) {
             this.ruleToUpdate.description = result.RULE.DESCRIPTION[0];
           }
+          
+          let ruleAttributes = this.processRuleAttributes(result);
+          if (ruleAttributes) {
+            this.ruleToUpdate.attributes = ruleAttributes;
+          }
         }
+
         this.validToSubmit = valid;
       });
     }

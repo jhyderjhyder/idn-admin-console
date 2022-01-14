@@ -275,6 +275,10 @@ export class IDNService {
       "attributes": {}
     };
 
+    if (rule.attributes) {
+      payload.attributes = rule.attributes;
+    }
+
     return this.http.put(url, payload, myHttpOptions);
   }
 
