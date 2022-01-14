@@ -361,7 +361,7 @@ export class ImportRuleComponent implements OnInit {
     }
 
     // const builder = new xml2js.Builder({xmldec: {standalone: false, encoding: 'UTF-8'}});
-    const builder = new xml2js.Builder({cdata: true, doctype: {sysID: "sailpoint.dtd sailpoint.dtd"}});
+    const builder = new xml2js.Builder({doctype: {sysID: "sailpoint.dtd sailpoint.dtd"}});
     // const builder = new xml2js.Builder();
     let xmlObject = {Rule: {$: 
                               {name: rule.name,
@@ -379,6 +379,8 @@ export class ImportRuleComponent implements OnInit {
     let xml: string = builder.buildObject(xmlObject);
     xml = xml.replace("Rule SYSTEM \"sailpoint.dtd sailpoint.dtd\"", "Rule PUBLIC \"sailpoint.dtd\" \"sailpoint.dtd\"");
     xml = xml.replace(" standalone=\"yes\"?>", "?>");
+    xml = xml.replace("<Source>", "<Source><![CDATA[\n");
+    xml = xml.replace("</Source>", "\n]]></Source>");
     console.log("xml: " + xml);
     
     var blob = new Blob([xml], {type: "application/xml"});
