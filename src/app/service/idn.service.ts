@@ -47,7 +47,7 @@ export class IDNService {
     return aggTaskPollingStatus;
   }
 
-  searchDuplicatedAccounts(): Observable<any> {
+  searchMultipleAccounts(): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
     let url = `https://${currentUser.tenant}.api.identitynow.com/beta/search-aggregations/identities?limit=0`;
 
@@ -87,7 +87,7 @@ export class IDNService {
     };
 
     return this.http.post(url, payload, this.httpOptions).pipe(
-      catchError(this.handleError(`searchDuplicatedAccounts`))
+      catchError(this.handleError(`MultipleAccountsComponent`))
     );
   }
 

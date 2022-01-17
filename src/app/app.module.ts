@@ -8,7 +8,7 @@ import { NgIdleKeepaliveModule } from '@ng-idle/keepalive';
 import { MomentModule } from 'angular2-moment'; 
 
 import { AppComponent } from './app.component';
-import { DuplicatedAccountsComponent } from './duplicated-accounts/duplicated-accounts.component';
+import { MultipleAccountsComponent } from './multiple-accounts/multiple-accounts.component';
 import { AggregationManagementComponent} from './aggregation-management/aggregation-management.component';
 import { ChangeSourceOwnerComponent} from './change-source-owner/change-source-owner.component';
 import { AggregateSourceComponent} from './aggregate-source/aggregate-source.component';
@@ -25,7 +25,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
 @NgModule({
   declarations: [
     AppComponent,
-    DuplicatedAccountsComponent,
+    MultipleAccountsComponent,
     AggregationManagementComponent,
     ChangeSourceOwnerComponent,
     AggregateSourceComponent,

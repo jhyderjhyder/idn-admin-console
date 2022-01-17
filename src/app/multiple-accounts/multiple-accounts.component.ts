@@ -5,11 +5,11 @@ import { IDNService } from '../service/idn.service';
 import { AuthenticationService } from '../service/authentication-service.service';
 
 @Component({
-  selector: 'app-duplicated-accounts',
-  templateUrl: './duplicated-accounts.component.html',
-  styleUrls: ['./duplicated-accounts.component.css']
+  selector: 'app-multiple-accounts',
+  templateUrl: './multiple-accounts.component.html',
+  styleUrls: ['./multiple-accounts.component.css']
 })
-export class DuplicatedAccountsComponent implements OnInit {
+export class MultipleAccountsComponent implements OnInit {
   accounts: Account[];
   errorMessage: string;
   searchText: string;
@@ -29,7 +29,7 @@ export class DuplicatedAccountsComponent implements OnInit {
   }
 
   search() {
-    this.idnService.searchDuplicatedAccounts()
+    this.idnService.searchMultipleAccounts()
           .subscribe(searchResult => {
             this.accounts = [];
             let accnts = searchResult.aggregations.accounts.source_id.buckets.filter(each => each.identities.buckets.length > 0);
@@ -95,7 +95,7 @@ export class DuplicatedAccountsComponent implements OnInit {
     };
 
     const currentUser = this.authenticationService.currentUserValue;
-    let fileName = `${currentUser.tenant}-Duplicate-Accounts`;
+    let fileName = `${currentUser.tenant}-Multiple-Accounts`;
 
     let arr = [];
     for (let each of this.accounts) {

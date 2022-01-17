@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
-import { DuplicatedAccountsComponent } from './duplicated-accounts.component';
+import { MultipleAccountsComponent } from './multiple-accounts.component';
 
-describe('DuplicatedAccountsComponent', () => {
-  let component: DuplicatedAccountsComponent;
-  let fixture: ComponentFixture<DuplicatedAccountsComponent>;
+describe('MultipleAccountsComponent', () => {
+  let component: MultipleAccountsComponent;
+  let fixture: ComponentFixture<MultipleAccountsComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ DuplicatedAccountsComponent ]
+      declarations: [ MultipleAccountsComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(DuplicatedAccountsComponent);
+    fixture = TestBed.createComponent(MultipleAccountsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
