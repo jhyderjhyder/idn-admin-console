@@ -29,6 +29,8 @@ export class ImportRuleComponent implements OnInit {
   searchText: string;
   loading: boolean;
 
+  // use searchText sample
+
   public modalRef: BsModalRef;
   
   @ViewChild('createRuleConfirmModal', { static: false }) createRuleConfirmModal: ModalDirective;
@@ -348,6 +350,11 @@ export class ImportRuleComponent implements OnInit {
       convertedRule.type = result.type;
       convertedRule.name = result.name;
       convertedRule.description = result.description;
+
+      if (result.attributes) {
+        convertedRule.attributes = result.attributes;
+      }
+
       if (result.sourceCode && result.sourceCode.script) {
         convertedRule.script = result.sourceCode.script;
         return convertedRule;
@@ -370,17 +377,29 @@ export class ImportRuleComponent implements OnInit {
     // const builder = new xml2js.Builder({xmldec: {standalone: false, encoding: 'UTF-8'}});
     const builder = new xml2js.Builder({doctype: {sysID: "sailpoint.dtd sailpoint.dtd"}});
     // const builder = new xml2js.Builder();
-    let xmlObject = {Rule: {$: 
-                              {name: rule.name,
-                               type: rule.type  
-                              },
-                            'Description': {
-                                _: ruleDesc
-                              },
-                            'Source': {
-                                _: rule.script
-                              }   
-                           }
+
+    let xmlObject = {
+                      Rule: {
+                        $: {
+                          name: rule.name,
+                          type: rule.type  
+                        },
+                        "Attributes": [
+                          {
+                            "Map": [
+                              {
+                                "entry": this.convertRuleAttributes(rule.attributes)
+                              }
+                            ]
+                          }
+                        ],
+                        'Description': {
+                          _: ruleDesc
+                        },
+                        'Source': {
+                          _: rule.script
+                        },
+                      }
                     };
 
     let xml: string = builder.buildObject(xmlObject);
@@ -393,6 +412,31 @@ export class ImportRuleComponent implements OnInit {
     var blob = new Blob([xml], {type: "application/xml"});
     let fileName = "Rule - " + rule.type + " - " + rule.name + ".xml";
     saveAs(blob, fileName);
+  }
+
+  convertRuleAttributes(attributes) {
+
+    let returnValue = [];
+    /*
+            {
+              "$": {
+                "key": "ObjectOrientedScript",
+                "value": "true"
+              }
+            }
+    */
+
+    for (let name of Object.keys(attributes)) {
+      let attr = {
+                  "$": {
+                    "key": name, 
+                    "value": attributes[name]
+                  }
+                 };
+      returnValue.push(attr);
+    }
+
+    return returnValue;
   }
 
   downloadRule(ruleId: string) {
