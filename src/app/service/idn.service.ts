@@ -228,7 +228,21 @@ export class IDNService {
     );
   }
 
-  createConnectorRule(rule: Rule): Observable<any> {
+  getConnectorRules(): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    let url = `https://${currentUser.tenant}.api.identitynow.com/beta/connector-rules`;
+
+    return this.http.get(url, this.httpOptions);
+  }
+
+  getConnectorRuleById(ruleId: string): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    let url = `https://${currentUser.tenant}.api.identitynow.com/beta/connector-rules/${ruleId}`;
+
+    return this.http.get(url, this.httpOptions);
+  }
+
+  importConnectorRule(rule: Rule): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
     let url = `https://${currentUser.tenant}.api.identitynow.com/beta/connector-rules`;
     
@@ -292,20 +306,6 @@ export class IDNService {
     };
     
     return this.http.delete(url, myHttpOptions);
-  }
-
-  getConnectorRules(): Observable<any> {
-    const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.identitynow.com/beta/connector-rules`;
-
-    return this.http.get(url, this.httpOptions);
-  }
-
-  retrieveConnectorRule(ruleId: string): Observable<any> {
-    const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.identitynow.com/beta/connector-rules/${ruleId}`;
-
-    return this.http.get(url, this.httpOptions);
   }
 
    /** Log a HeroService message with the MessageService */

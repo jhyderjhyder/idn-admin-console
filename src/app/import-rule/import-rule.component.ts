@@ -16,28 +16,23 @@ const RuleDescriptionMaxLength = 50;
 })
 
 export class ImportRuleComponent implements OnInit {
-  //rule to create
-  rule: Rule;
-  //rule to update
+  ruleToImport: Rule;
   ruleToUpdate: Rule;
-  //rule to delete
   ruleToDelete: Rule;
-  ruleNameText: string;
+  deleteRuleNameText: string;
   rules: Rule[];
   validToSubmit: boolean;
   invalidMessage: string[];
   searchText: string;
   loading: boolean;
 
-  // use searchText sample
-
   public modalRef: BsModalRef;
   
-  @ViewChild('createRuleConfirmModal', { static: false }) createRuleConfirmModal: ModalDirective;
-  @ViewChild('updateRuleModal', { static: false }) updateRuleModal: ModalDirective;
+  @ViewChild('importRuleConfirmModal', { static: false }) importRuleConfirmModal: ModalDirective;
+  @ViewChild('updateRuleConfirmModal', { static: false }) updateRuleConfirmModal: ModalDirective;
   @ViewChild('deleteRuleConfirmModal', { static: false }) deleteRuleConfirmModal: ModalDirective;
-  @ViewChild('fileInput', {static: false}) fileInput: ElementRef;
-  @ViewChild('fileInputRuleUpdate', {static: false}) fileInputRuleUpdate: ElementRef;
+  @ViewChild('importRuleFile', {static: false}) importRuleFile: ElementRef;
+  @ViewChild('updateRuleFile', {static: false}) updateRuleFile: ElementRef;
 
   constructor(
     private idnService: IDNService, 
@@ -50,10 +45,10 @@ export class ImportRuleComponent implements OnInit {
   }
 
   reset(clearMsg: boolean) {
-    this.rule = null;
+    this.ruleToImport = null;
     this.ruleToUpdate = null;
     this.ruleToDelete = null;
-    this.ruleNameText = null;
+    this.deleteRuleNameText = null;
     this.searchText = null;
     this.loading = false;
     this.invalidMessage = [];
@@ -88,29 +83,29 @@ export class ImportRuleComponent implements OnInit {
           });
   }
 
-  showCreateRuleConfirmModal() {
+  showImportRuleConfirmModal() {
     this.messageService.clearError();
     this.validToSubmit = true;
     this.invalidMessage = [];
     
-    if (this.rule == null) {
-      this.invalidMessage.push("No rule man!");
+    if (this.ruleToImport == null) {
+      this.invalidMessage.push("No rule is chosen!");
       this.validToSubmit = false;
     }
 
     if (this.validToSubmit) {
-      this.createRuleConfirmModal.show();
+      this.importRuleConfirmModal.show();
     } else {
-      this.createRuleConfirmModal.show();
+      this.importRuleConfirmModal.hide();
     }
   }
 
-  hideCreateRuleConfirmModal() {
-    this.createRuleConfirmModal.hide();
+  hideImportRuleConfirmModal() {
+    this.importRuleConfirmModal.hide();
   }
 
-  showUpdateRuleModal(selectedRule: Rule) {
-    this.fileInputRuleUpdate.nativeElement.value = "";
+  showUpdateRuleConfirmModal(selectedRule: Rule) {
+    this.updateRuleFile.nativeElement.value = "";
     this.invalidMessage = [];
     this.ruleToUpdate = new Rule();
     this.ruleToUpdate.id = selectedRule.id;
@@ -118,16 +113,16 @@ export class ImportRuleComponent implements OnInit {
     this.ruleToUpdate.type = selectedRule.type;
     this.ruleToUpdate.description = selectedRule.description;
     this.validToSubmit = false;
-    this.updateRuleModal.show();
+    this.updateRuleConfirmModal.show();
   }
 
-  hideUpdateRuleModal() {
-    this.updateRuleModal.hide();
+  hideUpdateRuleConfirmModal() {
+    this.updateRuleConfirmModal.hide();
   }
 
   showDeleteRuleConfirmModal(selectedRule: Rule) {
     this.invalidMessage = [];
-    this.ruleNameText = null;
+    this.deleteRuleNameText = null;
     this.ruleToDelete = new Rule();
     this.ruleToDelete.id = selectedRule.id;
     this.ruleToDelete.name = selectedRule.name;
@@ -145,8 +140,8 @@ export class ImportRuleComponent implements OnInit {
     this.messageService.clearAll();
     this.invalidMessage = [];
     // validation
-    if (this.ruleNameText != this.ruleToDelete.name) {
-      this.invalidMessage.push("Rule names do not match!");
+    if (this.deleteRuleNameText != this.ruleToDelete.name) {
+      this.invalidMessage.push("Confirmed rule name does not match rule name!");
       this.validToSubmit = false;
       return;
     }
@@ -174,18 +169,18 @@ export class ImportRuleComponent implements OnInit {
 
   importRule() {
     this.messageService.clearAll();
-    this.idnService.createConnectorRule(this.rule)
+    this.idnService.importConnectorRule(this.ruleToImport)
       .subscribe(
         result => {
-          this.createRuleConfirmModal.hide();
+          this.importRuleConfirmModal.hide();
           this.messageService.add("Rule imported successfully.");
-          this.rule = null;
+          this.ruleToImport = null;
           this.reset(false);
           this.getConnectorRules();
         },
         err => {
-          this.createRuleConfirmModal.hide();
-          this.rule = null;
+          this.importRuleConfirmModal.hide();
+          this.ruleToImport = null;
           this.messageService.handleIDNError(err);
         }
       );
@@ -196,31 +191,31 @@ export class ImportRuleComponent implements OnInit {
     this.idnService.updateConnectorRule(this.ruleToUpdate)
       .subscribe(
         result => {
-          this.updateRuleModal.hide();
-          this.messageService.add("Rule imported successfully.");
-          this.rule = null;
+          this.updateRuleConfirmModal.hide();
+          this.messageService.add("Rule updated successfully.");
+          this.ruleToUpdate = null;
         },
         err => {
-          this.updateRuleModal.hide();
-          this.rule = null;
+          this.updateRuleConfirmModal.hide();
+          this.ruleToUpdate = null;
           this.messageService.handleIDNError(err);
         }
       );
   }
 
-  clearFileSelect() {
-    this.rule = null;
+  clearFileForImportRule() {
+    this.ruleToImport = null;
     this.messageService.clearError();
-    this.fileInput.nativeElement.value = "";
+    this.importRuleFile.nativeElement.value = "";
   }
 
-  clearFileSelect4RuleUpdate() {
-    this.messageService.clearError();
-    this.fileInputRuleUpdate.nativeElement.value = "";
+  clearFileForUpdateRule() {
+    this.invalidMessage = [];
+    this.updateRuleFile.nativeElement.value = "";
     this.validToSubmit = false;
   }
 
-  handleFileSelect(evt) {
+  processFileForImportRule(evt) {
     this.messageService.clearError();
     var files = evt.target.files; // FileList object
     var file = files[0];
@@ -234,15 +229,15 @@ export class ImportRuleComponent implements OnInit {
         if (result.RULE && result.RULE.$) {
           //verify rule name
           if (result.RULE.$.NAME) {
-            this.rule = new Rule();
-            this.rule.name = result.RULE.$.NAME;
+            this.ruleToImport = new Rule();
+            this.ruleToImport.name = result.RULE.$.NAME;
           } else {
             valid = false;
             this.messageService.setError("Invalid Rule XML file: rule name is not specified.");
           }
           //verify rule type
           if (result.RULE.$.TYPE) {
-              this.rule.type = result.RULE.$.TYPE;
+              this.ruleToImport.type = result.RULE.$.TYPE;
           } else {
             valid = false;
             this.messageService.setError("Invalid Rule XML file: rule type is not specified.");
@@ -254,7 +249,7 @@ export class ImportRuleComponent implements OnInit {
         //verify source
         if (valid) {
           if (result.RULE.SOURCE && result.RULE.SOURCE.length == 1) {
-            this.rule.script = result.RULE.SOURCE[0];
+            this.ruleToImport.script = result.RULE.SOURCE[0];
           } else {
             valid = false;
             this.messageService.setError("Invalid Rule XML file: source is not specified.");
@@ -263,16 +258,16 @@ export class ImportRuleComponent implements OnInit {
         //now update description
         if (valid) {
           if (result.RULE.DESCRIPTION && result.RULE.DESCRIPTION.length == 1) {
-            this.rule.description = result.RULE.DESCRIPTION[0];
+            this.ruleToImport.description = result.RULE.DESCRIPTION[0];
           } 
 
           let ruleAttributes = this.processRuleAttributes(result);
           if (ruleAttributes) {
-            this.rule.attributes = ruleAttributes;
+            this.ruleToImport.attributes = ruleAttributes;
           }
 
         } else {
-          this.rule = null;
+          this.ruleToImport = null;
         }
       });
     }
@@ -296,7 +291,7 @@ export class ImportRuleComponent implements OnInit {
     return null;
   }
 
-  selectFileToUpdatRule(evt) {
+  processFileForUpdatRule(evt) {
     this.messageService.clearError();
     var files = evt.target.files; // FileList object
     var file = files[0];
@@ -358,31 +353,6 @@ export class ImportRuleComponent implements OnInit {
     }
   }
 
-  convertResponseToRule(result): Rule {
-    if (result) {
-      let convertedRule = new Rule();
-      convertedRule.id = result.id;
-      convertedRule.type = result.type;
-      convertedRule.name = result.name;
-      convertedRule.description = result.description;
-
-      if (result.attributes) {
-        convertedRule.attributes = result.attributes;
-      }
-
-      if (result.sourceCode && result.sourceCode.script) {
-        convertedRule.script = result.sourceCode.script;
-        return convertedRule;
-      } else {
-        this.messageService.addError("Invalid Rule as it doesn't have the source code.");
-        return null;
-      }
-    } else {
-      this.messageService.addError("Failed to download the Rule");
-      return null;
-    }
-  }
-
   convertRuleToXML(rule: Rule) {
     let ruleDesc = null;
     if (rule.description) {
@@ -400,7 +370,7 @@ export class ImportRuleComponent implements OnInit {
                           {
                             "Map": [
                               {
-                                "entry": this.convertRuleAttributes(rule.attributes)
+                                "entry": this.prepareRuleAttributes(rule.attributes)
                               }
                             ]
                           }
@@ -415,18 +385,18 @@ export class ImportRuleComponent implements OnInit {
                     };
 
     let xml: string = builder.buildObject(xmlObject);
+    // xml.replace is a hack to format certain elements that xml2js does not support
     xml = xml.replace("Rule SYSTEM \"sailpoint.dtd sailpoint.dtd\"", "Rule PUBLIC \"sailpoint.dtd\" \"sailpoint.dtd\"");
     xml = xml.replace(" standalone=\"yes\"?>", "?>");
     xml = xml.replace("<Source>", "<Source><![CDATA[\n");
     xml = xml.replace("</Source>", "\n]]></Source>");
-    console.log("xml: " + xml);
     
     var blob = new Blob([xml], {type: "application/xml"});
     let fileName = "Rule - " + rule.type + " - " + rule.name + ".xml";
     saveAs(blob, fileName);
   }
 
-  convertRuleAttributes(attributes) {
+  prepareRuleAttributes(attributes) {
 
     let returnValue = [];
     for (let name of Object.keys(attributes)) {
@@ -443,16 +413,41 @@ export class ImportRuleComponent implements OnInit {
   }
 
   downloadRule(ruleId: string) {
-    this.idnService.retrieveConnectorRule(ruleId)
+    this.idnService.getConnectorRuleById(ruleId)
       .subscribe(
         result => {
-          let donwloadedRule = this.convertResponseToRule(result);
+          let donwloadedRule = this.processDownloadRule(result);
           if (donwloadedRule != null) {
             this.convertRuleToXML(donwloadedRule);
           }
         },
         err => this.messageService.handleIDNError(err)
       );
+  }
+
+  processDownloadRule(result): Rule {
+    if (result) {
+      let processedRule = new Rule();
+      processedRule.id = result.id;
+      processedRule.type = result.type;
+      processedRule.name = result.name;
+      processedRule.description = result.description;
+
+      if (result.attributes) {
+        processedRule.attributes = result.attributes;
+      }
+
+      if (result.sourceCode && result.sourceCode.script) {
+        processedRule.script = result.sourceCode.script;
+        return processedRule;
+      } else {
+        this.messageService.addError("Invalid Rule: missing source code script.");
+        return null;
+      }
+    } else {
+      this.messageService.addError("Failed to download rule");
+      return null;
+    }
   }
 
 }
