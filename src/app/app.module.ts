@@ -12,7 +12,7 @@ import { MultipleAccountsComponent } from './multiple-accounts/multiple-accounts
 import { AggregationManagementComponent} from './aggregation-management/aggregation-management.component';
 import { ChangeSourceOwnerComponent} from './change-source-owner/change-source-owner.component';
 import { AggregateSourceComponent} from './aggregate-source/aggregate-source.component';
-import { ImportRuleComponent} from './import-rule/import-rule.component';
+import { ImportRuleComponent} from './rule-management/rule-management.component';
 import { AppRoutingModule } from './app-routing.module';
 import { MessagesComponent } from './messages/messages.component';
 import { SearchFilterPipe } from './shared/search-filter.pipe';
