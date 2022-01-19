@@ -12,15 +12,12 @@
     </button>
     <div class="collapse navbar-collapse" id="collapsibleNavbar" *ngIf="currentUser">
       <ul class="navbar-nav mr-auto">
-        <li class="nav-item" routerLinkActive="active">
-          <a class="nav-link" routerLink="/multiple-account">Multiple Accounts</a>
-        </li>
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbarAccounts" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             Accounts
           </a>
           <div class="dropdown-menu" aria-labelledby="navbarAccounts">
-            <a class="dropdown-item" routerLink="/duplicate-account">Find Multiple Accounts</a>
+            <a class="dropdown-item" routerLink="/multiple-account">Find Multiple Accounts</a>
           </div>
         </li>
         <li class="nav-item dropdown">
@@ -29,7 +26,7 @@
           </a>
           <div class="dropdown-menu" aria-labelledby="navbarManageSource">
             <a class="dropdown-item" routerLink="/manage-aggregation">Manage Aggregation Schedules</a>
-            <a class="dropdown-item" routerLink="/change-source-owner">Manage Owners</a>
+            <a class="dropdown-item" routerLink="/change-source-owner">Manage Source Owners</a>
             <a class="dropdown-item" routerLink="/aggregate-source">Run Aggregations</a>
           </div>
         </li>
@@ -38,25 +35,15 @@
             Rules
           </a>
           <div class="dropdown-menu" aria-labelledby="navbarRules">
-            <a class="dropdown-item" routerLink="/import-rule">Manage Rules</a>
+            <a class="dropdown-item" routerLink="/rule-management">Manage Rules</a>
           </div>
         </li>
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbarRules" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            Doco
+            Documentation
           </a>
           <div class="dropdown-menu" aria-labelledby="navbarRules">
-            <a class="dropdown-item" routerLink="#">Doco</a>
-          </div>
-        </li>
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="navbarRules" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            Amigos
-          </a>
-          <div class="dropdown-menu" aria-labelledby="navbarRules">
-            <a class="dropdown-item" routerLink="#">Bruce "Yoda" Ren</a>
-            <a class="dropdown-item" routerLink="#">Piyush "Grand Master" Khandelwal</a>
-            <a class="dropdown-item" routerLink="#">Ken-Solo "Grasshopper" Li</a>
+            <a class="dropdown-item" routerLink="#">Generate Config Doc</a>
           </div>
         </li>
       </ul>

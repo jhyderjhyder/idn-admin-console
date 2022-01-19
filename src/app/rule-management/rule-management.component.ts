@@ -10,9 +10,9 @@ import { MessageService } from '../service/message.service';
 const RuleDescriptionMaxLength = 50;
 
 @Component({
-  selector: 'app-import-rule',
-  templateUrl: './import-rule.component.html',
-  styleUrls: ['./import-rule.component.css']
+  selector: 'app-rule-management',
+  templateUrl: './rule-management.component.html',
+  styleUrls: ['./rule-management.component.css']
 })
 
 export class ImportRuleComponent implements OnInit {
