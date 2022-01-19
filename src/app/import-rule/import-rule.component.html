@@ -10,8 +10,7 @@
       <span class="input-group-prepend">
         <div class="input-group-text bg-transparent border-right-0"><i class="fa fa-search"></i></div>
       </span>
-      <input class="form-control py-2 border-left-0 border" type="text" name="search" [(ngModel)]="searchText" autocomplete="off" 
-        placeholder="Type rule name or type to filter list of rules">
+      <input class="form-control py-2 border-left-0 border" type="text" name="search" [(ngModel)]="searchText" autocomplete="off" placeholder="Type rule name or type to filter list of rules">
     </div>
     <div class="col-sm-2 text-right">
       <button type="button" [disabled]="loading" (click)="ngOnInit()" class="btn btn-info btn-sm">
@@ -84,27 +83,34 @@
   <div class="modal-dialog modal-dialog-centered modal-lg">
     <div class="modal-content">
       <div class="modal-header">
-        <h6 id="dialog-child-name" class="modal-title pull-left">
-          <span *ngIf="rule && validToSubmit">
-            Ready to import rule?
-            <br/><br/><span class="font-weight-bold">Name:</span>&nbsp;{{ rule.name }}<br>
-            <span class="font-weight-bold">Type:</span>&nbsp;{{ rule.type }}<br>
-            <span class="font-weight-bold">Description:</span>&nbsp;{{ rule.description }}<br>
-          </span>
-          <div *ngIf="!validToSubmit">
-            <span class="font-weight-bold">Please fix the following error(s) before importing the rule: </span><br>
-            <span *ngFor="let err of invalidMessage">
-              {{ err }}
-              <br>
-            </span>
-          </div>
-        </h6>
+        <h5 id="dialog-child-name" class="modal-title pull-left pull-left font-weight-bold">
+          Import Rule
+        </h5>
         <button type="button" class="close pull-right" aria-label="Close" (click)="hideCreateRuleConfirmModal()">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
         <form name="form" novalidate>
+          <div class="form-group row">
+            <div class="col-sm-12 text-left" *ngIf="rule">
+              <span *ngIf="rule && validToSubmit">
+                <span class="font-weight-bold">Name:</span>&nbsp;{{ rule.name }}<br>
+                <span class="font-weight-bold">Type:</span>&nbsp;{{ rule.type }}<br>
+                <span class="font-weight-bold">Description:</span>&nbsp;{{ rule.description }}<br>
+              </span>
+              <div *ngIf="!validToSubmit && invalidMessage && invalidMessage.length > 0">
+                <br>
+                <span class="font-weight-bold text-danger">Please fix following error(s): </span><br>
+                <span *ngFor="let err of invalidMessage">
+                  {{ err }}
+                  <br>
+                </span>
+              </div>
+            </div>
+          </div>
+
+
           <div class="row mrgbtm small">
             <div class="col-md-12 text-center">
               <button type="button" (click)="hideCreateRuleConfirmModal()" class="btn btn-danger btn-sm">Cancel</button>
@@ -127,7 +133,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 id="dialog-child-name" class="modal-title pull-left font-weight-bold">
-          Modify Rule
+          Update Rule
         </h5>
         <button type="button" class="close pull-right" aria-label="Close" (click)="hideUpdateRuleModal()">
           <span aria-hidden="true">&times;</span>
@@ -142,7 +148,7 @@
                 <span class="font-weight-bold">Description:</span>&nbsp;{{ ruleToUpdate.description }}<br>
               <div *ngIf="!validToSubmit && invalidMessage && invalidMessage.length > 0">
                 <br>
-                <span class="font-weight-bold">Please fix the following error(s) before importing the rule: </span><br>
+                <span class="font-weight-bold text-danger">Please fix following error(s): </span><br>
                 <span *ngFor="let err of invalidMessage">
                   {{ err }}
                   <br>
@@ -168,11 +174,7 @@
             <div class="col-md-12 text-right">
               <button type="button" (click)="hideUpdateRuleModal()" class="btn btn-danger btn-sm">Cancel</button>
               &nbsp;&nbsp;&nbsp;
-              <span *ngIf="validToSubmit">
-                <button type="button" class="btn btn-success btn-sm" (click)="updatedRule()">
-                  Import
-                </button>
-              </span>
+              <button type="button" [disabled]="!validToSubmit" class="btn btn-success btn-sm" (click)="updatedRule()">Update</button>
             </div>
           </div>
       </form>
@@ -186,19 +188,33 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 id="dialog-child-name" class="modal-title pull-left font-weight-bold">
-          Are you sure to delete the selected Rule?
+          Delete Rule
         </h5>
         <button type="button" class="close pull-right" aria-label="Close" (click)="hideDeleteRuleConfirmModal()">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
-        <form name="form" novalidate>
           <div class="form-group row">
             <div class="col-sm-12 text-left" *ngIf="ruleToDelete">
                 <span class="font-weight-bold">Name:</span>&nbsp;{{ ruleToDelete.name }}<br>
                 <span class="font-weight-bold">Type:</span>&nbsp;{{ ruleToDelete.type }}<br>
                 <span class="font-weight-bold">Description:</span>&nbsp;{{ ruleToDelete.description }}<br>
+                <div *ngIf="!validToSubmit && invalidMessage && invalidMessage.length > 0">
+                  <br>
+                  <span class="font-weight-bold text-danger">Please fix following error(s):</span><br>
+                  <span *ngFor="let err of invalidMessage">
+                    {{ err }}
+                    <br>
+                  </span>
+                </div>
+            </div>
+          </div>
+
+          <div class="form-group row">
+            <div class="col-sm-8 text-left">
+              <span class="font-weight-bold">Enter exact rule name to confirm</span>
+              &nbsp;<input type="text" class="form-control" id="rule-name" [(ngModel)]="ruleNameText" placeholder="Rule name" aria-describedby="basic-addon3" autocomplete="off">
             </div>
           </div>
           <div class="row mrgbtm small">
@@ -212,9 +228,7 @@
               </span>
             </div>
           </div>
-        </form>
       </div>
     </div>
   </div>
 </div>
-

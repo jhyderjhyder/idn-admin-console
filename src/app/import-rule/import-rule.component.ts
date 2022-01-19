@@ -22,7 +22,7 @@ export class ImportRuleComponent implements OnInit {
   ruleToUpdate: Rule;
   //rule to delete
   ruleToDelete: Rule;
-  // validToDelete: boolean;
+  ruleNameText: string;
   rules: Rule[];
   validToSubmit: boolean;
   invalidMessage: string[];
@@ -53,6 +53,7 @@ export class ImportRuleComponent implements OnInit {
     this.rule = null;
     this.ruleToUpdate = null;
     this.ruleToDelete = null;
+    this.ruleNameText = null;
     this.searchText = null;
     this.loading = false;
     this.invalidMessage = [];
@@ -64,7 +65,8 @@ export class ImportRuleComponent implements OnInit {
   getConnectorRules() {
     this.loading = true;
     this.idnService.getConnectorRules()
-          .subscribe(results => {
+          .subscribe(
+            results => {
             this.rules = [];
             for (let each of results) {
               let rule = new Rule();
@@ -124,12 +126,14 @@ export class ImportRuleComponent implements OnInit {
   }
 
   showDeleteRuleConfirmModal(selectedRule: Rule) {
+    this.invalidMessage = [];
+    this.ruleNameText = null;
     this.ruleToDelete = new Rule();
     this.ruleToDelete.id = selectedRule.id;
     this.ruleToDelete.name = selectedRule.name;
     this.ruleToDelete.type = selectedRule.type;
     this.ruleToDelete.description = selectedRule.description;
-    // this.validToDelete = true;
+    this.validToSubmit = false;
     this.deleteRuleConfirmModal.show();
   }
 
@@ -139,6 +143,17 @@ export class ImportRuleComponent implements OnInit {
 
   deleteRule() {
     this.messageService.clearAll();
+    this.invalidMessage = [];
+    // validation
+    if (this.ruleNameText != this.ruleToDelete.name) {
+      this.invalidMessage.push("Rule names do not match!");
+      this.validToSubmit = false;
+      return;
+    }
+    else {
+      this.validToSubmit = true;
+    }
+
     this.idnService.deleteConnectorRule(this.ruleToDelete)
       .subscribe(
         result => {
@@ -161,7 +176,7 @@ export class ImportRuleComponent implements OnInit {
     this.messageService.clearAll();
     this.idnService.createConnectorRule(this.rule)
       .subscribe(
-        searchResult => {
+        result => {
           this.createRuleConfirmModal.hide();
           this.messageService.add("Rule imported successfully.");
           this.rule = null;
@@ -180,7 +195,7 @@ export class ImportRuleComponent implements OnInit {
     this.messageService.clearAll();
     this.idnService.updateConnectorRule(this.ruleToUpdate)
       .subscribe(
-        searchResult => {
+        result => {
           this.updateRuleModal.hide();
           this.messageService.add("Rule imported successfully.");
           this.rule = null;
@@ -374,10 +389,7 @@ export class ImportRuleComponent implements OnInit {
       ruleDesc = rule.description;
     }
 
-    // const builder = new xml2js.Builder({xmldec: {standalone: false, encoding: 'UTF-8'}});
     const builder = new xml2js.Builder({doctype: {sysID: "sailpoint.dtd sailpoint.dtd"}});
-    // const builder = new xml2js.Builder();
-
     let xmlObject = {
                       Rule: {
                         $: {
@@ -417,15 +429,6 @@ export class ImportRuleComponent implements OnInit {
   convertRuleAttributes(attributes) {
 
     let returnValue = [];
-    /*
-            {
-              "$": {
-                "key": "ObjectOrientedScript",
-                "value": "true"
-              }
-            }
-    */
-
     for (let name of Object.keys(attributes)) {
       let attr = {
                   "$": {
