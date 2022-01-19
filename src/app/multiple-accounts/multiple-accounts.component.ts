@@ -13,6 +13,7 @@ export class MultipleAccountsComponent implements OnInit {
   accounts: Account[];
   errorMessage: string;
   searchText: string;
+  loading: boolean;
 
   constructor(private idnService: IDNService, 
     private authenticationService: AuthenticationService) { }
@@ -26,6 +27,7 @@ export class MultipleAccountsComponent implements OnInit {
     this.accounts = null;
     this.searchText = null;
     this.errorMessage = null;
+    this.loading = false;
   }
 
   search() {
@@ -80,6 +82,7 @@ export class MultipleAccountsComponent implements OnInit {
                 });
               }
             }
+            this.loading = false;
           });
   }
 

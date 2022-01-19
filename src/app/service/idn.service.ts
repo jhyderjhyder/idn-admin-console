@@ -4,6 +4,7 @@ import { catchError } from 'rxjs/operators';
 import { Observable, of } from 'rxjs';
 import { MessageService } from './message.service';
 import { Source } from '../model/source';
+import { Rule } from '../model/rule';
 import { SimpleQueryCondition } from '../model/simple-query-condition';
 import { AggTaskPollingStatus } from '../model/agg-task-polling-status';
 import { AuthenticationService } from '../service/authentication-service.service';
@@ -118,19 +119,23 @@ export class IDNService {
   getAggregationSchedules(cloudExternalID: string): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
     let url = `https://${currentUser.tenant}.api.identitynow.com/cc/api/source/getAggregationSchedules/${cloudExternalID}`;
-
+    return this.http.get(url);
+    /*
     return this.http.get(url).pipe(
       catchError(this.handleError(`getAggregationSchedules`))
     );
+    */
   }
 
   getEntitlementAggregationSchedules(cloudExternalID: string): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
     let url = `https://${currentUser.tenant}.api.identitynow.com/cc/api/source/getEntitlementAggregationSchedules/${cloudExternalID}`;
-
+    return this.http.get(url);
+    /*
     return this.http.get(url).pipe(
       catchError(this.handleError(`getEntitlementAggregationSchedules`))
     );
+    */
   }
 
   updateAggregationSchedules(source: Source, enable: boolean): Observable<any> {
@@ -221,6 +226,86 @@ export class IDNService {
     return this.http.get(url).pipe(
       catchError(this.handleError(`getAccountAggregationStatus`))
     );
+  }
+
+  getConnectorRules(): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    let url = `https://${currentUser.tenant}.api.identitynow.com/beta/connector-rules`;
+
+    return this.http.get(url, this.httpOptions);
+  }
+
+  getConnectorRuleById(ruleId: string): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    let url = `https://${currentUser.tenant}.api.identitynow.com/beta/connector-rules/${ruleId}`;
+
+    return this.http.get(url, this.httpOptions);
+  }
+
+  importConnectorRule(rule: Rule): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    let url = `https://${currentUser.tenant}.api.identitynow.com/beta/connector-rules`;
+    
+    let myHttpOptions = {
+      headers: new HttpHeaders({
+      })
+    };
+
+    let payload = {
+      "name": `${rule.name}`,
+      "type": `${rule.type}`,
+      "sourceCode": {
+        "version": "1.0",
+        "script": `${rule.script}`
+      },
+      "description": `${rule.description}`,
+      "attributes": {}
+    };
+    
+    if (rule.attributes) {
+      payload.attributes = rule.attributes;
+    }
+    return this.http.post(url, payload, myHttpOptions);
+  }
+
+  updateConnectorRule(rule: Rule): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    let url = `https://${currentUser.tenant}.api.identitynow.com/beta/connector-rules/${rule.id}`;
+    
+    let myHttpOptions = {
+      headers: new HttpHeaders({
+      })
+    };
+
+    let payload = {
+      "name": `${rule.name}`,
+      "type": `${rule.type}`,
+      "id": `${rule.id}`,
+      "sourceCode": {
+        "version": "1.0",
+        "script": `${rule.script}`
+      },
+      "description": `${rule.description}`,
+      "attributes": {}
+    };
+
+    if (rule.attributes) {
+      payload.attributes = rule.attributes;
+    }
+
+    return this.http.put(url, payload, myHttpOptions);
+  }
+
+  deleteConnectorRule(rule: Rule): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    let url = `https://${currentUser.tenant}.api.identitynow.com/beta/connector-rules/${rule.id}`;
+    
+    let myHttpOptions = {
+      headers: new HttpHeaders({
+      })
+    };
+    
+    return this.http.delete(url, myHttpOptions);
   }
 
    /** Log a HeroService message with the MessageService */

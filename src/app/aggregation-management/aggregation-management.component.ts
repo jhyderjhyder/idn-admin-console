@@ -3,6 +3,7 @@ import { AngularCsv } from 'angular-csv-ext/dist/Angular-csv';
 import { Papa } from 'ngx-papaparse';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { ModalDirective } from 'ngx-bootstrap/modal';
+import cron from 'cron-validate'
 import { Source } from '../model/source';
 import { Schedule } from '../model/schedule';
 import { IDNService } from '../service/idn.service';
@@ -20,13 +21,15 @@ export class AggregationManagementComponent implements OnInit {
   bulkAction: string;
   selectAll: boolean;
   atLeastOneSelected: boolean;
-  cronExpSecified: boolean;
+  cronExpValid: boolean;
   cronExpAll: string;
-  errorMessage: string;
+  errorInvokeApi: boolean;
   searchText: string;
   accntAggScheduleLoaded: boolean;
   entAggScheduleLoaded: boolean;
   loading: boolean;
+
+  invalidMessage: string[];
 
   public modalRef: BsModalRef;
   
@@ -50,14 +53,15 @@ export class AggregationManagementComponent implements OnInit {
     this.sourcesToShow = null;
     this.selectAll = false;
     this.atLeastOneSelected = false;
-    this.cronExpSecified = true;
+    this.cronExpValid = true;
     this.bulkAction = null;
     this.cronExpAll = null;
     this.searchText = null;
     this.loading = false;
+    this.invalidMessage = [];
     if (clearMsg) {
       this.messageService.clearAll();
-      this.errorMessage = null;
+      this.errorInvokeApi = false;
     } 
   }
 
@@ -83,30 +87,51 @@ export class AggregationManagementComponent implements OnInit {
               source.type = each.type;
 
               this.idnService.getAggregationSchedules(source.cloudExternalID)
-                .subscribe(searchResult => { 
-                  if (searchResult.length > 0) {
-                    source.accountAggregationSchedule = new Schedule();
-                    source.accountAggregationSchedule.enable = true;
-                    source.accountAggregationSchedule.cronExp = searchResult[0].cronExpressions;
+                .subscribe(
+                  searchResult => {
+                    if (searchResult.length > 0) {
+                      source.accountAggregationSchedule = new Schedule();
+                      source.accountAggregationSchedule.enable = true;
+                      source.accountAggregationSchedule.cronExp = searchResult[0].cronExpressions;
+                    }
+                    fetchAccntAggScheduleCount++;
+                    if (fetchAccntAggScheduleCount == count) {
+                      this.accntAggScheduleLoaded = true;
+                    }
+                  },
+                  err => {
+                    // this.messageService.addError(`Error to retrieve Aggregation Schedule for Source (${source.name})`);
+                    this.messageService.handleIDNError(err);
+                    fetchAccntAggScheduleCount++;
+                    if (fetchAccntAggScheduleCount == count) {
+                      this.accntAggScheduleLoaded = true;
+                    }
                   }
-                  fetchAccntAggScheduleCount++;
-                  if (fetchAccntAggScheduleCount == count) {
-                    this.accntAggScheduleLoaded = true;
-                  }
-              });
+              );
         
               this.idnService.getEntitlementAggregationSchedules(source.cloudExternalID)
-                .subscribe(searchResult => { 
-                  if (searchResult.length > 0) {
-                    source.entAggregationSchedule = new Schedule();
-                    source.entAggregationSchedule.enable = true;
-                    source.entAggregationSchedule.cronExp = searchResult[0].cronExpressions;
+                .subscribe(
+                  searchResult => {
+                    if (searchResult.length > 0) {
+                      source.entAggregationSchedule = new Schedule();
+                      source.entAggregationSchedule.enable = true;
+                      source.entAggregationSchedule.cronExp = searchResult[0].cronExpressions;
+                    }
+                    fetchEntAggScheduleCount++;
+                    if (fetchEntAggScheduleCount == count) {
+                      this.entAggScheduleLoaded = true;
+                    }
+                  },
+                  err => {
+                    // this.messageService.addError(`Error to retrieve Entitlement Aggregation Schedule for Source (${source.name})`);
+                    this.messageService.handleIDNError(err);
+                    fetchEntAggScheduleCount++;
+                    if (fetchEntAggScheduleCount == count) {
+                      this.entAggScheduleLoaded = true;
+                    }
                   }
-                  fetchEntAggScheduleCount++;
-                  if (fetchEntAggScheduleCount == count) {
-                    this.entAggScheduleLoaded = true;
-                  }
-              });
+              
+              );
               
               this.sources.push(source);
               this.sourcesToShow.push(source);
@@ -167,20 +192,47 @@ export class AggregationManagementComponent implements OnInit {
     }
   }
 
+  validateCronExp(cronExp: string, sourceName: string) :boolean {
+    const cronResult = cron(cronExp, {
+        override: {
+          useSeconds: true,
+          useBlankDay: true,
+        },
+      }
+    );
+    if (!cronResult.isValid()) {
+      this.invalidMessage.push(`Invalid Cron Job Expression (${cronExp}) of the selected source (name: ${sourceName}).`);
+      return false;
+    } else {
+      return true;
+    }
+  }
+
   showSubmitConfirmModal() {
     this.messageService.clearError();
+    this.invalidMessage = [];
     this.atLeastOneSelected = false;
-    this.cronExpSecified = true;
+    this.cronExpValid = true;
     for (let each of this.sourcesToShow) {
       if (each.selected) {
         this.atLeastOneSelected = true;
         if (this.bulkAction == 'EnableAggSchedule') {
           if (!each.accountAggCronExp || each.accountAggCronExp.trim() == '') {
-            this.cronExpSecified = false;
+            this.invalidMessage.push(`Enter Cron Job Expression of the selected source (name: ${each.name}).`);
+            this.cronExpValid = false;
+          } else {
+            if (!this.validateCronExp(each.accountAggCronExp, each.name)) {
+              this.cronExpValid = false;
+            }
           }
         } else if (this.bulkAction == 'EnableEntAggSchedule') {
           if (!each.entAggCronExp || each.entAggCronExp.trim() == '') {
-            this.cronExpSecified = false;
+            this.invalidMessage.push(`Enter Cron Job Expression of the selected source (name: ${each.name}).`);
+            this.cronExpValid = false;
+          } else {
+            if (!this.validateCronExp(each.entAggCronExp, each.name)) {
+              this.cronExpValid = false;
+            }
           }
         }
       }
@@ -209,9 +261,7 @@ export class AggregationManagementComponent implements OnInit {
   }
 
   closeModalDisplayMsg() {
-    if (this.errorMessage != null) {
-      this.messageService.setError(this.errorMessage);
-    } else {
+    if (!this.errorInvokeApi) {
       this.messageService.add("Changes saved successfully.");
     }
     this.submitConfirmModal.hide();
@@ -231,7 +281,8 @@ export class AggregationManagementComponent implements OnInit {
             }
           },
           err => {
-            this.errorMessage = "Error to submit the changes.";
+            this.errorInvokeApi = true;
+            this.messageService.handleIDNError(err);
             processedCount++;
             if (processedCount == arr.length) {
               this.closeModalDisplayMsg();
@@ -257,7 +308,8 @@ export class AggregationManagementComponent implements OnInit {
             }
           },
           err => {
-            this.errorMessage = "Error to submit the changes.";
+            this.errorInvokeApi = true;
+            this.messageService.handleIDNError(err);
             processedCount++;
             if (processedCount == arr.length) {
               this.closeModalDisplayMsg();

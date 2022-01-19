@@ -14,14 +14,19 @@
         placeholder="Click Search button to fetch the data. Type Identity Name, Display Name or Source Name to filter the result.">
     </div>
     <div class="col-sm-2 text-right">
-      <button type="button" (click)="ngOnInit()" class="btn btn-info btn-sm">
+      <button type="button" [disabled]="loading" (click)="ngOnInit()" class="btn btn-info btn-sm">
         Refresh
       </button>
     </div>
   </div>
 </form>
+<div class="form-group row" *ngIf="loading">
+  <div class="col-sm-12 text-right">
+    <span class="spinner-border spinner-border-sm mr-1"></span>Loading...
+  </div>
+</div>
 <br>
-<div *ngIf="accounts" class="row">
+<div *ngIf="accounts && !loading" class="row">
   <div class="col-md-12 text-right">
     <button type="button" (click)="saveInCsv()" class="btn btn-link">
       Download
