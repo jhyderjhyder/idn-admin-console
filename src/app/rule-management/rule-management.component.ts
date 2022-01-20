@@ -366,15 +366,7 @@ export class ImportRuleComponent implements OnInit {
                           name: rule.name,
                           type: rule.type  
                         },
-                        "Attributes": [
-                          {
-                            "Map": [
-                              {
-                                "entry": this.prepareRuleAttributes(rule.attributes)
-                              }
-                            ]
-                          }
-                        ],
+                        "Attributes": [this.prepareRuleAttributes(rule.attributes)],
                         'Description': {
                           _: ruleDesc
                         },
@@ -398,18 +390,28 @@ export class ImportRuleComponent implements OnInit {
 
   prepareRuleAttributes(attributes) {
 
-    let returnValue = [];
-    for (let name of Object.keys(attributes)) {
-      let attr = {
-                  "$": {
-                    "key": name, 
-                    "value": attributes[name]
-                  }
-                 };
-      returnValue.push(attr);
+    let returnObject = null;
+    if (attributes) {
+      let attrs = [];
+      for (let name of Object.keys(attributes)) {
+        let attr = {
+                    "$": {
+                      "key": name, 
+                      "value": attributes[name]
+                    }
+                  };
+                  attrs.push(attr);
+      }
+      returnObject = { 
+                      "Map": [ 
+                        { 
+                          "entry": attrs
+                        }
+                      ]
+                    };
     }
 
-    return returnValue;
+    return returnObject;
   }
 
   downloadRule(ruleId: string) {
