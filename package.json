@@ -53,7 +53,7 @@
     "path-parse": ">=1.0.7",
     "popper": "^1.0.1",
     "popper.js": "^1.16.1",
-    "rxjs": "~7.5.2",
+    "rxjs": "~6.5.4",
     "selfsigned": "1.10.11",
     "timers": "^0.1.1",
     "tslib": "^2.0.0",
