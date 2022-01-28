@@ -382,6 +382,8 @@ export class ImportRuleComponent implements OnInit {
     xml = xml.replace(" standalone=\"yes\"?>", "?>");
     xml = xml.replace("<Source>", "<Source><![CDATA[\n");
     xml = xml.replace("</Source>", "\n]]></Source>");
+    xml = xml.replace("&lt;#", "<#");
+    xml = xml.replace("#&gt;", "#>");
     
     var blob = new Blob([xml], {type: "application/xml"});
     let fileName = "Rule - " + rule.type + " - " + rule.name + ".xml";
