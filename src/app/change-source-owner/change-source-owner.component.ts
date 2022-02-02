@@ -84,6 +84,8 @@ export class ChangeSourceOwnerComponent implements OnInit {
                     source.owner.accountId = searchResult[0].id;
                     source.owner.accountName = searchResult[0].name;
                     source.owner.displayName = searchResult[0].displayName;
+                    source.currentOwnerAccountName = searchResult[0].name;
+                    source.currentOwnerDisplayName = searchResult[0].displayName;
                   }
                   fetchedOwnerCount++;
                   if (fetchedOwnerCount == sourceCount) {

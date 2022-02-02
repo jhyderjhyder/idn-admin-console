@@ -14,6 +14,8 @@ export class Source {
   accountAggCronExp: string;
   entAggCronExp: string;
   owner: SourceOwner;
+  currentOwnerAccountName: string;
+  currentOwnerDisplayName: string;
   newOwner: SourceOwner;
   aggregateSourceFormData: FormData;
   aggSourceDisableOptimization: boolean;
