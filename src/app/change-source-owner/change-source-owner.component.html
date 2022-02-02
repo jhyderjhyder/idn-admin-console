@@ -84,7 +84,7 @@
     </tr>
   </thead>
   <tbody *ngIf="sources">
-    <tr *ngFor="let s of sources | filter:searchText:['cloudExternalID', 'name', 'description', 'type', 'owner']">
+    <tr *ngFor="let s of sources | filter:searchText:['cloudExternalID', 'name', 'description', 'type', 'currentOwnerAccountName', 'currentOwnerDisplayName']">
       <td>
         <input type="checkbox" [(ngModel)]="s.selected" (click)="changeOnSelect($event, sources.indexOf(s))">
       </td>
