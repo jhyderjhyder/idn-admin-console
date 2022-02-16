@@ -132,9 +132,10 @@ export class AggregateSourceComponent implements OnInit {
     this.submitConfirmModal.hide();
   }
 
-  aggregateSource() {
+  async aggregateSource() {
     let arr = this.sources.filter(each => each.selected);
     let processedCount = 0;
+    let index = 0;
     for (let each of arr) {
       if (each.aggregateSourceFormData == null) {
         each.aggregateSourceFormData = new FormData();
@@ -144,6 +145,14 @@ export class AggregateSourceComponent implements OnInit {
       } else {
         each.aggregateSourceFormData.append("disableOptimization", "false");
       }
+
+      if (index > 0 && (index % 10) == 0) {
+        // After processing every batch (10 sources), wait for 2 seconds before calling another API to avoid 429 
+        // Too Many Requests Error
+        await this.sleep(2000);
+      }
+      index++;
+
       this.idnService.aggregateSourceOwner(each.cloudExternalID, each.aggregateSourceFormData)
           .subscribe(searchResult => {
             processedCount++;
@@ -170,6 +179,10 @@ export class AggregateSourceComponent implements OnInit {
           }
         );
     }
+  }
+
+  sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
   }
 
   onFileChange(event, index: number) {
