@@ -219,10 +219,18 @@ export class ChangeSourceOwnerComponent implements OnInit {
     this.submitConfirmModal.hide();
   }
 
-  updateSourceOwner() {
+  async updateSourceOwner() {
     let arr = this.sources.filter(each => each.selected);
     let processedCount = 0;
+    let index = 0;
     for (let each of arr) {
+      if (index > 0 && (index % 10) == 0) {
+        // After processing every batch (10 sources), wait for 2 seconds before calling another API to avoid 429 
+        // Too Many Requests Error
+        await this.sleep(2000);
+      }
+      index++;
+
       this.idnService.updateSourceOwner(each)
           .subscribe(searchResult => {
             processedCount++;
@@ -244,6 +252,10 @@ export class ChangeSourceOwnerComponent implements OnInit {
         );
     }
 
+  }
+
+  sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
   }
 
   saveInCsv() {
