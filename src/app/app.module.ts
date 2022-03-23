@@ -13,6 +13,8 @@ import { AggregationManagementComponent} from './aggregation-management/aggregat
 import { ChangeSourceOwnerComponent} from './change-source-owner/change-source-owner.component';
 import { AggregateSourceComponent} from './aggregate-source/aggregate-source.component';
 import { ImportRuleComponent} from './rule-management/rule-management.component';
+import { ReleaseHistoryComponent } from './release-history/release-history.component';
+import { CreditsComponent } from './credits/credits.component';
 import { AppRoutingModule } from './app-routing.module';
 import { MessagesComponent } from './messages/messages.component';
 import { SearchFilterPipe } from './shared/search-filter.pipe';
@@ -31,6 +33,8 @@ import { NgSelectModule } from '@ng-select/ng-select';
     ChangeSourceOwnerComponent,
     AggregateSourceComponent,
     ImportRuleComponent,
+    ReleaseHistoryComponent,
+    CreditsComponent,
     MessagesComponent,
     LoginComponent,
     SearchFilterPipe
