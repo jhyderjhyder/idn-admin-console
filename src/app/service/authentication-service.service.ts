@@ -54,6 +54,14 @@ export class AuthenticationService {
     );
   }
 
+  checkOrgAdminAccess(authUser: User): any {
+    const headers = { 'Authorization': 'Bearer ' +  authUser.accessToken }
+    let url = `https://${authUser.tenant}.api.identitynow.com/beta/org-config`;
+    return this.http.get(url, { headers }).pipe(
+      catchError(this.handleError(`checkOrgAdminAccess`, null, true))
+    );
+  }
+
   loginMock(username: string, password: string) {
       let user  = new User();
       // user.username = username;
