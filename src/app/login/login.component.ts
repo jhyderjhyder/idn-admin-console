@@ -66,14 +66,32 @@ export class LoginComponent implements OnInit {
 
         this.authenticationService.authenticate(user).subscribe(
             response => {
-                this.loading = false;
+                this.loading = true;
                 let authUser  = new User();
                 authUser.clientId = user.clientId;
                 authUser.tenant = user.tenant;
                 if (response.body && response.body.access_token) {
                     authUser.accessToken = response.body.access_token;
-                    this.authenticationService.afterLogin(authUser);
-                    this.router.navigate([this.returnUrl]);
+                    this.authenticationService.checkOrgAdminAccess(authUser).subscribe(
+                        response => {
+                            this.loading = false;
+                            if (response.orgName) {
+                                this.authenticationService.afterLogin(authUser);
+                                this.router.navigate([this.returnUrl]);
+                            } else {
+                                console.log('error onSubmit');
+                                this.error = "403 Forbidden: Given Client ID should have Org Admin Rights";
+                                this.loading = false;
+                            }
+                        },
+                        err => {
+                            console.log('error onSubmit');
+                            this.error = "403 Forbidden: Given Client ID should have Org Admin Rights";
+                            this.loading = false;
+                          }
+
+                    );
+
                 } else {
                     console.log('error onSubmit');
                     this.error = "Failed to authenticate.";
