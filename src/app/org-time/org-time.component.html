@@ -1,0 +1,45 @@
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a routerLink="/multiple-account">Home</a></li>
+    <li class="breadcrumb-item">Misc</li>
+    <li class="breadcrumb-item active" aria-current="page">Set Org Time</li>
+  </ol>
+</nav>
+<div class="form-group row" *ngIf="loading">
+  <div class="col-sm-12 text-right">
+    <span class="spinner-border spinner-border-sm mr-1"></span>Loading...
+  </div>
+</div>
+<div class="form-group row" *ngIf="!loading">
+  <div class="col-sm-12 text-right">
+    <button type="button" (click)="showSubmitConfirmModal()" class="btn btn-info btn-sm">
+      Submit
+    </button>
+  </div>
+</div>
+<table class="table table-striped table-bordered">
+  <thead class="thead-light">
+    <tr>
+      <th scope="col">Org Name</th>
+      <th scope="col">Current TimeZone</th>
+      <th scope="col">Set TimeZone</th>
+    </tr>
+  </thead>
+  <tbody *ngIf="timezone">
+    <tr *ngFor="let t of timezone">
+      <td>{{ t.orgName }}</td>
+      <td>{{ t.timeZone }}</td>
+      <td >
+        <select (change)="select($event.target)">
+          <ng-container *ngFor="let t of validtimezones[0].validTimeZones">
+            <option [value]="t">
+              {{ t }}
+            </option>
+          </ng-container>
+        </select>
+
+
+      </td>
+    </tr>
+  </tbody>
+</table>

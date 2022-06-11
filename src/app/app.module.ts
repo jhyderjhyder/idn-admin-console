@@ -15,6 +15,7 @@ import { AggregateSourceComponent} from './aggregate-source/aggregate-source.com
 import { ImportRuleComponent} from './rule-management/rule-management.component';
 import { ReleaseHistoryComponent } from './release-history/release-history.component';
 import { CreditsComponent } from './credits/credits.component';
+import { OrgTimeComponent } from './org-time/org-time.component';
 import { AppRoutingModule } from './app-routing.module';
 import { MessagesComponent } from './messages/messages.component';
 import { SearchFilterPipe } from './shared/search-filter.pipe';
@@ -35,6 +36,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
     ImportRuleComponent,
     ReleaseHistoryComponent,
     CreditsComponent,
+    OrgTimeComponent,
     MessagesComponent,
     LoginComponent,
     SearchFilterPipe
