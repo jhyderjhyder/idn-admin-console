@@ -29,16 +29,12 @@
     <tr *ngFor="let t of timezone">
       <td>{{ t.orgName }}</td>
       <td>{{ t.timeZone }}</td>
-      <td >
-        <select (change)="select($event.target)">
-          <ng-container *ngFor="let t of validtimezones[0].validTimeZones">
-            <option [value]="t">
-              {{ t }}
-            </option>
-          </ng-container>
+      <td>
+        <select [(ngModel)]='selectedOption'>
+          <option *ngFor="let tz of validtimezones" [value]="tz">
+            {{ tz }}
+          </option>
         </select>
-
-
       </td>
     </tr>
   </tbody>

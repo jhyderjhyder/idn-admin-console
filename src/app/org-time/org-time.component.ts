@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { OrgConfig } from '../model/org-config';
 import { Papa } from 'ngx-papaparse';
 import { BsModalRef } from 'ngx-bootstrap/modal';
@@ -13,15 +13,20 @@ import { AuthenticationService } from '../service/authentication-service.service
   templateUrl: './org-time.component.html',
   styleUrls: ['./org-time.component.css']
 })
+
 export class OrgTimeComponent implements OnInit {
   loading: boolean;
   timezone: OrgConfig[];
   validtimezones: OrgConfig[];
+  selectedOption: string;
+  errorMessage: string;
   
   constructor(
     private idnService: IDNService, 
     private messageService: MessageService) {
   }
+
+  @ViewChild('submitConfirmModal', { static: false }) submitConfirmModal: ModalDirective;
 
   ngOnInit() {
     this.reset(true);
@@ -34,7 +39,17 @@ export class OrgTimeComponent implements OnInit {
     this.loading = false;
     if (clearMsg) {
       this.messageService.clearAll();
+      this.errorMessage = null;
     } 
+  }
+
+  closeModalDisplayMsg() {
+    if (this.errorMessage != null) {
+      this.messageService.setError(this.errorMessage);
+    } else {
+      this.messageService.add("Changes saved successfully.");
+    }
+    this.submitConfirmModal.hide();
   }
 
   getOrgConfig() {
@@ -58,31 +73,28 @@ export class OrgTimeComponent implements OnInit {
     this.idnService.getValidTimeZones()
           .subscribe(
             results => {
-            this.validtimezones = [];
-            let validtimezones = new OrgConfig();
-            validtimezones.validTimeZones = results;
-
-            validtimezones.validTimeZones.sort(function(a, b) {
+              results.sort(function(a, b) {
               return a.localeCompare(b);
-              
-            });
+          });
 
-           this.validtimezones.push(validtimezones);
-            this.loading = false;
-            
+          this.validtimezones = results;
+          this.loading = false;
           });
   }
 
-  select(event?: any) {
-    console.log(event.value);
-  }
-
   showSubmitConfirmModal() {
-
     this.messageService.clearError();
     let selectedTimeZone = [];
-
-
+    this.idnService.updateOrgTimeConfig(this.selectedOption)
+          .subscribe(results => {
+             this.reset(false);
+             this.ngOnInit();
+          },
+          err => {
+            this.errorMessage = "Error to submit the changes.";
+            this.reset(false);
+            this.ngOnInit();
+          }
+        );;
   }
-
 }
