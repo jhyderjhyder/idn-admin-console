@@ -1,12 +1,8 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { OrgConfig } from '../model/org-config';
-import { Papa } from 'ngx-papaparse';
-import { BsModalRef } from 'ngx-bootstrap/modal';
 import { ModalDirective } from 'ngx-bootstrap/modal';
-import { SimpleQueryCondition } from '../model/simple-query-condition';
 import { IDNService } from '../service/idn.service';
 import { MessageService } from '../service/message.service';
-import { AuthenticationService } from '../service/authentication-service.service';
 
 @Component({
   selector: 'app-org-time',
@@ -31,7 +27,6 @@ export class OrgTimeComponent implements OnInit {
   ngOnInit() {
     this.reset(true);
     this.getOrgConfig();
-    this.getValidTimeZones();
   }
 
   reset(clearMsg: boolean) {
@@ -57,19 +52,15 @@ export class OrgTimeComponent implements OnInit {
     this.idnService.getOrgConfig()
           .subscribe(
             results => {
-            this.timezone = [];
-            let timezone = new OrgConfig();
-            timezone.orgName = results.orgName;
-            timezone.timeZone = results.timeZone;
+              this.timezone = [];
+              let timezone = new OrgConfig();
+              timezone.orgName = results.orgName;
+              timezone.timeZone = results.timeZone;
 
-            this.timezone.push(timezone);
-            this.loading = false;
-            
+              this.timezone.push(timezone);
+
           });
-  }
 
-  getValidTimeZones() {
-    this.loading = true;
     this.idnService.getValidTimeZones()
           .subscribe(
             results => {
@@ -79,6 +70,7 @@ export class OrgTimeComponent implements OnInit {
 
           this.validtimezones = results;
           this.loading = false;
+          
           });
   }
 
