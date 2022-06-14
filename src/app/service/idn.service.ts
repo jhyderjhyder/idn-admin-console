@@ -308,6 +308,42 @@ export class IDNService {
     return this.http.delete(url, myHttpOptions);
   }
 
+
+  getOrgConfig(): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    let url = `https://${currentUser.tenant}.api.identitynow.com/beta/org-config`;
+
+    return this.http.get(url, this.httpOptions);
+  }
+
+  getValidTimeZones(): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    let url = `https://${currentUser.tenant}.api.identitynow.com/beta/org-config/valid-time-zones`;
+
+    return this.http.get(url, this.httpOptions);
+  }
+
+  updateOrgTimeConfig(timeZoneValue: string): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    let url = `https://${currentUser.tenant}.api.identitynow.com/beta/org-config`;
+    
+    let myHttpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json-patch+json'
+      })
+    };
+
+    let payload = [
+      {
+          "op": "replace",
+          "path": "/timeZone",
+          "value": `${timeZoneValue}`
+      }
+    ];
+
+    return this.http.patch(url, payload, myHttpOptions);
+  }
+
    /** Log a HeroService message with the MessageService */
    private log(message: string) {
      this.messageService.add(`${message}`);
