@@ -17,6 +17,7 @@ import { ChangeRoleOwnerComponent} from './change-role-owner/change-role-owner.c
 import { RoleManagementComponent} from './role-management/role-management.component';
 import { ReleaseHistoryComponent } from './release-history/release-history.component';
 import { CreditsComponent } from './credits/credits.component';
+import { OrgTimeComponent } from './org-time/org-time.component';
 import { AppRoutingModule } from './app-routing.module';
 import { MessagesComponent } from './messages/messages.component';
 import { SearchFilterPipe } from './shared/search-filter.pipe';
@@ -39,6 +40,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
     RoleManagementComponent,
     ReleaseHistoryComponent,
     CreditsComponent,
+    OrgTimeComponent,
     MessagesComponent,
     LoginComponent,
     SearchFilterPipe

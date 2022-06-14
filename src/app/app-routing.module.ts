@@ -10,6 +10,7 @@ import { ChangeRoleOwnerComponent} from './change-role-owner/change-role-owner.c
 import { RoleManagementComponent} from './role-management/role-management.component';
 import { ReleaseHistoryComponent} from './release-history/release-history.component';
 import { CreditsComponent} from './credits/credits.component';
+import { OrgTimeComponent} from './org-time/org-time.component';
 import { LoginComponent }   from './login/login.component';
 import { AuthGuard } from './helper/auth.guard';
 
@@ -24,6 +25,7 @@ const routes: Routes = [
   { path: 'role-management', component: RoleManagementComponent, canActivate: [AuthGuard] },
   { path: 'release-history', component: ReleaseHistoryComponent, canActivate: [AuthGuard] },
   { path: 'credits', component: CreditsComponent, canActivate: [AuthGuard] },
+  { path: 'org-time', component: OrgTimeComponent, canActivate: [AuthGuard] },
   { path: 'login', component: LoginComponent }
 ];
 
