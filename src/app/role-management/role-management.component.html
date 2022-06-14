@@ -7,16 +7,21 @@
 </nav>
 <form name="form" #f="ngForm" novalidate contactRequired>
   <div class="form-group row">
-    <div class="input-group col-md-10">
+    <div class="input-group col-sm-9">
       <span class="input-group-prepend">
         <div class="input-group-text bg-transparent border-right-0"><i class="fa fa-search"></i></div>
       </span>
       <input class="form-control py-2 border-left-0 border" type="text" name="search" [(ngModel)]="searchText" autocomplete="off" 
-        placeholder="Click Search button to fetch the data. Type Source Name, description, cloudExternalID or type to filter the result.">
+        placeholder="Type Role Name, Description, Owner Account ID or Owner Display Name to filter the result.">
     </div>
-    <div class="col-sm-2 text-right">
+    <div class="col-sm-1 text-right">
       <button type="button" [disabled]="loading" (click)="ngOnInit()" class="btn btn-info btn-sm">
         Refresh
+      </button>
+    </div>
+    <div class="col-sm-2 text-right">
+      <button type="button" [disabled]="loading || !allOwnersFetched" (click)="showRoleRefreshSubmitConfirmModal()" class="btn btn-info btn-sm">
+        Refresh Roles
       </button>
     </div>
   </div>
@@ -36,11 +41,6 @@
         <ng-option value="MakeRolesNonRequestable">Bulk Mark Roles as Non Requestable</ng-option>
         <ng-option value="DeleteRoles">Bulk Delete Roles</ng-option>
     </ng-select>
-  </div>
-  <div class="col-sm-7 text-right" *ngIf="sources && bulkAction == null">
-    <button type="button" (click)="saveInCsv()" class="btn btn-link">
-      Download
-    </button>
   </div>
 </div>
 <div class="form-group row" *ngIf="bulkAction == 'EnableRoles'">
@@ -113,7 +113,7 @@
     </tr>
   </thead>
   <tbody *ngIf="rolesToShow">
-    <tr *ngFor="let r of rolesToShow | filter:searchText:['name', 'description', 'id']">
+    <tr *ngFor="let r of rolesToShow | filter:searchText:['name', 'description', 'currentOwnerAccountName', 'currentOwnerDisplayName']">
       <td *ngIf="bulkAction">
         <input type="checkbox" [(ngModel)]="r.selected" (click)="changeOnSelect($event)">
       </td>
@@ -124,8 +124,16 @@
       <td>{{ r.requestable }}</td>
       <td>{{ r.criteria }}</td>
       <td>{{ r.accessProfiles }}</td>
-      <td> {{ r.owner.accountName }}</td>
-      <td> {{ r.owner.displayName }}</td>
+      <td style="word-wrap: break-word;min-width: 160px;max-width: 160px;">
+        <span *ngIf="r.owner">
+          {{ r.owner.accountName }}
+        </span>
+      </td>
+      <td style="word-wrap: break-word;min-width: 160px;max-width: 160px;">
+        <span *ngIf="r.owner">
+          {{ r.owner.displayName }}
+        </span>
+      </td>
     </tr>
   </tbody>
 </table>
@@ -194,13 +202,77 @@
                 </button>
               </span>
               <span *ngIf="bulkAction == 'DeleteRoles' && atLeastOneSelected">
-                <button type="button" class="btn btn-success btn-sm" (click)="deleteRoles()">
+                <button type="button" class="btn btn-success btn-sm" (click)="showDeleteRoleConfirmModal()">
                   Delete
                 </button>
               </span>
             </div>
           </div>
       </form>
+      </div>
+    </div>
+  </div>
+</div>
+<div bsModal #submitRoleRefreshConfirmModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="dialog-child-name">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h6 id="dialog-child-name" class="modal-title pull-left">
+          <span>
+            Are you sure you want to kick off a org role refresh?
+          </span>
+        </h6>
+        <button type="button" class="close pull-right" aria-label="Close" (click)="hideRoleRefreshSubmitConfirmModal()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form name="form" novalidate>
+          <div class="row mrgbtm small">
+            <div class="col-sm-12 text-center">
+              <button type="button" (click)="hideRoleRefreshSubmitConfirmModal()" class="btn btn-danger btn-sm">Cancel</button>
+              &nbsp;&nbsp;&nbsp;
+              <span>
+                <button type="button" class="btn btn-success btn-sm" (click)="roleRefresh()">
+                  Save
+                </button>
+              </span>
+            </div>
+          </div>
+      </form>
+      </div>
+    </div>
+  </div>
+</div>
+<div bsModal #deleteRoleConfirmModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="dialog-child-name">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 id="dialog-child-name" class="modal-title pull-left font-weight-bold">
+          Delete Roles
+        </h5>
+        <button type="button" class="close pull-right" aria-label="Close" (click)="hideDeleteRoleConfirmModal()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+          <div class="form-group row">
+            <div class="col-sm-12 text-left">
+              To delete the roles, enter "YES TO DELETE" in below textbox for confirmation and click 'Delete' button
+              &nbsp;<input type="text" class="form-control col-sm-8" id="rule-name" [(ngModel)]="deleteRoleConfirmText" placeholder="Confirmation Text" aria-describedby="basic-addon3" autocomplete="off">
+            </div>
+          </div>
+          <div class="row mrgbtm small">
+            <div class="col-md-12 text-right">
+              <button type="button" (click)="hideDeleteRoleConfirmModal()" class="btn btn-danger btn-sm">Cancel</button>
+              &nbsp;&nbsp;&nbsp;
+              <span>
+                <button type="button" class="btn btn-success btn-sm" (click)="deleteRoles()">
+                  Delete
+                </button>
+              </span>
+            </div>
+          </div>
       </div>
     </div>
   </div>

@@ -7,21 +7,16 @@
 </nav>
 <form name="form" #f="ngForm" novalidate contactRequired>
   <div class="form-group row">
-    <div class="input-group col-sm-9">
+    <div class="input-group col-sm-10">
       <span class="input-group-prepend">
         <div class="input-group-text bg-transparent border-right-0"><i class="fa fa-search"></i></div>
       </span>
       <input class="form-control py-2 border-left-0 border" type="text" name="search" [(ngModel)]="searchText" autocomplete="off" 
-        placeholder="Click Search button to fetch the data. Type Role Name, Description, Owner Account ID to filter the result.">
+        placeholder="Type Role Name, Description, Owner Account ID or Owner Display Name to filter the result.">
     </div>
-    <div class="col-sm-1 text-left">
+    <div class="col-sm-2 text-left">
       <button type="button" [disabled]="loading || !allOwnersFetched" (click)="ngOnInit()" class="btn btn-info btn-sm">
         Refresh
-      </button>
-    </div>
-    <div class="col-sm-2 text-right">
-      <button type="button" [disabled]="loading || !allOwnersFetched" (click)="showRoleRefreshSubmitConfirmModal()" class="btn btn-info btn-sm">
-        Refresh Roles
       </button>
     </div>
   </div>
@@ -149,37 +144,6 @@
               &nbsp;&nbsp;&nbsp;
               <span *ngIf="validToSubmit">
                 <button type="button" class="btn btn-success btn-sm" (click)="updateRoleOwner()">
-                  Save
-                </button>
-              </span>
-            </div>
-          </div>
-      </form>
-      </div>
-    </div>
-  </div>
-</div>
-<div bsModal #submitRoleRefreshConfirmModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="dialog-child-name">
-  <div class="modal-dialog modal-dialog-centered modal-lg">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h6 id="dialog-child-name" class="modal-title pull-left">
-          <span>
-            Are you sure you want to kick off a org role refresh?
-          </span>
-        </h6>
-        <button type="button" class="close pull-right" aria-label="Close" (click)="hideRoleRefreshSubmitConfirmModal()">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <form name="form" novalidate>
-          <div class="row mrgbtm small">
-            <div class="col-sm-12 text-center">
-              <button type="button" (click)="hideRoleRefreshSubmitConfirmModal()" class="btn btn-danger btn-sm">Cancel</button>
-              &nbsp;&nbsp;&nbsp;
-              <span>
-                <button type="button" class="btn btn-success btn-sm" (click)="roleRefresh()">
                   Save
                 </button>
               </span>

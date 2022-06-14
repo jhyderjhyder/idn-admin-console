@@ -4,8 +4,6 @@ import { Papa } from 'ngx-papaparse';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import cron from 'cron-validate'
-import { Source } from '../model/source';
-import { Schedule } from '../model/schedule';
 import { IDNService } from '../service/idn.service';
 import { MessageService } from '../service/message.service';
 import { AuthenticationService } from '../service/authentication-service.service';
@@ -45,7 +43,7 @@ export class ChangeRoleOwnerComponent implements OnInit {
 
   ngOnInit() {
     this.reset(true);
-    this.search();
+    this.getAllRoles();
   }
 
   reset(clearMsg: boolean) {
@@ -62,10 +60,10 @@ export class ChangeRoleOwnerComponent implements OnInit {
     } 
   }
 
-  search() {
+  getAllRoles() {
     this.allOwnersFetched = false;
     this.loading = true;
-    this.idnService.getAllRoles()
+    this.idnService.getRoles()
           .subscribe(allRoles => {
             this.roles = [];
             let roleCount = allRoles.length;
@@ -97,6 +95,8 @@ export class ChangeRoleOwnerComponent implements OnInit {
                     role.owner.accountId = searchResult[0].id;
                     role.owner.accountName = searchResult[0].name;
                     role.owner.displayName = searchResult[0].displayName;
+                    role.currentOwnerAccountName = searchResult[0].name;
+                    role.currentOwnerDisplayName = searchResult[0].displayName;
                   }
                   fetchedOwnerCount++;
                   if (fetchedOwnerCount == roleCount) {
@@ -117,7 +117,7 @@ export class ChangeRoleOwnerComponent implements OnInit {
       decimalseparator: '.',
       showLabels: true,
       useHeader: true,
-      headers: ["name", "description", "id", "enabled", "requestable", "criteria", "ownerAccountID", "ownerDisplayName"],
+      headers: ["name", "description", "id", "enabled", "requestable", "criteria", "accessProfiles", "ownerAccountID", "ownerDisplayName"],
       nullToEmptyString: true,
     };
 
@@ -279,7 +279,7 @@ export class ChangeRoleOwnerComponent implements OnInit {
             if (processedCount == arr.length) {
              this.closeModalDisplayMsg();
              this.reset(false);
-             this.search();
+             this.getAllRoles();
             }
           },
           err => {
@@ -288,7 +288,7 @@ export class ChangeRoleOwnerComponent implements OnInit {
             if (processedCount == arr.length) {
               this.closeModalDisplayMsg();
               this.reset(false);
-              this.search();
+              this.getAllRoles();
             }
           }
         );
@@ -340,35 +340,6 @@ export class ChangeRoleOwnerComponent implements OnInit {
         }
       });
     }
-  }
-
-  showRoleRefreshSubmitConfirmModal(){
-    this.messageService.clearError();
-    this.validToSubmit = true;
-    this.submitRoleRefreshConfirmModal.show();
-}
-
-  hideRoleRefreshSubmitConfirmModal() {
-    this.submitRoleRefreshConfirmModal.hide();
-  }
-
-  roleRefresh(){
-    this.idnService.refreshAllRoles()
-          .subscribe(response => {
-            this.closeRoleRefreshModalDisplayMsg();
-            this.reset(false);
-            this.search();
-  });
-
-  }
-
-  closeRoleRefreshModalDisplayMsg() {
-    if (this.errorMessage != null) {
-      this.messageService.setError(this.errorMessage);
-    } else {
-      this.messageService.add("Org Role Refresh Kicked off. Please check Org -> Admin -> Dashboard -> Monitor");
-    }
-    this.submitRoleRefreshConfirmModal.hide();
   }
 
 }

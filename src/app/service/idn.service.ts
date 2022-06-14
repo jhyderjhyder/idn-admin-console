@@ -126,7 +126,7 @@ export class IDNService {
     );
   }
 
-  getAllRoles(): Observable<any> {
+  getRoles(): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
     let url = `https://${currentUser.tenant}.api.identitynow.com/beta/roles`;
 
