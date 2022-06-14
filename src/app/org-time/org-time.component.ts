@@ -12,10 +12,12 @@ import { MessageService } from '../service/message.service';
 
 export class OrgTimeComponent implements OnInit {
   loading: boolean;
-  timezone: OrgConfig[];
+  orgConfig: OrgConfig;
   validtimezones: OrgConfig[];
   selectedOption: string;
   errorMessage: string;
+  validToSubmit: boolean;
+  invalidMessage: string[];
   
   constructor(
     private idnService: IDNService, 
@@ -30,7 +32,7 @@ export class OrgTimeComponent implements OnInit {
   }
 
   reset(clearMsg: boolean) {
-    this.timezone = null;
+    this.orgConfig = null;
     this.loading = false;
     if (clearMsg) {
       this.messageService.clearAll();
@@ -52,12 +54,9 @@ export class OrgTimeComponent implements OnInit {
     this.idnService.getOrgConfig()
           .subscribe(
             results => {
-              this.timezone = [];
-              let timezone = new OrgConfig();
-              timezone.orgName = results.orgName;
-              timezone.timeZone = results.timeZone;
-
-              this.timezone.push(timezone);
+              this.orgConfig = new OrgConfig();
+              this.orgConfig.orgName = results.orgName;
+              this.orgConfig.currentTimeZone = results.timeZone;
 
           });
 
@@ -69,24 +68,58 @@ export class OrgTimeComponent implements OnInit {
           });
 
           this.validtimezones = results;
+
           this.loading = false;
-          
           });
+
   }
 
-  showSubmitConfirmModal() {
+  updateOrgTimeZone() {
     this.messageService.clearError();
-    let selectedTimeZone = [];
+    this.validToSubmit = true;
+    this.loading = true;
+    
     this.idnService.updateOrgTimeConfig(this.selectedOption)
           .subscribe(results => {
+            this.closeModalDisplayMsg();
              this.reset(false);
              this.ngOnInit();
           },
           err => {
             this.errorMessage = "Error to submit the changes.";
+            this.closeModalDisplayMsg();
             this.reset(false);
             this.ngOnInit();
           }
         );;
+
+
   }
+
+  showSubmitConfirmModal() {
+    this.messageService.clearError();
+    this.validToSubmit = true;
+    this.loading = true;
+    this.invalidMessage = [];
+    if (!this.selectedOption) {
+      this.invalidMessage.push(`Must select a timezone from dropdown list`);
+      this.validToSubmit = false;
+    }
+    else if (this.orgConfig.currentTimeZone == this.selectedOption) {
+      this.invalidMessage.push(`Selected Timezone ${this.selectedOption} is not changed.`);
+      this.validToSubmit = false;
+    }
+
+    if (this.validToSubmit) {
+      this.submitConfirmModal.show();
+  } else {
+    this.submitConfirmModal.show();
+  }
+}
+
+  hideSubmitConfirmModal() {
+    this.submitConfirmModal.hide();
+    this.ngOnInit();
+  }
+
 }
