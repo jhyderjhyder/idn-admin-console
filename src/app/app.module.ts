@@ -13,6 +13,8 @@ import { AggregationManagementComponent} from './aggregation-management/aggregat
 import { ChangeSourceOwnerComponent} from './change-source-owner/change-source-owner.component';
 import { AggregateSourceComponent} from './aggregate-source/aggregate-source.component';
 import { ImportRuleComponent} from './rule-management/rule-management.component';
+import { ChangeRoleOwnerComponent} from './change-role-owner/change-role-owner.component';
+import { RoleManagementComponent} from './role-management/role-management.component';
 import { ReleaseHistoryComponent } from './release-history/release-history.component';
 import { CreditsComponent } from './credits/credits.component';
 import { AppRoutingModule } from './app-routing.module';
@@ -33,6 +35,8 @@ import { NgSelectModule } from '@ng-select/ng-select';
     ChangeSourceOwnerComponent,
     AggregateSourceComponent,
     ImportRuleComponent,
+    ChangeRoleOwnerComponent,
+    RoleManagementComponent,
     ReleaseHistoryComponent,
     CreditsComponent,
     MessagesComponent,

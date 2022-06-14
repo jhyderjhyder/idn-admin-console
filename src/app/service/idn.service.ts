@@ -8,6 +8,7 @@ import { Rule } from '../model/rule';
 import { SimpleQueryCondition } from '../model/simple-query-condition';
 import { AggTaskPollingStatus } from '../model/agg-task-polling-status';
 import { AuthenticationService } from '../service/authentication-service.service';
+import { Role } from '../model/role';
 
 @Injectable({
   providedIn: 'root'
@@ -114,6 +115,85 @@ export class IDNService {
     return this.http.get(url, this.httpOptions).pipe(
       catchError(this.handleError(`getAggregationSources`))
     );
+  }
+
+  refreshAllRoles(): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    let url = `https://${currentUser.tenant}.api.identitynow.com/cc/api/role/refresh`;
+
+    return this.http.post(url, null, { responseType: 'text' }).pipe(
+      catchError(this.handleError(`refreshAllRoles`))
+    );
+  }
+
+  getAllRoles(): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    let url = `https://${currentUser.tenant}.api.identitynow.com/beta/roles`;
+
+    return this.http.get(url, this.httpOptions).pipe(
+      catchError(this.handleError(`getAllRoles`))
+    );
+  }
+
+  updateRoleOwner(role: Role): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    let url = `https://${currentUser.tenant}.api.identitynow.com/beta/roles/${role.id}`;
+    
+    let myHttpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json-patch+json'
+      })
+    };
+
+    let payload = [
+      {
+          "op": "replace",
+          "path": "/owner",
+          "value": {
+              "type": "IDENTITY",
+              "id": null,
+              "name": null
+          }
+      }
+    ];
+
+    payload[0].value.id = role.newOwner.accountId;
+    payload[0].value.name = role.newOwner.displayName;
+
+    return this.http.patch(url, payload, myHttpOptions);
+  }
+
+  updateRole(role: Role, path: string, enable: boolean): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    let url = `https://${currentUser.tenant}.api.identitynow.com/beta/roles/${role.id}`;
+    
+    let myHttpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json-patch+json'
+      })
+    };
+
+    let payload = [
+      {
+          "op": "replace",
+          "path": `/${path}`,
+          "value": `${enable}`
+      }
+    ];
+
+    return this.http.patch(url, payload, myHttpOptions);
+  }
+
+  deleteRole(role: Role): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    let url = `https://${currentUser.tenant}.api.identitynow.com/beta/roles/${role.id}`;
+    
+    let myHttpOptions = {
+      headers: new HttpHeaders({
+      })
+    };
+    
+    return this.http.delete(url, myHttpOptions);
   }
 
   getAggregationSchedules(cloudExternalID: string): Observable<any> {
