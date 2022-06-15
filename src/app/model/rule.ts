@@ -8,4 +8,5 @@ export class Rule {
     script: string;
     description: string;
     attributes: {};
+    object: {};
 }

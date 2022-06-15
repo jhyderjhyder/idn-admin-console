@@ -424,6 +424,41 @@ export class IDNService {
     return this.http.patch(url, payload, myHttpOptions);
   }
 
+  exportCloudRules(): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    let url = `https://${currentUser.tenant}.api.identitynow.com/beta/sp-config/export`;
+
+    let payload = 
+      {
+        "description": "Export Rules - Call by IDN Admin Console",
+        "includeTypes": [
+            "RULE"
+        ]
+    };
+
+    return this.http.post(url, payload, this.httpOptions).pipe(
+      catchError(this.handleError(`exportCloudRules`))
+    );
+  }
+
+  checkSPConfigJobStatus(jobId: string): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    let url = `https://${currentUser.tenant}.api.identitynow.com/beta/sp-config/export/${jobId}`;
+
+    return this.http.get(url, this.httpOptions).pipe(
+      catchError(this.handleError(`checkSPConfigJobStatus`))
+    );
+  }
+
+  downloadSPConfigExport(jobId: string): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    let url = `https://${currentUser.tenant}.api.identitynow.com/beta/sp-config/export/${jobId}/download`;
+
+    return this.http.get(url, this.httpOptions).pipe(
+      catchError(this.handleError(`downloadSPConfigExport`))
+    );
+  }
+
    /** Log a HeroService message with the MessageService */
    private log(message: string) {
      this.messageService.add(`${message}`);
