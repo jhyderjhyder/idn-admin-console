@@ -12,7 +12,8 @@ import { MultipleAccountsComponent } from './multiple-accounts/multiple-accounts
 import { AggregationManagementComponent} from './aggregation-management/aggregation-management.component';
 import { ChangeSourceOwnerComponent} from './change-source-owner/change-source-owner.component';
 import { AggregateSourceComponent} from './aggregate-source/aggregate-source.component';
-import { ImportRuleComponent} from './rule-management/rule-management.component';
+import { ImportRuleComponent} from './connector-rule-management/connector-rule-management.component';
+import { CloudRuleComponent} from './cloud-rule-management/cloud-rule-management.component';
 import { ChangeRoleOwnerComponent} from './change-role-owner/change-role-owner.component';
 import { RoleManagementComponent} from './role-management/role-management.component';
 import { ReleaseHistoryComponent } from './release-history/release-history.component';
@@ -36,6 +37,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
     ChangeSourceOwnerComponent,
     AggregateSourceComponent,
     ImportRuleComponent,
+    CloudRuleComponent,
     ChangeRoleOwnerComponent,
     RoleManagementComponent,
     ReleaseHistoryComponent,

@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
-import { ImportRuleComponent } from './rule-management.component';
+import { ImportRuleComponent } from './connector-rule-management.component';
 
 describe('ImportRuleComponent', () => {
   let component: ImportRuleComponent;
