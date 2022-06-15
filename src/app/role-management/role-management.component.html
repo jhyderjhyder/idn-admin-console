@@ -21,7 +21,7 @@
     </div>
     <div class="col-sm-2 text-right">
       <button type="button" [disabled]="loading || !allOwnersFetched" (click)="showRoleRefreshSubmitConfirmModal()" class="btn btn-info btn-sm">
-        Refresh Roles
+        Refresh All Org Roles
       </button>
     </div>
   </div>
@@ -31,7 +31,7 @@
     <span class="spinner-border spinner-border-sm mr-1"></span>Loading...
   </div>
 </div>
-<div class="form-group row" *ngIf="!loading">
+<div class="form-group row" *ngIf="!loading && allOwnersFetched">
   <div class="col-sm-5">
     <ng-select [(ngModel)]="bulkAction" appearance="outline" placeholder="Select Bulk Role Action" 
       (change)="changeOnBulkAction($event)">
@@ -41,6 +41,11 @@
         <ng-option value="MakeRolesNonRequestable">Bulk Mark Roles as Non Requestable</ng-option>
         <ng-option value="DeleteRoles">Bulk Delete Roles</ng-option>
     </ng-select>
+  </div>
+  <div class="col-sm-7 text-right" *ngIf="roles">
+    <button type="button" (click)="saveInCsv()" class="btn btn-link">
+      Download
+    </button>
   </div>
 </div>
 <div class="form-group row" *ngIf="bulkAction == 'EnableRoles'">
@@ -103,7 +108,6 @@
       </th>
       <th scope="col">Name</th>
       <th scope="col">Description</th>
-      <th scope="col">ID</th>
       <th scope="col">Enabled</th>
       <th scope="col">Requestable</th>
       <th scope="col">Criteria Based</th>
@@ -119,7 +123,6 @@
       </td>
       <td>{{ r.name }}</td>
       <td>{{ r.description }}</td>
-      <td>{{ r.id }}</td>
       <td>{{ r.enabled }}</td>
       <td>{{ r.requestable }}</td>
       <td>{{ r.criteria }}</td>
@@ -219,7 +222,7 @@
       <div class="modal-header">
         <h6 id="dialog-child-name" class="modal-title pull-left">
           <span>
-            Are you sure you want to kick off a org role refresh?
+            Are you sure you want to kick off an org role refresh?
           </span>
         </h6>
         <button type="button" class="close pull-right" aria-label="Close" (click)="hideRoleRefreshSubmitConfirmModal()">
@@ -256,6 +259,18 @@
         </button>
       </div>
       <div class="modal-body">
+        <div class="form-group row">
+          <div class="col-sm-12 text-left" *ngIf="deleteRoleConfirmText">
+              <div *ngIf="!validToSubmit && invalidMessage && invalidMessage.length > 0">
+                <br>
+                <span class="font-weight-bold text-danger">Please fix following error:</span><br>
+                <span *ngFor="let err of invalidMessage">
+                  {{ err }}
+                  <br>
+                </span>
+              </div>
+          </div>
+        </div>
           <div class="form-group row">
             <div class="col-sm-12 text-left">
               To delete the roles, enter "YES TO DELETE" in below textbox for confirmation and click 'Delete' button

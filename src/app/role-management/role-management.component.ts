@@ -11,6 +11,8 @@ import { Role } from '../model/role';
 import { SimpleQueryCondition } from '../model/simple-query-condition';
 import { SourceOwner } from '../model/source-owner';
 
+const RoleDescriptionMaxLength = 50;
+
 @Component({
   selector: 'app-role-management',
   templateUrl: './role-management.component.html',
@@ -55,6 +57,7 @@ export class RoleManagementComponent implements OnInit {
   reset(clearMsg: boolean) {
     this.roles = null;
     this.rolesToShow = null;
+    this.sources = null;
     this.selectAll = false;
     this.atLeastOneSelected = false;
     this.bulkAction = null;
@@ -81,7 +84,14 @@ export class RoleManagementComponent implements OnInit {
               let role = new Role();
               role.id = each.id;
               role.name = each.name;
-              role.description = each.description;
+              if (each.description) {
+                if (each.description.length > RoleDescriptionMaxLength) {
+                  role.description = each.description.substring(0, RoleDescriptionMaxLength) + "...";
+                }
+                else {
+                  role.description = each.description;
+                }
+              }
               role.id = each.id;
               role.enabled = each.enabled;
               role.requestable = each.requestable;
@@ -232,12 +242,36 @@ export class RoleManagementComponent implements OnInit {
     }
   } 
 
+  saveInCsv() {
+    var options = { 
+      fieldSeparator: ',',
+      quoteStrings: '"',
+      decimalseparator: '.',
+      showLabels: true,
+      useHeader: true,
+      headers: ["name", "description", "id", "enabled", "requestable", "criteria", "accessProfiles", "ownerAccountID", "ownerDisplayName"],
+      nullToEmptyString: true,
+    };
+
+    const currentUser = this.authenticationService.currentUserValue;
+    let fileName = `${currentUser.tenant}-roles`;
+    let arr = [];
+    for (let each of this.roles) {
+      let record = Object.assign(each);
+      if (each.owner) {
+        record.ownerAccountID = each.owner.accountName;
+        record.ownerDisplayName = each.owner.displayName;
+      }
+      arr.push(record);
+    }
+
+    let angularCsv: AngularCsv = new AngularCsv(arr, fileName, options);
+  }
+
   deleteRoles() {
     this.messageService.clearAll();
     this.invalidMessage = [];
-    let arr = this.getSelectedRoles();
-    let processedCount = 0;
-    if (this.deleteRoleConfirmText != "YES TO DELETE") {
+    if (this.deleteRoleConfirmText !== "YES TO DELETE") {
       this.invalidMessage.push("Text does not match");
       this.validToSubmit = false;
       return;
@@ -246,17 +280,19 @@ export class RoleManagementComponent implements OnInit {
       this.validToSubmit = true;
     }
 
+    let arr = this.getSelectedRoles();
+    let processedCount = 0;
     for (let each of arr) {
       this.idnService.deleteRole(each)
           .subscribe(searchResult => {
             processedCount++;
             if (processedCount == arr.length) {
-            this.messageService.add("Roles deleted successfully.");
-            this.deleteRoleConfirmModal.hide();
-            this.hideSubmitConfirmModal();
-            this.reset(false);
-            this.sleep(5000);
-            this.getAllRoles();
+              this.deleteRoleConfirmModal.hide();
+              this.messageService.add("Roles deleted successfully.");
+              this.hideSubmitConfirmModal();
+              this.reset(false);
+              this.sleep(5000);
+              this.getAllRoles();
             }
           },
           err => {
@@ -272,92 +308,6 @@ export class RoleManagementComponent implements OnInit {
         );
     }
   } 
-
-  // saveInCsv() {
-  //   var options = { 
-  //     fieldSeparator: ',',
-  //     quoteStrings: '"',
-  //     decimalseparator: '.',
-  //     showLabels: true,
-  //     useHeader: true,
-  //     headers: ["name", "description", "type", "cloudExternalID", "accountAggregationScheduled", 
-  //       "accountAggregationScheduleCronExp", "entilementAggregationScheduled", "entilementAggregationScheduleCronExp"],
-  //     nullToEmptyString: true,
-  //   };
-
-  //   const currentUser = this.authenticationService.currentUserValue;
-  //   let fileName = `${currentUser.tenant}-Sources`;
-  //   let arr = [];
-  //   for (let each of this.sources) {
-  //     let record = Object.assign(each);
-  //     if (each.accountAggregationSchedule) {
-  //       record.accountAggregationScheduled = "Yes";
-  //       record.accountAggregationScheduleCronExp = each.accountAggregationSchedule.cronExp.toString();
-  //     } else {
-  //       record.accountAggregationScheduled = "No";
-  //     }
-  //     if (each.entAggregationSchedule) {
-  //       record.entilementAggregationScheduled = "Yes";
-  //       record.entilementAggregationScheduleCronExp = each.entAggregationSchedule.cronExp.toString();
-  //     } else {
-  //       record.entilementAggregationScheduled = "No";
-  //     }
-  //     arr.push(record);
-  //   }
-
-  //   let angularCsv: AngularCsv = new AngularCsv(arr, fileName, options);
-  // }
-
-  // clearFileSelect() {
-  //   this.messageService.clearError();
-  //   this.fileInput.nativeElement.value = "";
-  // }
-
-  // handleFileSelect(evt) {
-  //   this.messageService.clearError();
-  //   let cronExpMap = {}; //key is source cloudExternalID, value is cronExp
-  //   var files = evt.target.files; // FileList object
-  //   var file = files[0];
-  //   var reader = new FileReader();
-  //   reader.readAsText(file);
-  //   reader.onload = (event: any) => {
-  //     var csv = event.target.result; // Content of CSV file
-  //     this.papa.parse(csv, {
-  //       skipEmptyLines: true,
-  //       header: true,
-  //       complete: (results) => {
-  //         for (let i = 0; i < results.data.length; i++) {
-  //           let cloudExternalID = results.data[i].cloudExternalID;
-  //           if (this.bulkAction == 'EnableAggSchedule') {
-  //             cronExpMap[cloudExternalID] = results.data[i].accountAggregationScheduleCronExp;
-  //           } else if (this.bulkAction == 'EnableEntAggSchedule') {
-  //             cronExpMap[cloudExternalID] = results.data[i].entilementAggregationScheduleCronExp;
-  //           }
-  //         }
-
-  //         let anythingMatched = false;
-
-  //         for (let each of this.rolesToShow) {
-  //           // if (each.selected) {
-  //             let cronExp = cronExpMap[each.cloudExternalID];
-  //             if (cronExp && cronExp != '') {
-  //               // if (this.bulkAction == 'EnableAggSchedule') {
-  //               //   each.accountAggCronExp = cronExp;
-  //               // } else if (this.bulkAction == 'EnableEntAggSchedule') {
-  //               //   each.entAggCronExp = cronExp;
-  //               // }
-  //               // anythingMatched = true;
-  //             }
-  //           // }
-  //         }
-
-  //         if (!anythingMatched) {
-  //           this.messageService.setError("No source record in uploaded file is matched with the selected items.");
-  //         }
-  //       }
-  //     });
-  //   }
-  // }
 
   showRoleRefreshSubmitConfirmModal(){
     this.messageService.clearError();

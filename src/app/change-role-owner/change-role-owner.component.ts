@@ -11,6 +11,8 @@ import { Role } from '../model/role';
 import { SimpleQueryCondition } from '../model/simple-query-condition';
 import { SourceOwner } from '../model/source-owner';
 
+const RoleDescriptionMaxLength = 50;
+
 @Component({
   selector: 'change-role-owner',
   templateUrl: './change-role-owner.component.html',
@@ -72,7 +74,14 @@ export class ChangeRoleOwnerComponent implements OnInit {
               let role = new Role();
               role.id = each.id;
               role.name = each.name;
-              role.description = each.description;
+              if (each.description) {
+                if (each.description.length > RoleDescriptionMaxLength) {
+                  role.description = each.description.substring(0, RoleDescriptionMaxLength) + "...";
+                }
+                else {
+                  role.description = each.description;
+                }
+              }
               role.id = each.id;
               role.enabled = each.enabled;
               role.requestable = each.requestable;
