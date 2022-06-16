@@ -57,9 +57,6 @@ export class IDNService {
       "query": {
           "query": "*"
       },
-      "indices": [
-          "identities"
-      ],
       "aggregationsDsl": {
           "accounts": {
               "nested": {
@@ -70,12 +67,12 @@ export class IDNService {
                       "terms": {
                           "field": "accounts.source.id",
                           "min_doc_count": 2,
-                          "size": 1000
+                          "size": 100
                       },
                       "aggs": {
                           "identities": {
                               "terms": {
-                                  "field": "_id",
+                                  "field": "_uid",
                                   "min_doc_count": 2
                               },
                               "aggs": {
@@ -89,7 +86,7 @@ export class IDNService {
               }
           }
       }
-  };
+    };
 
     return this.http.post(url, payload, this.httpOptions).pipe(
       catchError(this.handleError(`MultipleAccountsComponent`))
