@@ -51,12 +51,15 @@ export class IDNService {
 
   searchMultipleAccounts(): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.identitynow.com/beta/search-aggregations/identities?limit=0`;
+    let url = `https://${currentUser.tenant}.api.identitynow.com/v3/search/aggregate`;
 
     let payload = {
       "query": {
           "query": "*"
       },
+      "indices": [
+          "identities"
+      ],
       "aggregationsDsl": {
           "accounts": {
               "nested": {
@@ -67,12 +70,12 @@ export class IDNService {
                       "terms": {
                           "field": "accounts.source.id",
                           "min_doc_count": 2,
-                          "size": 100
+                          "size": 1000
                       },
                       "aggs": {
                           "identities": {
                               "terms": {
-                                  "field": "_uid",
+                                  "field": "_id",
                                   "min_doc_count": 2
                               },
                               "aggs": {
@@ -86,7 +89,7 @@ export class IDNService {
               }
           }
       }
-    };
+  };
 
     return this.http.post(url, payload, this.httpOptions).pipe(
       catchError(this.handleError(`MultipleAccountsComponent`))
