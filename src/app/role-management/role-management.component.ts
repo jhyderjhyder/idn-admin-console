@@ -55,15 +55,18 @@ export class RoleManagementComponent implements OnInit {
   }
 
   reset(clearMsg: boolean) {
-    this.roles = null;
-    this.rolesToShow = null;
     this.sources = null;
-    this.selectAll = false;
-    this.atLeastOneSelected = false;
     this.bulkAction = null;
+    this.selectAll = null;
+    this.atLeastOneSelected = null;
     this.searchText = null;
     this.loading = false;
     this.invalidMessage = [];
+  
+    this.allOwnersFetched = false;
+    this.roles = null;
+    this.rolesToShow = null;
+    this.errorMessage = null;
     this.deleteRoleConfirmText = null;
     if (clearMsg) {
       this.messageService.clearAll();
@@ -268,7 +271,7 @@ export class RoleManagementComponent implements OnInit {
     let angularCsv: AngularCsv = new AngularCsv(arr, fileName, options);
   }
 
-  deleteRoles() {
+  async deleteRoles() {
     this.messageService.clearAll();
     this.invalidMessage = [];
     if (this.deleteRoleConfirmText !== "YES TO DELETE") {
@@ -284,14 +287,14 @@ export class RoleManagementComponent implements OnInit {
     let processedCount = 0;
     for (let each of arr) {
       this.idnService.deleteRole(each)
-          .subscribe(searchResult => {
+          .subscribe( async searchResult => {
             processedCount++;
             if (processedCount == arr.length) {
               this.deleteRoleConfirmModal.hide();
               this.messageService.add("Roles deleted successfully.");
               this.hideSubmitConfirmModal();
               this.reset(false);
-              this.sleep(5000);
+              await this.sleep(2000);
               this.getAllRoles();
             }
           },
@@ -350,7 +353,7 @@ showDeleteRoleConfirmModal() {
   this.deleteRoleConfirmModal.show();
 }
 
-sleep(ms) {
+async sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 

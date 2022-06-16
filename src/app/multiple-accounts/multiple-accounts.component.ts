@@ -3,6 +3,7 @@ import { AngularCsv } from 'angular-csv-ext/dist/Angular-csv';
 import { Account } from '../model/account';
 import { IDNService } from '../service/idn.service';
 import { AuthenticationService } from '../service/authentication-service.service';
+import { MessageService } from '../service/message.service';
 
 @Component({
   selector: 'app-multiple-accounts',
@@ -16,7 +17,8 @@ export class MultipleAccountsComponent implements OnInit {
   loading: boolean;
 
   constructor(private idnService: IDNService, 
-    private authenticationService: AuthenticationService) { }
+    private authenticationService: AuthenticationService,
+    private messageService: MessageService) { }
 
   ngOnInit() {
     this.reset();
@@ -28,6 +30,7 @@ export class MultipleAccountsComponent implements OnInit {
     this.searchText = null;
     this.errorMessage = null;
     this.loading = false;
+    this.messageService.clearAll();
   }
 
   search() {
@@ -36,6 +39,10 @@ export class MultipleAccountsComponent implements OnInit {
             this.accounts = [];
             let accnts = searchResult.aggregations.accounts.source_id.buckets.filter(each => each.identities.buckets.length > 0);
 
+            if (accnts.length == 0) {
+              this.messageService.add("No Multiple Accounts Found");
+              return null;
+            }
             for (let acc of accnts) {
               for (let bucket of acc.identities.buckets) {
                 let identityId = bucket.key.replace("identity#", "");
