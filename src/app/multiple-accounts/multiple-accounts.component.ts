@@ -34,6 +34,7 @@ export class MultipleAccountsComponent implements OnInit {
   }
 
   search() {
+    this.loading = true;
     this.idnService.searchMultipleAccounts()
           .subscribe(searchResult => {
             this.accounts = [];
