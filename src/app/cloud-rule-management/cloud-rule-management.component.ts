@@ -58,20 +58,25 @@ export class CloudRuleComponent implements OnInit {
           }});
   }
 
-  checkExportJobStatus(jobId: string) {
+  async checkExportJobStatus(jobId: string) {
     this.loading = true;
     this.idnService.checkSPConfigJobStatus(jobId)
     .subscribe(
-      results => {
+      async results => {
         if (results != null) {
           this.jobStatus = results.status;
 
-          if (this.jobStatus === "COMPLETE") {
+          //should work but not tested
+          if (this.jobStatus === "CANCELLED" || this.jobStatus === "FAILED") {
+            this.messageService.addError("Export JobStatus Error: `${this.jobStatus}`");
+            return null;
+          }
+          else if (this.jobStatus === "COMPLETE") {
             this.getSPConfigExports(this.jobId);
           }
           else
           {
-            this.sleep(5000);
+            await this.sleep(2000);
             this.checkExportJobStatus(this.jobId);
           }
           this.loading = true;
@@ -115,7 +120,7 @@ export class CloudRuleComponent implements OnInit {
 
   }
 
-  sleep(ms) {
+  async sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
 
