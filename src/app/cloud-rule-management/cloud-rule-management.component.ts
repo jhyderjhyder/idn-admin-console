@@ -177,6 +177,11 @@ export class CloudRuleComponent implements OnInit {
     xml = xml.replace("#&gt;", "#>");
     
     var blob = new Blob([xml], {type: "application/xml"});
+
+    if (rule.type === "" || rule.type == null) {
+      rule.type = "Generic";
+    }
+    
     let fileName = "Rule - " + rule.type + " - " + rule.name + ".xml";
     saveAs(blob, fileName);
   }
