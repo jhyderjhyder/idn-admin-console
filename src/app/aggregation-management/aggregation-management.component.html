@@ -44,7 +44,7 @@
 </div>
 <div class="form-group row" *ngIf="bulkAction == 'DisableAggSchedule' || bulkAction == 'DisableEntAggSchedule'">
   <div class="col-sm-8 text-left">
-    <span class="font-weight-bold">To disable aggregation schedule, select the items and click the 'Submit to Disable' button.</span>
+    <span class="font-weight-bold">To disable aggregation schedule, select the items and click the 'Submit to Disable' button. <b style='color:red;'>Make sure to take backup</b> as the aggregation schedule will be lost on disable. To do so press the refresh button and click on "Download"</span>
   </div>
   <div class="col-sm-2 text-right">
     <button type="button" (click)="showSubmitConfirmModal()" class="btn btn-info btn-sm">
