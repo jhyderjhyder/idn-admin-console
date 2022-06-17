@@ -1,6 +1,9 @@
-# README #
+# IDN Admin Console #
 
-The application can be run as a standalone web application, inside docker container or packaged as an electron application (desktop app style). Follow the steps below to get it up adn running in your preferred environment.
+> This application is not developed, maintained or supported by SailPoint. It is built and based on a community effort.
+
+
+The application can be run as a standalone web application, inside docker container or packaged as an electron application (desktop app style). Follow the steps below to get it up and running in your preferred environment.
 
 ### Run as Standalone App ###
 * Prerequisites
@@ -43,3 +46,11 @@ The application can be run as a standalone web application, inside docker contai
         * docker rm idn-admin-console-container
     * To delete image
         * docker rmi idn-admin-console-image
+
+## Screenshots
+
+![Find Multiple Accounts]()
+
+## 📝 License
+
+This project is [MIT](https://github.com/piyush-khandelwal-sp/idn-admin-console/blob/main/License) licensed.
