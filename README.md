@@ -49,9 +49,9 @@ The application can be run as a standalone web application, inside docker contai
 
 ## Screenshots
 
-![Find Multiple Accounts](https://github.com/piyush-khandelwal-sp/idn-admin-console/main/resources/readme/find-multiple-accounts.png)
+![Find Multiple Accounts](https://github.com/piyush-khandelwal-sp/idn-admin-console/blob/18111b3caa001bf83874af60a3d18a70baee4aed/resources/readme/find-multiple-accounts.png)
 
-![Find Multiple Accounts](https://github.com/piyush-khandelwal-sp/idn-admin-console/main/resources/readme/manage-connector-rules.png)
+![Find Multiple Accounts](https://github.com/piyush-khandelwal-sp/idn-admin-console/blob/18111b3caa001bf83874af60a3d18a70baee4aed/resources/readme/manage-connector-rules.png)
 
 ## 📝 License
 
