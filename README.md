@@ -47,6 +47,21 @@ The application can be run as a standalone web application, inside docker contai
     * To delete image
         * docker rmi idn-admin-console-image
 
+## Features
+* Find Multiple Accounts in source and download report
+* Sources
+	* Bulk Manage Aggregation Schedules (enable / disable / backup and restore accounts & entitlement)
+	* Bulk Manage Source Owners
+	* Bulk Run Aggregations (unoptimized/file upload)
+* Rules
+	* Download Cloud Rules
+	* Manage Connector Rules (Add / update / delete / download)
+* Roles
+	* Bulk Manage Roles (Enable/disable/mark unmark as requestable/delete)
+	* Bulk Manage Source Owners
+* Misc
+	* Check and Set Org Time
+
 ## Screenshots
 
 ![Find Multiple Accounts](https://github.com/piyush-khandelwal-sp/idn-admin-console/blob/18111b3caa001bf83874af60a3d18a70baee4aed/resources/readme/find-multiple-accounts.png)
