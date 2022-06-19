@@ -16,7 +16,7 @@ import { User } from './model/user';
 })
 
 export class AppComponent {
-  title = 'SCHN Connect Admin';
+  title = 'IDN Admin Console';
   currentUser: User;
   launchedFromIframe: boolean;
 
