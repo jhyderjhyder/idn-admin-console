@@ -26,7 +26,7 @@ import { SearchFilterPipe } from './shared/search-filter.pipe';
 import { BasicAuthInterceptor } from './helper/basic-auth.interceptor';
 import { ErrorInterceptor } from './helper/error.interceptor';
 import { LoginComponent } from './login/login.component';
-import { ModalModule } from "ngx-bootstrap";
+import { ModalModule } from "ngx-bootstrap/modal";
 import { NgSelectModule } from '@ng-select/ng-select';
 
 @NgModule({
