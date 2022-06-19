@@ -2,7 +2,7 @@
 
 > This application is not developed, maintained or supported by SailPoint. It is built and based on a community effort.
 
-This tool is build to help with 
+This tool is build to help the community to manage SailPoint IdentityNow (IDN).
 
 ## Release
 
