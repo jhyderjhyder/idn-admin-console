@@ -149,6 +149,9 @@ export class CloudRuleComponent implements OnInit {
     if (rule.description) {
       ruleDesc = rule.description;
     }
+    else {
+      ruleDesc = "";
+    }
 
     const builder = new xml2js.Builder({doctype: {sysID: "sailpoint.dtd sailpoint.dtd"}});
     let xmlObject = {
@@ -175,7 +178,10 @@ export class CloudRuleComponent implements OnInit {
     xml = xml.replace("</Source>", "\n]]></Source>");
     xml = xml.replace("&lt;#", "<#");
     xml = xml.replace("#&gt;", "#>");
-    
+    // replace carriage return characters, if exist
+    var re = /&#xD;/gi;
+    xml = xml.replace(re, "");
+
     var blob = new Blob([xml], {type: "application/xml"});
 
     if (rule.type === "" || rule.type == null) {
