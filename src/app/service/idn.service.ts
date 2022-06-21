@@ -51,7 +51,7 @@ export class IDNService {
 
   searchMultipleAccounts(): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.identitynow.com/v3/search/aggregate`;
+    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/search/aggregate`;
 
     let payload = {
       "query": {
@@ -98,7 +98,7 @@ export class IDNService {
 
   searchIdentities(identityId: string): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.identitynow.com/beta/search/identities`;
+    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/search/identities`;
 
     let payload = {
       "query": {
@@ -113,7 +113,7 @@ export class IDNService {
 
   searchAggregationSources(): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.identitynow.com/beta/sources`;
+    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/sources`;
 
     return this.http.get(url, this.httpOptions).pipe(
       catchError(this.handleError(`getAggregationSources`))
@@ -122,7 +122,7 @@ export class IDNService {
 
   refreshAllRoles(): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.identitynow.com/cc/api/role/refresh`;
+    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/cc/api/role/refresh`;
 
     return this.http.post(url, null, { responseType: 'text' }).pipe(
       catchError(this.handleError(`refreshAllRoles`))
@@ -131,7 +131,7 @@ export class IDNService {
 
   getRoles(): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.identitynow.com/beta/roles`;
+    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/roles`;
 
     return this.http.get(url, this.httpOptions).pipe(
       catchError(this.handleError(`getAllRoles`))
@@ -140,7 +140,7 @@ export class IDNService {
 
   updateRoleOwner(role: Role): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.identitynow.com/beta/roles/${role.id}`;
+    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/roles/${role.id}`;
     
     let myHttpOptions = {
       headers: new HttpHeaders({
@@ -168,7 +168,7 @@ export class IDNService {
 
   updateRole(role: Role, path: string, enable: boolean): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.identitynow.com/beta/roles/${role.id}`;
+    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/roles/${role.id}`;
     
     let myHttpOptions = {
       headers: new HttpHeaders({
@@ -189,7 +189,7 @@ export class IDNService {
 
   deleteRole(role: Role): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.identitynow.com/beta/roles/${role.id}`;
+    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/roles/${role.id}`;
     
     let myHttpOptions = {
       headers: new HttpHeaders({
@@ -201,7 +201,7 @@ export class IDNService {
 
   getAggregationSchedules(cloudExternalID: string): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.identitynow.com/cc/api/source/getAggregationSchedules/${cloudExternalID}`;
+    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/cc/api/source/getAggregationSchedules/${cloudExternalID}`;
     return this.http.get(url);
     /*
     return this.http.get(url).pipe(
@@ -212,7 +212,7 @@ export class IDNService {
 
   getEntitlementAggregationSchedules(cloudExternalID: string): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.identitynow.com/cc/api/source/getEntitlementAggregationSchedules/${cloudExternalID}`;
+    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/cc/api/source/getEntitlementAggregationSchedules/${cloudExternalID}`;
     return this.http.get(url);
     /*
     return this.http.get(url).pipe(
@@ -225,7 +225,7 @@ export class IDNService {
     const currentUser = this.authenticationService.currentUserValue;
     let encodedCronExp = this.codec.encodeValue(source.accountAggCronExp);
     encodedCronExp = encodedCronExp.replace('?', '%3F');
-    let url = `https://${currentUser.tenant}.api.identitynow.com/cc/api/source/scheduleAggregation/${source.cloudExternalID}?enable=${enable}&cronExp=${encodedCronExp}`;
+    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/cc/api/source/scheduleAggregation/${source.cloudExternalID}?enable=${enable}&cronExp=${encodedCronExp}`;
     
     let myHttpOptions = {
       headers: new HttpHeaders({
@@ -238,7 +238,7 @@ export class IDNService {
     const currentUser = this.authenticationService.currentUserValue;
     let encodedCronExp = this.codec.encodeValue(source.entAggCronExp);
     encodedCronExp = encodedCronExp.replace('?', '%3F');
-    let url = `https://${currentUser.tenant}.api.identitynow.com/cc/api/source/scheduleEntitlementAggregation/${source.cloudExternalID}?enable=${enable}&cronExp=${encodedCronExp}`;
+    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/cc/api/source/scheduleEntitlementAggregation/${source.cloudExternalID}?enable=${enable}&cronExp=${encodedCronExp}`;
     
     let myHttpOptions = {
       headers: new HttpHeaders({
@@ -249,7 +249,7 @@ export class IDNService {
 
   searchAccounts(query: SimpleQueryCondition): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.identitynow.com/beta/search/`;
+    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/search/`;
 
     let payload = {
       "query": {
@@ -264,7 +264,7 @@ export class IDNService {
 
   updateSourceOwner(source: Source): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.identitynow.com/beta/sources/${source.id}`;
+    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/sources/${source.id}`;
     
     let myHttpOptions = {
       headers: new HttpHeaders({
@@ -292,7 +292,7 @@ export class IDNService {
 
   aggregateSourceOwner(cloudExternalID: string, formData: FormData): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.identitynow.com/cc/api/source/loadAccounts/${cloudExternalID}`;
+    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/cc/api/source/loadAccounts/${cloudExternalID}`;
     
     let myHttpOptions = {
       headers: new HttpHeaders({
@@ -304,7 +304,7 @@ export class IDNService {
 
   getAccountAggregationStatus(taskId: string): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.identitynow.com/beta/account-aggregations/${taskId}/status`;
+    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/account-aggregations/${taskId}/status`;
 
     return this.http.get(url).pipe(
       catchError(this.handleError(`getAccountAggregationStatus`))
@@ -313,21 +313,21 @@ export class IDNService {
 
   getConnectorRules(): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.identitynow.com/beta/connector-rules`;
+    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/connector-rules`;
 
     return this.http.get(url, this.httpOptions);
   }
 
   getConnectorRuleById(ruleId: string): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.identitynow.com/beta/connector-rules/${ruleId}`;
+    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/connector-rules/${ruleId}`;
 
     return this.http.get(url, this.httpOptions);
   }
 
   importConnectorRule(rule: Rule): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.identitynow.com/beta/connector-rules`;
+    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/connector-rules`;
     
     let myHttpOptions = {
       headers: new HttpHeaders({
@@ -353,7 +353,7 @@ export class IDNService {
 
   updateConnectorRule(rule: Rule): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.identitynow.com/beta/connector-rules/${rule.id}`;
+    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/connector-rules/${rule.id}`;
     
     let myHttpOptions = {
       headers: new HttpHeaders({
@@ -381,7 +381,7 @@ export class IDNService {
 
   deleteConnectorRule(rule: Rule): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.identitynow.com/beta/connector-rules/${rule.id}`;
+    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/connector-rules/${rule.id}`;
     
     let myHttpOptions = {
       headers: new HttpHeaders({
@@ -394,21 +394,21 @@ export class IDNService {
 
   getOrgConfig(): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.identitynow.com/beta/org-config`;
+    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/org-config`;
 
     return this.http.get(url, this.httpOptions);
   }
 
   getValidTimeZones(): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.identitynow.com/beta/org-config/valid-time-zones`;
+    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/org-config/valid-time-zones`;
 
     return this.http.get(url, this.httpOptions);
   }
 
   updateOrgTimeConfig(timeZoneValue: string): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.identitynow.com/beta/org-config`;
+    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/org-config`;
     
     let myHttpOptions = {
       headers: new HttpHeaders({
@@ -429,7 +429,7 @@ export class IDNService {
 
   exportCloudRules(): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.identitynow.com/beta/sp-config/export`;
+    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/sp-config/export`;
 
     let payload = 
       {
@@ -446,7 +446,7 @@ export class IDNService {
 
   checkSPConfigJobStatus(jobId: string): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.identitynow.com/beta/sp-config/export/${jobId}`;
+    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/sp-config/export/${jobId}`;
 
     return this.http.get(url, this.httpOptions).pipe(
       catchError(this.handleError(`checkSPConfigJobStatus`))
@@ -455,7 +455,7 @@ export class IDNService {
 
   downloadSPConfigExport(jobId: string): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.identitynow.com/beta/sp-config/export/${jobId}/download`;
+    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/sp-config/export/${jobId}/download`;
 
     return this.http.get(url, this.httpOptions).pipe(
       catchError(this.handleError(`downloadSPConfigExport`))
