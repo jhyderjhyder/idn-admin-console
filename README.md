@@ -36,9 +36,9 @@ Currently the builds are not code-singed. For Mac, please download and unzip, ri
 
 You require `{tenant}` and PAT ID and Token as mentioned [in this guide](https://developer.sailpoint.com/docs/getting_started.html).
 
-Alternatively if you have a domain other than identitynow.com please fill it in the domain section of login
+Alternatively if you have an internal domain other than identitynow.com please fill it in the domain name section of login.
 
-**NOTE:** For Vanity URL's please [find your](https://developer.sailpoint.com/docs/getting_started.html#finding-your-org-tenant-name) `{tenant}` as per the article above and use that.
+**NOTE:** For Vanity URL's please [find your](https://developer.sailpoint.com/docs/getting_started.html#finding-your-org-tenant-name) `{tenant}` as per the article above and use that. DO NOT fill in your vanity URL domain in the Domain Name section.
 
 ## Manual Build
 
