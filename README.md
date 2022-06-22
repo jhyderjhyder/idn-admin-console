@@ -10,6 +10,14 @@ You can download the latest build from [Release](https://github.com/piyush-khand
 
 Currently the builds are not code-singed. For Mac, please download and unzip, right click and open. Then you can open normally for subsequent uses. Warning should go away
 
+##Authentication
+
+You require `{tenant}` and PAT ID and Token as mentioned [in this guide](https://developer.sailpoint.com/docs/getting_started.html).
+
+Alternatively if you have an internal domain other than identitynow.com please fill it in the domain name section of login.
+
+**NOTE:** For Vanity URL's please [find your](https://developer.sailpoint.com/docs/getting_started.html#finding-your-org-tenant-name) `{tenant}` as per the article above and use that. **DO NOT** fill in your vanity URL domain in the Domain Name section.
+
 ## Features
 * Find Multiple Accounts in source and download report
 * Sources
@@ -32,13 +40,6 @@ Currently the builds are not code-singed. For Mac, please download and unzip, ri
 
 ![Manage Connector Rules](resources/readme/manage-connector-rules.png)
 
-##Authentication
-
-You require `{tenant}` and PAT ID and Token as mentioned [in this guide](https://developer.sailpoint.com/docs/getting_started.html).
-
-Alternatively if you have an internal domain other than identitynow.com please fill it in the domain name section of login.
-
-**NOTE:** For Vanity URL's please [find your](https://developer.sailpoint.com/docs/getting_started.html#finding-your-org-tenant-name) `{tenant}` as per the article above and use that. DO NOT fill in your vanity URL domain in the Domain Name section.
 
 ## Manual Build
 
