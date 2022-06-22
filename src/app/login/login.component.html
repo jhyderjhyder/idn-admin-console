@@ -12,6 +12,12 @@
                     </div>
                 </div>
                 <div class="form-group">
+                    <label for="domain">Domain Name (Optional)</label>
+                    <input type="text" placeholder="identitynow.com" formControlName="domain" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.domain.errors }" />
+                    <div *ngIf="submitted && f.domain.errors" class="invalid-feedback">
+                    </div>
+                </div>
+                <div class="form-group">
                     <label for="clientId">Client ID</label>
                     <input type="text" formControlName="clientId" class="form-control" [ngClass]="{ 'is-invalid': submitted && f.clientId.errors }" />
                     <div *ngIf="submitted && f.clientId.errors" class="invalid-feedback">

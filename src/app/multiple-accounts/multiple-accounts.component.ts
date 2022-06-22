@@ -42,6 +42,7 @@ export class MultipleAccountsComponent implements OnInit {
 
             if (accnts.length == 0) {
               this.messageService.add("No Multiple Accounts Found");
+              this.loading = false;
               return null;
             }
             for (let acc of accnts) {

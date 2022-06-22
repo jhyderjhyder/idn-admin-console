@@ -32,6 +32,7 @@ export class LoginComponent implements OnInit {
     ngOnInit() {
         this.loginForm = this.formBuilder.group({
             tenant: ['', Validators.required],
+            domain: [''],
             clientId: ['', Validators.required],
             clientSecret: ['', Validators.required]
         });
@@ -64,12 +65,19 @@ export class LoginComponent implements OnInit {
         user.clientId = this.f.clientId.value;
         user.clientSecret = this.f.clientSecret.value;
 
+        if (typeof this.f.domain.value!='undefined' && this.f.domain.value) {
+            user.domain = this.f.domain.value;
+        } else {
+            user.domain = "identitynow.com";
+        }
+
         this.authenticationService.authenticate(user).subscribe(
             response => {
                 this.loading = true;
                 let authUser  = new User();
                 authUser.clientId = user.clientId;
                 authUser.tenant = user.tenant;
+                authUser.domain = user.domain;
                 if (response.body && response.body.access_token) {
                     authUser.accessToken = response.body.access_token;
                     this.authenticationService.checkOrgAdminAccess(authUser).subscribe(
