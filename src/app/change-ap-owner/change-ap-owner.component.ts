@@ -17,7 +17,7 @@ const AccessProfileDescriptionMaxLength = 50;
   templateUrl: './change-ap-owner.component.html',
   styleUrls: ['./change-ap-owner.component.css']
 })
-export class ChangeAPOwnerComponent implements OnInit {
+export class ChangeAccessProfileOwnerComponent implements OnInit {
   
   accessProfiles: AccessProfile[];
   loading: boolean;
@@ -274,7 +274,7 @@ export class ChangeAPOwnerComponent implements OnInit {
       }
       index++;
 
-      this.idnService.updateAPOwner(each)
+      this.idnService.updateAccessProfileOwner(each)
           .subscribe(searchResult => {
             processedCount++;
             if (processedCount == arr.length) {

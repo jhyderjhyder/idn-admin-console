@@ -1,20 +1,20 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
-import { ChangeAPOwnerComponent } from './change-ap-owner.component';
+import { ChangeAccessProfileOwnerComponent } from './change-ap-owner.component';
 
-describe('ChangeAPOwnerComponent', () => {
-  let component: ChangeAPOwnerComponent;
-  let fixture: ComponentFixture<ChangeAPOwnerComponent>;
+describe('ChangeAccessProfileOwnerComponent', () => {
+  let component: ChangeAccessProfileOwnerComponent;
+  let fixture: ComponentFixture<ChangeAccessProfileOwnerComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ ChangeAPOwnerComponent ]
+      declarations: [ ChangeAccessProfileOwnerComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(ChangeAPOwnerComponent);
+    fixture = TestBed.createComponent(ChangeAccessProfileOwnerComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

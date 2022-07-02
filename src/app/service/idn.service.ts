@@ -209,7 +209,7 @@ export class IDNService {
     );
   }
 
-  updateAPOwner(accessProfile: AccessProfile): Observable<any> {
+  updateAccessProfileOwner(accessProfile: AccessProfile): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
     let url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/access-profiles/${accessProfile.id}`;
     
