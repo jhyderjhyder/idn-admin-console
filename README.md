@@ -18,18 +18,33 @@ Alternatively if you have an internal domain other than identitynow.com please f
 
 **NOTE:** For Vanity URL's please [find your](https://developer.sailpoint.com/docs/getting_started.html#finding-your-org-tenant-name) `{tenant}` as per the article above and use that. **DO NOT** fill in your vanity URL domain in the Domain Name section.
 
+## Contribute
+
+We are looking for (list is not exhaustive)
+
+* Help from community if they are interested in spreading the word
+* Help us build more features and extend existing ones.
+* GitHub and Actions know-how to help management and auto build / deploy / version et al
+* Help us make the Angular framework better and plug holes if any. Upgrade existing versions and remove non used dependencies.
+* Help us enhance it (pagination, current build documentation / standardizing and refactoring code et al .. list is endless)
+* Testing, finding, and reporting and hopefully help fixing bugs – we are bound to find lot of issues to being with.
+* Looking for contributors for the repo to help us set it up properly.
+
 ## Features
 * Find Multiple Accounts in source and download report
+* Access Profiles
+	* Bulk Manage Access Profiles (Enable / Disable / Delete)
+	* Bulk Manage Acess Profile Owners
+* Roles
+	* Bulk Manage Roles (Enable / Disable / Mark-Umark as Requestable / Delete)
+	* Bulk Manage Roles Owners
 * Sources
-	* Bulk Manage Aggregation Schedules (enable / disable / backup and restore accounts & entitlement)
+	* Bulk Manage Aggregation Schedules (Enable / Disable / Backup and restore accounts & entitlement)
 	* Bulk Manage Source Owners
-	* Bulk Run Aggregations (unoptimized/file upload)
+	* Bulk Run Aggregations (Unoptimized / File Upload)
 * Rules
 	* Download Cloud Rules
-	* Manage Connector Rules (Add / update / delete / download)
-* Roles
-	* Bulk Manage Roles (Enable/disable/mark unmark as requestable/delete)
-	* Bulk Manage Source Owners
+	* Manage Connector Rules (Add / Update / Delete / Download)
 * Misc
 	* Check and Set Org Time
 
