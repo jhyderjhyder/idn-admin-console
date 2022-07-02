@@ -33,15 +33,15 @@ We are looking for (list is not exhaustive)
 ## Features
 * Find Multiple Accounts in source and download report
 * Access Profiles
-	* Bulk Manage Access Profiles (Enable/Disable/Delete)
+	* Bulk Manage Access Profiles (Enable / Disable / Delete)
 	* Bulk Manage Acess Profile Owners
 * Roles
-	* Bulk Manage Roles (Enable/Disable/Mark-Umark as requestable/Delete)
+	* Bulk Manage Roles (Enable / Disable / Mark-Umark as Requestable / Delete)
 	* Bulk Manage Roles Owners
 * Sources
 	* Bulk Manage Aggregation Schedules (Enable / Disable / Backup and restore accounts & entitlement)
 	* Bulk Manage Source Owners
-	* Bulk Run Aggregations (Unoptimized/File upload)
+	* Bulk Run Aggregations (Unoptimized / File Upload)
 * Rules
 	* Download Cloud Rules
 	* Manage Connector Rules (Add / Update / Delete / Download)
