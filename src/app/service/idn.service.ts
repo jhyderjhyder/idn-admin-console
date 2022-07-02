@@ -9,6 +9,7 @@ import { SimpleQueryCondition } from '../model/simple-query-condition';
 import { AggTaskPollingStatus } from '../model/agg-task-polling-status';
 import { AuthenticationService } from '../service/authentication-service.service';
 import { Role } from '../model/role';
+import { AccessProfile } from '../model/accessprofile';
 
 @Injectable({
   providedIn: 'root'
@@ -190,6 +191,76 @@ export class IDNService {
   deleteRole(role: Role): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
     let url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/roles/${role.id}`;
+    
+    let myHttpOptions = {
+      headers: new HttpHeaders({
+      })
+    };
+    
+    return this.http.delete(url, myHttpOptions);
+  }
+
+  getAccessProfiles(): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/access-profiles`;
+
+    return this.http.get(url, this.httpOptions).pipe(
+      catchError(this.handleError(`getAllAccessProfiles`))
+    );
+  }
+
+  updateAPOwner(accessProfile: AccessProfile): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/access-profiles/${accessProfile.id}`;
+    
+    let myHttpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json-patch+json'
+      })
+    };
+
+    let payload = [
+      {
+          "op": "replace",
+          "path": "/owner",
+          "value": {
+              "type": "IDENTITY",
+              "id": null,
+              "name": null
+          }
+      }
+    ];
+
+    payload[0].value.id = accessProfile.newOwner.accountId;
+    payload[0].value.name = accessProfile.newOwner.displayName;
+
+    return this.http.patch(url, payload, myHttpOptions);
+  }
+
+  updateAccessProfile(accessProfile: AccessProfile, path: string, enable: boolean): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/access-profiles/${accessProfile.id}`;
+    
+    let myHttpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json-patch+json'
+      })
+    };
+
+    let payload = [
+      {
+          "op": "replace",
+          "path": `/${path}`,
+          "value": `${enable}`
+      }
+    ];
+
+    return this.http.patch(url, payload, myHttpOptions);
+  }
+
+  deleteAccessProfile(accessProfile: AccessProfile): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/access-profiles/${accessProfile.id}`;
     
     let myHttpOptions = {
       headers: new HttpHeaders({

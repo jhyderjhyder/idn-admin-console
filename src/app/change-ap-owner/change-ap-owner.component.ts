@@ -6,20 +6,20 @@ import { ModalDirective } from 'ngx-bootstrap/modal';
 import { IDNService } from '../service/idn.service';
 import { MessageService } from '../service/message.service';
 import { AuthenticationService } from '../service/authentication-service.service';
-import { Role } from '../model/role';
 import { SimpleQueryCondition } from '../model/simple-query-condition';
 import { SourceOwner } from '../model/source-owner';
+import { AccessProfile } from '../model/accessprofile';
 
-const RoleDescriptionMaxLength = 50;
+const AccessProfileDescriptionMaxLength = 50;
 
 @Component({
-  selector: 'change-role-owner',
-  templateUrl: './change-role-owner.component.html',
-  styleUrls: ['./change-role-owner.component.css']
+  selector: 'change-ap-owner',
+  templateUrl: './change-ap-owner.component.html',
+  styleUrls: ['./change-ap-owner.component.css']
 })
-export class ChangeRoleOwnerComponent implements OnInit {
+export class ChangeAPOwnerComponent implements OnInit {
   
-  roles: Role[];
+  accessProfiles: AccessProfile[];
   loading: boolean;
   allOwnersFetched: boolean;
   searchText: string;
@@ -32,7 +32,6 @@ export class ChangeRoleOwnerComponent implements OnInit {
   public modalRef: BsModalRef;
   
   @ViewChild('submitConfirmModal', { static: false }) submitConfirmModal: ModalDirective;
-  @ViewChild('submitRoleRefreshConfirmModal', { static: false }) submitRoleRefreshConfirmModal: ModalDirective;
 
   @ViewChild('fileInput', {static: false}) fileInput: ElementRef;
 
@@ -44,11 +43,11 @@ export class ChangeRoleOwnerComponent implements OnInit {
 
   ngOnInit() {
     this.reset(true);
-    this.getAllRoles();
+    this.getAllAccessProfiles();
   }
 
   reset(clearMsg: boolean) {
-    this.roles = null;
+    this.accessProfiles = null;
     this.selectAll = false;
     this.newOwnerAll = null;
     this.searchText = null;
@@ -61,36 +60,30 @@ export class ChangeRoleOwnerComponent implements OnInit {
     } 
   }
 
-  getAllRoles() {
+  getAllAccessProfiles() {
     this.allOwnersFetched = false;
     this.loading = true;
-    this.idnService.getRoles()
-          .subscribe(allRoles => {
-            this.roles = [];
-            let roleCount = allRoles.length;
+    this.idnService.getAccessProfiles()
+          .subscribe(allAccessProfiles => {
+            this.accessProfiles = [];
+            let apCount = allAccessProfiles.length;
             let fetchedOwnerCount = 0;
-            for (let each of allRoles) {
-              let role = new Role();
-              role.id = each.id;
-              role.name = each.name;
+            for (let each of allAccessProfiles) {
+              let accessProfile = new AccessProfile();
+              accessProfile.id = each.id;
+              accessProfile.name = each.name;
               if (each.description) {
-                if (each.description.length > RoleDescriptionMaxLength) {
-                  role.description = each.description.substring(0, RoleDescriptionMaxLength) + "...";
+                if (each.description.length > AccessProfileDescriptionMaxLength) {
+                  accessProfile.description = each.description.substring(0, AccessProfileDescriptionMaxLength) + "...";
                 }
                 else {
-                  role.description = each.description;
+                  accessProfile.description = each.description;
                 }
               }
-              role.id = each.id;
-              role.enabled = each.enabled;
-              role.requestable = each.requestable;
-              if(each.membership && each.membership.criteria != null) {
-                role.criteria = true;
-              } else {
-                role.criteria = false;
-              }
+              accessProfile.id = each.id;
+              accessProfile.enabled = each.enabled;
 
-              role.accessProfiles = each.accessProfiles.length;
+              accessProfile.entitlements = each.entitlements.length;
               
               let query = new SimpleQueryCondition();
               query.attribute = "id";
@@ -99,20 +92,20 @@ export class ChangeRoleOwnerComponent implements OnInit {
               this.idnService.searchAccounts(query)
                 .subscribe(searchResult => { 
                   if (searchResult.length > 0) {
-                    role.owner = new SourceOwner();
-                    role.owner.accountId = searchResult[0].id;
-                    role.owner.accountName = searchResult[0].name;
-                    role.owner.displayName = searchResult[0].displayName;
-                    role.currentOwnerAccountName = searchResult[0].name;
-                    role.currentOwnerDisplayName = searchResult[0].displayName;
+                    accessProfile.owner = new SourceOwner();
+                    accessProfile.owner.accountId = searchResult[0].id;
+                    accessProfile.owner.accountName = searchResult[0].name;
+                    accessProfile.owner.displayName = searchResult[0].displayName;
+                    accessProfile.currentOwnerAccountName = searchResult[0].name;
+                    accessProfile.currentOwnerDisplayName = searchResult[0].displayName;
                   }
                   fetchedOwnerCount++;
-                  if (fetchedOwnerCount == roleCount) {
+                  if (fetchedOwnerCount == apCount) {
                     this.allOwnersFetched = true;
                   }
               });
           
-              this.roles.push(role);
+              this.accessProfiles.push(accessProfile);
             }
             this.loading = false;
           });
@@ -125,14 +118,14 @@ export class ChangeRoleOwnerComponent implements OnInit {
       decimalseparator: '.',
       showLabels: true,
       useHeader: true,
-      headers: ["name", "description", "id", "enabled", "requestable", "criteria", "accessProfiles", "ownerAccountID", "ownerDisplayName"],
+      headers: ["name", "description", "id", "enabled", "entitlements", "ownerAccountID", "ownerDisplayName"],
       nullToEmptyString: true,
     };
 
     const currentUser = this.authenticationService.currentUserValue;
-    let fileName = `${currentUser.tenant}-roles`;
+    let fileName = `${currentUser.tenant}-accessProfiles`;
     let arr = [];
-    for (let each of this.roles) {
+    for (let each of this.accessProfiles) {
       let record = Object.assign(each);
       if (each.owner) {
         record.ownerAccountID = each.owner.accountName;
@@ -147,24 +140,24 @@ export class ChangeRoleOwnerComponent implements OnInit {
   showSubmitConfirmModal() {
     this.messageService.clearError();
     this.validToSubmit = true;
-    let selectedRoles = [];
+    let selectedAccessProfiles = [];
     this.invalidMessage = [];
-    for (let each of this.roles) {
+    for (let each of this.accessProfiles) {
       if (each.selected) {
         if (each.newOwner == null || each.newOwner.accountName == null || each.newOwner.accountName.trim() == '') {
-          this.invalidMessage.push(`Owner of Role (name: ${each.name}) can not be empty.`);
+          this.invalidMessage.push(`Owner of AccessProfile (name: ${each.name}) can not be empty.`);
           this.validToSubmit = false;
         }
         else if (each.newOwner.accountName == each.owner.accountName) {
-          this.invalidMessage.push(`Owner of Role (name: ${each.name}) is not changed.`);
+          this.invalidMessage.push(`Owner of AccessProfile (name: ${each.name}) is not changed.`);
           this.validToSubmit = false;
         }
 
-        selectedRoles.push(each);
+        selectedAccessProfiles.push(each);
       }
     }
 
-    if (selectedRoles.length == 0) {
+    if (selectedAccessProfiles.length == 0) {
       this.invalidMessage.push("Select at least one item to submit.");
       this.validToSubmit = false;
     }
@@ -172,7 +165,7 @@ export class ChangeRoleOwnerComponent implements OnInit {
     if (this.validToSubmit) {
       let count = 0;
       //check if account name of new owner is valid
-      for (let each of selectedRoles) {
+      for (let each of selectedAccessProfiles) {
         let query = new SimpleQueryCondition();
         query.attribute = "name";
         query.value = each.newOwner.accountName;
@@ -184,10 +177,10 @@ export class ChangeRoleOwnerComponent implements OnInit {
               each.newOwner.displayName = searchResult[0].displayName;
             } else {
               this.validToSubmit = false;
-              this.invalidMessage.push(`New owner's account name (${each.newOwner.accountName}) of Role (${each.name}) is invalid.`);
+              this.invalidMessage.push(`New owner's account name (${each.newOwner.accountName}) of AccessProfile (${each.name}) is invalid.`);
             }
             count++;
-            if (count == selectedRoles.length) {
+            if (count == selectedAccessProfiles.length) {
               this.submitConfirmModal.show();
             }
         });
@@ -201,7 +194,7 @@ export class ChangeRoleOwnerComponent implements OnInit {
     this.messageService.clearError();
     if (this.newOwnerAll && this.newOwnerAll.trim() != '') {
       let anythingSelected = false;
-      for (let each of this.roles) {
+      for (let each of this.accessProfiles) {
         if (each.selected) {
           if (each.newOwner == null) {
             each.newOwner = new SourceOwner();
@@ -221,7 +214,7 @@ export class ChangeRoleOwnerComponent implements OnInit {
   changeOnSelectAll() {
     this.messageService.clearError();
     this.searchText = null;
-    this.roles.forEach(each => {
+    this.accessProfiles.forEach(each => {
       each.selected = !this.selectAll;
       if (each.selected) {
         if (each.newOwner == null) {
@@ -240,14 +233,14 @@ export class ChangeRoleOwnerComponent implements OnInit {
     this.messageService.clearError();
     if (!$event.currentTarget.checked) {
       this.selectAll = false;
-      if (this.roles[index].newOwner) {
-        this.roles[index].newOwner.accountName = null;
+      if (this.accessProfiles[index].newOwner) {
+        this.accessProfiles[index].newOwner.accountName = null;
       }
     } else {
-      if (this.roles[index].newOwner == null) {
-        this.roles[index].newOwner = new SourceOwner();
+      if (this.accessProfiles[index].newOwner == null) {
+        this.accessProfiles[index].newOwner = new SourceOwner();
       }
-      this.roles[index].newOwner.accountName = this.roles[index].owner.accountName;
+      this.accessProfiles[index].newOwner.accountName = this.accessProfiles[index].owner.accountName;
     }
   }
 
@@ -269,25 +262,25 @@ export class ChangeRoleOwnerComponent implements OnInit {
     this.submitConfirmModal.hide();
   }
 
-  async updateRoleOwner() {
-    let arr = this.roles.filter(each => each.selected);
+  async updateAccessProfileOwner() {
+    let arr = this.accessProfiles.filter(each => each.selected);
     let processedCount = 0;
     let index = 0;
     for (let each of arr) {
       if (index > 0 && (index % 10) == 0) {
-        // After processing every batch (10 roles), wait for 2 seconds before calling another API to avoid 429 
+        // After processing every batch (10 accessProfiles), wait for 2 seconds before calling another API to avoid 429 
         // Too Many Requests Error
         await this.sleep(2000);
       }
       index++;
 
-      this.idnService.updateRoleOwner(each)
+      this.idnService.updateAPOwner(each)
           .subscribe(searchResult => {
             processedCount++;
             if (processedCount == arr.length) {
              this.closeModalDisplayMsg();
              this.reset(false);
-             this.getAllRoles();
+             this.getAllAccessProfiles();
             }
           },
           err => {
@@ -296,7 +289,7 @@ export class ChangeRoleOwnerComponent implements OnInit {
             if (processedCount == arr.length) {
               this.closeModalDisplayMsg();
               this.reset(false);
-              this.getAllRoles();
+              this.getAllAccessProfiles();
             }
           }
         );
@@ -311,7 +304,7 @@ export class ChangeRoleOwnerComponent implements OnInit {
 
   handleFileSelect(evt) {
     this.messageService.clearError();
-    let newOwnerAccountNameMap = {}; //key is role id, value is new owner account name
+    let newOwnerAccountNameMap = {}; //key is accessProfile id, value is new owner account name
     var files = evt.target.files; // FileList object
     var file = files[0];
     var reader = new FileReader();
@@ -330,7 +323,7 @@ export class ChangeRoleOwnerComponent implements OnInit {
           let anythingSelected = false;
           let anythingMatched = false;
           
-          for (let each of this.roles) {
+          for (let each of this.accessProfiles) {
             if (each.selected) {
               let newOwnerAccountName = newOwnerAccountNameMap[each.id];
               if (newOwnerAccountName && newOwnerAccountName != '') {
@@ -343,7 +336,7 @@ export class ChangeRoleOwnerComponent implements OnInit {
           if (!anythingSelected) {
             this.messageService.setError("No item is selected to apply the change.");
           } else if (!anythingMatched) {
-            this.messageService.setError("No role record in uploaded file is matched with the selected items.");
+            this.messageService.setError("No accessProfile record in uploaded file is matched with the selected items.");
           }
         }
       });
