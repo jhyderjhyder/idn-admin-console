@@ -10,7 +10,7 @@ You can download the latest build from [Release](https://github.com/piyush-khand
 
 Currently the builds are not code-singed. For Mac, please download and unzip, right click and open. Then you can open normally for subsequent uses. Warning should go away
 
-##Authentication
+## Authentication
 
 You require `{tenant}` and PAT ID and Token as mentioned [in this guide](https://developer.sailpoint.com/docs/getting_started.html).
 
