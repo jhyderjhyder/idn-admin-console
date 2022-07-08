@@ -42,6 +42,7 @@ We are looking for (list is not exhaustive)
 	* Bulk Manage Aggregation Schedules (Enable / Disable / Backup and restore accounts & entitlement)
 	* Bulk Manage Source Owners
 	* Bulk Run Aggregations (Unoptimized / File Upload)
+	* Reset Source (Accounts / Entitlements / Both)
 * Rules
 	* Download Cloud Rules
 	* Manage Connector Rules (Add / Update / Delete / Download)
