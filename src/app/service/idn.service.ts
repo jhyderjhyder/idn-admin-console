@@ -121,6 +121,27 @@ export class IDNService {
     );
   }
 
+  resetSource(cloudExternalID: string, skipType: string): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/cc/api/source/reset/${cloudExternalID}`;
+
+    let myHttpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/x-www-form-urlencoded'
+      })
+    };
+
+    let payload = null;
+
+    if (skipType != null) {
+    payload = "skip=" + `${skipType}`;
+  }
+
+
+    return this.http.post(url, payload, myHttpOptions);
+  }
+
+
   refreshAllRoles(): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
     let url = `https://${currentUser.tenant}.api.${currentUser.domain}/cc/api/role/refresh`;
