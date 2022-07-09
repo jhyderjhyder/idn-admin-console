@@ -70,6 +70,17 @@ export class ResetSourceComponent implements OnInit {
               source.name = each.name;
               source.description = each.description;
               source.type = each.type;
+
+              this.idnService.getSourceCCApi(source.cloudExternalID)
+              .subscribe(
+                searchResult => {
+                    source.accountsCount = searchResult.accountsCount;
+                    source.entitlementsCount = searchResult.entitlementsCount;
+                },
+                err => {
+                  this.messageService.handleIDNError(err);
+                }
+            );
               
               this.sources.push(source);
             }
@@ -97,7 +108,7 @@ export class ResetSourceComponent implements OnInit {
         result => {
           //this.closeModalDisplayMsg();
           this.resetSourceAccountsConfirmModal.hide();
-          this.messageService.add("Source account reset in progress. Please check Org -> Admin -> Dashboard -> Monitor");
+          this.messageService.add("Source account reset in progress. Please check Org -> Admin -> Dashboard -> Monitor. Hit Refresh to see the count drop for the source to 0 if successful");
           this.sourceToReset = null;
           this.skipType = null;
           this.reset(false);
@@ -133,7 +144,7 @@ export class ResetSourceComponent implements OnInit {
         result => {
           //this.closeModalDisplayMsg();
           this.resetSourceEntitlementsConfirmModal.hide();
-          this.messageService.add("Source entitlements reset in progress. Please check Org -> Admin -> Dashboard -> Monitor");
+          this.messageService.add("Source entitlements reset in progress. Please check Org -> Admin -> Dashboard -> Monitor. Hit Refresh to see the count drop for the source to 0 if successful");
           this.sourceToReset = null;
           this.skipType = null;
           this.reset(false);
@@ -169,7 +180,7 @@ export class ResetSourceComponent implements OnInit {
         result => {
           //this.closeModalDisplayMsg();
           this.resetSourceBothConfirmModal.hide();
-          this.messageService.add("Source accounts and entitlements in progress. Please check Org -> Admin -> Dashboard -> Monitor");
+          this.messageService.add("Source accounts and entitlements in progress. Please check Org -> Admin -> Dashboard -> Monitor. Hit Refresh to see the count drop for the source to 0 if successful");
           this.sourceToReset = null;
           this.skipType = null;
           this.reset(false);
@@ -231,11 +242,11 @@ export class ResetSourceComponent implements OnInit {
   }
 
   hideResetSourceEntitlementsConfirmModal() {
-    this.resetSourceAccountsConfirmModal.hide();
+    this.resetSourceEntitlementsConfirmModal.hide();
   }
 
   hideResetSourceBothConfirmModal() {
-    this.resetSourceAccountsConfirmModal.hide();
+    this.resetSourceBothConfirmModal.hide();
   }
 
 }

@@ -31,17 +31,17 @@ We are looking for (list is not exhaustive)
 * Looking for contributors for the repo to help us set it up properly.
 
 ## Features
-* Find Multiple Accounts in source and download report
+* Find Multiple Accounts in Source and Download Report
 * Access Profiles
-	* Bulk Manage Access Profiles (Enable / Disable / Delete)
-	* Bulk Manage Acess Profile Owners
+	* Manage Access Profiles (Enable / Disable / Delete)
+	* Manage Access Profile Owners
 * Roles
-	* Bulk Manage Roles (Enable / Disable / Mark-Umark as Requestable / Delete)
-	* Bulk Manage Roles Owners
+	* Manage Roles (Enable / Disable / Mark-Umark as Requestable / Delete)
+	* Manage Role Owners
 * Sources
-	* Bulk Manage Aggregation Schedules (Enable / Disable / Backup and restore accounts & entitlement)
-	* Bulk Manage Source Owners
-	* Bulk Run Aggregations (Unoptimized / File Upload)
+	* Manage Aggregation Schedules (Enable / Disable / Backup and Restore Accounts & Entitlement)
+	* Manage Source Owners
+	* Run Aggregations (Unoptimized / File Upload)
 	* Reset Source (Accounts / Entitlements / Both)
 * Rules
 	* Download Cloud Rules
