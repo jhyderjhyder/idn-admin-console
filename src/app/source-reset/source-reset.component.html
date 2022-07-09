@@ -1,6 +1,6 @@
 <nav aria-label="breadcrumb">
   <ol class="breadcrumb">
-    <li class="breadcrumb-item"><a routerLink="/multiple-account">Home</a></li>
+    <li class="breadcrumb-item"><a routerLink="/multiple-accounts-report">Home</a></li>
     <li class="breadcrumb-item">Sources</li>
     <li class="breadcrumb-item active" aria-current="page">Reset Source</li>
   </ol>
@@ -38,6 +38,8 @@
       <th scope="col">Source Description</th>
       <th scope="col">Type</th>
       <th scope="col">cloudExternalID</th>
+      <th scope="col">Account Count</th>
+      <th scope="col">Entitlement Count</th>
       <th scope="col">Actions</th>
     </tr>
   </thead>
@@ -47,6 +49,8 @@
       <td>{{ s.description }}</td>
       <td>{{ s.type }}</td>
       <td>{{ s.cloudExternalID }}</td>
+      <td>{{ s.accountsCount }}</td>
+      <td>{{ s.entitlementsCount }}</td>
       <td>
         <div class="btn-group" role="group">
           <button id="btnGroupDrop1" type="button" class="btn btn-info btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

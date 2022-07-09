@@ -20,4 +20,6 @@ export class Source {
   aggregateSourceFormData: FormData;
   aggSourceDisableOptimization: boolean;
   aggTask: AggregationTask;
+  accountsCount: string;
+  entitlementsCount: string;
 }

@@ -1,39 +1,39 @@
 import { NgModule }             from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
-import { MultipleAccountsComponent }   from './multiple-accounts/multiple-accounts.component';
-import { AggregationManagementComponent }   from './aggregation-management/aggregation-management.component';
-import { ChangeSourceOwnerComponent} from './change-source-owner/change-source-owner.component';
-import { AggregateSourceComponent} from './aggregate-source/aggregate-source.component';
+import { MultipleAccountsComponent }   from './multiple-accounts-report/multiple-accounts-report.component';
+import { AggregationManagementComponent }   from './source-aggregation-management/source-aggregation-management.component';
+import { ChangeSourceOwnerComponent} from './source-owner-update/source-owner-update.component';
+import { AggregateSourceComponent} from './source-aggregation-run/source-aggregation-run.component';
 import { ResetSourceComponent} from './source-reset/source-reset.component';
-import { ImportRuleComponent} from './connector-rule-management/connector-rule-management.component';
-import { CloudRuleComponent} from './cloud-rule-management/cloud-rule-management.component';
-import { ChangeRoleOwnerComponent} from './change-role-owner/change-role-owner.component';
-import { ChangeAccessProfileOwnerComponent} from './change-ap-owner/change-ap-owner.component';
+import { ImportRuleComponent} from './rule-connector-management/rule-connector-management.component';
+import { CloudRuleComponent} from './rule-cloud-management/rule-cloud-management.component';
+import { ChangeRoleOwnerComponent} from './role-owner-update/role-owner-update.component';
+import { ChangeAccessProfileOwnerComponent} from './accessprofile-owner-update/accessprofile-owner-update.component';
 import { RoleManagementComponent} from './role-management/role-management.component';
-import { AccessProfileManagementComponent} from './ap-management/ap-management.component';
+import { AccessProfileManagementComponent} from './accessprofile-management/accessprofile-management.component';
 import { ReleaseHistoryComponent} from './release-history/release-history.component';
 import { CreditsComponent} from './credits/credits.component';
-import { OrgTimeComponent} from './org-time/org-time.component';
+import { OrgTimeComponent} from './org-time-update/org-time-update.component';
 import { LoginComponent }   from './login/login.component';
 import { AuthGuard } from './helper/auth.guard';
 
 const routes: Routes = [
-  { path: '', redirectTo: '/multiple-account', pathMatch: 'full' },
-  { path: 'multiple-account', component: MultipleAccountsComponent, canActivate: [AuthGuard] },
-  { path: 'manage-aggregation', component: AggregationManagementComponent, canActivate: [AuthGuard] },
-  { path: 'change-source-owner', component: ChangeSourceOwnerComponent, canActivate: [AuthGuard] },
-  { path: 'aggregate-source', component: AggregateSourceComponent, canActivate: [AuthGuard] },
+  { path: '', redirectTo: '/multiple-accounts-report', pathMatch: 'full' },
+  { path: 'multiple-accounts-report', component: MultipleAccountsComponent, canActivate: [AuthGuard] },
+  { path: 'source-aggregation-management', component: AggregationManagementComponent, canActivate: [AuthGuard] },
+  { path: 'source-owner-update', component: ChangeSourceOwnerComponent, canActivate: [AuthGuard] },
+  { path: 'source-aggregation-run', component: AggregateSourceComponent, canActivate: [AuthGuard] },
   { path: 'source-reset', component: ResetSourceComponent, canActivate: [AuthGuard] },
-  { path: 'connector-rule-management', component: ImportRuleComponent, canActivate: [AuthGuard] },
-  { path: 'cloud-rule-management', component: CloudRuleComponent, canActivate: [AuthGuard] },
-  { path: 'change-role-owner', component: ChangeRoleOwnerComponent, canActivate: [AuthGuard] },
-  { path: 'change-ap-owner', component: ChangeAccessProfileOwnerComponent, canActivate: [AuthGuard] },
+  { path: 'rule-connector-management', component: ImportRuleComponent, canActivate: [AuthGuard] },
+  { path: 'rule-cloud-management', component: CloudRuleComponent, canActivate: [AuthGuard] },
+  { path: 'role-owner-update', component: ChangeRoleOwnerComponent, canActivate: [AuthGuard] },
+  { path: 'accessprofile-owner-update', component: ChangeAccessProfileOwnerComponent, canActivate: [AuthGuard] },
   { path: 'role-management', component: RoleManagementComponent, canActivate: [AuthGuard] },
-  { path: 'ap-management', component: AccessProfileManagementComponent, canActivate: [AuthGuard] },
+  { path: 'accessprofile-management', component: AccessProfileManagementComponent, canActivate: [AuthGuard] },
   { path: 'release-history', component: ReleaseHistoryComponent, canActivate: [AuthGuard] },
   { path: 'credits', component: CreditsComponent, canActivate: [AuthGuard] },
-  { path: 'org-time', component: OrgTimeComponent, canActivate: [AuthGuard] },
+  { path: 'org-time-update', component: OrgTimeComponent, canActivate: [AuthGuard] },
   { path: 'login', component: LoginComponent }
 ];
 

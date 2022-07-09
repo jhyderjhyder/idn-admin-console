@@ -121,6 +121,17 @@ export class IDNService {
     );
   }
 
+  getSourceCCApi(cloudExternalID: string): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/cc/api/source/get/${cloudExternalID}`;
+    return this.http.get(url);
+    /*
+    return this.http.get(url).pipe(
+      catchError(this.handleError(`getAggregationSchedules`))
+    );
+    */
+  }
+
   resetSource(cloudExternalID: string, skipType: string): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
     let url = `https://${currentUser.tenant}.api.${currentUser.domain}/cc/api/source/reset/${cloudExternalID}`;
