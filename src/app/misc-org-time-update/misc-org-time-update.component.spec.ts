@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
-import { OrgTimeComponent } from './org-time-update.component';
+import { OrgTimeComponent } from './misc-org-time-update.component';
 
 describe('OrgTimeComponent', () => {
   let component: OrgTimeComponent;

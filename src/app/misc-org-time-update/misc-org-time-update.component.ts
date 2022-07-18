@@ -5,9 +5,9 @@ import { IDNService } from '../service/idn.service';
 import { MessageService } from '../service/message.service';
 
 @Component({
-  selector: 'app-org-time-update',
-  templateUrl: './org-time-update.component.html',
-  styleUrls: ['./org-time-update.component.css']
+  selector: 'app-misc-org-time-update',
+  templateUrl: './misc-org-time-update.component.html',
+  styleUrls: ['./misc-org-time-update.component.css']
 })
 
 export class OrgTimeComponent implements OnInit {
