@@ -10,6 +10,7 @@ import { AggTaskPollingStatus } from '../model/agg-task-polling-status';
 import { AuthenticationService } from '../service/authentication-service.service';
 import { Role } from '../model/role';
 import { AccessProfile } from '../model/accessprofile';
+import { PAT } from '../model/pat';
 
 @Injectable({
   providedIn: 'root'
@@ -529,6 +530,33 @@ export class IDNService {
 
     return this.http.patch(url, payload, myHttpOptions);
   }
+
+  listPAT(): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/personal-access-tokens`;
+
+    return this.http.get(url, this.httpOptions);
+  }
+
+  deletePAT(pat: PAT): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/personal-access-tokens/${pat.id}`;
+    
+    let myHttpOptions = {
+      headers: new HttpHeaders({
+      })
+    };
+    
+    return this.http.delete(url, myHttpOptions);
+  }
+
+  getUserByAlias(alias: string): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/cc/api/user/get?alias=${alias}`;
+
+    return this.http.get(url, this.httpOptions);
+  }
+
 
   exportCloudRules(): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
