@@ -44,10 +44,11 @@ We are looking for (list is not exhaustive)
 	* Run Aggregations (Unoptimized / File Upload)
 	* Reset Source (Accounts / Entitlements / Both)
 * Rules
-	* Download Cloud Rules
+	* Manage Cloud Rules (Download)
 	* Manage Connector Rules (Add / Update / Delete / Download)
 * Misc
 	* Check and Set Org Time
+	* Manage PAT (See Permission / Delete Token)
 
 
 ## Screenshots

@@ -390,6 +390,15 @@ export class ImportRuleComponent implements OnInit {
     // replace carriage return characters, if exist
     var re = /&#xD;/gi;
     xml = xml.replace(re, "");
+
+    re = /&amp;/gi;
+    xml = xml.replace(re, "&");
+
+    re = /&gt;/gi;
+    xml = xml.replace(re, ">");
+
+    re = /&lt;/gi;
+    xml = xml.replace(re, "<");
     
     var blob = new Blob([xml], {type: "application/xml"});
     let fileName = "Rule - " + rule.type + " - " + rule.name + ".xml";
