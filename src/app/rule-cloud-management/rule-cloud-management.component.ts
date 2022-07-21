@@ -182,6 +182,15 @@ export class CloudRuleComponent implements OnInit {
     var re = /&#xD;/gi;
     xml = xml.replace(re, "");
 
+    re = /&amp;/gi;
+    xml = xml.replace(re, "&");
+
+    re = /&gt;/gi;
+    xml = xml.replace(re, ">");
+
+    re = /&lt;/gi;
+    xml = xml.replace(re, "<");
+
     var blob = new Blob([xml], {type: "application/xml"});
 
     if (rule.type === "" || rule.type == null) {
