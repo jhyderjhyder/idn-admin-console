@@ -73,7 +73,7 @@ The application can be run as a standalone web application, inside docker contai
     * ng serve --open
     * Type URL in browser: http://localhost:4200
 * Build Package
-    * ng build --prod
+    * npm run build-prod
 
 ### Run as electron app ###
 * Prerequisites
@@ -93,7 +93,7 @@ The application can be run as a standalone web application, inside docker contai
 * Prerequisites
     * Install docker
 * Run in local
-    * ng build --prod
+    * npm run build-prod
     * docker build -t idn-admin-console-image .
     * docker run --name idn-admin-console-container -d -p 8080:80 idn-admin-console-image
     * Type URL in browser:  http://localhost:8080
