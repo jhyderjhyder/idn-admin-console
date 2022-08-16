@@ -15,7 +15,7 @@
         placeholder="Type Source Name, description, cloudExternalID or type to filter the result.">
     </div>
     <div class="col-sm-2 text-right">
-      <button type="button" [disabled]="loading" (click)="ngOnInit()" class="btn btn-info btn-sm">
+      <button type="button" [disabled]="loading" (click)="ngOnInit()" class="btn btn-primary btn-sm">
         Refresh
       </button>
     </div>
@@ -35,7 +35,7 @@
 </div>
 <div class="form-group row" *ngIf="!loading">
   <div class="col-sm-12 text-right">
-    <button type="button" (click)="showSubmitConfirmModal()" class="btn btn-info btn-sm">
+    <button type="button" (click)="showSubmitConfirmModal()" class="btn btn-primary btn-sm">
       Submit
     </button>
   </div>
@@ -76,7 +76,7 @@
         </td>
         <td class="col-sm-3">
           <span *ngIf="s.selected && (s.type == 'DelimitedFile' || s.type == 'Non-Employee') ">
-            <input type="file" accept=".csv" (change)="onFileChange($event, sources.indexOf(s))" [disabled]="s.aggTask && s.aggTask.status != 'COMPLETED' " class="btn btn-info btn-sm">
+            <input type="file" accept=".csv" (change)="onFileChange($event, sources.indexOf(s))" [disabled]="s.aggTask && s.aggTask.status != 'COMPLETED' " class="btn btn-primary btn-sm">
           </span>
         </td>
         <td>

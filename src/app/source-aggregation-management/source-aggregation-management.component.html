@@ -15,7 +15,7 @@
         placeholder="Type Source Name, description, cloudExternalID or type to filter the result.">
     </div>
     <div class="col-sm-2 text-right">
-      <button type="button" [disabled]="loading || !accntAggScheduleLoaded || !entAggScheduleLoaded" (click)="ngOnInit()" class="btn btn-info btn-sm">
+      <button type="button" [disabled]="loading || !accntAggScheduleLoaded || !entAggScheduleLoaded" (click)="ngOnInit()" class="btn btn-primary btn-sm">
         Refresh
       </button>
     </div>
@@ -47,7 +47,7 @@
     <span class="font-weight-bold">To disable aggregation schedule, select the items and click the 'Submit to Disable' button. <b style='color:red;'>Make sure to take backup</b> as the aggregation schedule will be lost on disable. To do so press the refresh button and click on "Download"</span>
   </div>
   <div class="col-sm-2 text-right">
-    <button type="button" (click)="showSubmitConfirmModal()" class="btn btn-info btn-sm">
+    <button type="button" (click)="showSubmitConfirmModal()" class="btn btn-primary btn-sm">
       Submit to Disable
     </button>
   </div>
@@ -66,17 +66,17 @@
           placeholder="Enter Cron Job Expression">
   </div>
   <div class="col-sm-2 text-right">
-    <button type="button" (click)="applyCronExpToAll()" class="btn btn-info btn-sm">
+    <button type="button" (click)="applyCronExpToAll()" class="btn btn-primary btn-sm">
       Apply to Selected
     </button>
   </div>
   <div class="col-sm-5 text-left">
-    <input #fileInput type="file" accept=".csv" (change)="handleFileSelect($event)" class="btn btn-info btn-sm">
+    <input #fileInput type="file" accept=".csv" (change)="handleFileSelect($event)" class="btn btn-primary btn-sm">
     &nbsp;&nbsp;
-    <button (click)="clearFileSelect()" class="btn btn-info btn-sm">Clear file</button>
+    <button (click)="clearFileSelect()" class="btn btn-primary btn-sm">Clear file</button>
   </div>
   <div class="col-sm-2 text-right">
-    <button type="button" (click)="showSubmitConfirmModal()" class="btn btn-info btn-sm">
+    <button type="button" (click)="showSubmitConfirmModal()" class="btn btn-primary btn-sm">
       Submit to Enable
     </button>
   </div>

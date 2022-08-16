@@ -14,7 +14,7 @@
       <input class="form-control py-2 border-left-0 border" type="text" name="search" [(ngModel)]="searchText" autocomplete="off" placeholder="Type rule name or type to filter the result.">
     </div>
     <div class="col-sm-2 text-right">
-      <button type="button" [disabled]="loading" (click)="ngOnInit()" class="btn btn-info btn-sm">
+      <button type="button" [disabled]="loading" (click)="ngOnInit()" class="btn btn-primary btn-sm">
         Refresh
       </button>
     </div>
@@ -33,12 +33,12 @@
 </div>
 <div class="form-group row" *ngIf="!loading">
   <div class="col-sm-5 text-left">
-    <input #importRuleFile type="file" accept=".xml" (change)="processFileForImportRule($event)" class="btn btn-info btn-sm">
+    <input #importRuleFile type="file" accept=".xml" (change)="processFileForImportRule($event)" class="btn btn-primary btn-sm">
     &nbsp;&nbsp;
-    <button (click)="clearFileForImportRule()" class="btn btn-info btn-sm">Clear File</button>
+    <button (click)="clearFileForImportRule()" class="btn btn-primary btn-sm">Clear File</button>
   </div>
   <div class="col-sm-2 text-right">
-    <button type="button" [disabled]="ruleToImport == null" (click)="showImportRuleConfirmModal()" class="btn btn-info btn-sm">
+    <button type="button" [disabled]="ruleToImport == null" (click)="showImportRuleConfirmModal()" class="btn btn-primary btn-sm">
       Import Rule
     </button>
   </div>
@@ -66,7 +66,7 @@
       <td>{{ r.id }}</td>
       <td>
         <div class="btn-group" role="group">
-          <button id="btnGroupDrop1" type="button" class="btn btn-info btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <button id="btnGroupDrop1" type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             Select
           </button>
           <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
@@ -159,9 +159,9 @@
           </div>
           <div class="form-group row">
             <div class="col-sm-12 text-left">
-              <input #updateRuleFile type="file" accept=".xml" (change)="processFileForUpdatRule($event)" class="btn btn-info btn-sm">
+              <input #updateRuleFile type="file" accept=".xml" (change)="processFileForUpdatRule($event)" class="btn btn-primary btn-sm">
               &nbsp;&nbsp;
-              <button (click)="clearFileForUpdateRule()" class="btn btn-info btn-sm">Clear File</button>
+              <button (click)="clearFileForUpdateRule()" class="btn btn-primary btn-sm">Clear File</button>
             </div>
           </div>
 
