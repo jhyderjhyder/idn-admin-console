@@ -15,12 +15,12 @@
         placeholder="Type Role Name, Description, Owner Account ID or Owner Display Name to filter the result.">
     </div>
     <div class="col-sm-1 text-right">
-      <button type="button" [disabled]="loading" (click)="ngOnInit()" class="btn btn-info btn-sm">
+      <button type="button" [disabled]="loading" (click)="ngOnInit()" class="btn btn-primary btn-sm">
         Refresh
       </button>
     </div>
     <div class="col-sm-2 text-right">
-      <button type="button" [disabled]="loading || !allOwnersFetched" (click)="showRoleRefreshSubmitConfirmModal()" class="btn btn-info btn-sm">
+      <button type="button" [disabled]="loading || !allOwnersFetched" (click)="showRoleRefreshSubmitConfirmModal()" class="btn btn-primary btn-sm">
         Refresh All Org Roles
       </button>
     </div>
@@ -53,7 +53,7 @@
     <span class="font-weight-bold">To enable roles, select the items and click the 'Submit to Enable' button.</span>
   </div>
   <div class="col-sm-2 text-right">
-    <button type="button" (click)="showSubmitConfirmModal()" class="btn btn-info btn-sm">
+    <button type="button" (click)="showSubmitConfirmModal()" class="btn btn-primary btn-sm">
       Submit to Enable
     </button>
   </div>
@@ -63,7 +63,7 @@
     <span class="font-weight-bold">To disable roles, select the items and click the 'Submit to Disable' button.</span>
   </div>
   <div class="col-sm-2 text-right">
-    <button type="button" (click)="showSubmitConfirmModal()" class="btn btn-info btn-sm">
+    <button type="button" (click)="showSubmitConfirmModal()" class="btn btn-primary btn-sm">
       Submit to Disable
     </button>
   </div>
@@ -73,7 +73,7 @@
     <span class="font-weight-bold">To make roles reqestable, select the items and click the 'Submit to Make Requestable' button.</span>
   </div>
   <div class="col-sm-2 text-right">
-    <button type="button" (click)="showSubmitConfirmModal()" class="btn btn-info btn-sm">
+    <button type="button" (click)="showSubmitConfirmModal()" class="btn btn-primary btn-sm">
       Submit to Make Requestable
     </button>
   </div>
@@ -83,7 +83,7 @@
     <span class="font-weight-bold">To make roles non reqestable, select the items and click the 'Submit to Make Non Requestable' button.</span>
   </div>
   <div class="col-sm-2 text-right">
-    <button type="button" (click)="showSubmitConfirmModal()" class="btn btn-info btn-sm">
+    <button type="button" (click)="showSubmitConfirmModal()" class="btn btn-primary btn-sm">
       Submit to Make Non Requestable
     </button>
   </div>
@@ -93,7 +93,7 @@
     <span class="font-weight-bold">To delete roles, select the items and click the 'Submit to Delete Roles' button.</span>
   </div>
   <div class="col-sm-2 text-right">
-    <button type="button" (click)="showSubmitConfirmModal()" class="btn btn-info btn-sm">
+    <button type="button" (click)="showSubmitConfirmModal()" class="btn btn-primary btn-sm">
       Submit to Delete Roles
     </button>
   </div>
