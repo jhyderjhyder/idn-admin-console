@@ -1,23 +1,43 @@
 name: Docker Image CI
 
 on:
-  push:
-    branches: [ "main" ]
+#  push:
+#    branches: [ "main" ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
     steps:
-    -  name: Login to DockerHub
-       uses: docker/login-action@v2
-       with:
-         username: ${{ secrets.DOCKERHUB_USERNAME }}
-         password: ${{ secrets.DOCKERHUB_TOKEN }}
-    - name: Build and push
-      uses: docker/build-push-action@v3
-      with:
-        push: true
-        tags: khandelwalpiyush/idn-test:latest
+      - name: Check out Git repository
+        uses: actions/checkout@v3
+        with:
+          persist-credentials: false
+
+      - name: Reconfigure Git to use HTTPS authentication
+        uses: GuillaumeFalourd/SSH-to-HTTPS@v1
+
+      - name: Install Node.js, NPM and Yarn
+        uses: actions/setup-node@v3
+        with:
+          node-version: 14.15
+
+      - name: Install Dependencies
+        run: npm install --legacy-peer-deps
+
+      - name: Build
+        run: npm run build-prod
+        
+      -  name: Login to DockerHub
+         uses: docker/login-action@v2
+         with:
+           username: ${{ secrets.DOCKERHUB_USERNAME }}
+           password: ${{ secrets.DOCKERHUB_TOKEN }}
+           
+      - name: Build and push
+        uses: docker/build-push-action@v3
+        with:
+          push: true
+          tags: khandelwalpiyush/idn-test:latest
 
 
           
