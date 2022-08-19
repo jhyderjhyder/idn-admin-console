@@ -172,6 +172,15 @@ export class IDNService {
     );
   }
 
+  getRoleIdentityCount(role: Role): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/roles/${role.id}/assigned-identities?count=true`;
+
+    return this.http.get(url, {observe: 'response'}).pipe(
+      catchError(this.handleError(`getRoleIdentityCount`))
+    );
+  }
+
   updateRoleOwner(role: Role): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
     let url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/roles/${role.id}`;

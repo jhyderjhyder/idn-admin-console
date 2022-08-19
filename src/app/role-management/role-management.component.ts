@@ -105,6 +105,11 @@ export class RoleManagementComponent implements OnInit {
               }
               
               role.accessProfiles = each.accessProfiles.length;
+
+              this.idnService.getRoleIdentityCount(each)
+              .subscribe( identityCount => {
+                role.identityCount = identityCount.headers.get('X-Total-Count');
+              })
               
               
               let query = new SimpleQueryCondition();

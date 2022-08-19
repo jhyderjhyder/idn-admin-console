@@ -112,6 +112,7 @@
       <th scope="col">Requestable</th>
       <th scope="col">Criteria Based</th>
       <th scope="col">Access Profiles Attached</th>
+      <th scope="col">Identity Count</th>
       <th scope="col">Owner Account ID</th>
       <th scope="col">Owner Display Name</th>
     </tr>
@@ -127,6 +128,7 @@
       <td>{{ r.requestable }}</td>
       <td>{{ r.criteria }}</td>
       <td>{{ r.accessProfiles }}</td>
+      <td>{{ r.identityCount }}</td>
       <td style="word-wrap: break-word;min-width: 160px;max-width: 160px;">
         <span *ngIf="r.owner">
           {{ r.owner.accountName }}
