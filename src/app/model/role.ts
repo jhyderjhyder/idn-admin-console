@@ -13,6 +13,7 @@ export class Role {
     selected: boolean;
     cloudExternalID: string;
     accessProfiles: string[];
+    identityCount: string;
     currentOwnerAccountName: string;
     currentOwnerDisplayName: string;
 }
