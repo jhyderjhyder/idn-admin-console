@@ -27,8 +27,8 @@ jobs:
       - name: Build
         run: npm run build-prod
 
-      - name: Docker Login
-        run: docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_TOKEN
+    #  - name: Docker Login
+    #    run: docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_TOKEN
           
       - name: Build the Docker image # push The image to the docker hub
         run: docker build . --tag $DOCKERHUB_REPO:latest
