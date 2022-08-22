@@ -27,26 +27,12 @@ jobs:
       - name: Build
         run: npm run build-prod
 
-    #  - name: Docker Login
-    #    run: docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_TOKEN
+      - name: Docker Login
+        run: docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_TOKEN
           
       - name: Build the Docker image # push The image to the docker hub
         run: docker build . --tag $DOCKERHUB_REPO:latest
 
-      - name: Fetch action
-        id: pl
-        uses: Rishabh510/Path-lister-action@master
-        with:
-          path: "/"
-          type: ".html"
-
-      - name: Output results
-        run: |
-          echo "Found ${{ steps.pl.outputs.path_count }} file(s) with this extension:"
-          for i in ${{ steps.pl.outputs.paths }}; do
-          echo $i
-          done
-    
    #   - name: Docker Push
      #   run: docker push $DOCKERHUB_REPO:latest
         
