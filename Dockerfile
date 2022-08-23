@@ -1,6 +1,6 @@
 ### STAGE 1: Build ###
 FROM nginx:1.17.1-alpine AS build
-RUN apt-get update && apt-get upgrade -y && apt-get install -y nodejs npm
+RUN apk add --update nodejs nodejs-npm
 WORKDIR /usr/src/app
 COPY package.json package-lock.json ./
 RUN npm install --legacy-peer-deps
