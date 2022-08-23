@@ -21,11 +21,11 @@ jobs:
         with:
           node-version: 14.15
 
-      - name: Install Dependencies
-        run: npm install --legacy-peer-deps
+     # - name: Install Dependencies
+    #    run: npm install --legacy-peer-deps
 
-      - name: Build
-        run: npm run build-prod
+    #  - name: Build
+    #    run: npm run build-prod
         
       -
         name: Set up QEMU
