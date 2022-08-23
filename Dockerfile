@@ -2,7 +2,7 @@
 FROM nginx:1.17.1-alpine AS build
 RUN apk add --update nodejs nodejs-npm
 WORKDIR /usr/src/app
-COPY package.json package-lock.json ./
+COPY package.json ./
 RUN npm install --legacy-peer-deps
 COPY . .
 RUN npm run build-prod
