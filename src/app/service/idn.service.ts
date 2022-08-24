@@ -100,7 +100,7 @@ export class IDNService {
 
   searchIdentities(identityId: string): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/search/identities`;
+    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/search/identities`;
 
     let payload = {
       "query": {
@@ -174,7 +174,7 @@ export class IDNService {
 
   getRoleIdentityCount(role: Role): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/roles/${role.id}/assigned-identities?count=true`;
+    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/roles/${role.id}/assigned-identities?limit=1&count=true`;
 
     return this.http.get(url, {observe: 'response'}).pipe(
       catchError(this.handleError(`getRoleIdentityCount`))
@@ -362,7 +362,7 @@ export class IDNService {
 
   searchAccounts(query: SimpleQueryCondition): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/search/`;
+    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/search/`;
 
     let payload = {
       "query": {
@@ -510,6 +510,121 @@ export class IDNService {
     let url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/org-config`;
 
     return this.http.get(url, this.httpOptions);
+  }
+
+  getHostingData(): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/tenant-data/hosting-data`;
+
+    return this.http.get(url, this.httpOptions);
+  }
+
+  getIdentityCount(): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/search/identities?limit=1&count=true`;
+
+    let payload = {
+      "query": {
+          "query": `*`
+      }
+    };
+
+    return this.http.post(url, payload, {observe: 'response'});
+  }
+
+  getAccountCount(): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/accounts?limit=1&count=true`;
+
+    return this.http.get(url, {observe: 'response'});
+  }
+
+  getIdentityProfileCount(): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/identity-profiles?limit=1&count=true`;
+
+    return this.http.get(url, {observe: 'response'});
+  }
+
+  getSourceCount(): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/sources?limit=1&count=true`;
+
+    return this.http.get(url, {observe: 'response'});
+  }
+
+  getAccessProfileCount(): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/access-profiles?limit=1&count=true`;
+
+    return this.http.get(url, {observe: 'response'});
+  }
+
+  getRoleCount(): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/roles?limit=1&count=true`;
+
+    return this.http.get(url, {observe: 'response'});
+  }
+
+  getEntitlementCount(): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/entitlements?limit=1&count=true`;
+
+    return this.http.get(url, {observe: 'response'});
+  }
+
+  getTotalCampaignCount(): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/campaigns?limit=1&count=true`;
+
+    return this.http.get(url, {observe: 'response'});
+  }
+
+  getActiveCampaignCount(): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/campaigns?limit=1&count=true&filters=status eq "ACTIVE"`;
+
+    return this.http.get(url, {observe: 'response'});
+  }
+
+  getCompletedCampaignCount(): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/campaigns?limit=1&count=true&filters=status eq "COMPLETED"`;
+
+    return this.http.get(url, {observe: 'response'});
+  }
+
+  getPasswordChangeCount(): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/search?limit=1&count=true`;
+
+    let payload = {
+      "query": {
+          "query": "technicalName:PASSWORD_ACTION_CHANGE_PASSED AND created:[now-7d/d TO now]"
+      },
+      "indices": [
+          "events"
+      ]
+  };
+
+    return this.http.post(url, payload, {observe: 'response'});
+  }
+
+  getProvisioningActivityCount(): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/search?limit=1&count=true`;
+
+    let payload = {
+      "query": {
+          "query": "technicalName:(\"ACCOUNT_CREATE_PASSED\" OR \"ACCOUNT_ENABLE_PASSED\" OR \"ACCOUNT_DISABLE_PASSED\" OR \"ENTITLEMENT_ADD_PASSED\" OR \"APP_REQUEST_PASSED\" OR \"PASSWORD_ACTION_CHANGE_PASSED\") AND created:[now-7d/d TO now]"
+      },
+      "indices": [
+          "events"
+      ]
+  };
+
+    return this.http.post(url, payload, {observe: 'response'});
   }
 
   getValidTimeZones(): Observable<any> {
