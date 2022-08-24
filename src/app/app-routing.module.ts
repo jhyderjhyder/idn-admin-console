@@ -16,6 +16,7 @@ import { ReleaseHistoryComponent} from './release-history/release-history.compon
 import { CreditsComponent} from './credits/credits.component';
 import { OrgTimeComponent} from './misc-org-time-update/misc-org-time-update.component';
 import { ManagePATComponent } from './misc-manage-pat/misc-manage-pat.component';
+import { OrgStatsComponent} from './misc-org-stats/misc-org-stats.component';
 import { LoginComponent }   from './login/login.component';
 import { AuthGuard } from './helper/auth.guard';
 
@@ -36,6 +37,7 @@ const routes: Routes = [
   { path: 'credits', component: CreditsComponent, canActivate: [AuthGuard] },
   { path: 'misc-org-time-update', component: OrgTimeComponent, canActivate: [AuthGuard] },
   { path: 'misc-manage-pat', component: ManagePATComponent, canActivate: [AuthGuard] },
+  { path: 'misc-org-stats', component: OrgStatsComponent, canActivate: [AuthGuard] },
   { path: 'login', component: LoginComponent }
 ];
 

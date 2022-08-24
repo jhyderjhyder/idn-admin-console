@@ -23,6 +23,7 @@ import { ReleaseHistoryComponent } from './release-history/release-history.compo
 import { CreditsComponent } from './credits/credits.component';
 import { OrgTimeComponent } from './misc-org-time-update/misc-org-time-update.component';
 import { ManagePATComponent } from './misc-manage-pat/misc-manage-pat.component';
+import { OrgStatsComponent } from './misc-org-stats/misc-org-stats.component';
 import { AppRoutingModule } from './app-routing.module';
 import { MessagesComponent } from './messages/messages.component';
 import { SearchFilterPipe } from './shared/search-filter.pipe';
@@ -51,6 +52,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
     CreditsComponent,
     OrgTimeComponent,
     ManagePATComponent,
+    OrgStatsComponent,
     MessagesComponent,
     LoginComponent,
     SearchFilterPipe

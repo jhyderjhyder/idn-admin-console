@@ -1,0 +1,110 @@
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a routerLink="/multiple-accounts-report">Home</a></li>
+    <li class="breadcrumb-item">Misc</li>
+    <li class="breadcrumb-item active" aria-current="page">Org Statistics</li>
+  </ol>
+</nav>
+<div class="form-group row" *ngIf="loading">
+  <div class="col-sm-12 text-right">
+    <span class="spinner-border spinner-border-sm mr-1"></span>Loading...
+  </div>
+</div>
+<table class="table table-striped table-bordered" *ngIf="!loading">
+  <thead class="thead-light">
+    <tr>
+      <th scope="col" colspan="2">Org Details</th>
+    </tr>
+  </thead>
+  <tbody *ngIf="orgData">
+    <tr>
+      <td>Name</td>
+      <td>{{ orgData.orgName }}</td>
+    </tr>
+    <tr>
+      <td>Region</td>
+      <td>{{ orgData.orgRegion }}</td>
+    </tr>
+    <tr>
+      <td>Pod</td>
+      <td>{{ orgData.orgPod }}</td>
+    </tr>
+    <tr>
+      <td>Layer</td>
+      <td>{{ orgData.orgLayer }}</td>
+    </tr>
+    <tr>
+      <td>Org Timezone</td>
+      <td>{{ orgData.currentTimeZone }}</td>
+    </tr>
+  </tbody>
+  <thead class="thead-light">
+    <tr>
+      <th scope="col" colspan="2">Identity Statistics</th>
+    </tr>
+  </thead>
+  <tbody *ngIf="orgData">
+    <tr>
+      <td>Total Identities</td>
+      <td>{{ orgData.identityCount }}</td>
+    </tr>
+    <tr>
+      <td>Total Accounts</td>
+      <td>{{ orgData.accountCount }}</td>
+    </tr>
+    <tr>
+      <td>Total Identity Profiles</td>
+      <td>{{ orgData.identityProfileCount }}</td>
+    </tr>
+    <tr>
+      <td>Total Sources</td>
+      <td>{{ orgData.sourceCount }}</td>
+    </tr>
+    <tr>
+      <td>Total Roles</td>
+      <td>{{ orgData.roleCount }}</td>
+    </tr>
+    <tr>
+      <td>Total Access Profiles</td>
+      <td>{{ orgData.accessProfileCount }}</td>
+    </tr>
+    <tr>
+      <td>Total Entitlements</td>
+      <td>{{ orgData.entitlementCount }}</td>
+    </tr>
+  </tbody>
+  <thead class="thead-light">
+    <tr>
+      <th scope="col" colspan="2">Campaign Statistics</th>
+    </tr>
+  </thead>
+  <tbody *ngIf="orgData">
+    <tr>
+      <td>Total Campaigns</td>
+      <td>{{ orgData.totalCampaignCount }}</td>
+    </tr>
+    <tr>
+      <td>Active Campaigns</td>
+      <td>{{ orgData.activeCampaignCount }}</td>
+    </tr>
+    <tr>
+      <td>Completed Campaigns</td>
+      <td>{{ orgData.completedCampaignCount }}</td>
+    </tr>
+  </tbody>
+  <thead class="thead-light">
+    <tr>
+      <th scope="col" colspan="2">Activities (Last 7 Days)</th>
+    </tr>
+  </thead>
+  <tbody *ngIf="orgData">
+    <tr>
+      <td>Password Changes</td>
+      <td>{{ orgData.passwordChangeCount }}</td>
+    </tr>
+    <tr>
+      <td>Provisioning Activities</td>
+      <td>{{ orgData.provisioningActivityCount }}</td>
+    </tr>
+  </tbody>
+</table>
