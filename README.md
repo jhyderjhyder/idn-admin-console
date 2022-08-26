@@ -6,9 +6,11 @@ This tool is build to help the community to manage SailPoint IdentityNow (IDN).
 
 ## Release
 
-You can download the latest build from [Release](https://github.com/piyush-khandelwal-sp/idn-admin-console/releases) page
+You can download the latest Windows/Mac/Linux build from [Release](https://github.com/piyush-khandelwal-sp/idn-admin-console/releases) page
 
-Currently the builds are not code-singed. For Mac, please download and unzip, right click and open. Then you can open normally for subsequent uses. Warning should go away
+Latest Docker Build can be found at [Docker Hub](http://hub.docker.com/r/khandelwalpiyush/idn-admin-console) page
+
+**NOTE:** Currently the builds are not code-singed. For Mac, please download and unzip, right click and open for the first time. Then you can open normally for subsequent uses.
 
 ## Authentication
 
