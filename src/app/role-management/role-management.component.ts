@@ -89,22 +89,43 @@ export class RoleManagementComponent implements OnInit {
               role.name = each.name;
               if (each.description) {
                 if (each.description.length > RoleDescriptionMaxLength) {
-                  role.description = each.description.substring(0, RoleDescriptionMaxLength) + "...";
+                  role.shortDescription = each.description.substring(0, RoleDescriptionMaxLength) + "...";
                 }
                 else {
                   role.description = each.description;
+                  role.shortDescription = each.description;
                 }
               }
               role.id = each.id;
               role.enabled = each.enabled;
               role.requestable = each.requestable;
+
+              let identityNames = [];
+
               if(each.membership && each.membership.criteria != null) {
+                role.criteriaDetail = JSON.stringify(each.membership.criteria);
                 role.criteria = true;
               } else {
                 role.criteria = false;
+                if(each.membership && each.membership.identities != null) {
+                  for (let identities of each.membership.identities) {
+                    identityNames.push(identities.name);
+                  }
+                  role.identityList = identityNames.join(";").toString();
+                }
               }
               
               role.accessProfiles = each.accessProfiles.length;
+
+              let accessProfileNames = [];
+
+              if (each.accessProfiles) {
+                 for (let accessprofile of each.accessProfiles) {
+                   accessProfileNames.push(accessprofile.name);
+                 }
+              }
+
+              role.accessProfilesNames = accessProfileNames.join(";").toString();
 
               this.idnService.getRoleIdentityCount(each)
               .subscribe( identityCount => {
@@ -257,7 +278,7 @@ export class RoleManagementComponent implements OnInit {
       decimalseparator: '.',
       showLabels: true,
       useHeader: true,
-      headers: ["name", "description", "id", "enabled", "requestable", "criteria", "accessProfiles", "ownerAccountID", "ownerDisplayName"],
+      headers: ["name", "description", "id", "enabled", "requestable", "criteria", "criteriaDetail", "accessProfiles", "accessProfilesNames", "identityList", "ownerAccountID", "ownerDisplayName"],
       nullToEmptyString: true,
     };
 

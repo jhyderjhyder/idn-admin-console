@@ -5,6 +5,7 @@ export class AccessProfile {
     name: string;
     id: string;
     description: string;
+    shortDescription: string;
     enabled: boolean;
     requestable: boolean;
     owner: SourceOwner;
@@ -13,4 +14,6 @@ export class AccessProfile {
     entitlements: string[];
     currentOwnerAccountName: string;
     currentOwnerDisplayName: string;
+    sourceName: string;
+    entitlementList: string;
 }

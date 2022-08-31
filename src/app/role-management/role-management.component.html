@@ -118,12 +118,12 @@
     </tr>
   </thead>
   <tbody *ngIf="rolesToShow">
-    <tr *ngFor="let r of rolesToShow | filter:searchText:['name', 'description', 'currentOwnerAccountName', 'currentOwnerDisplayName']">
+    <tr *ngFor="let r of rolesToShow | filter:searchText:['name', 'shortDescription', 'currentOwnerAccountName', 'currentOwnerDisplayName']">
       <td *ngIf="bulkAction">
         <input type="checkbox" [(ngModel)]="r.selected" (click)="changeOnSelect($event)">
       </td>
       <td>{{ r.name }}</td>
-      <td>{{ r.description }}</td>
+      <td>{{ r.shortDescription }}</td>
       <td>{{ r.enabled }}</td>
       <td>{{ r.requestable }}</td>
       <td>{{ r.criteria }}</td>
