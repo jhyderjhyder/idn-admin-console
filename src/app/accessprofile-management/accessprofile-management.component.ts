@@ -88,17 +88,28 @@ export class AccessProfileManagementComponent implements OnInit {
               accessProfile.name = each.name;
               if (each.description) {
                 if (each.description.length > AccessProfileDescriptionMaxLength) {
-                  accessProfile.description = each.description.substring(0, AccessProfileDescriptionMaxLength) + "...";
+                  accessProfile.shortDescription = each.description.substring(0, AccessProfileDescriptionMaxLength) + "...";
                 }
                 else {
                   accessProfile.description = each.description;
+                  accessProfile.shortDescription = each.description;
                 }
               }
               accessProfile.id = each.id;
               accessProfile.enabled = each.enabled;
               
               accessProfile.entitlements = each.entitlements.length;
+
+              accessProfile.sourceName = each.source.name;
               
+              let entitlementList = [];
+
+              if(each.entitlements != null) {
+                for (let entitlement of each.entitlements) {
+                  entitlementList.push(entitlement.name);
+                }
+                accessProfile.entitlementList = entitlementList.join(";").toString();
+              }
               
               let query = new SimpleQueryCondition();
               query.attribute = "id";
@@ -241,7 +252,7 @@ export class AccessProfileManagementComponent implements OnInit {
       decimalseparator: '.',
       showLabels: true,
       useHeader: true,
-      headers: ["name", "description", "id", "enabled", "entitlements", "ownerAccountID", "ownerDisplayName"],
+      headers: ["name", "description", "id", "enabled", "entitlements", "sourceName", "entitlementList", "ownerAccountID", "ownerDisplayName"],
       nullToEmptyString: true,
     };
 
