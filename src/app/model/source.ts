@@ -22,4 +22,6 @@ export class Source {
   aggTask: AggregationTask;
   accountsCount: string;
   entitlementsCount: string;
+  internalName: string;
+  authoritative: string;
 }

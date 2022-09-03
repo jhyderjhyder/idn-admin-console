@@ -6,6 +6,7 @@ import { AggregationManagementComponent }   from './source-aggregation-managemen
 import { ChangeSourceOwnerComponent} from './source-owner-update/source-owner-update.component';
 import { AggregateSourceComponent} from './source-aggregation-run/source-aggregation-run.component';
 import { ResetSourceComponent} from './source-reset/source-reset.component';
+import { SourceInfoComponent} from './source-info/source-info.component';
 import { ImportRuleComponent} from './rule-connector-management/rule-connector-management.component';
 import { CloudRuleComponent} from './rule-cloud-management/rule-cloud-management.component';
 import { ChangeRoleOwnerComponent} from './role-owner-update/role-owner-update.component';
@@ -27,6 +28,7 @@ const routes: Routes = [
   { path: 'source-owner-update', component: ChangeSourceOwnerComponent, canActivate: [AuthGuard] },
   { path: 'source-aggregation-run', component: AggregateSourceComponent, canActivate: [AuthGuard] },
   { path: 'source-reset', component: ResetSourceComponent, canActivate: [AuthGuard] },
+  { path: 'source-info', component: SourceInfoComponent, canActivate: [AuthGuard] },
   { path: 'rule-connector-management', component: ImportRuleComponent, canActivate: [AuthGuard] },
   { path: 'rule-cloud-management', component: CloudRuleComponent, canActivate: [AuthGuard] },
   { path: 'role-owner-update', component: ChangeRoleOwnerComponent, canActivate: [AuthGuard] },
