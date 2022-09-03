@@ -1,0 +1,55 @@
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a routerLink="/multiple-accounts-report">Home</a></li>
+    <li class="breadcrumb-item">Sources</li>
+    <li class="breadcrumb-item active" aria-current="page">Source Info</li>
+  </ol>
+</nav>
+<form name="form" #f="ngForm" novalidate contactRequired>
+  <div class="form-group row">
+    <div class="input-group col-md-10">
+      <span class="input-group-prepend">
+        <div class="input-group-text bg-transparent border-right-0"><i class="fa fa-search"></i></div>
+      </span>
+      <input class="form-control py-2 border-left-0 border" type="text" name="search" [(ngModel)]="searchText" autocomplete="off" 
+        placeholder="Type Source Name, description, cloudExternalID or type to filter the result.">
+    </div>
+    <div class="col-sm-2 text-right">
+      <button type="button" [disabled]="loading" (click)="ngOnInit()" class="btn btn-primary btn-sm">
+        Refresh
+      </button>
+    </div>
+  </div>
+</form>
+<div class="form-group row" *ngIf="loading">
+  <div class="col-sm-12 text-right">
+    <span class="spinner-border spinner-border-sm mr-1"></span>Loading...
+  </div>
+</div>
+<table class="table table-striped table-bordered">
+  <thead class="thead-light">
+    <tr>
+      <th scope="col">Source Name</th>
+      <th scope="col">Internal Name</th>
+      <th scope="col">Source Description</th>
+      <th scope="col">Type</th>
+      <th scope="col">cloudExternalID</th>
+      <th scope="col">ID</th>
+      <th scope="col">Account Count</th>
+      <th scope="col">Entitlement Count</th>
+    </tr>
+  </thead>
+  <tbody *ngIf="sources">
+    <tr *ngFor="let s of sources | filter:searchText:['cloudExternalID', 'name', 'description', 'type']">
+      <td [ngStyle]="{'color':s.name.includes('Authoritative') ? 'blue' : 'black' }">{{ s.name }}</td>
+      <td>{{ s.internalName }}</td>
+      <td>{{ s.description }}</td>
+      <td>{{ s.type }}</td>
+      <td>{{ s.cloudExternalID }}</td>
+      <td>{{ s.id }}</td>
+      <td>{{ s.accountsCount }}</td>
+      <td>{{ s.entitlementsCount }}</td>
+    </tr>
+  </tbody>
+</table>
+<br>
