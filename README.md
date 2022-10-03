@@ -29,36 +29,40 @@ We are looking for (list is not exhaustive)
 * GitHub and Actions know-how to help management and auto build / deploy / version et al
 * Help us make the Angular framework better and plug holes if any. Upgrade existing versions and remove non used dependencies.
 * Help us enhance it (pagination, current build documentation / standardizing and refactoring code et al .. list is endless)
-* Testing, finding, and reporting and hopefully help fixing bugs – we are bound to find lot of issues to being with.
+* Testing, finding, and reporting and hopefully help fixing bugs - we are bound to find lot of issues to being with.
 * Looking for contributors for the repo to help us set it up properly.
 
 ## Features
-* Find Multiple Accounts in Source and Download Report
-* Access Profiles
-	* Manage Access Profiles (Enable / Disable / Delete)
-	* Manage Access Profile Owners
-* Roles
-	* Manage Roles (Enable / Disable / Mark-Umark as Requestable / Delete)
-	* Manage Role Owners
-* Sources
-	* Manage Aggregation Schedules (Enable / Disable / Backup and Restore Accounts & Entitlement)
-	* Manage Source Owners
-	* Run Aggregations (Unoptimized / File Upload)
-	* Reset Source (Accounts / Entitlements / Both)
-* Rules
-	* Manage Cloud Rules (Download)
-	* Manage Connector Rules (Add / Update / Delete / Download)
-* Misc
-	* Check and Set Org Time
-	* Manage PAT (See Permission / Delete Token)
 
+* Find Multiple Accounts in Source and Download Report
+* Identity Profiles
+    * Manage Identity Profile (Move Priority / Refresh Individual Profile)
+    * Manage Identity Attribute Index (Index / Unindex Attributes)
+* Access Profiles
+    * Manage Access Profiles (Enable / Disable / Delete)
+    * Manage Access Profile Owners
+* Roles
+    * Manage Roles (Enable / Disable / Mark-Umark as Requestable / Delete)
+    * Manage Role Owners
+* Sources
+    * Manage Aggregation Schedules (Enable / Disable / Backup and Restore Accounts & Entitlement)
+    * Manage Source Owners
+    * Run Aggregations (Unoptimized / File Upload)
+    * Reset Source (Accounts / Entitlements / Both)
+    * Source Info (Internal Name / ID / Count)
+* Rules
+    * Manage Cloud Rules (Download)
+    * Manage Connector Rules (Add / Update / Delete / Download)
+* Misc
+    * Check and Set Org Time
+    * Manage PAT (See Permission / Delete Token)
+    * Org Statistics (Pretty cool to see)
 
 ## Screenshots
 
 ![Find Multiple Accounts](resources/readme/find-multiple-accounts.png)
 
 ![Manage Connector Rules](resources/readme/manage-connector-rules.png)
-
 
 ## Manual Build
 

@@ -20,6 +20,8 @@ import { ChangeRoleOwnerComponent} from './role-owner-update/role-owner-update.c
 import { ChangeAccessProfileOwnerComponent} from './accessprofile-owner-update/accessprofile-owner-update.component';
 import { RoleManagementComponent} from './role-management/role-management.component';
 import { AccessProfileManagementComponent} from './accessprofile-management/accessprofile-management.component';
+import { IdentityProfileManagementComponent} from './identity-profile-management/identity-profile-management.component';
+import { IdentityAttributeIndexComponent} from './identity-attribute-index/identity-attribute-index.component';
 import { ReleaseHistoryComponent } from './release-history/release-history.component';
 import { CreditsComponent } from './credits/credits.component';
 import { OrgTimeComponent } from './misc-org-time-update/misc-org-time-update.component';
@@ -50,6 +52,8 @@ import { NgSelectModule } from '@ng-select/ng-select';
     ChangeAccessProfileOwnerComponent,
     RoleManagementComponent,
     AccessProfileManagementComponent,
+    IdentityProfileManagementComponent,
+    IdentityAttributeIndexComponent,
     ReleaseHistoryComponent,
     CreditsComponent,
     OrgTimeComponent,
