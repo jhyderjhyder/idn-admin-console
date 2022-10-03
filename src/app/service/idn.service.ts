@@ -11,6 +11,8 @@ import { AuthenticationService } from '../service/authentication-service.service
 import { Role } from '../model/role';
 import { AccessProfile } from '../model/accessprofile';
 import { PAT } from '../model/pat';
+import { IdentityProfile } from '../model/identity-profile';
+import { IdentityAttribute } from '../model/identity-attribute';
 
 @Injectable({
   providedIn: 'root'
@@ -715,6 +717,100 @@ export class IDNService {
     return this.http.get(url, this.httpOptions).pipe(
       catchError(this.handleError(`downloadSPConfigExport`))
     );
+  }
+
+  getIdentityProfiles(): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/identity-profiles?sorters=priority`;
+
+    return this.http.get(url, this.httpOptions).pipe(
+      catchError(this.handleError(`getAllIdentityProfiles`))
+    );
+  }
+
+  refreshIdentityProfile(profileId: string): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/identity-profiles/${profileId}/refresh-identities`;
+
+    return this.http.post(url, this.httpOptions);
+  }
+
+  updateProfilePriority(profile: IdentityProfile): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/identity-profiles/${profile.id}`;
+    
+    let myHttpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json-patch+json'
+      })
+    };
+
+    let payload = [
+      {
+          "op": "replace",
+          "path": "/priority",
+          "value": `${profile.newPriority}`
+      }
+    ];
+
+    return this.http.patch(url, payload, myHttpOptions);
+  }
+
+  getIdentityProfilesv1(): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/cc/api/profile/list?sorters=priority`;
+
+    return this.http.get(url, this.httpOptions).pipe(
+      catchError(this.handleError(`getAllIdentityProfilesv1`))
+    );
+  }
+
+  updateProfilePriorityv1(profile: IdentityProfile): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/cc/api/profile/update/${profile.id}`;
+
+    var formdata = new FormData();
+    formdata.append("priority", `${profile.newPriority}`);
+
+    return this.http.post(url, formdata);
+  }
+
+  refreshIdentityProfilev1(profileId: string): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/cc/api/profile/refresh/${profileId}`;
+
+    let myHttpOptions = {
+      headers: new HttpHeaders({
+      })
+    };
+
+    return this.http.post(url, null, myHttpOptions);
+  }
+
+  getIdentityAttributes(): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/cc/api/identityAttribute/list`;
+
+    return this.http.get(url, this.httpOptions).pipe(
+      catchError(this.handleError(`getIdentityAttributes`))
+    );
+  }
+
+  updateAttributeIndex(attribute: IdentityAttribute): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/cc/api/identityAttribute/update?name=${attribute.name}`;
+
+
+    let payload = 
+      {
+        "displayName": attribute.displayName,
+        "name": attribute.name,
+        "searchable": attribute.searchable,
+        "sources": attribute.sources,
+        "type": attribute.type
+      };
+
+    return this.http.post(url, payload);
   }
 
    /** Log a HeroService message with the MessageService */

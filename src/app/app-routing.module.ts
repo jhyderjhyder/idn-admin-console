@@ -13,6 +13,8 @@ import { ChangeRoleOwnerComponent} from './role-owner-update/role-owner-update.c
 import { ChangeAccessProfileOwnerComponent} from './accessprofile-owner-update/accessprofile-owner-update.component';
 import { RoleManagementComponent} from './role-management/role-management.component';
 import { AccessProfileManagementComponent} from './accessprofile-management/accessprofile-management.component';
+import { IdentityProfileManagementComponent} from './identity-profile-management/identity-profile-management.component';
+import { IdentityAttributeIndexComponent} from './identity-attribute-index/identity-attribute-index.component';
 import { ReleaseHistoryComponent} from './release-history/release-history.component';
 import { CreditsComponent} from './credits/credits.component';
 import { OrgTimeComponent} from './misc-org-time-update/misc-org-time-update.component';
@@ -35,6 +37,8 @@ const routes: Routes = [
   { path: 'accessprofile-owner-update', component: ChangeAccessProfileOwnerComponent, canActivate: [AuthGuard] },
   { path: 'role-management', component: RoleManagementComponent, canActivate: [AuthGuard] },
   { path: 'accessprofile-management', component: AccessProfileManagementComponent, canActivate: [AuthGuard] },
+  { path: 'identity-profile-management', component: IdentityProfileManagementComponent, canActivate: [AuthGuard] },
+  { path: 'identity-attribute-index', component: IdentityAttributeIndexComponent, canActivate: [AuthGuard] },
   { path: 'release-history', component: ReleaseHistoryComponent, canActivate: [AuthGuard] },
   { path: 'credits', component: CreditsComponent, canActivate: [AuthGuard] },
   { path: 'misc-org-time-update', component: OrgTimeComponent, canActivate: [AuthGuard] },

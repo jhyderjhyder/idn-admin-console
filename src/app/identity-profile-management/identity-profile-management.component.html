@@ -1,0 +1,166 @@
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a routerLink="/multiple-accounts-report">Home</a></li>
+    <li class="breadcrumb-item">Identity Profiles</li>
+    <li class="breadcrumb-item active" aria-current="page">Manage Identity Profile</li>
+  </ol>
+</nav>
+<form name="form" #f="ngForm" novalidate contactRequired>
+  <div class="form-group row">
+    <div class="input-group col-sm-10">
+      <span class="input-group-prepend">
+        <div class="input-group-text bg-transparent border-right-0"><i class="fa fa-search"></i></div>
+      </span>
+      <input class="form-control py-2 border-left-0 border" type="text" name="search" [(ngModel)]="searchText" autocomplete="off" 
+        placeholder="Type Identity Profile Name, Description, Auth Source Name to filter the result.">
+    </div>
+    <div class="col-sm-2 text-left">
+      <button type="button" [disabled]="loading" (click)="ngOnInit()" class="btn btn-primary btn-sm">
+        Refresh
+      </button>
+    </div>
+  </div>
+</form>
+<div class="form-group row" *ngIf="loading">
+  <div class="col-sm-12 text-right">
+    <span class="spinner-border spinner-border-sm mr-1"></span>Loading...
+  </div>
+</div>
+<div class="form-group row" *ngIf="!loading">
+  <div class="col-sm-12 text-left">
+    <span class="font-weight-bold">To change profile priority, select the profiles below, change the value and then click the 'Submit' button. <b>Currently do not overlap with same priority number.</b> For example if you are interchanging priority between 10 and 20, don't swap them but make one 21 and other 11. Then can change it again to 10 and 20</span>
+  </div>
+</div>
+<div class="form-group row" *ngIf="!loading">
+  <div class="col-sm-12 text-right">
+    <button type="button" (click)="showSubmitConfirmModal()" class="btn btn-primary btn-sm">
+      Submit
+    </button>
+  </div>
+</div>
+<table class="table table-striped table-bordered">
+  <thead class="thead-light">
+    <tr>
+      <th scope="col">
+          Select All
+          <br>
+          <input type="checkbox" [(ngModel)]="selectAll" (click)="changeOnSelectAll()" id="selectAll" [disabled]="searchText != null && searchText.trim() != ''">
+      </th>
+      <th scope="col">Name</th>
+      <th scope="col">Description</th>
+      <th scope="col">Auth Source</th>
+      <th scope="col">Identity Count</th>
+      <th scope="col" class="col-sm-2">Priority</th>
+      <th scope="col">Identity Exception</th>
+      <th scope="col">Refresh Required</th>
+      <th scope="col">Actions</th> 
+    </tr>
+  </thead>
+  <tbody *ngIf="identityProfiles">
+    <tr *ngFor="let p of identityProfiles | filter:searchText:['name', 'description', 'authSourceName']">
+      <td>
+        <input type="checkbox" [(ngModel)]="p.selected" (click)="changeOnSelect($event, identityProfiles.indexOf(p))">
+      </td>
+      <td>{{ p.name }}</td>
+      <td>{{ p.description }}</td>
+      <td>{{ p.authSourceName }}</td>
+      <td>{{ p.identityCount }}</td>
+      <td class="col-sm-2">
+        <span *ngIf="p.priority && !p.selected">
+          {{ p.priority }}
+        </span>
+        <span *ngIf="p.selected">
+          <input class="form-control py-2 border-left-0 border" type="text" [(ngModel)]="p.newPriority"
+              placeholder="Enter Priority Value">
+        </span>
+      </td>
+      <td>{{ p.hasIdentityException }}</td>
+      <td>{{ p.identityRefreshRequired }}</td>
+      <td>
+        <div class="col-sm-2 text-right">
+          <button type="button" [disabled]="loading" (click)="showRefreshSubmitConfirmModal(p.id)" class="btn btn-primary btn-sm">
+            Refresh Identities
+          </button>
+        </div>
+      </td> 
+    </tr>
+  </tbody>
+</table>
+<br>
+<div bsModal #submitRefreshConfirmModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="dialog-child-name">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h6 id="dialog-child-name" class="modal-title pull-left">
+          <span *ngIf="validToSubmit">
+            Are you sure you want to kick off Identity Refresh for the Profile?
+          </span>
+          <div *ngIf="!validToSubmit">
+            <span class="font-weight-bold">Please fix the following error (errors) before submitting the changes: </span><br>
+            <span *ngFor="let err of invalidMessage">
+              {{ err }}
+              <br>
+            </span>
+          </div>
+        </h6>
+        <button type="button" class="close pull-right" aria-label="Close" (click)="hideRefreshSubmitConfirmModal()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form name="form" novalidate>
+          <div class="row mrgbtm small">
+            <div class="col-md-12 text-center">
+              <button type="button" (click)="hideRefreshSubmitConfirmModal()" class="btn btn-danger btn-sm">Cancel</button>
+              &nbsp;&nbsp;&nbsp;
+              <span *ngIf="validToSubmit">
+                <button type="button" class="btn btn-success btn-sm" (click)="refreshIdentityProfile()">
+                  Refresh
+                </button>
+              </span>
+            </div>
+          </div>
+      </form>
+      </div>
+    </div>
+  </div>
+</div>
+<div bsModal #submitConfirmModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="dialog-child-name">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h6 id="dialog-child-name" class="modal-title pull-left">
+          <span *ngIf="validToSubmit">
+            Are you sure you want to update Identity Profile Priority?
+          </span>
+          <div *ngIf="!validToSubmit">
+            <span class="font-weight-bold">Please fix the following error (errors) before submitting the changes: </span><br>
+            <span *ngFor="let err of invalidMessage">
+              {{ err }}
+              <br>
+            </span>
+          </div>
+        </h6>
+        <button type="button" class="close pull-right" aria-label="Close" (click)="hideSubmitConfirmModal()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form name="form" novalidate>
+          <div class="row mrgbtm small">
+            <div class="col-md-12 text-center">
+              <button type="button" (click)="hideSubmitConfirmModal()" class="btn btn-danger btn-sm">Cancel</button>
+              &nbsp;&nbsp;&nbsp;
+              <span *ngIf="validToSubmit">
+                <button type="button" class="btn btn-success btn-sm" (click)="updateProfilePriority()">
+                  Update
+                </button>
+              </span>
+            </div>
+          </div>
+      </form>
+      </div>
+    </div>
+  </div>
+</div>
+
