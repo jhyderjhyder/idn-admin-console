@@ -7,6 +7,8 @@ import { MessageService } from '../service/message.service';
 import { AuthenticationService } from '../service/authentication-service.service';
 import { IdentityProfile } from '../model/identity-profile';
 import { animateChild } from '@angular/animations';
+import * as JSZip from 'jszip';
+import { saveAs } from 'file-saver';
 
 const RoleDescriptionMaxLength = 50;
 
@@ -26,6 +28,8 @@ export class IdentityProfileManagementComponent implements OnInit {
   invalidMessage: string[];
   validToSubmit: boolean;
   profileToRefresh: string;
+
+  zip: JSZip = new JSZip();
 
   public modalRef: BsModalRef;
   
@@ -247,6 +251,32 @@ showRefreshSubmitConfirmModal(profileId: string) {
 
   sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+  exportAllIdentityProfiles() {
+    
+    this.idnService.getIdentityProfiles()
+          .subscribe(
+            results => {
+            this.identityProfiles = [];
+            for (let each of results) {
+              let identityProfile = new IdentityProfile();
+              let jsonData = JSON.stringify(each, null, 4);
+              identityProfile.name = each.name;
+              let fileName = "IdentityProfile - " + identityProfile.name + ".json";
+              this.zip.file(`${fileName}`, jsonData);
+              
+            }
+            const currentUser = this.authenticationService.currentUserValue;
+            let zipFileName = `${currentUser.tenant}-identityprofiles.zip`;
+  
+           this.zip.generateAsync({type:"blob"}).then(function(content) {
+              saveAs(content, zipFileName);
+          });
+  
+          this.ngOnInit();
+  
+          });    
   }
 
 }

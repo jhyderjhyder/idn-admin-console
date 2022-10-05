@@ -270,7 +270,7 @@ export class ChangeSourceOwnerComponent implements OnInit {
     };
 
     const currentUser = this.authenticationService.currentUserValue;
-    let fileName = `${currentUser.tenant}-Source-Owners`;
+    let fileName = `${currentUser.tenant}-source-owners`;
     let arr = [];
     for (let each of this.sources) {
       let record = Object.assign(each);

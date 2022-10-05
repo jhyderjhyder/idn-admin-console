@@ -36,20 +36,21 @@ We are looking for (list is not exhaustive)
 
 * Find Multiple Accounts in Source and Download Report
 * Identity Profiles
-    * Manage Identity Profile (Move Priority / Refresh Individual Profile)
+    * Manage Identity Profile (Move Priority / Refresh Individual Profile / Export All)
     * Manage Identity Attribute Index (Index / Unindex Attributes)
+    * Manage Transforms (Add / Update / Delete / Download / Export All)
 * Access Profiles
-    * Manage Access Profiles (Enable / Disable / Delete)
+    * Manage Access Profiles (Enable / Disable / Delete / Export All)
     * Manage Access Profile Owners
 * Roles
-    * Manage Roles (Enable / Disable / Mark-Umark as Requestable / Delete)
+    * Manage Roles (Enable / Disable / Mark-Umark as Requestable / Delete / Export All)
     * Manage Role Owners
 * Sources
     * Manage Aggregation Schedules (Enable / Disable / Backup and Restore Accounts & Entitlement)
     * Manage Source Owners
     * Run Aggregations (Unoptimized / File Upload)
     * Reset Source (Accounts / Entitlements / Both)
-    * Source Info (Internal Name / ID / Count)
+    * Source Info (Internal Name / ID / Count / Export All)
 * Rules
     * Manage Cloud Rules (Download)
     * Manage Connector Rules (Add / Update / Delete / Download)

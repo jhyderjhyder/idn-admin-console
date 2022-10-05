@@ -5,6 +5,8 @@ import { Source } from '../model/source';
 import { IDNService } from '../service/idn.service';
 import { MessageService } from '../service/message.service';
 import { AuthenticationService } from '../service/authentication-service.service';
+import * as JSZip from 'jszip';
+import { saveAs } from 'file-saver';
 
 @Component({
   selector: 'app-source-info',
@@ -15,6 +17,8 @@ export class SourceInfoComponent implements OnInit {
   sources: Source[];
   searchText: string;
   loading: boolean;
+
+  zip: JSZip = new JSZip();
 
   invalidMessage: string[];
 
@@ -74,6 +78,32 @@ export class SourceInfoComponent implements OnInit {
             }
             this.loading = false;
           });
+  }
+
+  exportAllSources() {
+    
+    this.idnService.searchAggregationSources()
+          .subscribe(
+            results => {
+            this.sources = [];
+            for (let each of results) {
+              let source = new Source();
+              let jsonData = JSON.stringify(each, null, 4);
+              source.name = each.name;
+              let fileName = "Source - " + source.name + ".json";
+              this.zip.file(`${fileName}`, jsonData);
+              
+            }
+            const currentUser = this.authenticationService.currentUserValue;
+            let zipFileName = `${currentUser.tenant}-sources.zip`;
+  
+           this.zip.generateAsync({type:"blob"}).then(function(content) {
+              saveAs(content, zipFileName);
+          });
+  
+          this.ngOnInit();
+  
+          });    
   }
 
 }

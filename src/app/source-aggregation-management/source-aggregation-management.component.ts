@@ -356,7 +356,7 @@ export class AggregationManagementComponent implements OnInit {
     };
 
     const currentUser = this.authenticationService.currentUserValue;
-    let fileName = `${currentUser.tenant}-Sources`;
+    let fileName = `${currentUser.tenant}-sources`;
     let arr = [];
     for (let each of this.sources) {
       let record = Object.assign(each);

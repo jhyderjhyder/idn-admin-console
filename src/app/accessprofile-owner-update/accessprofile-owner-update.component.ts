@@ -123,7 +123,7 @@ export class ChangeAccessProfileOwnerComponent implements OnInit {
     };
 
     const currentUser = this.authenticationService.currentUserValue;
-    let fileName = `${currentUser.tenant}-accessProfiles`;
+    let fileName = `${currentUser.tenant}-accessprofiles`;
     let arr = [];
     for (let each of this.accessProfiles) {
       let record = Object.assign(each);

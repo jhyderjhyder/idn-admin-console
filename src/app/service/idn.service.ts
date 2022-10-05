@@ -13,6 +13,7 @@ import { AccessProfile } from '../model/accessprofile';
 import { PAT } from '../model/pat';
 import { IdentityProfile } from '../model/identity-profile';
 import { IdentityAttribute } from '../model/identity-attribute';
+import { Transform } from '../model/transform';
 
 @Injectable({
   providedIn: 'root'
@@ -811,6 +812,47 @@ export class IDNService {
       };
 
     return this.http.post(url, payload);
+  }
+
+  getAllTransforms(): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/transforms`;
+
+    return this.http.get(url, this.httpOptions).pipe(
+      catchError(this.handleError(`getAllTransforms`))
+    );
+  }
+
+  getTransformById(transformId: string): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/transforms/${transformId}`;
+
+    return this.http.get(url, this.httpOptions);
+  }
+
+  updateTransform(transform: Transform): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/transforms/${transform.id}`;
+    
+    let payload = transform;
+
+    return this.http.put(url, payload, this.httpOptions);
+  }
+
+  deleteTransform(transformId: string): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/transforms/${transformId}`;
+
+    return this.http.delete(url, this.httpOptions);
+  }
+
+  createTransform(transform: Transform): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/transforms/`;
+    
+    let payload = transform;
+
+    return this.http.post(url, payload, this.httpOptions);
   }
 
    /** Log a HeroService message with the MessageService */

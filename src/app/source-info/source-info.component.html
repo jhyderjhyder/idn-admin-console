@@ -7,12 +7,17 @@
 </nav>
 <form name="form" #f="ngForm" novalidate contactRequired>
   <div class="form-group row">
-    <div class="input-group col-md-10">
+    <div class="input-group col-md-8">
       <span class="input-group-prepend">
         <div class="input-group-text bg-transparent border-right-0"><i class="fa fa-search"></i></div>
       </span>
       <input class="form-control py-2 border-left-0 border" type="text" name="search" [(ngModel)]="searchText" autocomplete="off" 
         placeholder="Type Source Name, description, cloudExternalID or type to filter the result.">
+    </div>
+    <div class="col-sm-2 text-right">
+      <button type="button" [disabled]="loading" (click)="exportAllSources()" class="btn btn-primary btn-sm">
+        Export All
+      </button>
     </div>
     <div class="col-sm-2 text-right">
       <button type="button" [disabled]="loading" (click)="ngOnInit()" class="btn btn-primary btn-sm">
