@@ -107,7 +107,7 @@ export class MultipleAccountsComponent implements OnInit {
     };
 
     const currentUser = this.authenticationService.currentUserValue;
-    let fileName = `${currentUser.tenant}-Multiple-Accounts`;
+    let fileName = `${currentUser.tenant}-multiple-accounts`;
 
     let arr = [];
     for (let each of this.accounts) {

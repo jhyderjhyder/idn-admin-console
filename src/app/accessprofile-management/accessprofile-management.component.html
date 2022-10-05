@@ -27,7 +27,7 @@
   </div>
 </div>
 <div class="form-group row" *ngIf="!loading && allOwnersFetched">
-  <div class="col-sm-5">
+  <div class="col-sm-8">
     <ng-select [(ngModel)]="bulkAction" appearance="outline" placeholder="Select Bulk Access Profile Action" 
       (change)="changeOnBulkAction($event)">
         <ng-option value="EnableAccessProfiles">Bulk Enable Access Profile</ng-option>
@@ -35,9 +35,14 @@
         <ng-option value="DeleteAccessProfiles">Bulk Delete Access Profile</ng-option>
     </ng-select>
   </div>
-  <div class="col-sm-7 text-right" *ngIf="accessProfiles">
-    <button type="button" (click)="saveInCsv()" class="btn btn-link">
-      Download
+  <div class="col-sm-2 text-right" *ngIf="accessProfiles">
+    <button type="button" [disabled]="loading" (click)="saveInCsv()" class="btn btn-primary btn-sm">
+      Download CSV
+    </button>
+  </div>
+  <div class="col-sm-2 text-right">
+    <button type="button" [disabled]="loading" (click)="exportAllAccessProfiles()" class="btn btn-primary btn-sm">
+      Export All
     </button>
   </div>
 </div>

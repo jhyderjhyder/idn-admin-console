@@ -27,16 +27,7 @@
   </div>
 </div>
 <div class="form-group row" *ngIf="!loading && allOwnersFetched">
-  <div class="col-sm-5">
-  </div>
-  <div class="col-sm-7 text-right" *ngIf="sources">
-    <button type="button" (click)="saveInCsv()" class="btn btn-link">
-      Download
-    </button>
-  </div>
-</div>
-<div class="form-group row" *ngIf="!loading && allOwnersFetched">
-  <div class="col-sm-12 text-left">
+  <div class="col-sm-10 text-left">
     <span class="font-weight-bold">To change the owner, select the items, enter the new owner account ID and click the 'Submit to Change' button. </span>
     <span class="font-weight-bold">To apply change in bulk:
       <br>
@@ -44,6 +35,11 @@
       <br>
       &nbsp;&nbsp;&nbsp;&nbsp; 2) or select the items and then upload the saved csv file by clicking 'Choose file' button.
     </span>
+  </div>
+  <div class="col-sm-2 text-right" *ngIf="sources">
+    <button type="button" (click)="saveInCsv()" class="btn btn-primary btn-sm">
+      Download
+    </button>
   </div>
 </div>
 <div class="form-group row" *ngIf="!loading && allOwnersFetched">

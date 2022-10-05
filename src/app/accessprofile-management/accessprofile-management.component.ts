@@ -10,6 +10,8 @@ import { AuthenticationService } from '../service/authentication-service.service
 import { SimpleQueryCondition } from '../model/simple-query-condition';
 import { SourceOwner } from '../model/source-owner';
 import { AccessProfile } from '../model/accessprofile';
+import * as JSZip from 'jszip';
+import { saveAs } from 'file-saver';
 
 const AccessProfileDescriptionMaxLength = 50;
 
@@ -34,6 +36,8 @@ export class AccessProfileManagementComponent implements OnInit {
   validToSubmit: boolean;
   errorMessage: string;
   deleteAccessProfileConfirmText: string;
+
+  zip: JSZip = new JSZip();
 
   public modalRef: BsModalRef;
   
@@ -326,6 +330,32 @@ showdeleteAccessProfileConfirmModal() {
 
 async sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
+}
+
+exportAllAccessProfiles() {
+    
+  this.idnService.getAccessProfiles()
+        .subscribe(
+          results => {
+          this.accessProfiles = [];
+          for (let each of results) {
+            let accessProfile = new AccessProfile();
+            let jsonData = JSON.stringify(each, null, 4);
+            accessProfile.name = each.name;
+            let fileName = "AccessProfile - " + accessProfile.name + ".json";
+            this.zip.file(`${fileName}`, jsonData);
+            
+          }
+          const currentUser = this.authenticationService.currentUserValue;
+          let zipFileName = `${currentUser.tenant}-accessprofiles.zip`;
+
+         this.zip.generateAsync({type:"blob"}).then(function(content) {
+            saveAs(content, zipFileName);
+        });
+
+        this.ngOnInit();
+
+        });    
 }
 
 }

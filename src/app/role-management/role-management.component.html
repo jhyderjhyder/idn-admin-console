@@ -32,7 +32,7 @@
   </div>
 </div>
 <div class="form-group row" *ngIf="!loading && allOwnersFetched">
-  <div class="col-sm-5">
+  <div class="col-sm-8">
     <ng-select [(ngModel)]="bulkAction" appearance="outline" placeholder="Select Bulk Role Action" 
       (change)="changeOnBulkAction($event)">
         <ng-option value="EnableRoles">Bulk Enable Roles</ng-option>
@@ -42,9 +42,14 @@
         <ng-option value="DeleteRoles">Bulk Delete Roles</ng-option>
     </ng-select>
   </div>
-  <div class="col-sm-7 text-right" *ngIf="roles">
-    <button type="button" (click)="saveInCsv()" class="btn btn-link">
-      Download
+  <div class="col-sm-2 text-right" *ngIf="roles">
+    <button type="button" [disabled]="loading" (click)="saveInCsv()" class="btn btn-primary btn-sm">
+      Download CSV
+    </button>
+  </div>
+  <div class="col-sm-2 text-right">
+    <button type="button" [disabled]="loading" (click)="exportAllRoles()" class="btn btn-primary btn-sm">
+      Export All
     </button>
   </div>
 </div>
