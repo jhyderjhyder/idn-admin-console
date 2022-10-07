@@ -52,8 +52,8 @@ We are looking for (list is not exhaustive)
     * Reset Source (Accounts / Entitlements / Both)
     * Source Info (Internal Name / ID / Count / Export All)
 * Rules
-    * Manage Cloud Rules (Download)
-    * Manage Connector Rules (Add / Update / Delete / Download)
+    * Manage Cloud Rules (Download / Export All)
+    * Manage Connector Rules (Add / Update / Delete / Download / Export All)
 * Misc
     * Check and Set Org Time
     * Manage PAT (See Permission / Delete Token)
