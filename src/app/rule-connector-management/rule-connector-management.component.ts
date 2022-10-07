@@ -6,6 +6,9 @@ import { ModalDirective } from 'ngx-bootstrap/modal';
 import { Rule } from '../model/rule';
 import { IDNService } from '../service/idn.service';
 import { MessageService } from '../service/message.service';
+import { AuthenticationService } from '../service/authentication-service.service';
+import * as JSZip from 'jszip';
+import { access } from 'fs';
 
 const RuleDescriptionMaxLength = 50;
 
@@ -25,6 +28,10 @@ export class ImportRuleComponent implements OnInit {
   invalidMessage: string[];
   searchText: string;
   loading: boolean;
+  zip: JSZip = new JSZip();
+  buttonClicked: string;
+  convertXMLResult: string;
+  allRules: Rule[];
 
   public modalRef: BsModalRef;
   
@@ -36,7 +43,8 @@ export class ImportRuleComponent implements OnInit {
 
   constructor(
     private idnService: IDNService, 
-    private messageService: MessageService) {
+    private messageService: MessageService,
+    private authenticationService: AuthenticationService) {
   }
 
   ngOnInit() {
@@ -63,6 +71,8 @@ export class ImportRuleComponent implements OnInit {
           .subscribe(
             results => {
             this.rules = [];
+            this.allRules = results;
+
             for (let each of results) {
               let rule = new Rule();
               rule.id = each.id;
@@ -76,7 +86,7 @@ export class ImportRuleComponent implements OnInit {
                 }
               }
               rule.type = each.type;
-              
+
               this.rules.push(rule);
             }
             this.loading = false;
@@ -353,7 +363,7 @@ export class ImportRuleComponent implements OnInit {
     }
   }
 
-  convertRuleToXML(rule: Rule) {
+  convertRuleToXML(rule: Rule, buttonClicked: string) {
     let ruleDesc = null;
     if (rule.description) {
       ruleDesc = rule.description;
@@ -401,8 +411,14 @@ export class ImportRuleComponent implements OnInit {
     xml = xml.replace(re, "<");
     
     var blob = new Blob([xml], {type: "application/xml"});
-    let fileName = "Rule - " + rule.type + " - " + rule.name + ".xml";
-    saveAs(blob, fileName);
+
+    if (buttonClicked === 'downloadRule') {
+      let fileName = "Rule - " + rule.type + " - " + rule.name + ".xml";
+      saveAs(blob, fileName);
+    }
+    else {
+      return(blob);
+    }
   }
 
   prepareRuleAttributes(attributes) {
@@ -431,13 +447,18 @@ export class ImportRuleComponent implements OnInit {
     return returnObject;
   }
 
-  downloadRule(ruleId: string) {
+  downloadRule(ruleId: string, $event) {
+
+    if ($event && $event != '') {
+      this.buttonClicked = $event.target.name;
+    }
+
     this.idnService.getConnectorRuleById(ruleId)
       .subscribe(
         result => {
           let donwloadedRule = this.processDownloadRule(result);
           if (donwloadedRule != null) {
-            this.convertRuleToXML(donwloadedRule);
+            this.convertRuleToXML(donwloadedRule, this.buttonClicked);
           }
         },
         err => this.messageService.handleIDNError(err)
@@ -467,6 +488,30 @@ export class ImportRuleComponent implements OnInit {
       this.messageService.addError("Failed to download rule");
       return null;
     }
+  }
+
+  exportAllRules($event) {
+
+    if ($event && $event != '') {
+      this.buttonClicked = $event.target.name;
+    }
+
+    for (let each of this.allRules) {
+  
+          let donwloadedRule = this.processDownloadRule(each);
+          if (donwloadedRule != null) {
+            let converted = this.convertRuleToXML(donwloadedRule, this.buttonClicked);
+            let fileName = "Rule - " + each.type + " - " + each.name + ".xml";
+            this.zip.file(`${fileName}`, converted);
+          }
+    }
+      const currentUser = this.authenticationService.currentUserValue;
+      let zipFileName = `${currentUser.tenant}-connector-rules.zip`;
+      
+      this.zip.generateAsync({type:"blob"}).then(function(content) {
+        saveAs(content, zipFileName);
+
+    });
   }
 
 }

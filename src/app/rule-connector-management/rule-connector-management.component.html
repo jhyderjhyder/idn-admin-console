@@ -32,7 +32,7 @@
   </div>
 </div>
 <div class="form-group row" *ngIf="!loading">
-  <div class="col-sm-5 text-left">
+  <div class="col-sm-8 text-left">
     <input #importRuleFile type="file" accept=".xml" (change)="processFileForImportRule($event)" class="btn btn-primary btn-sm">
     &nbsp;&nbsp;
     <button (click)="clearFileForImportRule()" class="btn btn-primary btn-sm">Clear File</button>
@@ -40,6 +40,11 @@
   <div class="col-sm-2 text-right">
     <button type="button" [disabled]="ruleToImport == null" (click)="showImportRuleConfirmModal()" class="btn btn-primary btn-sm">
       Import Rule
+    </button>
+  </div>
+  <div class="col-sm-2 text-right">
+    <button type="button" [disabled]="loading" (click)="exportAllRules($event)" class="btn btn-primary btn-sm" name="exportAllRules">
+      Export All
     </button>
   </div>
 </div>
@@ -70,7 +75,7 @@
             Select
           </button>
           <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-            <a class="dropdown-item" (click)="downloadRule(r.id)">Download</a>
+            <a class="dropdown-item" name="downloadRule" (click)="downloadRule(r.id, $event)">Download</a>
             <a class="dropdown-item" (click)="showUpdateRuleConfirmModal(r)">Update</a>
             <a class="dropdown-item" (click)="showDeleteRuleConfirmModal(r)">Delete</a>
           </div>

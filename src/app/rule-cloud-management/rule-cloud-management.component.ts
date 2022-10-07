@@ -6,6 +6,8 @@ import { ModalDirective } from 'ngx-bootstrap/modal';
 import { Rule } from '../model/rule';
 import { IDNService } from '../service/idn.service';
 import { MessageService } from '../service/message.service';
+import { AuthenticationService } from '../service/authentication-service.service';
+import * as JSZip from 'jszip';
 
 const RuleDescriptionMaxLength = 50;
 
@@ -22,12 +24,15 @@ export class CloudRuleComponent implements OnInit {
   loading: boolean;
   jobId: string;
   jobStatus: string;
+  zip: JSZip = new JSZip();
+  buttonClicked: string;
 
   public modalRef: BsModalRef;
 
   constructor(
     private idnService: IDNService, 
-    private messageService: MessageService) {
+    private messageService: MessageService,
+    private authenticationService: AuthenticationService) {
   }
 
   ngOnInit() {
@@ -143,7 +148,7 @@ export class CloudRuleComponent implements OnInit {
     return null;
   }
 
-  convertRuleToXML(rule: Rule) {
+  convertRuleToXML(rule: Rule, buttonClicked: string) {
     let ruleDesc = null;
 
     if (rule.description) {
@@ -196,9 +201,14 @@ export class CloudRuleComponent implements OnInit {
     if (rule.type === "" || rule.type == null) {
       rule.type = "Generic";
     }
-    
-    let fileName = "Rule - " + rule.type + " - " + rule.name + ".xml";
-    saveAs(blob, fileName);
+
+    if (buttonClicked === 'downloadRule') {
+      let fileName = "Rule - " + rule.type + " - " + rule.name + ".xml";
+      saveAs(blob, fileName);
+    }
+    else {
+      return(blob);
+    }
   }
 
   prepareRuleAttributes(attributes) {
@@ -227,13 +237,18 @@ export class CloudRuleComponent implements OnInit {
     return returnObject;
   }
 
-  downloadRule(ruleId: string) {
+  downloadRule(ruleId: string, $event) {
+
+    if ($event && $event != '') {
+      this.buttonClicked = $event.target.name;
+    }
+
     for (let selectedRule of this.rules) {
 
        if (selectedRule.id === ruleId) {
          let donwloadedRule = this.processDownloadRule(selectedRule);
          if (donwloadedRule != null) {
-          this.convertRuleToXML(donwloadedRule);
+          this.convertRuleToXML(donwloadedRule, this.buttonClicked);
         }
        }
     }
@@ -262,6 +277,32 @@ export class CloudRuleComponent implements OnInit {
       this.messageService.addError("Failed to download rule");
       return null;
     }
+  }
+
+  exportAllRules($event) {
+
+    if ($event && $event != '') {
+      this.buttonClicked = $event.target.name;
+    }
+
+    for (let each of this.rules) {
+      let rule = new Rule();
+
+      let downloadrule = this.processDownloadRule(each);
+
+      let result = this.convertRuleToXML(downloadrule, this.buttonClicked);
+
+      let fileName = "Rule - " + each.type + " - " + each.name + ".xml";
+      this.zip.file(`${fileName}`, result);
+        
+      }
+      const currentUser = this.authenticationService.currentUserValue;
+      let zipFileName = `${currentUser.tenant}-cloud-rules.zip`;
+      
+      this.zip.generateAsync({type:"blob"}).then(function(content) {
+        saveAs(content, zipFileName);
+
+    });
   }
 
 }
