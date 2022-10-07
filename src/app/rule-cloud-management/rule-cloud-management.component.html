@@ -25,6 +25,12 @@
     <span class="spinner-border spinner-border-sm mr-1"></span>Loading...
   </div>
 </div>
+<div class="col-sm-12 text-right">
+  <button type="button" [disabled]="loading" (click)="exportAllRules($event)" class="btn btn-primary btn-sm" name="exportAllRules">
+    Export All
+  </button>
+</div>
+<br>
 <table class="table table-striped table-bordered">
   <thead class="thead-light">
     <tr>
@@ -43,7 +49,7 @@
       <td>{{ r.id }}</td>
       <td>
         <div class="col-sm-2 text-right">
-          <button type="button" [disabled]="loading" (click)="downloadRule(r.id)" class="btn btn-primary btn-sm">
+          <button type="button" [disabled]="loading" (click)="downloadRule(r.id, $event)" class="btn btn-primary btn-sm" name="downloadRule">
             Download
           </button>
         </div>
