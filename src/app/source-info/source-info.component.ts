@@ -46,7 +46,7 @@ export class SourceInfoComponent implements OnInit {
 
   search() {
     this.loading = true;
-    this.idnService.searchAggregationSources()
+    this.idnService.getAllSources()
           .subscribe(allSources => {
             this.sources = [];
             for (let each of allSources) {
@@ -82,7 +82,7 @@ export class SourceInfoComponent implements OnInit {
 
   exportAllSources() {
     
-    this.idnService.searchAggregationSources()
+    this.idnService.getAllSources()
           .subscribe(
             results => {
             this.sources = [];

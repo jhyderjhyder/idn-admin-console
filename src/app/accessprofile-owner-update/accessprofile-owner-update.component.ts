@@ -63,7 +63,7 @@ export class ChangeAccessProfileOwnerComponent implements OnInit {
   getAllAccessProfiles() {
     this.allOwnersFetched = false;
     this.loading = true;
-    this.idnService.getAccessProfiles()
+    this.idnService.getAllAccessProfiles()
           .subscribe(allAccessProfiles => {
             this.accessProfiles = [];
             let apCount = allAccessProfiles.length;

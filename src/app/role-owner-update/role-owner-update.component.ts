@@ -64,7 +64,7 @@ export class ChangeRoleOwnerComponent implements OnInit {
   getAllRoles() {
     this.allOwnersFetched = false;
     this.loading = true;
-    this.idnService.getRoles()
+    this.idnService.getAllRoles()
           .subscribe(allRoles => {
             this.roles = [];
             let roleCount = allRoles.length;

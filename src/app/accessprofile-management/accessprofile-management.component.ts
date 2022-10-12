@@ -80,7 +80,7 @@ export class AccessProfileManagementComponent implements OnInit {
   getAllAccessProfiles() {
     this.allOwnersFetched = false;
     this.loading = true;
-    this.idnService.getAccessProfiles()
+    this.idnService.getAllAccessProfiles()
           .subscribe(allAccessProfiles => {
             this.accessProfiles = [];
             this.accessProfilesToShow = [];
@@ -334,7 +334,7 @@ async sleep(ms) {
 
 exportAllAccessProfiles() {
     
-  this.idnService.getAccessProfiles()
+  this.idnService.getAllAccessProfiles()
         .subscribe(
           results => {
           this.accessProfiles = [];

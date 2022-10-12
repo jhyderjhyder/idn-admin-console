@@ -255,7 +255,7 @@ showRefreshSubmitConfirmModal(profileId: string) {
 
   exportAllIdentityProfiles() {
     
-    this.idnService.getIdentityProfiles()
+    this.idnService.getAllIdentityProfiles()
           .subscribe(
             results => {
             this.identityProfiles = [];

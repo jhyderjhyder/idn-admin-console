@@ -60,7 +60,7 @@ export class ChangeSourceOwnerComponent implements OnInit {
   search() {
     this.allOwnersFetched = false;
     this.loading = true;
-    this.idnService.searchAggregationSources()
+    this.idnService.getAllSources()
           .subscribe(allSources => {
             this.sources = [];
             let sourceCount = allSources.length;

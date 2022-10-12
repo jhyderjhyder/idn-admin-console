@@ -57,7 +57,7 @@ export class IdentityAttributeIndexComponent implements OnInit {
 
   getAllIdentityAttributes() {
     this.loading = true;
-    this.idnService.getIdentityAttributes()
+    this.idnService.getAllIdentityAttributes()
           .subscribe(allIdentityAttributes => {
             this.indexedAttributes = [];
             this.unindexedAttributes = [];
