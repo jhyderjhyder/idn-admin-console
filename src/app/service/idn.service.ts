@@ -116,9 +116,18 @@ export class IDNService {
     );
   }
 
-  searchAggregationSources(): Observable<any> {
+  getAllSources(): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/sources`;
+    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/sources`;
+
+    return this.http.get(url, this.httpOptions).pipe(
+      catchError(this.handleError(`getAllSources`))
+    );
+  }
+
+  getSource(sourceId: string): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/sources/${sourceId}`;
 
     return this.http.get(url, this.httpOptions).pipe(
       catchError(this.handleError(`getAggregationSources`))
@@ -166,7 +175,7 @@ export class IDNService {
     );
   }
 
-  getRoles(): Observable<any> {
+  getAllRoles(): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
     let url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/roles`;
 
@@ -245,7 +254,7 @@ export class IDNService {
     return this.http.delete(url, myHttpOptions);
   }
 
-  getAccessProfiles(): Observable<any> {
+  getAllAccessProfiles(): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
     let url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/access-profiles`;
 
@@ -380,7 +389,7 @@ export class IDNService {
 
   updateSourceOwner(source: Source): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/sources/${source.id}`;
+    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/sources/${source.id}`;
     
     let myHttpOptions = {
       headers: new HttpHeaders({
@@ -537,21 +546,21 @@ export class IDNService {
 
   getAccountCount(): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/accounts?limit=1&count=true`;
+    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/accounts?limit=1&count=true`;
 
     return this.http.get(url, {observe: 'response'});
   }
 
   getIdentityProfileCount(): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/identity-profiles?limit=1&count=true`;
+    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/identity-profiles?limit=1&count=true`;
 
     return this.http.get(url, {observe: 'response'});
   }
 
   getSourceCount(): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/sources?limit=1&count=true`;
+    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/sources?limit=1&count=true`;
 
     return this.http.get(url, {observe: 'response'});
   }
@@ -658,16 +667,16 @@ export class IDNService {
     return this.http.patch(url, payload, myHttpOptions);
   }
 
-  listPAT(): Observable<any> {
+  getAllPAT(): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/personal-access-tokens`;
+    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/personal-access-tokens`;
 
     return this.http.get(url, this.httpOptions);
   }
 
   deletePAT(pat: PAT): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/personal-access-tokens/${pat.id}`;
+    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/personal-access-tokens/${pat.id}`;
     
     let myHttpOptions = {
       headers: new HttpHeaders({
@@ -720,7 +729,7 @@ export class IDNService {
     );
   }
 
-  getIdentityProfiles(): Observable<any> {
+  getAllIdentityProfiles(): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
     let url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/identity-profiles?sorters=priority`;
 
@@ -788,12 +797,12 @@ export class IDNService {
     return this.http.post(url, null, myHttpOptions);
   }
 
-  getIdentityAttributes(): Observable<any> {
+  getAllIdentityAttributes(): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
     let url = `https://${currentUser.tenant}.api.${currentUser.domain}/cc/api/identityAttribute/list`;
 
     return this.http.get(url, this.httpOptions).pipe(
-      catchError(this.handleError(`getIdentityAttributes`))
+      catchError(this.handleError(`getAllIdentityAttributes`))
     );
   }
 
@@ -853,6 +862,84 @@ export class IDNService {
     let payload = transform;
 
     return this.http.post(url, payload, this.httpOptions);
+  }
+
+  getSourceCreateProfile(sourceId: string): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/sources/${sourceId}/provisioning-policies/CREATE`;
+
+    return this.http.get(url, this.httpOptions);
+  }
+
+  createSourceCreateProfile(sourceId: string, attribute: string): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/sources/${sourceId}/provisioning-policies`;
+
+    let payload = {
+      "name": "Account",
+      "description": null,
+      "usageType": "CREATE",
+      "fields": [
+        {
+          "name": attribute,
+          "transform": null,
+          "attributes": {},
+          "isRequired": false,
+          "type": "string",
+          "isMultiValued": false
+        }
+      ]
+    };
+
+    return this.http.post(url, payload);
+  }
+
+  createSourceCreateProfileAttribute(sourceId: string, attribute: string): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/sources/${sourceId}/provisioning-policies/CREATE`;
+
+    let myHttpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json-patch+json'
+      })
+    };
+
+    let payload = [
+      {
+        "op": "add",
+        "path": "/fields/-",
+        "value":{
+                "name": attribute,
+                "transform": null,
+                "attributes": {},
+                "isRequired": false,
+                "type": "string",
+                "isMultiValued": false
+            }
+      }
+    ];
+
+    return this.http.patch(url, payload, myHttpOptions);
+  }
+
+  deleteSourceCreateProfileAttribute(sourceId: string, attributeJSONIndex: number): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/sources/${sourceId}/provisioning-policies/CREATE`;
+
+    let myHttpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json-patch+json'
+      })
+    };
+
+    let payload = [
+      {
+        "op": "remove",
+        "path": `/fields/${attributeJSONIndex}`
+      }
+    ];
+
+    return this.http.patch(url, payload, myHttpOptions);
   }
 
    /** Log a HeroService message with the MessageService */

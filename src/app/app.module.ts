@@ -12,6 +12,7 @@ import { MultipleAccountsComponent } from './multiple-accounts-report/multiple-a
 import { AggregationManagementComponent} from './source-aggregation-management/source-aggregation-management.component';
 import { ChangeSourceOwnerComponent} from './source-owner-update/source-owner-update.component';
 import { AggregateSourceComponent} from './source-aggregation-run/source-aggregation-run.component';
+import { SourceCreateProfileComponent} from './source-create-profile/source-create-profile.component';
 import { ResetSourceComponent} from './source-reset/source-reset.component';
 import { SourceInfoComponent} from './source-info/source-info.component';
 import { ImportRuleComponent} from './rule-connector-management/rule-connector-management.component';
@@ -45,6 +46,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
     AggregationManagementComponent,
     ChangeSourceOwnerComponent,
     AggregateSourceComponent,
+    SourceCreateProfileComponent,
     ResetSourceComponent,
     SourceInfoComponent,
     ImportRuleComponent,

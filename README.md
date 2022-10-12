@@ -49,6 +49,7 @@ We are looking for (list is not exhaustive)
     * Manage Aggregation Schedules (Enable / Disable / Backup and Restore Accounts & Entitlement)
     * Manage Source Owners
     * Run Aggregations (Unoptimized / File Upload)
+    * Manage Create Profile (Add / Delete Attribute / Download)
     * Reset Source (Accounts / Entitlements / Both)
     * Source Info (Internal Name / ID / Count / Export All)
 * Rules

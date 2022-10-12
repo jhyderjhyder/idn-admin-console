@@ -57,7 +57,7 @@ export class ManagePATComponent implements OnInit {
 
   search() {
     this.loading = true;
-    this.idnService.listPAT()
+    this.idnService.getAllPAT()
           .subscribe(allPATs => {
             this.pats = [];
             for (let each of allPATs) {

@@ -5,6 +5,7 @@ import { MultipleAccountsComponent }   from './multiple-accounts-report/multiple
 import { AggregationManagementComponent }   from './source-aggregation-management/source-aggregation-management.component';
 import { ChangeSourceOwnerComponent} from './source-owner-update/source-owner-update.component';
 import { AggregateSourceComponent} from './source-aggregation-run/source-aggregation-run.component';
+import { SourceCreateProfileComponent} from './source-create-profile/source-create-profile.component';
 import { ResetSourceComponent} from './source-reset/source-reset.component';
 import { SourceInfoComponent} from './source-info/source-info.component';
 import { ImportRuleComponent} from './rule-connector-management/rule-connector-management.component';
@@ -30,6 +31,7 @@ const routes: Routes = [
   { path: 'source-aggregation-management', component: AggregationManagementComponent, canActivate: [AuthGuard] },
   { path: 'source-owner-update', component: ChangeSourceOwnerComponent, canActivate: [AuthGuard] },
   { path: 'source-aggregation-run', component: AggregateSourceComponent, canActivate: [AuthGuard] },
+  { path: 'source-create-profile', component: SourceCreateProfileComponent, canActivate: [AuthGuard] },
   { path: 'source-reset', component: ResetSourceComponent, canActivate: [AuthGuard] },
   { path: 'source-info', component: SourceInfoComponent, canActivate: [AuthGuard] },
   { path: 'rule-connector-management', component: ImportRuleComponent, canActivate: [AuthGuard] },

@@ -69,7 +69,7 @@ export class AggregationManagementComponent implements OnInit {
     this.accntAggScheduleLoaded = false;
     this.entAggScheduleLoaded = false;
     this.loading = true;
-    this.idnService.searchAggregationSources()
+    this.idnService.getAllSources()
           .subscribe(searchResult => {
             this.sources = [];
             this.sourcesToShow = [];

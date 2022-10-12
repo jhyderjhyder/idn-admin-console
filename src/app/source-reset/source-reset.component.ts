@@ -60,7 +60,7 @@ export class ResetSourceComponent implements OnInit {
 
   search() {
     this.loading = true;
-    this.idnService.searchAggregationSources()
+    this.idnService.getAllSources()
           .subscribe(allSources => {
             this.sources = [];
             for (let each of allSources) {

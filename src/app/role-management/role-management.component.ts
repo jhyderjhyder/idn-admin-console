@@ -81,7 +81,7 @@ export class RoleManagementComponent implements OnInit {
   getAllRoles() {
     this.allOwnersFetched = false;
     this.loading = true;
-    this.idnService.getRoles()
+    this.idnService.getAllRoles()
           .subscribe(allRoles => {
             this.roles = [];
             this.rolesToShow = [];
@@ -389,7 +389,7 @@ async sleep(ms) {
 
 exportAllRoles() {
     
-  this.idnService.getRoles()
+  this.idnService.getAllRoles()
         .subscribe(
           results => {
           this.roles = [];
