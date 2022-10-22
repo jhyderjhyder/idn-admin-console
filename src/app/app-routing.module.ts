@@ -17,6 +17,7 @@ import { AccessProfileManagementComponent} from './accessprofile-management/acce
 import { IdentityProfileManagementComponent} from './identity-profile-management/identity-profile-management.component';
 import { IdentityAttributeIndexComponent} from './identity-attribute-index/identity-attribute-index.component';
 import { IdentityTransformManagementComponent} from './identity-transform-management/identity-transform-management.component';
+import { IdentityInfoComponent} from './identity-info/identity-info.component';
 import { ReleaseHistoryComponent} from './release-history/release-history.component';
 import { CreditsComponent} from './credits/credits.component';
 import { OrgTimeComponent} from './misc-org-time-update/misc-org-time-update.component';
@@ -43,6 +44,7 @@ const routes: Routes = [
   { path: 'identity-profile-management', component: IdentityProfileManagementComponent, canActivate: [AuthGuard] },
   { path: 'identity-attribute-index', component: IdentityAttributeIndexComponent, canActivate: [AuthGuard] },
   { path: 'identity-transform-management', component: IdentityTransformManagementComponent, canActivate: [AuthGuard] },
+  { path: 'identity-info', component: IdentityInfoComponent, canActivate: [AuthGuard] },
   { path: 'release-history', component: ReleaseHistoryComponent, canActivate: [AuthGuard] },
   { path: 'credits', component: CreditsComponent, canActivate: [AuthGuard] },
   { path: 'misc-org-time-update', component: OrgTimeComponent, canActivate: [AuthGuard] },

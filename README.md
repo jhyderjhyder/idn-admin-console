@@ -39,6 +39,7 @@ We are looking for (list is not exhaustive)
     * Manage Identity Profile (Move Priority / Refresh Individual Profile / Export All)
     * Manage Identity Attribute Index (Index / Unindex Attributes)
     * Manage Transforms (Add / Update / Delete / Download / Export All)
+    * Identity Info (Get Identity Details / Get Manager Details)
 * Access Profiles
     * Manage Access Profiles (Enable / Disable / Delete / Export All)
     * Manage Access Profile Owners

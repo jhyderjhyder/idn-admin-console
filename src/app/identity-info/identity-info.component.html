@@ -1,0 +1,147 @@
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a routerLink="/multiple-accounts-report">Home</a></li>
+    <li class="breadcrumb-item">Identity Profiles</li>
+    <li class="breadcrumb-item active" aria-current="page">Identity Info</li>
+  </ol>
+</nav>
+<div class="form-group row" *ngIf="loading">
+  <div class="col-sm-12 text-right">
+    <span class="spinner-border spinner-border-sm mr-1"></span>Loading...
+  </div>
+</div>
+<div class="form-group row" *ngIf="!loading">
+  <div class="col-sm-10 text-left">
+    <span class="font-weight-bold">Enter Identity's Account Name and click the 'Search' button. Click on the Manager's name (if exists) to get their details</span>
+  </div>
+  <div class="col-sm-2 text-left">
+    <button type="button" [disabled]="loading" (click)="ngOnInit()" class="btn btn-primary btn-sm">
+      Reset
+    </button>
+  </div>
+</div>
+<div class="form-group row" *ngIf="!loading">
+  <div class="col-sm-6 text-left">
+    <input class="form-control py-2 border-left-0 border" type="text" [(ngModel)]="accountName"
+          placeholder="Enter Identity Account Name">
+  </div>
+  <div class="col-sm-2 text-right">
+    <button type="button" (click)="submit()" class="btn btn-primary btn-sm">
+      Search
+    </button>
+  </div>
+</div>
+<table class="table table-striped table-bordered" *ngIf="!loading && identityInfo">
+  <thead class="thead-light">
+    <tr>
+      <th scope="col" colspan="2">Identity Details</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Display Name</td>
+      <td>{{ identityInfo.displayName }}</td>
+    </tr>
+    <tr>
+      <td>Employee Number</td>
+      <td>{{ identityInfo.employeeNumber }}</td>
+    </tr>
+    <tr>
+      <td>Email Address</td>
+      <td>{{ identityInfo.email }}</td>
+    </tr>
+    <tr>
+      <td>Lifecycle State</td>
+      <td>{{ identityInfo.cloudLifecycleState }}</td>
+    </tr>
+    <tr>
+      <td>Cloud Status</td>
+      <td>{{ identityInfo.cloudStatus }}</td>
+    </tr>
+    <tr *ngIf="identityInfo.managerDisplayName">
+      <td>Manager</td>
+      <td style="color:royalblue; cursor: pointer;" (click)="getManagerInfo()">{{ identityInfo.managerDisplayName }}</td>
+    </tr>
+    <tr>
+      <td>ID</td>
+      <td>{{ identityInfo.id }}</td>
+    </tr>
+    <tr>
+      <td>Created in IDN</td>
+      <td>{{ identityInfo.created }}</td>
+    </tr>
+    <tr>
+      <td>Is A Manager</td>
+      <td>{{ identityInfo.isManager }}</td>
+    </tr>
+    <tr>
+      <td>Identity Profile</td>
+      <td>{{ identityInfo.identityProfile }}</td>
+    </tr>
+    <tr>
+      <td>Org Permission</td>
+      <td>          
+        <option *ngFor="let permissions of identityInfo.orgPermission">
+          {{ permissions }}
+        </option>
+      </td>    </tr>
+  </tbody>
+  <thead class="thead-light">
+    <tr>
+      <th scope="col" colspan="2">Counts</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Accounts</td>
+      <td>{{ identityInfo.accountCount }}</td>
+    </tr>
+    <tr>
+      <td>Applications</td>
+      <td>{{ identityInfo.appCount }}</td>
+    </tr>
+    <tr>
+      <td>Total Access (Entitlements / AP / Roles)</td>
+      <td>{{ identityInfo.accessCount }}</td>
+    </tr>
+    <tr>
+      <td>Roles</td>
+      <td>{{ identityInfo.roleCount }}</td>
+    </tr>
+    <tr>
+      <td>Entitlements</td>
+      <td>{{ identityInfo.entitlementCount }}</td>
+    </tr>
+    <tr>
+      <td>Tags</td>
+      <td>{{ identityInfo.tagsCount }}</td>
+    </tr>
+  </tbody>
+  <thead class="thead-light">
+    <tr>
+      <th scope="col" colspan="2">Owns</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Sources</td>
+      <td>{{ identityInfo.ownSources }}</td>
+    </tr>
+    <tr>
+      <td>Access Profiles</td>
+      <td>{{ identityInfo.ownAccessProfiles }}</td>
+    </tr>
+    <tr>
+      <td>Applications</td>
+      <td>{{ identityInfo.ownApps }}</td>
+    </tr>
+    <tr>
+      <td>Roles</td>
+      <td>{{ identityInfo.ownRoles }}</td>
+    </tr>
+    <tr>
+      <td>Governance Groups</td>
+      <td>{{ identityInfo.ownGovernanceGroups }}</td>
+    </tr>
+  </tbody>
+</table>

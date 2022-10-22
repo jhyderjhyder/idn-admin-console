@@ -12,7 +12,7 @@
         <div class="input-group-text bg-transparent border-right-0"><i class="fa fa-search"></i></div>
       </span>
       <input class="form-control py-2 border-left-0 border" type="text" name="search" [(ngModel)]="searchText" autocomplete="off" 
-        placeholder="Type AP Name, Description, Owner Account ID or Owner Display Name to filter the result.">
+        placeholder="Type AP Name, Description, Owner Account Name or Owner Display Name to filter the result.">
     </div>
     <div class="col-sm-2 text-left">
       <button type="button" [disabled]="loading || !allOwnersFetched" (click)="ngOnInit()" class="btn btn-primary btn-sm">
@@ -28,7 +28,7 @@
 </div>
 <div class="form-group row" *ngIf="!loading && allOwnersFetched">
   <div class="col-sm-10 text-left">
-    <span class="font-weight-bold">To change the owner, select the items, enter the new owner account ID and click the 'Submit to Change' button. </span>
+    <span class="font-weight-bold">To change the owner, select the items, enter the new owner account name and click the 'Submit to Change' button. </span>
     <span class="font-weight-bold">To apply change in bulk:
       <br>
       &nbsp;&nbsp;&nbsp;&nbsp; 1) either select the items, enter the new owner account name in the text field below and then click the 'Apply to Selected' button,
@@ -45,7 +45,7 @@
 <div class="form-group row" *ngIf="!loading && allOwnersFetched">
   <div class="col-sm-3 text-left">
     <input class="form-control py-2 border-left-0 border" type="text" [(ngModel)]="newOwnerAll"
-          placeholder="Enter Owner account ID">
+          placeholder="Enter Owner Account Name">
   </div>
   <div class="col-sm-2 text-right">
     <button type="button" (click)="applyNewOwnerToAllSelected()" class="btn btn-primary btn-sm">
@@ -75,7 +75,7 @@
       <th scope="col">Description</th>
       <th scope="col">Enabled</th>
       <th scope="col">Entitlments Attached</th>
-      <th scope="col" class="col-sm-3">Owner Account ID</th>
+      <th scope="col" class="col-sm-3">Owner Account Name</th>
       <th scope="col">Owner Display Name</th>
     </tr>
   </thead>
