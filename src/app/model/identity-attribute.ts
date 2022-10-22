@@ -6,4 +6,28 @@ export class IdentityAttribute {
     sources: string;
     type: string;
     indexedAttributes: string[];
+    //Identity Info
+    employeeNumber: string;
+    email: string;
+    id: string;
+    created: string;
+    isManager: string;
+    identityProfile: string;
+    accountCount: number;
+    appCount: number;
+    accessCount: number;
+    entitlementCount: number;
+    roleCount: number;
+    accessProfileCount: number;
+    ownSources: number;
+    ownAccessProfiles: number;
+    ownApps: number;
+    ownRoles: number;
+    ownGovernanceGroups: number;
+    tagsCount: number;
+    cloudLifecycleState: string;
+    managerDisplayName: string;
+    managerAccountName: string;
+    orgPermission: string[];
+    cloudStatus: string;
 }

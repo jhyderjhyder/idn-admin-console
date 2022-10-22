@@ -12,7 +12,7 @@
         <div class="input-group-text bg-transparent border-right-0"><i class="fa fa-search"></i></div>
       </span>
       <input class="form-control py-2 border-left-0 border" type="text" name="search" [(ngModel)]="searchText" autocomplete="off" 
-        placeholder="Type Access Profile Name, Description, Owner Account ID or Owner Display Name to filter the result.">
+        placeholder="Type Access Profile Name, Description, Owner Account Name or Owner Display Name to filter the result.">
     </div>
     <div class="col-sm-2 text-right">
       <button type="button" [disabled]="loading" (click)="ngOnInit()" class="btn btn-primary btn-sm">
@@ -88,7 +88,7 @@
       <th scope="col">Description</th>
       <th scope="col">Enabled</th>
       <th scope="col">Entitlements Attached</th>
-      <th scope="col">Owner Account ID</th>
+      <th scope="col">Owner Account Name</th>
       <th scope="col">Owner Display Name</th>
     </tr>
   </thead>

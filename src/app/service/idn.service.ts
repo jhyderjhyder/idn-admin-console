@@ -378,7 +378,7 @@ export class IDNService {
 
     let payload = {
       "query": {
-          "query": `${query.attribute}:${query.value}`
+          "query": `${query.attribute}:\"${query.value}\"`
       }
     };
 
