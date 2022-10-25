@@ -30,6 +30,11 @@
       Search
     </button>
   </div>
+  <div class="col-sm-2 text-left">
+    <button type="button" *ngIf="identityInfo" [disabled]="loading" (click)="saveInCsv()" class="btn btn-primary btn-sm">
+      Download
+    </button>
+  </div>
 </div>
 <table class="table table-striped table-bordered" *ngIf="!loading && identityInfo">
   <thead class="thead-light">
@@ -38,6 +43,10 @@
     </tr>
   </thead>
   <tbody>
+    <tr>
+      <td>ID</td>
+      <td>{{ identityInfo.id }}</td>
+    </tr>
     <tr>
       <td>Display Name</td>
       <td>{{ identityInfo.displayName }}</td>
@@ -63,10 +72,6 @@
       <td style="color:royalblue; cursor: pointer;" (click)="getManagerInfo()">{{ identityInfo.managerDisplayName }}</td>
     </tr>
     <tr>
-      <td>ID</td>
-      <td>{{ identityInfo.id }}</td>
-    </tr>
-    <tr>
       <td>Created in IDN</td>
       <td>{{ identityInfo.created }}</td>
     </tr>
@@ -80,11 +85,8 @@
     </tr>
     <tr>
       <td>Org Permission</td>
-      <td>          
-        <option *ngFor="let permissions of identityInfo.orgPermission">
-          {{ permissions }}
-        </option>
-      </td>    </tr>
+      <td>{{ identityInfo.orgPermission }}</td> 
+    </tr>
   </tbody>
   <thead class="thead-light">
     <tr>
@@ -96,9 +98,17 @@
       <td>Accounts</td>
       <td>{{ identityInfo.accountCount }}</td>
     </tr>
+    <tr *ngIf="identityInfo.accountSourceNames">
+      <td>Account Source Names</td>
+      <td>{{ identityInfo.accountSourceNames }}</td>
+    </tr>
     <tr>
       <td>Applications</td>
       <td>{{ identityInfo.appCount }}</td>
+    </tr>
+    <tr *ngIf="identityInfo.appNames">
+      <td>Application Names</td>
+      <td>{{ identityInfo.appNames }}</td>
     </tr>
     <tr>
       <td>Total Access (Entitlements / AP / Roles)</td>
@@ -108,13 +118,33 @@
       <td>Roles</td>
       <td>{{ identityInfo.roleCount }}</td>
     </tr>
+    <tr *ngIf="identityInfo.roleNames">
+      <td>Role Names</td>
+      <td>{{ identityInfo.roleNames }}</td>
+    </tr>
+    <tr>
+      <td>Access Profiles</td>
+      <td>{{ identityInfo.accessProfileCount }}</td>
+    </tr>
+    <tr *ngIf="identityInfo.accessProfileNames">
+      <td>Access Profile Names</td>
+      <td>{{ identityInfo.accessProfileNames }}</td>
+    </tr>
     <tr>
       <td>Entitlements</td>
+      <td>{{ identityInfo.entitlementCount }}</td>
+    </tr>
+    <tr *ngIf="identityInfo.entitlementNames">
+      <td>Entitlement Names</td>
       <td>{{ identityInfo.entitlementCount }}</td>
     </tr>
     <tr>
       <td>Tags</td>
       <td>{{ identityInfo.tagsCount }}</td>
+    </tr>
+    <tr *ngIf="identityInfo.tagNames">
+      <td>Tag Names</td>
+      <td>{{ identityInfo.tagNames }}</td>
     </tr>
   </tbody>
   <thead class="thead-light">
@@ -127,21 +157,41 @@
       <td>Sources</td>
       <td>{{ identityInfo.ownSources }}</td>
     </tr>
+    <tr *ngIf="identityInfo.ownSourcesNames">
+      <td>Source Names</td>
+      <td>{{ identityInfo.ownSourcesNames }}</td>
+    </tr>
     <tr>
       <td>Access Profiles</td>
       <td>{{ identityInfo.ownAccessProfiles }}</td>
+    </tr>
+    <tr *ngIf="identityInfo.ownAccessProfilesNames">
+      <td>Access Profiles Names</td>
+      <td>{{ identityInfo.ownAccessProfilesNames }}</td>
     </tr>
     <tr>
       <td>Applications</td>
       <td>{{ identityInfo.ownApps }}</td>
     </tr>
+    <tr *ngIf="identityInfo.ownAppsNames">
+      <td>Application Names</td>
+      <td>{{ identityInfo.ownAppsNames }}</td>
+    </tr>
     <tr>
       <td>Roles</td>
       <td>{{ identityInfo.ownRoles }}</td>
     </tr>
+    <tr *ngIf="identityInfo.ownRolesNames">
+      <td>Role Names</td>
+      <td>{{ identityInfo.ownRolesNames }}</td>
+    </tr>
     <tr>
       <td>Governance Groups</td>
       <td>{{ identityInfo.ownGovernanceGroups }}</td>
+    </tr>
+    <tr *ngIf="identityInfo.ownGovernanceGroupsNames">
+      <td>Governance Groups Names</td>
+      <td>{{ identityInfo.ownGovernanceGroupsNames }}</td>
     </tr>
   </tbody>
 </table>
