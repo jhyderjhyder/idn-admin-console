@@ -28,7 +28,9 @@
 </div>
 <div *ngIf="accounts && !loading" class="row">
   <div class="col-sm-10 text-left">
-    <span class="font-weight-bold">This report shows multiple accounts for an identity from a source. Use the search above to filter through them or the download button to export as CSV</span>
+    <span class="font-weight-bold">This report shows multiple accounts for an identity from a source. Use the search above to filter through them or the download button to export as CSV.<br><br>
+      <font style='color:red;'>NOTE:</font> The report currently doesn't display all multiple records due to API Implementation.
+    </span>
   </div>
   <div class="col-sm-2 text-right">
     <button type="button" (click)="saveInCsv()" class="btn btn-primary btn-sm">
