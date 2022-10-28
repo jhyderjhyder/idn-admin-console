@@ -4,7 +4,8 @@ import { Account } from '../model/account';
 import { IDNService } from '../service/idn.service';
 import { AuthenticationService } from '../service/authentication-service.service';
 import { MessageService } from '../service/message.service';
-import { of, map, mergeMap, concatMap, bufferCount, scan, forkJoin, from, delay, tap, retryWhen, throwError, catchError, } from 'rxjs';
+import { bufferCount, catchError, concatMap, delay, map, mergeMap, retryWhen } from 'rxjs/operators';
+import { from, forkJoin, throwError, of } from 'rxjs';
 
 @Component({
   selector: 'app-multiple-accounts-report',
