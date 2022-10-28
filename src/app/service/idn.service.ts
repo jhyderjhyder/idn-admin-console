@@ -75,13 +75,14 @@ export class IDNService {
                       "terms": {
                           "field": "accounts.source.id",
                           "min_doc_count": 2,
-                          "size": 1000
+                          "size": 65536
                       },
                       "aggs": {
                           "identities": {
                               "terms": {
                                   "field": "_id",
-                                  "min_doc_count": 2
+                                  "min_doc_count": 2,
+                                  "size": 65536
                               },
                               "aggs": {
                                   "accounts": {
@@ -111,9 +112,7 @@ export class IDNService {
       }
     };
 
-    return this.http.post(url, payload, this.httpOptions).pipe(
-      catchError(this.handleError(`searchIdentities`))
-    );
+    return this.http.post(url, payload, this.httpOptions);
   }
 
   getAllSources(): Observable<any> {
