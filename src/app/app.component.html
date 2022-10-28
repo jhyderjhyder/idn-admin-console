@@ -13,22 +13,22 @@
     <div class="collapse navbar-collapse" id="collapsibleNavbar" *ngIf="currentUser">
       <ul class="navbar-nav mr-auto">
         <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarIdentityProfile" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Identity Profiles
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarIdentityProfile">
+            <a class="dropdown-item" routerLink="/identity-info">Identity Info</a>
+            <a class="dropdown-item" routerLink="/identity-profile-management">Manage Identity Profile</a>
+            <a class="dropdown-item" routerLink="/identity-attribute-index">Manage Identity Attribute Index</a>
+            <a class="dropdown-item" routerLink="/identity-transform-management">Manage Transforms</a>
+          </div>
+        </li>
+        <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbarAccounts" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             Accounts
           </a>
           <div class="dropdown-menu" aria-labelledby="navbarAccounts">
             <a class="dropdown-item" routerLink="/multiple-accounts-report">Multiple Accounts Report</a>
-          </div>
-        </li>
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" id="navbarIdentityProfile" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-            Identity Profiles
-          </a>
-          <div class="dropdown-menu" aria-labelledby="navbarIdentityProfile">
-            <a class="dropdown-item" routerLink="/identity-profile-management">Manage Identity Profile</a>
-            <a class="dropdown-item" routerLink="/identity-attribute-index">Manage Identity Attribute Index</a>
-            <a class="dropdown-item" routerLink="/identity-transform-management">Manage Transforms</a>
-            <a class="dropdown-item" routerLink="/identity-info">Identity Info</a>
           </div>
         </li>
         <li class="nav-item dropdown">
@@ -98,7 +98,7 @@
         </span>
         &nbsp;&nbsp;
         <span class="text-white">
-          v1.15.2
+          v1.16.0
         </span>
       </small>
     </div>

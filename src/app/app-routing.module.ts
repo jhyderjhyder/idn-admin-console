@@ -27,7 +27,7 @@ import { LoginComponent }   from './login/login.component';
 import { AuthGuard } from './helper/auth.guard';
 
 const routes: Routes = [
-  { path: '', redirectTo: '/multiple-accounts-report', pathMatch: 'full' },
+  { path: '', redirectTo: '/identity-info', pathMatch: 'full' },
   { path: 'multiple-accounts-report', component: MultipleAccountsComponent, canActivate: [AuthGuard] },
   { path: 'source-aggregation-management', component: AggregationManagementComponent, canActivate: [AuthGuard] },
   { path: 'source-owner-update', component: ChangeSourceOwnerComponent, canActivate: [AuthGuard] },
