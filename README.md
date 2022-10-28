@@ -34,12 +34,12 @@ We are looking for (list is not exhaustive)
 
 ## Features
 
-* Find Multiple Accounts in Source and Download Report
 * Identity Profiles
+    * Identity Info (Get Identity Details / Get Manager Details)
     * Manage Identity Profile (Move Priority / Refresh Individual Profile / Export All)
     * Manage Identity Attribute Index (Index / Unindex Attributes)
     * Manage Transforms (Add / Update / Delete / Download / Export All)
-    * Identity Info (Get Identity Details / Get Manager Details)
+* Find Multiple Accounts in Source and Download Report
 * Access Profiles
     * Manage Access Profiles (Enable / Disable / Delete / Export All)
     * Manage Access Profile Owners
