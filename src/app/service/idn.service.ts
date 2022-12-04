@@ -941,6 +941,41 @@ export class IDNService {
     return this.http.patch(url, payload, myHttpOptions);
   }
 
+  getAccessRequestStatus(): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/access-request-status?sorters=-created`;
+
+    return this.http.get(url, this.httpOptions);
+  }
+
+  getAccessRequestApprovalsPending(): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/access-request-approvals/pending?sorters=-created`;
+
+    return this.http.get(url, this.httpOptions);
+  }
+
+  forwardAccessRequestApproval(approvalToForwardId: string, newOwnerId: string, comment: string): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/access-request-approvals/${approvalToForwardId}/forward`;
+
+
+    let payload = 
+      {
+        "newOwnerId": newOwnerId,
+        "comment": comment,
+      };
+
+    return this.http.post(url, payload);
+  }
+
+  getAccessRequestApprovalsSummary(): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/access-request-approvals/approval-summary`;
+
+    return this.http.get(url, this.httpOptions);
+  }
+
    /** Log a HeroService message with the MessageService */
    private log(message: string) {
      this.messageService.add(`${message}`);

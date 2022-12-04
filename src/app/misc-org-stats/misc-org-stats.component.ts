@@ -140,6 +140,15 @@ export class OrgStatsComponent implements OnInit {
 
     });
 
+    this.idnService.getAccessRequestApprovalsSummary()
+    .subscribe(
+      result => {
+       this.orgData.approvalSummaryTotalPending = result.pending;
+       this.orgData.approvalSummaryTotalApproved = result.approved;
+       this.orgData.approvalSummaryTotalRejected = result.rejected;
+ 
+    });
+
     this.loading = false;
 
   }

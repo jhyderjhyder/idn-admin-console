@@ -5,8 +5,8 @@ let win;
 function createWindow () {
   // Create the browser window.
   win = new BrowserWindow({
-    width: 1366, 
-    height: 784,
+    width: 1920, 
+    height: 1080,
     backgroundColor: '#ffffff',
     icon: `file://${__dirname}/dist/idn-admin-console/assets/images/sp_logo.png`
   })
