@@ -1,4 +1,4 @@
-<div class="container">
+<div class="container col-9">
   <br>
   <a class="navbar-brand" href="#">
     <img src="./assets/images/sp_logo.png" alt="IdentityNow" class="navbar-brand-image">
@@ -73,6 +73,15 @@
         </li>
         <li class="nav-item dropdown">
           <a class="nav-link dropdown-toggle" href="#" id="navbarRules" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Requests
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarRules">
+            <a class="dropdown-item" routerLink="/access-request-status">Access Request Status</a>
+            <a class="dropdown-item" routerLink="/access-request-approval-forward">Access Request Approval Forward</a>
+          </div>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarRules" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             Misc
           </a>
           <div class="dropdown-menu" aria-labelledby="navbarRules">
@@ -98,13 +107,13 @@
         </span>
         &nbsp;&nbsp;
         <span class="text-white">
-          v1.16.0
+          v1.17.0
         </span>
       </small>
     </div>
   </nav>
 </div>
-<div class="container" style="margin-top:30px">
+<div class="container col-9" style="margin-top:30px">
   <div class="row">
     <div class="col-sm-12">
       <app-messages></app-messages>
@@ -114,7 +123,7 @@
     </div>
   </div>
 </div>
-<div class="container">
+<div class="container col-9">
   <nav class="navbar navbar-custom navbar-expand-lg">
     <div class="col-sm-12 text-center text-white">
       <small></small>

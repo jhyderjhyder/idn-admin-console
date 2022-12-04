@@ -16,4 +16,7 @@ export class OrgData {
     completedCampaignCount: string;
     passwordChangeCount: string;
     provisioningActivityCount: string;
+    approvalSummaryTotalApproved: string;
+    approvalSummaryTotalPending: string;
+    approvalSummaryTotalRejected: string;
 }

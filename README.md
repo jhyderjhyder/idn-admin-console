@@ -14,11 +14,11 @@ Latest Docker Build can be found at [Docker Hub](http://hub.docker.com/r/khandel
 
 ## Authentication
 
-You require `{tenant}` and PAT ID and Token as mentioned [in this guide](https://developer.sailpoint.com/docs/getting_started.html).
+You require `{tenant}` and PAT ID and Token as mentioned [in this guide](https://developer.sailpoint.com/idn/api/getting-started). PAT ID and Token must be of an **ORG_ADMIN** User
 
 Alternatively if you have an internal domain other than identitynow.com please fill it in the domain name section of login.
 
-**NOTE:** For Vanity URL's please [find your](https://developer.sailpoint.com/docs/getting_started.html#finding-your-org-tenant-name) `{tenant}` as per the article above and use that. **DO NOT** fill in your vanity URL domain in the Domain Name section.
+**NOTE:** For Vanity URL's please [find your](https://developer.sailpoint.com/idn/api/getting-started#find-your-tenant-name) `{tenant}` as per the article and use that. **DO NOT** fill in your vanity URL domain in the Domain Name section.
 
 ## Contribute
 
@@ -56,6 +56,9 @@ We are looking for (list is not exhaustive)
 * Rules
     * Manage Cloud Rules (Download / Export All)
     * Manage Connector Rules (Add / Update / Delete / Download / Export All)
+* Requests
+    * Access Request Status (List / Download Report)
+    * Access Request Approval Forward (Forward Pending Requests / Download Report)
 * Misc
     * Check and Set Org Time
     * Manage PAT (See Permission / Delete Token)

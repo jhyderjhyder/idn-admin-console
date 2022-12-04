@@ -2,6 +2,8 @@ import { NgModule }             from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 import { MultipleAccountsComponent }   from './multiple-accounts-report/multiple-accounts-report.component';
+import { AccessRequestStatusComponent }   from './access-request-status/access-request-status.component';
+import { AccessRequestApprovalForwardComponent }   from './access-request-approval-forward/access-request-approval-forward.component';
 import { AggregationManagementComponent }   from './source-aggregation-management/source-aggregation-management.component';
 import { ChangeSourceOwnerComponent} from './source-owner-update/source-owner-update.component';
 import { AggregateSourceComponent} from './source-aggregation-run/source-aggregation-run.component';
@@ -29,6 +31,8 @@ import { AuthGuard } from './helper/auth.guard';
 const routes: Routes = [
   { path: '', redirectTo: '/identity-info', pathMatch: 'full' },
   { path: 'multiple-accounts-report', component: MultipleAccountsComponent, canActivate: [AuthGuard] },
+  { path: 'access-request-status', component: AccessRequestStatusComponent, canActivate: [AuthGuard] },
+  { path: 'access-request-approval-forward', component: AccessRequestApprovalForwardComponent, canActivate: [AuthGuard] },
   { path: 'source-aggregation-management', component: AggregationManagementComponent, canActivate: [AuthGuard] },
   { path: 'source-owner-update', component: ChangeSourceOwnerComponent, canActivate: [AuthGuard] },
   { path: 'source-aggregation-run', component: AggregateSourceComponent, canActivate: [AuthGuard] },
