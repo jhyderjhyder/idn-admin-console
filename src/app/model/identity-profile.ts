@@ -9,4 +9,9 @@ export class IdentityProfile {
     name: string;
     selected: boolean;
     newPriority: string;
+    lcsDisplayName: string;
+    lcsTechnicalName: string;
+    lcsEnabled: string;
+    lcsId: string;
+    lcsIdentityCount: string;
 }

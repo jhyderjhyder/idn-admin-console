@@ -26,6 +26,7 @@ import { AccessProfileManagementComponent} from './accessprofile-management/acce
 import { IdentityProfileManagementComponent} from './identity-profile-management/identity-profile-management.component';
 import { IdentityAttributeIndexComponent} from './identity-attribute-index/identity-attribute-index.component';
 import { IdentityTransformManagementComponent} from './identity-transform-management/identity-transform-management.component';
+import { IdentityLCSComponent} from './identity-lcs-management/identity-lcs-management.component';
 import { IdentityInfoComponent} from './identity-info/identity-info.component';
 import { ReleaseHistoryComponent } from './release-history/release-history.component';
 import { CreditsComponent } from './credits/credits.component';
@@ -63,6 +64,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
     IdentityProfileManagementComponent,
     IdentityAttributeIndexComponent,
     IdentityTransformManagementComponent,
+    IdentityLCSComponent,
     IdentityInfoComponent,
     ReleaseHistoryComponent,
     CreditsComponent,

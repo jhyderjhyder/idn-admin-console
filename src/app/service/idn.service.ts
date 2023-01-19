@@ -976,6 +976,33 @@ export class IDNService {
     return this.http.get(url, this.httpOptions);
   }
 
+  getIdentityProfile(profileId: string): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/identity-profiles/${profileId}`;
+
+    return this.http.get(url, this.httpOptions);
+  }
+
+  
+  getIdentityProfileLCS(profileId: string): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/identity-profiles/${profileId}/lifecycle-states`;
+
+    return this.http.get(url, this.httpOptions);
+  }
+
+  deleteIdentityProfileLCS(profileId: string, lcsId: string): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/identity-profiles/${profileId}/lifecycle-states/${lcsId}`;
+    
+    let myHttpOptions = {
+      headers: new HttpHeaders({
+      })
+    };
+    
+    return this.http.delete(url, myHttpOptions);
+  }
+  
    /** Log a HeroService message with the MessageService */
    private log(message: string) {
      this.messageService.add(`${message}`);

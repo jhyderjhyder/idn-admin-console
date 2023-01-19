@@ -14,7 +14,7 @@ Latest Docker Build can be found at [Docker Hub](http://hub.docker.com/r/khandel
 
 ## Authentication
 
-You require `{tenant}` and PAT ID and Token as mentioned [in this guide](https://developer.sailpoint.com/idn/api/getting-started). PAT ID and Token must be of an **ORG_ADMIN** User
+You require `{tenant}` and PAT ID and Token as mentioned [in this guide](https://developer.sailpoint.com/idn/api/getting-started). PAT ID and Token must be of an **ORG_ADMIN** User or have `sp:scopes:all` scope
 
 Alternatively if you have an internal domain other than identitynow.com please fill it in the domain name section of login.
 
@@ -39,6 +39,7 @@ We are looking for (list is not exhaustive)
     * Manage Identity Profile (Move Priority / Refresh Individual Profile / Export All)
     * Manage Identity Attribute Index (Index / Unindex Attributes)
     * Manage Transforms (Add / Update / Delete / Download / Export All)
+    * Manage LCS (Delete / Download)
 * Find Multiple Accounts in Source and Download Report
 * Access Profiles
     * Manage Access Profiles (Enable / Disable / Delete / Export All)
