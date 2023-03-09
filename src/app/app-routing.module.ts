@@ -4,6 +4,8 @@ import { RouterModule, Routes } from '@angular/router';
 import { MultipleAccountsComponent }   from './multiple-accounts-report/multiple-accounts-report.component';
 import { AccessRequestStatusComponent }   from './access-request-status/access-request-status.component';
 import { AccessRequestApprovalForwardComponent }   from './access-request-approval-forward/access-request-approval-forward.component';
+import { WorkItemsStatusComponent } from './work-items-status/work-items-status.component';
+import { WorkItemsForwardComponent } from './work-items-forward/work-items-forward.component';
 import { AggregationManagementComponent }   from './source-aggregation-management/source-aggregation-management.component';
 import { ChangeSourceOwnerComponent} from './source-owner-update/source-owner-update.component';
 import { AggregateSourceComponent} from './source-aggregation-run/source-aggregation-run.component';
@@ -34,6 +36,8 @@ const routes: Routes = [
   { path: 'multiple-accounts-report', component: MultipleAccountsComponent, canActivate: [AuthGuard] },
   { path: 'access-request-status', component: AccessRequestStatusComponent, canActivate: [AuthGuard] },
   { path: 'access-request-approval-forward', component: AccessRequestApprovalForwardComponent, canActivate: [AuthGuard] },
+  { path: 'work-items-status', component: WorkItemsStatusComponent, canActivate: [AuthGuard] },
+  { path: 'work-items-forward', component: WorkItemsForwardComponent, canActivate: [AuthGuard] },
   { path: 'source-aggregation-management', component: AggregationManagementComponent, canActivate: [AuthGuard] },
   { path: 'source-owner-update', component: ChangeSourceOwnerComponent, canActivate: [AuthGuard] },
   { path: 'source-aggregation-run', component: AggregateSourceComponent, canActivate: [AuthGuard] },

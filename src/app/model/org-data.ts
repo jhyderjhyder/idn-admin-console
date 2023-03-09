@@ -19,4 +19,7 @@ export class OrgData {
     approvalSummaryTotalApproved: string;
     approvalSummaryTotalPending: string;
     approvalSummaryTotalRejected: string;
+    workItemsTotalOpen: string;
+    workItemsTotalCompleted: string;
+    workItemsTotal: string;
 }
