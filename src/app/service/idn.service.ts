@@ -969,6 +969,42 @@ export class IDNService {
     return this.http.post(url, payload);
   }
 
+  getWorkItemsPending(): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/work-items?sorters=-created`;
+
+    return this.http.get(url, this.httpOptions);
+  }
+
+  getWorkItemsCompleted(): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/work-items/completed?sorters=-created`;
+
+    return this.http.get(url, this.httpOptions);
+  }
+
+  getWorkItemsSummary(): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/work-items/summary`;
+
+    return this.http.get(url, this.httpOptions);
+  }
+
+  forwardPendingWorkItem(workItemId: string, newOwnerId: string, comment: string): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/work-items/${workItemId}/forward`;
+
+
+    let payload = 
+      {
+        "targetOwnerId": newOwnerId,
+        "comment": comment,
+        "sendNotifications":true
+      };
+
+    return this.http.post(url, payload);
+  }
+
   getAccessRequestApprovalsSummary(): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
     let url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/access-request-approvals/approval-summary`;

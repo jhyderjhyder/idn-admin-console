@@ -149,10 +149,17 @@ export class OrgStatsComponent implements OnInit {
  
     });
 
+    this.idnService.getWorkItemsSummary()
+    .subscribe(
+      results => {
+       this.orgData.workItemsTotalOpen = results.open;
+       this.orgData.workItemsTotalCompleted = results.completed;
+       this.orgData.workItemsTotal = results.total;
+ 
+    });
+
     this.loading = false;
 
   }
-
-
 
 }

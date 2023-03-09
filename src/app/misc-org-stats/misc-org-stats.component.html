@@ -119,6 +119,25 @@
   </tbody>
   <thead class="thead-light">
     <tr>
+      <th scope="col" colspan="2">Work Items</th>
+    </tr>
+  </thead>
+  <tbody *ngIf="orgData">
+    <tr>
+      <td>Total</td>
+      <td>{{ orgData.workItemsTotal }}</td>
+    </tr>
+    <tr>
+      <td>Total Open</td>
+      <td>{{ orgData.workItemsTotalOpen }}</td>
+    </tr>
+    <tr>
+      <td>Total Completed</td>
+      <td>{{ orgData.workItemsTotalCompleted }}</td>
+    </tr>
+  </tbody>
+  <thead class="thead-light">
+    <tr>
       <th scope="col" colspan="2">Activities (Last 7 Days)</th>
     </tr>
   </thead>
