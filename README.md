@@ -60,6 +60,9 @@ We are looking for (list is not exhaustive)
 * Requests
     * Access Request Status (List / Download Report)
     * Access Request Approval Forward (Forward Pending Requests / Download Report)
+* Work Items
+    * Work Items Status (List / Download Report)
+    * Work Items Pending Forward (Forward Pending Work Items / Download Report)
 * Misc
     * Check and Set Org Time
     * Manage PAT (See Permission / Delete Token)
