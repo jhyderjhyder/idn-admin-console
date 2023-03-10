@@ -8,7 +8,6 @@ import { AuthenticationService } from '../service/authentication-service.service
 import { Role } from '../model/role';
 import { SimpleQueryCondition } from '../model/simple-query-condition';
 import { SourceOwner } from '../model/source-owner';
-import { delay } from 'rxjs';
 
 const RoleDescriptionMaxLength = 50;
 
