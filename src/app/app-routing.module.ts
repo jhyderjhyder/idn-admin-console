@@ -15,6 +15,7 @@ import { SourceInfoComponent} from './source-info/source-info.component';
 import { ImportRuleComponent} from './rule-connector-management/rule-connector-management.component';
 import { CloudRuleComponent} from './rule-cloud-management/rule-cloud-management.component';
 import { ChangeRoleOwnerComponent} from './role-owner-update/role-owner-update.component';
+import { DuplicateRoleComponent} from './role-duplicate/role-duplicate.component';
 import { ChangeAccessProfileOwnerComponent} from './accessprofile-owner-update/accessprofile-owner-update.component';
 import { RoleManagementComponent} from './role-management/role-management.component';
 import { AccessProfileManagementComponent} from './accessprofile-management/accessprofile-management.component';
@@ -47,6 +48,7 @@ const routes: Routes = [
   { path: 'rule-connector-management', component: ImportRuleComponent, canActivate: [AuthGuard] },
   { path: 'rule-cloud-management', component: CloudRuleComponent, canActivate: [AuthGuard] },
   { path: 'role-owner-update', component: ChangeRoleOwnerComponent, canActivate: [AuthGuard] },
+  { path: 'role-duplicate', component: DuplicateRoleComponent, canActivate: [AuthGuard] },
   { path: 'accessprofile-owner-update', component: ChangeAccessProfileOwnerComponent, canActivate: [AuthGuard] },
   { path: 'role-management', component: RoleManagementComponent, canActivate: [AuthGuard] },
   { path: 'accessprofile-management', component: AccessProfileManagementComponent, canActivate: [AuthGuard] },

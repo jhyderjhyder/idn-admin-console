@@ -70,7 +70,12 @@ export class WorkItemsStatusComponent implements OnInit {
        workItemsStatus.description = each.description;
        workItemsStatus.state = each.state;
        workItemsStatus.type = each.type;
-       workItemsStatus.approvalItems = each.approvalItems.length;
+       if (each.remediationItems && each.remediationItems.length) {
+        workItemsStatus.remediationItems = each.remediationItems.length;
+       }
+       if (each.approvalItems && each.approvalItems.length) {
+        workItemsStatus.approvalItems = each.approvalItems.length;
+       }
 
        let query = new SimpleQueryCondition();
        query.attribute = "id";
@@ -81,7 +86,7 @@ export class WorkItemsStatusComponent implements OnInit {
          if (searchResult.length > 0) {
           workItemsStatus.ownerDisplayName = searchResult[0].displayName;
          }
-        }); 
+        });
 
        this.workItemsStatuses.push(workItemsStatus);
       }
@@ -99,12 +104,12 @@ export class WorkItemsStatusComponent implements OnInit {
          workItemsStatus.description = each.description;
          workItemsStatus.state = each.state;
          workItemsStatus.type = each.type;
-         if (each.approvalItems != null) {
-           workItemsStatus.approvalItems = each.approvalItems.length;
-         }
-         else {
-           workItemsStatus.approvalItems = null;
-         }
+         if (each.remediationItems && each.remediationItems.length) {
+          workItemsStatus.remediationItems = each.remediationItems.length;
+        }
+        if (each.approvalItems && each.approvalItems.length) {
+          workItemsStatus.approvalItems = each.approvalItems.length;
+        }
 
          let query = new SimpleQueryCondition();
          query.attribute = "name";
@@ -143,7 +148,7 @@ export class WorkItemsStatusComponent implements OnInit {
       decimalseparator: '.',
       showLabels: true,
       useHeader: true,
-      headers: ["id", "description", "requesterDisplayName", "ownerDisplayName", "created", "state", "approvalItems"],
+      headers: ["id", "description", "requesterDisplayName", "ownerDisplayName", "created", "state", "remediationItems", "approvalItems"],
       nullToEmptyString: true,
     };
 

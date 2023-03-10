@@ -50,6 +50,7 @@
       <th scope="col" class="col-1">Current Owner</th>
       <th scope="col" class="col-1">Created</th>
       <th scope="col" class="col-1">State</th>
+      <th scope="col" class="col-2">Remediation Items</th>
       <th scope="col" class="col-2">Approval Items</th>
       <th scope="col">Actions</th>
     </tr>
@@ -62,6 +63,7 @@
       <td class="col-1">{{ p.ownerDisplayName }}</td>
       <td class="col-1">{{ p.created }}</td>
       <td class="col-2">{{ p.state }}</td>
+      <td class="col-2">{{ p.remediationItems }}</td>
       <td class="col-2">{{ p.approvalItems }}</td>
       <td>
         <div class="col-sm-2 text-right">
