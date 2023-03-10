@@ -73,7 +73,12 @@ export class WorkItemsForwardComponent implements OnInit {
        pendingWorkItem.description = each.description;
        pendingWorkItem.state = each.state;
        pendingWorkItem.type = each.type;
-       pendingWorkItem.approvalItems = each.approvalItems.length;
+       if (each.remediationItems && each.remediationItems.length) {
+        pendingWorkItem.remediationItems = each.remediationItems.length;
+       }
+       if (each.approvalItems && each.approvalItems.length) {
+        pendingWorkItem.approvalItems = each.approvalItems.length;
+       }
 
        let query = new SimpleQueryCondition();
        query.attribute = "id";
@@ -179,7 +184,7 @@ export class WorkItemsForwardComponent implements OnInit {
       decimalseparator: '.',
       showLabels: true,
       useHeader: true,
-      headers: ["id", "description", "requesterDisplayName", "ownerDisplayName", "created", "state", "approvalItems"],
+      headers: ["id", "description", "requesterDisplayName", "ownerDisplayName", "created", "state", "remediationItems", "approvalItems"],
       nullToEmptyString: true,
     };
 

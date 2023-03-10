@@ -8,6 +8,7 @@ export class WorkItem {
     description: string;
     state: string;
     type: string;
+    remediationItems: string[];
     approvalItems: string[];
     ownerDisplayName: string;
 }

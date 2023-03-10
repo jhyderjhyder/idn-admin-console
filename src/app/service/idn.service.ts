@@ -176,7 +176,7 @@ export class IDNService {
 
   getAllRoles(): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/roles`;
+    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/roles`;
 
     return this.http.get(url, this.httpOptions).pipe(
       catchError(this.handleError(`getAllRoles`))
@@ -185,7 +185,7 @@ export class IDNService {
 
   getRoleIdentityCount(role: Role): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/roles/${role.id}/assigned-identities?limit=1&count=true`;
+    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/roles/${role.id}/assigned-identities?limit=1&count=true`;
 
     return this.http.get(url, {observe: 'response'}).pipe(
       catchError(this.handleError(`getRoleIdentityCount`))
@@ -194,7 +194,7 @@ export class IDNService {
 
   updateRoleOwner(role: Role): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/roles/${role.id}`;
+    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/roles/${role.id}`;
     
     let myHttpOptions = {
       headers: new HttpHeaders({
@@ -222,7 +222,7 @@ export class IDNService {
 
   updateRole(role: Role, path: string, enable: boolean): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/roles/${role.id}`;
+    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/roles/${role.id}`;
     
     let myHttpOptions = {
       headers: new HttpHeaders({
@@ -241,9 +241,27 @@ export class IDNService {
     return this.http.patch(url, payload, myHttpOptions);
   }
 
+  duplicateRole(role: Role, newRoleName: string): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/roles`;
+
+    let payload = 
+      {
+        "name": `${newRoleName}`,
+        "description": `${role.description}`,
+        "owner": null,
+        "membership": null
+    };
+
+    payload.owner = JSON.parse(role.duplicateOwner);
+    payload.membership = JSON.parse(role.membership);
+
+    return this.http.post(url, payload);
+  }
+
   deleteRole(role: Role): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/roles/${role.id}`;
+    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/roles/${role.id}`;
     
     let myHttpOptions = {
       headers: new HttpHeaders({
@@ -255,7 +273,7 @@ export class IDNService {
 
   getAllAccessProfiles(): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/access-profiles`;
+    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/access-profiles`;
 
     return this.http.get(url, this.httpOptions).pipe(
       catchError(this.handleError(`getAllAccessProfiles`))
@@ -264,7 +282,7 @@ export class IDNService {
 
   updateAccessProfileOwner(accessProfile: AccessProfile): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/access-profiles/${accessProfile.id}`;
+    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/access-profiles/${accessProfile.id}`;
     
     let myHttpOptions = {
       headers: new HttpHeaders({
@@ -292,7 +310,7 @@ export class IDNService {
 
   updateAccessProfile(accessProfile: AccessProfile, path: string, enable: boolean): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/access-profiles/${accessProfile.id}`;
+    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/access-profiles/${accessProfile.id}`;
     
     let myHttpOptions = {
       headers: new HttpHeaders({
@@ -313,7 +331,7 @@ export class IDNService {
 
   deleteAccessProfile(accessProfile: AccessProfile): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/access-profiles/${accessProfile.id}`;
+    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/access-profiles/${accessProfile.id}`;
     
     let myHttpOptions = {
       headers: new HttpHeaders({
@@ -566,14 +584,14 @@ export class IDNService {
 
   getAccessProfileCount(): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/access-profiles?limit=1&count=true`;
+    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/access-profiles?limit=1&count=true`;
 
     return this.http.get(url, {observe: 'response'});
   }
 
   getRoleCount(): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/roles?limit=1&count=true`;
+    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/roles?limit=1&count=true`;
 
     return this.http.get(url, {observe: 'response'});
   }

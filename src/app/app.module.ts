@@ -22,6 +22,7 @@ import { SourceInfoComponent} from './source-info/source-info.component';
 import { ImportRuleComponent} from './rule-connector-management/rule-connector-management.component';
 import { CloudRuleComponent} from './rule-cloud-management/rule-cloud-management.component';
 import { ChangeRoleOwnerComponent} from './role-owner-update/role-owner-update.component';
+import { DuplicateRoleComponent } from './role-duplicate/role-duplicate.component';
 import { ChangeAccessProfileOwnerComponent} from './accessprofile-owner-update/accessprofile-owner-update.component';
 import { RoleManagementComponent} from './role-management/role-management.component';
 import { AccessProfileManagementComponent} from './accessprofile-management/accessprofile-management.component';
@@ -62,6 +63,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
     ImportRuleComponent,
     CloudRuleComponent,
     ChangeRoleOwnerComponent,
+    DuplicateRoleComponent,
     ChangeAccessProfileOwnerComponent,
     RoleManagementComponent,
     AccessProfileManagementComponent,

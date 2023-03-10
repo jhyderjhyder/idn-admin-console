@@ -47,6 +47,7 @@ We are looking for (list is not exhaustive)
 * Roles
     * Manage Roles (Enable / Disable / Mark-Umark as Requestable / Delete / Export All)
     * Manage Role Owners
+    * Duplicate Role (Good for Testing / Troubleshooting Membership Criteria)
 * Sources
     * Manage Aggregation Schedules (Enable / Disable / Backup and Restore Accounts & Entitlement)
     * Manage Source Owners

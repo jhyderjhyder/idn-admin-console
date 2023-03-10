@@ -20,4 +20,6 @@ export class Role {
     criteriaDetail: string;
     accessProfilesNames: string;
     identityList: string;
+    membership: string;
+    duplicateOwner: string;
 }
