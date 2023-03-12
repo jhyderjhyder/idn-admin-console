@@ -65,7 +65,14 @@ export class WorkItemsForwardComponent implements OnInit {
      for (let each of results) {
        let pendingWorkItem = new WorkItem();
        pendingWorkItem.id = each.id;
-       pendingWorkItem.requesterDisplayName = each.requesterDisplayName;
+
+       if (each.requesterDisplayName) {
+        pendingWorkItem.requesterDisplayName = each.requesterDisplayName;
+       }
+       else {
+        pendingWorkItem.requesterDisplayName = "NULL";
+       }       
+       
        pendingWorkItem.created = each.created;
        pendingWorkItem.description = each.description;
        pendingWorkItem.state = each.state;
@@ -74,9 +81,15 @@ export class WorkItemsForwardComponent implements OnInit {
        if (each.remediationItems && each.remediationItems.length) {
         pendingWorkItem.remediationItems = each.remediationItems.length;
        }
+       else {
+        pendingWorkItem.remediationItems = "0";
+       }
 
        if (each.approvalItems && each.approvalItems.length) {
         pendingWorkItem.approvalItems = each.approvalItems.length;
+       }
+       else {
+        pendingWorkItem.approvalItems = "0";
        }
 
        if (each.ownerId) {
@@ -89,7 +102,13 @@ export class WorkItemsForwardComponent implements OnInit {
           if (searchResult.length > 0) {
             pendingWorkItem.ownerDisplayName = searchResult[0].displayName;
           }
+          else {
+            pendingWorkItem.ownerDisplayName = "NULL";
+          }
           });
+        }
+        else {
+          pendingWorkItem.ownerDisplayName = "NULL";
         }
 
        this.pendingWorkItems.push(pendingWorkItem);
