@@ -62,7 +62,14 @@ export class WorkItemsStatusComponent implements OnInit {
      for (let each of results) {
       let workItemsStatus = new WorkItem();
        workItemsStatus.id = each.id;
-       workItemsStatus.requesterDisplayName = each.requesterDisplayName;
+
+       if (each.requesterDisplayName) {
+        workItemsStatus.requesterDisplayName = each.requesterDisplayName;
+       }
+       else {
+        workItemsStatus.requesterDisplayName = "NULL";
+       }
+       
        workItemsStatus.ownerName = each.ownerName;
        workItemsStatus.created = each.created;
        workItemsStatus.description = each.description;
@@ -71,10 +78,16 @@ export class WorkItemsStatusComponent implements OnInit {
 
        if (each.remediationItems && each.remediationItems.length) {
         workItemsStatus.remediationItems = each.remediationItems.length;
+       } 
+       else {
+        workItemsStatus.remediationItems = "0";
        }
 
        if (each.approvalItems && each.approvalItems.length) {
         workItemsStatus.approvalItems = each.approvalItems.length;
+       }
+       else {
+        workItemsStatus.approvalItems = "0";
        }
 
        if (each.ownerId) {
@@ -87,7 +100,13 @@ export class WorkItemsStatusComponent implements OnInit {
           if (searchResult.length > 0) {
             workItemsStatus.ownerDisplayName = searchResult[0].displayName;
           }
+          else {
+            workItemsStatus.ownerDisplayName = "NULL";
+          }
         });
+        }
+        else {
+          workItemsStatus.ownerDisplayName = "NULL";
         }
 
        this.workItemsStatuses.push(workItemsStatus);
@@ -108,10 +127,16 @@ export class WorkItemsStatusComponent implements OnInit {
           if (each.remediationItems && each.remediationItems.length) {
             workItemsStatus.remediationItems = each.remediationItems.length;
           }
+          else {
+            workItemsStatus.remediationItems = "0";
+           }
 
           if (each.approvalItems && each.approvalItems.length) {
             workItemsStatus.approvalItems = each.approvalItems.length;
           }
+          else {
+            workItemsStatus.approvalItems = "0";
+           }
 
           let query = new SimpleQueryCondition();
           query.attribute = "name";
@@ -124,7 +149,13 @@ export class WorkItemsStatusComponent implements OnInit {
               if (searchResult.length > 0) {
                 workItemsStatus.ownerDisplayName = searchResult[0].displayName;
               }
+              else {
+                workItemsStatus.ownerDisplayName = "NULL";
+              }
             });
+          }
+          else {
+            workItemsStatus.ownerDisplayName = "NULL";
           }
 
           if (each.requesterDisplayName) {
@@ -135,7 +166,13 @@ export class WorkItemsStatusComponent implements OnInit {
               if (searchResult.length > 0) {
                 workItemsStatus.requesterDisplayName = searchResult[0].displayName;
               }
+              else {
+                workItemsStatus.requesterDisplayName = "NULL";
+              }
             });
+          }
+          else {
+            workItemsStatus.requesterDisplayName = "NULL";
           }
           
           this.workItemsStatuses.push(workItemsStatus);
