@@ -12,7 +12,7 @@
         <div class="input-group-text bg-transparent border-right-0"><i class="fa fa-search"></i></div>
       </span>
       <input class="form-control py-2 border-left-0 border" type="text" name="search" [(ngModel)]="searchText" autocomplete="off" 
-        placeholder="Description, Requester Name or Current Owner to filter the result.">
+        placeholder="Description, Requester Name, Current Owner or Type to filter the result.">
     </div>
     <div class="col-sm-2 text-right">
       <button type="button" [disabled]="loading" (click)="ngOnInit()" class="btn btn-primary btn-sm">
@@ -50,19 +50,21 @@
       <th scope="col" class="col-1">Current Owner</th>
       <th scope="col" class="col-1">Created</th>
       <th scope="col" class="col-1">State</th>
+      <th scope="col" class="col-1">Type</th>
       <th scope="col" class="col-2">Remediation Items</th>
       <th scope="col" class="col-2">Approval Items</th>
       <th scope="col">Actions</th>
     </tr>
   </thead>
   <tbody *ngIf="pendingWorkItems && !loading">
-    <tr *ngFor="let p of pendingWorkItems | filter:searchText:['description', 'requesterDisplayName', 'ownerDisplayName']">
+    <tr *ngFor="let p of pendingWorkItems | filter:searchText:['description', 'requesterDisplayName', 'ownerDisplayName', 'type']">
       <td class="col-sm-4">{{ p.id }}</td>
       <td class="col-sm-6">{{ p.description }}</td>
       <td class="col-2">{{ p.requesterDisplayName }}</td>
       <td class="col-1">{{ p.ownerDisplayName }}</td>
       <td class="col-1">{{ p.created }}</td>
       <td class="col-2">{{ p.state }}</td>
+      <td class="col-2">{{ p.type }}</td>
       <td class="col-2">{{ p.remediationItems }}</td>
       <td class="col-2">{{ p.approvalItems }}</td>
       <td>

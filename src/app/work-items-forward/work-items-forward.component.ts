@@ -65,31 +65,32 @@ export class WorkItemsForwardComponent implements OnInit {
      for (let each of results) {
        let pendingWorkItem = new WorkItem();
        pendingWorkItem.id = each.id;
-       pendingWorkItem.requesterId = each.requesterId;
        pendingWorkItem.requesterDisplayName = each.requesterDisplayName;
-       pendingWorkItem.ownerId = each.ownerId;
-       pendingWorkItem.ownerName = each.ownerName;
        pendingWorkItem.created = each.created;
        pendingWorkItem.description = each.description;
        pendingWorkItem.state = each.state;
        pendingWorkItem.type = each.type;
+
        if (each.remediationItems && each.remediationItems.length) {
         pendingWorkItem.remediationItems = each.remediationItems.length;
        }
+
        if (each.approvalItems && each.approvalItems.length) {
         pendingWorkItem.approvalItems = each.approvalItems.length;
        }
 
-       let query = new SimpleQueryCondition();
-       query.attribute = "id";
-       query.value = each.ownerId;
+       if (each.ownerId) {
+        let query = new SimpleQueryCondition();
+        query.attribute = "name";
+        query.value = each.ownerName;
 
-       this.idnService.searchAccounts(query)
-       .subscribe(searchResult => { 
-         if (searchResult.length > 0) {
-          pendingWorkItem.ownerDisplayName = searchResult[0].displayName;
-         }
-     }); 
+        this.idnService.searchAccounts(query)
+        .subscribe(searchResult => { 
+          if (searchResult.length > 0) {
+            pendingWorkItem.ownerDisplayName = searchResult[0].displayName;
+          }
+          });
+        }
 
        this.pendingWorkItems.push(pendingWorkItem);
      }
