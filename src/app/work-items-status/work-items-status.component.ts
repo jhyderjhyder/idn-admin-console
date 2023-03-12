@@ -11,6 +11,7 @@ import { SimpleQueryCondition } from '../model/simple-query-condition';
   templateUrl: './work-items-status.component.html',
   styleUrls: ['./work-items-status.component.css']
 })
+
 export class WorkItemsStatusComponent implements OnInit {
   workItemsStatuses: WorkItem[];
   searchText: string;
@@ -19,8 +20,7 @@ export class WorkItemsStatusComponent implements OnInit {
   totalOpen: number;
   totalCompleted: number;
   totalWorkItems: number;
-
-
+  
   constructor(private idnService: IDNService, 
     private authenticationService: AuthenticationService,
     private messageService: MessageService) { }
@@ -37,7 +37,7 @@ export class WorkItemsStatusComponent implements OnInit {
     this.loading = false;
     this.messageService.clearAll();
   }
-
+  
   getAllWorkItemsStatus() {
    this.loading = true;
 
@@ -62,31 +62,33 @@ export class WorkItemsStatusComponent implements OnInit {
      for (let each of results) {
       let workItemsStatus = new WorkItem();
        workItemsStatus.id = each.id;
-       workItemsStatus.requesterId = each.requesterId;
        workItemsStatus.requesterDisplayName = each.requesterDisplayName;
-       workItemsStatus.ownerId = each.ownerId;
        workItemsStatus.ownerName = each.ownerName;
        workItemsStatus.created = each.created;
        workItemsStatus.description = each.description;
        workItemsStatus.state = each.state;
        workItemsStatus.type = each.type;
+
        if (each.remediationItems && each.remediationItems.length) {
         workItemsStatus.remediationItems = each.remediationItems.length;
        }
+
        if (each.approvalItems && each.approvalItems.length) {
         workItemsStatus.approvalItems = each.approvalItems.length;
        }
 
-       let query = new SimpleQueryCondition();
-       query.attribute = "id";
-       query.value = each.ownerId;
-
-       this.idnService.searchAccounts(query)
-       .subscribe(searchResult => { 
-         if (searchResult.length > 0) {
-          workItemsStatus.ownerDisplayName = searchResult[0].displayName;
-         }
+       if (each.ownerId) {
+        let query = new SimpleQueryCondition();
+        query.attribute = "id";
+        query.value = each.ownerId;
+        
+        this.idnService.searchAccounts(query)
+        .subscribe(searchResult => { 
+          if (searchResult.length > 0) {
+            workItemsStatus.ownerDisplayName = searchResult[0].displayName;
+          }
         });
+        }
 
        this.workItemsStatuses.push(workItemsStatus);
       }
@@ -94,52 +96,57 @@ export class WorkItemsStatusComponent implements OnInit {
 
     this.idnService.getWorkItemsCompleted()
     .subscribe(
-     results => {
-       for (let each of results) {
-        let workItemsStatus = new WorkItem();
-         workItemsStatus.id = each.id;
-         workItemsStatus.requesterId = each.requesterId;
-         workItemsStatus.ownerId = each.ownerId;
-         workItemsStatus.created = each.created;
-         workItemsStatus.description = each.description;
-         workItemsStatus.state = each.state;
-         workItemsStatus.type = each.type;
-         if (each.remediationItems && each.remediationItems.length) {
-          workItemsStatus.remediationItems = each.remediationItems.length;
+      results => {
+        for (let each of results) {
+          let workItemsStatus = new WorkItem();
+          workItemsStatus.id = each.id;
+          workItemsStatus.created = each.created;
+          workItemsStatus.description = each.description;
+          workItemsStatus.state = each.state;
+          workItemsStatus.type = each.type;
+          
+          if (each.remediationItems && each.remediationItems.length) {
+            workItemsStatus.remediationItems = each.remediationItems.length;
+          }
+
+          if (each.approvalItems && each.approvalItems.length) {
+            workItemsStatus.approvalItems = each.approvalItems.length;
+          }
+
+          let query = new SimpleQueryCondition();
+          query.attribute = "name";
+
+          if (each.ownerName) {
+            query.value = each.ownerName;
+            
+            this.idnService.searchAccounts(query)
+            .subscribe(searchResult => {
+              if (searchResult.length > 0) {
+                workItemsStatus.ownerDisplayName = searchResult[0].displayName;
+              }
+            });
+          }
+
+          if (each.requesterDisplayName) {
+            query.value = each.requesterDisplayName;
+            
+            this.idnService.searchAccounts(query)
+            .subscribe(searchResult => {
+              if (searchResult.length > 0) {
+                workItemsStatus.requesterDisplayName = searchResult[0].displayName;
+              }
+            });
+          }
+          
+          this.workItemsStatuses.push(workItemsStatus);
         }
-        if (each.approvalItems && each.approvalItems.length) {
-          workItemsStatus.approvalItems = each.approvalItems.length;
-        }
+      });
+      
+      //To Sort in created date order on combining both API calls
+      this.workItemsStatuses.sort((a,b) => a.created.localeCompare(b.created))
 
-         let query = new SimpleQueryCondition();
-         query.attribute = "name";
-         query.value = each.ownerName;
-  
-         this.idnService.searchAccounts(query)
-         .subscribe(searchResult => { 
-           if (searchResult.length > 0) {
-            workItemsStatus.ownerDisplayName = searchResult[0].displayName;
-           }
-          }); 
-
-          query.value = each.requesterDisplayName;
-   
-          this.idnService.searchAccounts(query)
-          .subscribe(searchResult => { 
-            if (searchResult.length > 0) {
-             workItemsStatus.requesterDisplayName = searchResult[0].displayName;
-            }
-           }); 
-
-         this.workItemsStatuses.push(workItemsStatus);
-       }
-     });
-
-     //To Sort in created date order on combining both API calls
-     this.workItemsStatuses.sort((a,b) => a.created.localeCompare(b.created))
-
-    this.loading = false;
-  }
+      this.loading = false;
+    }
 
   saveInCsv() {
     var options = { 
@@ -148,7 +155,7 @@ export class WorkItemsStatusComponent implements OnInit {
       decimalseparator: '.',
       showLabels: true,
       useHeader: true,
-      headers: ["id", "description", "requesterDisplayName", "ownerDisplayName", "created", "state", "remediationItems", "approvalItems"],
+      headers: ["id", "description", "requesterDisplayName", "ownerDisplayName", "created", "state", "type", "remediationItems", "approvalItems"],
       nullToEmptyString: true,
     };
 
