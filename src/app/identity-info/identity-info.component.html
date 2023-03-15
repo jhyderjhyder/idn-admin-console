@@ -31,6 +31,11 @@
     </button>
   </div>
   <div class="col-sm-2 text-left">
+    <button type="button" *ngIf="identityInfo" [disabled]="loading" (click)="refreshIdentity()" class="btn btn-primary btn-sm">
+      Refresh Identity
+    </button>
+  </div>
+  <div class="col-sm-2 text-left">
     <button type="button" *ngIf="identityInfo" [disabled]="loading" (click)="saveInCsv()" class="btn btn-primary btn-sm">
       Download
     </button>
