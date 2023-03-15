@@ -35,7 +35,7 @@ We are looking for (list is not exhaustive)
 ## Features
 
 * Identity Profiles
-    * Identity Info (Get Identity Details / Get Manager Details)
+    * Identity Info (Get Identity Details / Get Manager Details / Refresh Single Identity / Download Report)
     * Manage Identity Profile (Move Priority / Refresh Individual Profile / Export All)
     * Manage Identity Attribute Index (Index / Unindex Attributes)
     * Manage Transforms (Add / Update / Delete / Download / Export All)
