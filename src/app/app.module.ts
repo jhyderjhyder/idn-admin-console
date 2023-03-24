@@ -3,9 +3,9 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ReactiveFormsModule } from '@angular/forms';
 import { NgbModule} from '@ng-bootstrap/ng-bootstrap';
-import { HttpClientModule, HTTP_INTERCEPTORS }    from '@angular/common/http';
+/* import { HttpClientModule, HTTP_INTERCEPTORS }    from '@angular/common/http'; */
 import { NgIdleKeepaliveModule } from '@ng-idle/keepalive';
-import { MomentModule } from 'angular2-moment'; 
+/* import { MomentModule } from 'angular2-moment';  */
 
 import { AppComponent } from './app.component';
 import { MultipleAccountsComponent } from './multiple-accounts-report/multiple-accounts-report.component';
@@ -44,6 +44,7 @@ import { BasicAuthInterceptor } from './helper/basic-auth.interceptor';
 import { ErrorInterceptor } from './helper/error.interceptor';
 import { LoginComponent } from './login/login.component';
 import { ModalModule } from "ngx-bootstrap/modal";
+import { TooltipModule } from 'ngx-bootstrap/tooltip';
 import { NgSelectModule } from '@ng-select/ng-select';
 
 @NgModule({
@@ -85,17 +86,18 @@ import { NgSelectModule } from '@ng-select/ng-select';
     BrowserModule,
     FormsModule,
     ReactiveFormsModule,
-    HttpClientModule,
+    /* HttpClientModule, */
     NgbModule,
     NgSelectModule,
     AppRoutingModule,
     NgIdleKeepaliveModule.forRoot(),
-    MomentModule,
+   /*  MomentModule, */
     ModalModule.forRoot()
+   
   ],
   providers: [
-    { provide: HTTP_INTERCEPTORS, useClass: BasicAuthInterceptor, multi: true },
-    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true }
+   /*  { provide: HTTP_INTERCEPTORS, useClass: BasicAuthInterceptor, multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: ErrorInterceptor, multi: true } */
 
   ],
   bootstrap: [AppComponent]
