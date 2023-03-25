@@ -9,41 +9,41 @@
   <div class="form-group row">
   </div>
 </form>
-<div class="form-group row" *ngIf="loading">
-  <div class="col-sm-12 text-right">
-    <span class="spinner-border spinner-border-sm mr-1"></span>Loading...
+<div class="form-group row align-items-center" *ngIf="loading">
+  <div class="col-sm-12 text-end">
+    <span class="spinner-border spinner-border-sm me-1"></span>Loading...
   </div>
 </div>
-<div class="col-sm-12 text-left" *ngIf="!loading">
-  <span class="font-weight-bold">Select the Identity Profile and then select the LCS to delete.</span>
+<div class="col-sm-12 text-start" *ngIf="!loading">
+  <span class="fw-bold">Select the Identity Profile and then select the LCS to delete.</span>
 </div>
 <br>
-<div class="form-group row" *ngIf="!loading && identityProfiles">
+<div class="form-group row align-items-center pb-4" *ngIf="!loading && identityProfiles">
   <div class="col-sm-6">
-    <ng-select appearance="outline" placeholder="Select Identity Profile" (change)="getIdentityProfileLCS($event)" (clear)="ngOnInit()">
+    <ng-select class="p-0" appearance="outline" placeholder="Select Identity Profile" (change)="getIdentityProfileLCS($event)" (clear)="ngOnInit()">
       <ng-option value="{{ p.id }}" *ngFor="let p of identityProfiles">
         {{ p.name }}
       </ng-option>
     </ng-select>
   </div>
-  <div class="col-sm-2 text-right">
+  <div class="col-sm-2 text-end">
     <button type="button" *ngIf="identityProfileLCSExists" [disabled]="loading" (click)="downloadLCS()" class="btn btn-primary btn-sm">
       Download
     </button>
   </div>
-  <!-- <div class="col-sm-2 text-right">
+  <!-- <div class="col-sm-2 text-end">
     <button type="button" [disabled]="loading" (click)="exportAllIdentityProfilesLCS()" class="btn btn-primary btn-sm">
       Export All
     </button>
   </div> -->
-  <div class="col-sm-2 text-right">
+  <div class="col-sm-2 text-end">
     <button type="button" [disabled]="loading" (click)="ngOnInit()" class="btn btn-primary btn-sm">
       Refresh
     </button>
   </div>
 </div>
 <table class="table table-striped table-bordered">
-  <thead class="thead-light">
+  <thead class="thead-light text-center align-middle">
     <tr>
       <th scope="col">Display Name</th>
       <th scope="col">Technical Name</th>
@@ -53,13 +53,13 @@
     </tr>
   </thead>
   <tbody *ngIf="identityProfileLCSExists">
-    <tr *ngFor="let attr of lcsAttributes">
+    <tr class="text-center align-middle" *ngFor="let attr of lcsAttributes">
       <td>{{ attr.lcsDisplayName }}</td>
       <td>{{ attr.lcsTechnicalName }}</td>
       <td>{{ attr.lcsEnabled }}</td>
       <td>{{ attr.lcsIdentityCount }}</td>
       <td>
-        <div class="col-sm-2 text-right">
+        <div class="text-center align-middle">
           <button type="button" [disabled]="loading" (click)="showDeleteLCSSubmitConfirmModal(attr.lcsId)"class="btn btn-primary btn-sm">
             Delete
           </button>
@@ -78,14 +78,14 @@
             <b>Are you sure you want to delete the LCS?</b> <br>
           </span>
           <div *ngIf="!validToSubmit">
-            <span class="font-weight-bold">Please fix the following error (errors) before submitting the changes: </span><br>
+            <span class="fw-bold">Please fix the following error (errors) before submitting the changes: </span><br>
             <span *ngFor="let err of invalidMessage">
               {{ err }}
               <br>
             </span>
           </div>
         </h6>
-        <button type="button" class="close pull-right" aria-label="Close" (click)="hideDeleteLCSSubmitConfirmModal()">
+        <button type="button" class="btn close pull-right" aria-label="Close" (click)="hideDeleteLCSSubmitConfirmModal()">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>

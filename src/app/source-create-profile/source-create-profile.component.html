@@ -6,37 +6,37 @@
   </ol>
 </nav>
 <form name="form" #f="ngForm" novalidate contactRequired>
-  <div class="form-group row">
+  <div class="form-group row mb-3">
   </div>
 </form>
-<div class="form-group row" *ngIf="loading">
-  <div class="col-sm-12 text-right">
-    <span class="spinner-border spinner-border-sm mr-1"></span>Loading...
+<div class="form-group row mb-3" *ngIf="loading">
+  <div class="col-sm-12 text-end">
+    <span class="spinner-border spinner-border-sm me-1"></span>Loading...
   </div>
 </div>
-<div class="col-sm-12 text-left" *ngIf="!loading">
-  <span class="font-weight-bold">Select the source and then add or remove attribute from create profile. It will be added as a disabled attribute. Please goto UI to then modify it.</span>
+<div class="col-sm-12 text-start" *ngIf="!loading">
+  <span class="fw-bold">Select the source and then add or remove attribute from create profile. It will be added as a disabled attribute. Please goto UI to then modify it.</span>
 </div>
 <br>
-<div class="form-group row" *ngIf="!loading && sources">
+<div class="form-group row mb-3 align-items-center" *ngIf="!loading && sources">
   <div class="col-sm-6">
-    <ng-select appearance="outline" placeholder="Select Source" (change)="getSourceCreateProfile($event)" (clear)="ngOnInit()">
+    <ng-select class="p-0" appearance="outline" placeholder="Select Source" (change)="getSourceCreateProfile($event)" (clear)="ngOnInit()">
       <ng-option value="{{ s.id }}" *ngFor="let s of sources">
         {{ s.name }}
       </ng-option>
     </ng-select>
   </div>
-  <div class="col-sm-2 text-right">
+  <div class="col-sm-2 text-end">
     <button type="button" *ngIf="createProfileExists" [disabled]="loading" (click)="downloadCreateProfile()" class="btn btn-primary btn-sm">
       Download
     </button>
   </div>
-  <!-- <div class="col-sm-2 text-right">
+  <!-- <div class="col-sm-2 text-end">
     <button type="button" [disabled]="loading" (click)="exportAllCreateProfiles()" class="btn btn-primary btn-sm">
       Export All
     </button>
   </div> -->
-  <div class="col-sm-4 text-right">
+  <div class="col-sm-4 text-end">
     <button type="button" [disabled]="loading" (click)="ngOnInit()" class="btn btn-primary btn-sm">
       Refresh
     </button>
@@ -57,7 +57,7 @@
           <input class="border" type="text" [(ngModel)]="newCreateProfileAttribute" placeholder="Enter Attribute Name">
       </td>
       <td>
-        <div class="col-sm-2 text-right">
+        <div class="col-sm-2 text-end">
           <button type="button" [disabled]="!newCreateProfileAttribute" (click)="showAddAttributeSubmitConfirmModal()" class="btn btn-primary btn-sm">
             Create
           </button>
@@ -74,7 +74,7 @@
         </select>
       </td>
       <td>
-        <div class="col-sm-2 text-right">
+        <div class="col-sm-2 text-end">
           <button type="button" [disabled]="loading" (click)="showDeleteAttributeSubmitConfirmModal()"class="btn btn-primary btn-sm">
             Delete
           </button>
@@ -93,14 +93,14 @@
             <b>Are you sure you want to add the attribute?</b><br>
           </span>
           <div *ngIf="!validToSubmit">
-            <span class="font-weight-bold">Please fix the following error (errors) before submitting the changes: </span><br>
+            <span class="fw-bold">Please fix the following error (errors) before submitting the changes: </span><br>
             <span *ngFor="let err of invalidMessage">
               {{ err }}
               <br>
             </span>
           </div>
         </h6>
-        <button type="button" class="close pull-right" aria-label="Close" (click)="hideAddAttributeSubmitConfirmModal()">
+        <button type="button" class="btn close pull-right" aria-label="Close" (click)="hideAddAttributeSubmitConfirmModal()">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
@@ -131,14 +131,14 @@
             <b>Are you sure you want to delete the attribute?</b> <br>
           </span>
           <div *ngIf="!validToSubmit">
-            <span class="font-weight-bold">Please fix the following error (errors) before submitting the changes: </span><br>
+            <span class="fw-bold">Please fix the following error (errors) before submitting the changes: </span><br>
             <span *ngFor="let err of invalidMessage">
               {{ err }}
               <br>
             </span>
           </div>
         </h6>
-        <button type="button" class="close pull-right" aria-label="Close" (click)="hideDeleteAttributeSubmitConfirmModal()">
+        <button type="button" class="btn close pull-right" aria-label="Close" (click)="hideDeleteAttributeSubmitConfirmModal()">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>

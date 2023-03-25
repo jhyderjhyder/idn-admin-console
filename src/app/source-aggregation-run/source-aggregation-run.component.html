@@ -6,42 +6,44 @@
   </ol>
 </nav>
 <form name="form" #f="ngForm" novalidate contactRequired>
-  <div class="form-group row">
-    <div class="input-group col-md-10">
-      <span class="input-group-prepend">
-        <div class="input-group-text bg-transparent border-right-0"><i class="fa fa-search"></i></div>
-      </span>
-      <input class="form-control py-2 border-left-0 border" type="text" name="search" [(ngModel)]="searchText" autocomplete="off" 
-        placeholder="Type Source Name, description, cloudExternalID or type to filter the result.">
+  <div class="form-group row align-items-center mb-3">
+    <div class="col-md-10">
+      <div class="input-group">
+        <span class="input-group-text bg-white border-end-0">
+          <i class="fa fa-search"></i>
+        </span>
+        <input class="form-control py-2 border-start-0 border" type="text" name="search" [(ngModel)]="searchText" autocomplete="off" 
+        placeholder="Type Source Name, description, cloudExternalID or type to filter the result.">   
+      </div>
     </div>
-    <div class="col-sm-2 text-right">
+    <div class="col-sm-2 text-end">
       <button type="button" [disabled]="loading" (click)="ngOnInit()" class="btn btn-primary btn-sm">
         Refresh
       </button>
     </div>
   </div>
 </form>
-<div class="form-group row" *ngIf="loading">
-  <div class="col-sm-12 text-right">
-    <span class="spinner-border spinner-border-sm mr-1"></span>Loading...
+<div class="form-group row mb-3" *ngIf="loading">
+  <div class="col-sm-12 text-end">
+    <span class="spinner-border spinner-border-sm me-1"></span>Loading...
   </div>
 </div>
-<div class="form-group row" *ngIf="!loading">
-  <div class="col-sm-12 text-left">
-    <span class="font-weight-bold">To aggregate the source, select the items below and then click the 'Submit' button. </span>
-    <span class="font-weight-bold">For Delimited File type source, click the 'Choose file' button in the 'CSV File' column to upload file first before submitting.
+<div class="form-group row mb-3" *ngIf="!loading">
+  <div class="col-sm-12 text-start">
+    <span class="fw-bold">To aggregate the source, select the items below and then click the 'Submit' button. </span>
+    <span class="fw-bold">For Delimited File type source, click the 'Choose file' button in the 'CSV File' column to upload file first before submitting.
     </span>
   </div>
 </div>
-<div class="form-group row" *ngIf="!loading">
-  <div class="col-sm-12 text-right">
+<div class="form-group row mb-3" *ngIf="!loading">
+  <div class="col-sm-12 text-end">
     <button type="button" (click)="showSubmitConfirmModal()" class="btn btn-primary btn-sm">
       Submit
     </button>
   </div>
 </div>
 <table class="table table-striped table-bordered">
-  <thead class="thead-light">
+  <thead class="thead-light text-center align-middle">
     <tr>
       <th scope="col">
           Select All
@@ -62,7 +64,7 @@
       <!--
       <tr data-toggle="collapse" [attr.data-target]="'#collapseRow' + s.cloudExternalID" class="accordion-toggle">
       -->
-      <tr>
+      <tr class="text-center align-middle">
         <td>
           <input type="checkbox" [(ngModel)]="s.selected" (click)="changeOnSelect($event, sources.indexOf(s))" [disabled]="s.aggTask && s.aggTask.status != 'COMPLETED' ">
         </td>
@@ -156,14 +158,14 @@
             Are you sure to aggregate the selected sources?
           </span>
           <div *ngIf="!validToSubmit">
-            <span class="font-weight-bold">Please fix the following error (errors) before sending the request to aggregate the selected sources: </span><br>
+            <span class="fw-bold">Please fix the following error (errors) before sending the request to aggregate the selected sources: </span><br>
             <span *ngFor="let err of invalidMessage">
               {{ err }}
               <br>
             </span>
           </div>
         </h6>
-        <button type="button" class="close pull-right" aria-label="Close" (click)="hideSubmitConfirmModal()">
+        <button type="button" class="btn close pull-right" aria-label="Close" (click)="hideSubmitConfirmModal()">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
