@@ -3,7 +3,7 @@ FROM nginx:1.17.1-alpine AS build
 RUN apk add --update nodejs nodejs-npm
 WORKDIR /usr/src/app
 COPY package.json ./
-RUN npm install --legacy-peer-deps
+RUN npm install
 COPY . .
 RUN npm run build-prod
 

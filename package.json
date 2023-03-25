@@ -10,7 +10,7 @@
     "lint": "ng lint",
     "e2e": "ng e2e",
     "electron": "electron .",
-    "build-prod": "ng build --prod",
+    "build-prod": "ng build",
     "electron-mac-x64-package": "electron-packager . --platform=darwin --arch=x64 --overwrite",
     "electron-mac-arm64-package": "electron-packager . --platform=darwin --arch=arm64 --overwrite",
     "electron-win-x64-package": "electron-packager . --platform=win32 --arch=x64 --overwrite",
