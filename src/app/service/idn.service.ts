@@ -1086,10 +1086,6 @@ export class IDNService {
     return this.http.post(url, payload, this.httpOptions);
   }
   
-   /** Log a HeroService message with the MessageService */
-   private log(message: string) {
-     this.messageService.add(`${message}`);
-   }
 
    private logError(error: string) {
       this.messageService.addError(`${error}`);
@@ -1116,24 +1112,5 @@ export class IDNService {
      };
    }
 
-   private handleException<T> (operation: string, errorMessage?: string , propagateAPIError?:boolean) {
-    return (error: any): Observable<T> => {
-      console.error(error); // log to console instead
-      if (propagateAPIError) {
-        throw new Error(error);
-      }
-      else if (error.toUpperCase() == "OK") {
-        return of(error as T);
-      }
-      else if (errorMessage) {
-        throw new Error(errorMessage);
-      } 
-      else {
-        throw new Error('System error. Please contact system admistrator');
-      }
-
-      // return of(error as T);
-    };
-  }
 
 }

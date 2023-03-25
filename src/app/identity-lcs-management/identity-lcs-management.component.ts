@@ -1,10 +1,8 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { Papa } from 'ngx-papaparse';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { IDNService } from '../service/idn.service';
 import { MessageService } from '../service/message.service';
-import { AuthenticationService } from '../service/authentication-service.service';
 import * as JSZip from 'jszip';
 import { saveAs } from 'file-saver';
 import { IdentityProfile } from '../model/identity-profile';
@@ -33,10 +31,8 @@ export class IdentityLCSComponent implements OnInit {
 
   @ViewChild('submitDeleteLCSSubmitConfirmModal', { static: false }) submitDeleteLCSSubmitConfirmModal: ModalDirective;
 
-  constructor(private papa: Papa,
-    private idnService: IDNService,
-    private messageService: MessageService,
-    private authenticationService: AuthenticationService) {
+  constructor(private idnService: IDNService,
+    private messageService: MessageService) {
   }
 
   ngOnInit() {

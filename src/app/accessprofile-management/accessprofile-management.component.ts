@@ -1,6 +1,5 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { AngularCsv } from 'angular-csv-ext/dist/Angular-csv';
-import { Papa } from 'ngx-papaparse';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { Source } from '../model/source';
@@ -46,8 +45,7 @@ export class AccessProfileManagementComponent implements OnInit {
 
   @ViewChild('fileInput', { static: false }) fileInput: ElementRef;
 
-  constructor(private papa: Papa,
-    private idnService: IDNService,
+  constructor(private idnService: IDNService,
     private messageService: MessageService,
     private authenticationService: AuthenticationService) {
   }

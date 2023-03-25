@@ -24,7 +24,7 @@ export class AuthenticationService {
     return this.currentUserSubject.value;
   }
 
-  private handleError<T>(operation: string, errorMessage?: string, propagateAPIError?: boolean) {
+  private handleError<T>(_operation: string, errorMessage?: string, propagateAPIError?: boolean) {
     return (error: any): Observable<T> => {
       console.error(error); // log to console instead
       if (propagateAPIError) {

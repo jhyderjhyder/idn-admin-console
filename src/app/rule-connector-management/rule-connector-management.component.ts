@@ -233,7 +233,7 @@ export class ImportRuleComponent implements OnInit {
     reader.onload = (event: any) => {
       const ruleXML = event.target.result; // Content of Rule XML file
       const parser = new xml2js.Parser({ strict: false, trim: true });
-      parser.parseString(ruleXML, (err, result) => {
+      parser.parseString(ruleXML, (_err, result) => {
         let valid: boolean = true;
         if (result.RULE && result.RULE.$) {
           //verify rule name
@@ -309,7 +309,7 @@ export class ImportRuleComponent implements OnInit {
     reader.onload = (event: any) => {
       const ruleXML = event.target.result; // Content of Rule XML file
       const parser = new xml2js.Parser({ strict: false, trim: true });
-      parser.parseString(ruleXML, (err, result) => {
+      parser.parseString(ruleXML, (_err, result) => {
         let valid: boolean = true;
         if (result.RULE && result.RULE.$) {
           //verify rule name

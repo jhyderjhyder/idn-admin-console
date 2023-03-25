@@ -1,10 +1,8 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { Papa } from 'ngx-papaparse';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { IDNService } from '../service/idn.service';
 import { MessageService } from '../service/message.service';
-import { AuthenticationService } from '../service/authentication-service.service';
 import { PAT } from '../model/pat';
 import { SimpleQueryCondition } from '../model/simple-query-condition';
 
@@ -30,10 +28,8 @@ export class ManagePATComponent implements OnInit {
   @ViewChild('deletePATConfirmModal', { static: false }) deletePATConfirmModal: ModalDirective;
 
 
-  constructor(private papa: Papa,
-    private idnService: IDNService,
-    private messageService: MessageService,
-    private authenticationService: AuthenticationService) {
+  constructor(private idnService: IDNService,
+    private messageService: MessageService) {
   }
 
   ngOnInit() {

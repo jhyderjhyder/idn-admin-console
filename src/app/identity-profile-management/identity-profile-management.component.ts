@@ -1,5 +1,4 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { Papa } from 'ngx-papaparse';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { IDNService } from '../service/idn.service';
@@ -35,8 +34,7 @@ export class IdentityProfileManagementComponent implements OnInit {
   @ViewChild('submitConfirmModal', { static: false }) submitConfirmModal: ModalDirective;
   @ViewChild('submitRefreshConfirmModal', { static: false }) submitRefreshConfirmModal: ModalDirective;
 
-  constructor(private papa: Papa,
-    private idnService: IDNService, 
+  constructor(private idnService: IDNService, 
     private messageService: MessageService,
     private authenticationService: AuthenticationService) {
   }

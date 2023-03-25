@@ -1,10 +1,8 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { Papa } from 'ngx-papaparse';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { IDNService } from '../service/idn.service';
 import { MessageService } from '../service/message.service';
-import { AuthenticationService } from '../service/authentication-service.service';
 import { Role } from '../model/role';
 import { SimpleQueryCondition } from '../model/simple-query-condition';
 import { SourceOwner } from '../model/source-owner';
@@ -34,10 +32,8 @@ export class DuplicateRoleComponent implements OnInit {
   
   @ViewChild('duplicateRoleConfirmModal', { static: false }) duplicateRoleConfirmModal: ModalDirective;
 
-  constructor(private papa: Papa,
-    private idnService: IDNService, 
-    private messageService: MessageService,
-    private authenticationService: AuthenticationService) {
+  constructor(private idnService: IDNService, 
+    private messageService: MessageService) {
   }
 
   ngOnInit() {

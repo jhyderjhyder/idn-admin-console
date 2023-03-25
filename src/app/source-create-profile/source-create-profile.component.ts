@@ -1,11 +1,9 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { Papa } from 'ngx-papaparse';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { Source } from '../model/source';
 import { IDNService } from '../service/idn.service';
 import { MessageService } from '../service/message.service';
-import { AuthenticationService } from '../service/authentication-service.service';
 import * as JSZip from 'jszip';
 import { saveAs } from 'file-saver';
 
@@ -38,10 +36,8 @@ export class SourceCreateProfileComponent implements OnInit {
 
   @ViewChild('fileInput', {static: false}) fileInput: ElementRef;
 
-  constructor(private papa: Papa,
-    private idnService: IDNService, 
-    private messageService: MessageService,
-    private authenticationService: AuthenticationService) {
+  constructor(private idnService: IDNService, 
+    private messageService: MessageService) {
   }
 
   ngOnInit() {
