@@ -1,10 +1,14 @@
+// Core imports
 import { Component, ViewChild } from '@angular/core';
 import { Router,NavigationEnd  } from '@angular/router';
+
+// Third party imports
 import { Idle, DEFAULT_INTERRUPTSOURCES } from '@ng-idle/core';
 import { Keepalive } from '@ng-idle/keepalive';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 
+// Application imports
 import { MessageService } from './service/message.service';
 import { AuthenticationService } from './service/authentication-service.service';
 import { User } from './model/user';

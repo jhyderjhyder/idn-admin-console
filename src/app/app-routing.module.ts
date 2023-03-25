@@ -1,35 +1,37 @@
-import { NgModule }             from '@angular/core';
+// Core imports
+import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
-import { MultipleAccountsComponent }   from './multiple-accounts-report/multiple-accounts-report.component';
-import { AccessRequestStatusComponent }   from './access-request-status/access-request-status.component';
-import { AccessRequestApprovalForwardComponent }   from './access-request-approval-forward/access-request-approval-forward.component';
+// Application imports
+import { MultipleAccountsComponent } from './multiple-accounts-report/multiple-accounts-report.component';
+import { AccessRequestStatusComponent } from './access-request-status/access-request-status.component';
+import { AccessRequestApprovalForwardComponent } from './access-request-approval-forward/access-request-approval-forward.component';
 import { WorkItemsStatusComponent } from './work-items-status/work-items-status.component';
 import { WorkItemsForwardComponent } from './work-items-forward/work-items-forward.component';
-import { AggregationManagementComponent }   from './source-aggregation-management/source-aggregation-management.component';
-import { ChangeSourceOwnerComponent} from './source-owner-update/source-owner-update.component';
-import { AggregateSourceComponent} from './source-aggregation-run/source-aggregation-run.component';
-import { SourceCreateProfileComponent} from './source-create-profile/source-create-profile.component';
-import { ResetSourceComponent} from './source-reset/source-reset.component';
-import { SourceInfoComponent} from './source-info/source-info.component';
-import { ImportRuleComponent} from './rule-connector-management/rule-connector-management.component';
-import { CloudRuleComponent} from './rule-cloud-management/rule-cloud-management.component';
-import { ChangeRoleOwnerComponent} from './role-owner-update/role-owner-update.component';
-import { DuplicateRoleComponent} from './role-duplicate/role-duplicate.component';
-import { ChangeAccessProfileOwnerComponent} from './accessprofile-owner-update/accessprofile-owner-update.component';
-import { RoleManagementComponent} from './role-management/role-management.component';
-import { AccessProfileManagementComponent} from './accessprofile-management/accessprofile-management.component';
-import { IdentityProfileManagementComponent} from './identity-profile-management/identity-profile-management.component';
-import { IdentityAttributeIndexComponent} from './identity-attribute-index/identity-attribute-index.component';
-import { IdentityTransformManagementComponent} from './identity-transform-management/identity-transform-management.component';
-import { IdentityLCSComponent} from './identity-lcs-management/identity-lcs-management.component';
-import { IdentityInfoComponent} from './identity-info/identity-info.component';
-import { ReleaseHistoryComponent} from './release-history/release-history.component';
-import { CreditsComponent} from './credits/credits.component';
-import { OrgTimeComponent} from './misc-org-time-update/misc-org-time-update.component';
+import { AggregationManagementComponent } from './source-aggregation-management/source-aggregation-management.component';
+import { ChangeSourceOwnerComponent } from './source-owner-update/source-owner-update.component';
+import { AggregateSourceComponent } from './source-aggregation-run/source-aggregation-run.component';
+import { SourceCreateProfileComponent } from './source-create-profile/source-create-profile.component';
+import { ResetSourceComponent } from './source-reset/source-reset.component';
+import { SourceInfoComponent } from './source-info/source-info.component';
+import { ImportRuleComponent } from './rule-connector-management/rule-connector-management.component';
+import { CloudRuleComponent } from './rule-cloud-management/rule-cloud-management.component';
+import { ChangeRoleOwnerComponent } from './role-owner-update/role-owner-update.component';
+import { DuplicateRoleComponent } from './role-duplicate/role-duplicate.component';
+import { ChangeAccessProfileOwnerComponent } from './accessprofile-owner-update/accessprofile-owner-update.component';
+import { RoleManagementComponent } from './role-management/role-management.component';
+import { AccessProfileManagementComponent } from './accessprofile-management/accessprofile-management.component';
+import { IdentityProfileManagementComponent } from './identity-profile-management/identity-profile-management.component';
+import { IdentityAttributeIndexComponent } from './identity-attribute-index/identity-attribute-index.component';
+import { IdentityTransformManagementComponent } from './identity-transform-management/identity-transform-management.component';
+import { IdentityLCSComponent } from './identity-lcs-management/identity-lcs-management.component';
+import { IdentityInfoComponent } from './identity-info/identity-info.component';
+import { ReleaseHistoryComponent } from './release-history/release-history.component';
+import { CreditsComponent } from './credits/credits.component';
+import { OrgTimeComponent } from './misc-org-time-update/misc-org-time-update.component';
 import { ManagePATComponent } from './misc-manage-pat/misc-manage-pat.component';
-import { OrgStatsComponent} from './misc-org-stats/misc-org-stats.component';
-import { LoginComponent }   from './login/login.component';
+import { OrgStatsComponent } from './misc-org-stats/misc-org-stats.component';
+import { LoginComponent } from './login/login.component';
 import { AuthGuard } from './helper/auth.guard';
 
 const routes: Routes = [
@@ -66,7 +68,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [ RouterModule.forRoot(routes, { relativeLinkResolution: 'legacy' }) ],
-  exports: [ RouterModule ]
+  imports: [RouterModule.forRoot(routes, {})],
+  exports: [RouterModule]
 })
-export class AppRoutingModule {}
+export class AppRoutingModule { }
