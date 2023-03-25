@@ -80,12 +80,12 @@ export class OrgTimeComponent implements OnInit {
     this.loading = true;
     
     this.idnService.updateOrgTimeConfig(this.selectedOption)
-          .subscribe(results => {
+          .subscribe(() => {
             this.closeModalDisplayMsg();
              this.reset(false);
              this.ngOnInit();
           },
-          err => {
+          () => {
             this.errorMessage = "Error to submit the changes.";
             this.closeModalDisplayMsg();
             this.reset(false);

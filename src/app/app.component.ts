@@ -48,7 +48,7 @@ export class AppComponent {
     idle.setInterrupts(DEFAULT_INTERRUPTSOURCES);
     
     idle.onIdleEnd.subscribe(() => { 
-      this.idleState = 'No longer idle.'
+      this.idleState = 'No longer idle.';
       console.log(this.idleState);
       this.reset();
     });
@@ -64,7 +64,7 @@ export class AppComponent {
     
     idle.onIdleStart.subscribe(() => {
         if (this.currentUser != null) {
-          this.idleState = 'You\'ve gone idle!'
+          this.idleState = 'You\'ve gone idle!';
           console.log(this.idleState);
           this.childModal.show();
         }
@@ -72,7 +72,7 @@ export class AppComponent {
     
     idle.onTimeoutWarning.subscribe((countdown) => {
       if (this.currentUser != null) {
-        this.idleState = 'You will time out in ' + countdown + ' seconds!'
+        this.idleState = 'You will time out in ' + countdown + ' seconds!';
         console.log(this.idleState);
       }
     });
@@ -82,7 +82,7 @@ export class AppComponent {
 
     keepalive.onPing.subscribe(() => this.lastPing = new Date());
 
-    this.idle.watch()
+    this.idle.watch();
   }
 
   reset() {
@@ -105,7 +105,7 @@ export class AppComponent {
   logout() {
     this.childModal.hide();
     this.authenticationService.logout().subscribe(
-      res => {
+      () => {
         //do something
       }
     );

@@ -1,5 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { Papa } from 'ngx-papaparse';
+import { Component, OnInit } from '@angular/core';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { Source } from '../model/source';
 import { IDNService } from '../service/idn.service';
@@ -24,8 +23,8 @@ export class SourceInfoComponent implements OnInit {
 
   public modalRef: BsModalRef;
 
-  constructor(private papa: Papa,
-    private idnService: IDNService, 
+  constructor(
+    private idnService: IDNService,
     private messageService: MessageService,
     private authenticationService: AuthenticationService) {
   }
@@ -41,69 +40,66 @@ export class SourceInfoComponent implements OnInit {
     this.invalidMessage = [];
     if (clearMsg) {
       this.messageService.clearAll();
-    } 
+    }
   }
 
   search() {
     this.loading = true;
     this.idnService.getAllSources()
-          .subscribe(allSources => {
-            this.sources = [];
-            for (let each of allSources) {
-              let source = new Source();
-              source.id = each.id;
-              source.cloudExternalID = each.connectorAttributes.cloudExternalId;
-              source.name = each.name;
-              source.description = each.description;
-              source.type = each.type;
-              source.authoritative = each.authoritative;
+      .subscribe(allSources => {
+        this.sources = [];
+        for (const each of allSources) {
+          const source = new Source();
+          source.id = each.id;
+          source.cloudExternalID = each.connectorAttributes.cloudExternalId;
+          source.name = each.name;
+          source.description = each.description;
+          source.type = each.type;
+          source.authoritative = each.authoritative;
 
-              if (source.authoritative) {
-                source.name = source.name + " (Authoritative)";
+          if (source.authoritative) {
+            source.name = source.name + " (Authoritative)";
+          }
+
+          this.idnService.getSourceCCApi(source.cloudExternalID)
+            .subscribe(
+              searchResult => {
+                source.accountsCount = searchResult.accountsCount;
+                source.entitlementsCount = searchResult.entitlementsCount;
+                source.internalName = searchResult.health.name;
+              },
+              err => {
+                this.messageService.handleIDNError(err);
               }
-
-              this.idnService.getSourceCCApi(source.cloudExternalID)
-              .subscribe(
-                searchResult => {
-                    source.accountsCount = searchResult.accountsCount;
-                    source.entitlementsCount = searchResult.entitlementsCount;
-                    source.internalName = searchResult.health.name;
-                },
-                err => {
-                  this.messageService.handleIDNError(err);
-                }
             );
-              
-              this.sources.push(source);
-            }
-            this.loading = false;
-          });
+
+          this.sources.push(source);
+        }
+        this.loading = false;
+      });
   }
 
   exportAllSources() {
-    
-    this.idnService.getAllSources()
-          .subscribe(
-            results => {
-            this.sources = [];
-            for (let each of results) {
-              let source = new Source();
-              let jsonData = JSON.stringify(each, null, 4);
-              source.name = each.name;
-              let fileName = "Source - " + source.name + ".json";
-              this.zip.file(`${fileName}`, jsonData);
-              
-            }
-            const currentUser = this.authenticationService.currentUserValue;
-            let zipFileName = `${currentUser.tenant}-sources.zip`;
-  
-           this.zip.generateAsync({type:"blob"}).then(function(content) {
-              saveAs(content, zipFileName);
-          });
-  
-          this.ngOnInit();
-  
-          });    
-  }
 
+    this.idnService.getAllSources()
+      .subscribe(
+        results => {
+          this.sources = [];
+          for (const each of results) {
+            const source = new Source();
+            const jsonData = JSON.stringify(each, null, 4);
+            source.name = each.name;
+            const fileName = "Source - " + source.name + ".json";
+            this.zip.file(`${fileName}`, jsonData);
+          }
+
+          const currentUser = this.authenticationService.currentUserValue;
+          const zipFileName = `${currentUser.tenant}-sources.zip`;
+
+          this.zip.generateAsync({ type: "blob" }).then(function (content) {
+            saveAs(content, zipFileName);
+          });
+          this.ngOnInit();
+        });
+  }
 }

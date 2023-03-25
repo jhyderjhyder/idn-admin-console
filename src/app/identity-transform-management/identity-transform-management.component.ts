@@ -65,8 +65,8 @@ export class IdentityTransformManagementComponent implements OnInit {
           .subscribe(
             results => {
             this.transforms = [];
-            for (let each of results) {
-              let transform = new Transform();
+            for (const each of results) {
+              const transform = new Transform();
               transform.id = each.id;
               transform.name = each.name;
               transform.type = each.type;
@@ -146,7 +146,7 @@ export class IdentityTransformManagementComponent implements OnInit {
 
     this.idnService.deleteTransform(this.transformToDelete.id)
       .subscribe(
-        result => {
+        () => {
           //this.closeModalDisplayMsg();
           this.deleteTransformConfirmModal.hide();
           this.messageService.add("Transform deleted successfully.");
@@ -166,7 +166,7 @@ export class IdentityTransformManagementComponent implements OnInit {
     this.messageService.clearAll();
     this.idnService.createTransform(this.transformToImport)
       .subscribe(
-        result => {
+        () => {
           this.importTransformConfirmModal.hide();
           this.messageService.add("Transform imported successfully.");
           this.transformToImport = null;
@@ -185,7 +185,7 @@ export class IdentityTransformManagementComponent implements OnInit {
     this.messageService.clearAll();
     this.idnService.updateTransform(this.transformToUpdate)
       .subscribe(
-        result => {
+        () => {
           this.updateTransformConfirmModal.hide();
           this.messageService.add("Transform updated successfully.");
           this.transformToUpdate = null;
@@ -221,12 +221,12 @@ export class IdentityTransformManagementComponent implements OnInit {
 
   processFileForImportTransform(evt) {
     this.messageService.clearError();
-    var files = evt.target.files; // FileList object
-    var file = files[0];
-    var reader = new FileReader();
+    const files = evt.target.files; // FileList object
+    const file = files[0];
+    const reader = new FileReader();
     reader.readAsText(file);
     reader.onload = (event: any) => {
-      var transformJSON = event.target.result; // Content of Tranform JSON file
+      const transformJSON = event.target.result; // Content of Tranform JSON file
       let valid: boolean = true;
       if (this.isJsonString(transformJSON) != "valid") {
         valid = false;
@@ -252,18 +252,18 @@ export class IdentityTransformManagementComponent implements OnInit {
       if (!valid) {
         this.transformToImport = null;
       }
-    }
+    };
   }
 
   processFileForUpdatTransform(evt) {
     this.messageService.clearError();
-    var files = evt.target.files; // FileList object
-    var file = files[0];
-    var reader = new FileReader();
+    const files = evt.target.files; // FileList object
+    const file = files[0];
+    const reader = new FileReader();
     reader.readAsText(file);
     reader.onload = (event: any) => {
-      var transformJSON = event.target.result; // Content of Tranform JSON file
-      //let parsedTransformJSON = JSON.parse(transformJSON);
+      const transformJSON = event.target.result; // Content of Tranform JSON file
+      //const parsedTransformJSON = JSON.parse(transformJSON);
       let parsedTransformJSON = null;
       let valid: boolean = true;
       if (this.isJsonString(transformJSON) != "valid") {
@@ -312,21 +312,21 @@ export class IdentityTransformManagementComponent implements OnInit {
           } 
         }
         this.validToSubmit = valid;
-    }
+    };
   }
 
   downloadTransform(transformId: string) {
     this.idnService.getTransformById(transformId)
       .subscribe(
         result => {
-          let transform = new Transform();
+          const transform = new Transform();
           transform.name = result.name;
           transform.type = result.type;
           result = JSON.stringify(result, null, 4);
           
 
-          var blob = new Blob([result], {type: "application/json"});
-          let fileName = "Transform - " + transform.type + " - " + transform.name + ".json";
+          const blob = new Blob([result], {type: "application/json"});
+          const fileName = "Transform - " + transform.type + " - " + transform.name + ".json";
           saveAs(blob, fileName);
 
         },
@@ -340,17 +340,17 @@ export class IdentityTransformManagementComponent implements OnInit {
           .subscribe(
             results => {
             this.transforms = [];
-            for (let each of results) {
-              let transform = new Transform();
-              let jsonData = JSON.stringify(each, null, 4);
+            for (const each of results) {
+              const transform = new Transform();
+              const jsonData = JSON.stringify(each, null, 4);
               transform.name = each.name;
               transform.type = each.type;
-              let fileName = "Transform - " + transform.type + " - " + transform.name + ".json";
+              const fileName = "Transform - " + transform.type + " - " + transform.name + ".json";
               this.zip.file(`${fileName}`, jsonData);
               
             }
             const currentUser = this.authenticationService.currentUserValue;
-            let zipFileName = `${currentUser.tenant}-transforms.zip`;
+            const zipFileName = `${currentUser.tenant}-transforms.zip`;
 
            this.zip.generateAsync({type:"blob"}).then(function(content) {
               saveAs(content, zipFileName);

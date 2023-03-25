@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Papa } from 'ngx-papaparse';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { ModalDirective } from 'ngx-bootstrap/modal';
@@ -26,14 +26,14 @@ export class ResetSourceComponent implements OnInit {
   invalidMessage: string[];
 
   public modalRef: BsModalRef;
-  
+
   @ViewChild('resetSourceAccountsConfirmModal', { static: false }) resetSourceAccountsConfirmModal: ModalDirective;
   @ViewChild('resetSourceEntitlementsConfirmModal', { static: false }) resetSourceEntitlementsConfirmModal: ModalDirective;
   @ViewChild('resetSourceBothConfirmModal', { static: false }) resetSourceBothConfirmModal: ModalDirective;
 
 
   constructor(private papa: Papa,
-    private idnService: IDNService, 
+    private idnService: IDNService,
     private messageService: MessageService,
     private authenticationService: AuthenticationService) {
   }
@@ -55,37 +55,37 @@ export class ResetSourceComponent implements OnInit {
     if (clearMsg) {
       this.messageService.clearAll();
       this.errorInvokeApi = false;
-    } 
+    }
   }
 
   search() {
     this.loading = true;
     this.idnService.getAllSources()
-          .subscribe(allSources => {
-            this.sources = [];
-            for (let each of allSources) {
-              let source = new Source();
-              source.id = each.id;
-              source.cloudExternalID = each.connectorAttributes.cloudExternalId;
-              source.name = each.name;
-              source.description = each.description;
-              source.type = each.type;
+      .subscribe(allSources => {
+        this.sources = [];
+        for (const each of allSources) {
+          const source = new Source();
+          source.id = each.id;
+          source.cloudExternalID = each.connectorAttributes.cloudExternalId;
+          source.name = each.name;
+          source.description = each.description;
+          source.type = each.type;
 
-              this.idnService.getSourceCCApi(source.cloudExternalID)
-              .subscribe(
-                searchResult => {
-                    source.accountsCount = searchResult.accountsCount;
-                    source.entitlementsCount = searchResult.entitlementsCount;
-                },
-                err => {
-                  this.messageService.handleIDNError(err);
-                }
+          this.idnService.getSourceCCApi(source.cloudExternalID)
+            .subscribe(
+              searchResult => {
+                source.accountsCount = searchResult.accountsCount;
+                source.entitlementsCount = searchResult.entitlementsCount;
+              },
+              err => {
+                this.messageService.handleIDNError(err);
+              }
             );
-              
-              this.sources.push(source);
-            }
-            this.loading = false;
-          });
+
+          this.sources.push(source);
+        }
+        this.loading = false;
+      });
   }
 
   resetSourceAccounts() {
@@ -105,7 +105,7 @@ export class ResetSourceComponent implements OnInit {
 
     this.idnService.resetSource(this.sourceToReset.cloudExternalID, this.skipType)
       .subscribe(
-        result => {
+        () => {
           //this.closeModalDisplayMsg();
           this.resetSourceAccountsConfirmModal.hide();
           this.messageService.add("Source account reset in progress. Please check Org -> Admin -> Dashboard -> Monitor. Hit Refresh to see the count drop for the source to 0 if successful");
@@ -141,10 +141,12 @@ export class ResetSourceComponent implements OnInit {
 
     this.idnService.resetSource(this.sourceToReset.cloudExternalID, this.skipType)
       .subscribe(
-        result => {
+        () => {
           //this.closeModalDisplayMsg();
           this.resetSourceEntitlementsConfirmModal.hide();
-          this.messageService.add("Source entitlements reset in progress. Please check Org -> Admin -> Dashboard -> Monitor. Hit Refresh to see the count drop for the source to 0 if successful");
+          this.messageService.add(`Source entitlements reset in progress. 
+                                Please check Org -> Admin -> Dashboard -> Monitor. 
+                                Hit Refresh to see the count drop for the source to 0 if successful`);
           this.sourceToReset = null;
           this.skipType = null;
           this.reset(false);
@@ -177,10 +179,12 @@ export class ResetSourceComponent implements OnInit {
 
     this.idnService.resetSource(this.sourceToReset.cloudExternalID, this.skipType)
       .subscribe(
-        result => {
+        () => {
           //this.closeModalDisplayMsg();
           this.resetSourceBothConfirmModal.hide();
-          this.messageService.add("Source accounts and entitlements in progress. Please check Org -> Admin -> Dashboard -> Monitor. Hit Refresh to see the count drop for the source to 0 if successful");
+          this.messageService.add(`Source accounts and entitlements in progress. 
+                          Please check Org -> Admin -> Dashboard -> Monitor. 
+                          Hit Refresh to see the count drop for the source to 0 if successful`);
           this.sourceToReset = null;
           this.skipType = null;
           this.reset(false);

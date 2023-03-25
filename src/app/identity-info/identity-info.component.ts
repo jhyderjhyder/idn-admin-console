@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { IDNService } from '../service/idn.service';
 import { MessageService } from '../service/message.service';
 import { SimpleQueryCondition } from '../model/simple-query-condition';
@@ -13,7 +13,7 @@ import { AngularCsv } from 'angular-csv-ext/dist/Angular-csv';
 })
 
 export class IdentityInfoComponent implements OnInit {
-  
+
   loading: boolean;
   allOwnersFetched: boolean;
   errorMessage: string;
@@ -23,8 +23,8 @@ export class IdentityInfoComponent implements OnInit {
   //new
   accountName: string;
   identityInfo: IdentityAttribute;
-  
-  constructor(private idnService: IDNService, 
+
+  constructor(private idnService: IDNService,
     private authenticationService: AuthenticationService,
     private messageService: MessageService) { }
 
@@ -43,7 +43,7 @@ export class IdentityInfoComponent implements OnInit {
     if (clearMsg) {
       this.messageService.clearAll();
       this.errorMessage = null;
-    } 
+    }
   }
 
   submit() {
@@ -54,21 +54,21 @@ export class IdentityInfoComponent implements OnInit {
 
     if (this.accountName && this.accountName.trim() != '') {
 
-      let query = new SimpleQueryCondition();
+      const query = new SimpleQueryCondition();
       query.attribute = "name";
       query.value = this.accountName;
 
       this.idnService.searchAccounts(query)
-      .subscribe(searchResult => { 
-        if (searchResult && searchResult.length == 1) {
-          this.getIdentityInfo(searchResult);
-         
-        } else {
-          this.validToSubmit = false;
-          this.messageService.setError(`Identity Account Name is Invalid.`);
-        }
-       
-    });
+        .subscribe(searchResult => {
+          if (searchResult && searchResult.length == 1) {
+            this.getIdentityInfo(searchResult);
+
+          } else {
+            this.validToSubmit = false;
+            this.messageService.setError(`Identity Account Name is Invalid.`);
+          }
+
+        });
 
     } else {
       this.messageService.setError("Identity Account Name is needed.");
@@ -78,7 +78,7 @@ export class IdentityInfoComponent implements OnInit {
 
   }
 
-  getIdentityInfo(identity){
+  getIdentityInfo(identity) {
 
     this.identityInfo = new IdentityAttribute();
 
@@ -154,13 +154,13 @@ export class IdentityInfoComponent implements OnInit {
     }
 
     this.idnService.getUserByAlias(this.accountName)
-    .subscribe( userDetail => {
-      this.identityInfo.orgPermission = userDetail.role.join("; ");
-    })
-    
+      .subscribe(userDetail => {
+        this.identityInfo.orgPermission = userDetail.role.join("; ");
+      });
+
   }
 
-  getManagerInfo(){
+  getManagerInfo() {
 
     this.accountName = this.identityInfo.managerAccountName;
     this.submit();
@@ -172,17 +172,17 @@ export class IdentityInfoComponent implements OnInit {
     if (this.accountName && this.accountName.trim() != '') {
 
       this.idnService.refreshSingleIdentity(this.accountName)
-      .subscribe(result => {
+        .subscribe(() => {
           this.messageService.add(`Trigerred Identity Refresh`);
-      },
-      err => {
-        this.messageService.handleIDNError(err);
-      });
+        },
+          err => {
+            this.messageService.handleIDNError(err);
+          });
     }
   }
 
   saveInCsv() {
-    var options = {
+    const options = {
       fieldSeparator: ',',
       quoteStrings: '"',
       decimalseparator: '.',
@@ -193,10 +193,10 @@ export class IdentityInfoComponent implements OnInit {
     };
 
     const currentUser = this.authenticationService.currentUserValue;
-    let fileName = `${currentUser.tenant}-${this.accountName}-identity-info`;
+    const fileName = `${currentUser.tenant}-${this.accountName}-identity-info`;
 
-   // let arr = [];
-    let arr = [
+    // const arr = [];
+    const arr = [
       {
         Description: "Export Date",
         Value: Date()
@@ -345,7 +345,7 @@ export class IdentityInfoComponent implements OnInit {
       }
     ];
 
-   let angularCsv: AngularCsv = new AngularCsv(arr, fileName, options);
-}
+    new AngularCsv(arr, fileName, options);
+  }
 
 }

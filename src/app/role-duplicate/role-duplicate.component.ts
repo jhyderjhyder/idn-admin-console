@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Papa } from 'ngx-papaparse';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { ModalDirective } from 'ngx-bootstrap/modal';
@@ -67,10 +67,10 @@ export class DuplicateRoleComponent implements OnInit {
     this.idnService.getAllRoles()
           .subscribe(allRoles => {
             this.roles = [];
-            let roleCount = allRoles.length;
+            const roleCount = allRoles.length;
             let fetchedOwnerCount = 0;
-            for (let each of allRoles) {
-              let role = new Role();
+            for (const each of allRoles) {
+              const role = new Role();
               if (each.membership && each.membership.type == "STANDARD") {
                   role.id = each.id;
                   role.name = each.name;
@@ -89,7 +89,7 @@ export class DuplicateRoleComponent implements OnInit {
                   role.enabled = each.enabled;
                   role.requestable = each.requestable;
 
-                  let identityNames = [];
+                  const identityNames = [];
 
                   if(each.membership && each.membership.criteria != null) {
                     role.criteriaDetail = JSON.stringify(each.membership.criteria);
@@ -97,7 +97,7 @@ export class DuplicateRoleComponent implements OnInit {
                   } else {
                     role.criteria = false;
                     if(each.membership && each.membership.identities != null) {
-                      for (let identities of each.membership.identities) {
+                      for (const identities of each.membership.identities) {
                         identityNames.push(identities.name);
                       }
                       role.identityList = identityNames.join(";").toString();
@@ -106,15 +106,15 @@ export class DuplicateRoleComponent implements OnInit {
                   
                   role.accessProfiles = each.accessProfiles.length;
 
-                  let accessProfileNames = [];
+                  const accessProfileNames = [];
 
                   if (each.accessProfiles) {
-                    for (let accessprofile of each.accessProfiles) {
+                    for (const accessprofile of each.accessProfiles) {
                       accessProfileNames.push(accessprofile.name);
                     }
                   }
 
-                  let query = new SimpleQueryCondition();
+                  const query = new SimpleQueryCondition();
                   query.attribute = "id";
                   query.value = each.owner.id;
 
@@ -156,7 +156,7 @@ export class DuplicateRoleComponent implements OnInit {
 
     this.idnService.duplicateRole(this.roleToDuplicate, this.newRoleName)
     .subscribe(
-      result => {
+      () => {
         this.duplicateRoleConfirmModal.hide();
         this.messageService.add("Role duplicated successfully.");
         this.roleToDuplicate = null;

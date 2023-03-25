@@ -40,7 +40,7 @@
     <button (click)="clearFileForImportRule()" class="btn btn-primary btn-sm">Clear File</button>
   </div>
   <div class="col-sm-2 text-end">
-    <button type="button" [disabled]="ruleToImport == null" (click)="showImportRuleConfirmModal()" class="btn btn-primary btn-sm">
+    <button type="button" [disabled]="ruleToImport === null" (click)="showImportRuleConfirmModal()" class="btn btn-primary btn-sm">
       Import Rule
     </button>
   </div>

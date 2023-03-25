@@ -1,6 +1,5 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { OrgData } from '../model/org-data';
-import { ModalDirective } from 'ngx-bootstrap/modal';
 import { IDNService } from '../service/idn.service';
 import { MessageService } from '../service/message.service';
 
@@ -59,84 +58,84 @@ export class OrgStatsComponent implements OnInit {
     this.idnService.getAccountCount()
           .subscribe(
             result => {
-              this.orgData.accountCount = result.headers.get('X-Total-Count')
+              this.orgData.accountCount = result.headers.get('X-Total-Count');
 
           });
 
     this.idnService.getIdentityProfileCount()
     .subscribe(
       result => {
-        this.orgData.identityProfileCount = result.headers.get('X-Total-Count')
+        this.orgData.identityProfileCount = result.headers.get('X-Total-Count');
 
     });
 
     this.idnService.getIdentityCount()
     .subscribe(
       result => {
-        this.orgData.identityCount = result.headers.get('X-Total-Count')
+        this.orgData.identityCount = result.headers.get('X-Total-Count');
 
     });
 
     this.idnService.getSourceCount()
     .subscribe(
       result => {
-        this.orgData.sourceCount = result.headers.get('X-Total-Count')
+        this.orgData.sourceCount = result.headers.get('X-Total-Count');
 
     });
 
     this.idnService.getAccessProfileCount()
     .subscribe(
       result => {
-        this.orgData.accessProfileCount = result.headers.get('X-Total-Count')
+        this.orgData.accessProfileCount = result.headers.get('X-Total-Count');
 
     });
 
     this.idnService.getRoleCount()
     .subscribe(
       result => {
-        this.orgData.roleCount = result.headers.get('X-Total-Count')
+        this.orgData.roleCount = result.headers.get('X-Total-Count');
 
     });
 
     this.idnService.getEntitlementCount()
     .subscribe(
       result => {
-        this.orgData.entitlementCount = result.headers.get('X-Total-Count')
+        this.orgData.entitlementCount = result.headers.get('X-Total-Count');
 
     });
 
     this.idnService.getTotalCampaignCount()
     .subscribe(
       result => {
-        this.orgData.totalCampaignCount = result.headers.get('X-Total-Count')
+        this.orgData.totalCampaignCount = result.headers.get('X-Total-Count');
 
     });
 
     this.idnService.getActiveCampaignCount()
     .subscribe(
       result => {
-        this.orgData.activeCampaignCount = result.headers.get('X-Total-Count')
+        this.orgData.activeCampaignCount = result.headers.get('X-Total-Count');
 
     });
 
     this.idnService.getCompletedCampaignCount()
     .subscribe(
       result => {
-        this.orgData.completedCampaignCount = result.headers.get('X-Total-Count')
+        this.orgData.completedCampaignCount = result.headers.get('X-Total-Count');
 
     });
 
     this.idnService.getPasswordChangeCount()
     .subscribe(
       result => {
-        this.orgData.passwordChangeCount = result.headers.get('X-Total-Count')
+        this.orgData.passwordChangeCount = result.headers.get('X-Total-Count');
 
     });
 
     this.idnService.getProvisioningActivityCount()
     .subscribe(
       result => {
-        this.orgData.provisioningActivityCount = result.headers.get('X-Total-Count')
+        this.orgData.provisioningActivityCount = result.headers.get('X-Total-Count');
 
     });
 

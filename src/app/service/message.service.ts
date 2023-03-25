@@ -36,7 +36,7 @@ export class MessageService {
 
     handleIDNError(errResponse) {
       let errMsg = "";
-      let errStatusCode = errResponse.status;
+      const  errStatusCode = errResponse.status;
 
       if (errResponse.error) {
         if (errStatusCode === 400 || errStatusCode === 403 || errStatusCode === 404 || errStatusCode === 500) {

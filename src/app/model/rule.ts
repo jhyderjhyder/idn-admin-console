@@ -1,5 +1,3 @@
-import { StringLiteralLike } from "typescript";
-
 export class Rule {
     name: string;
     type: string;

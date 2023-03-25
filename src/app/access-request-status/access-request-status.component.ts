@@ -20,7 +20,7 @@ export class AccessRequestStatusComponent implements OnInit {
   totalRejected: number;
 
 
-  constructor(private idnService: IDNService, 
+  constructor(private idnService: IDNService,
     private authenticationService: AuthenticationService,
     private messageService: MessageService) { }
 
@@ -38,53 +38,53 @@ export class AccessRequestStatusComponent implements OnInit {
   }
 
   getAllAccessRequestStatus() {
-   this.loading = true;
+    this.loading = true;
 
-   this.totalPending = 0;
-   this.totalApproved = 0;
-   this.totalRejected = 0;
+    this.totalPending = 0;
+    this.totalApproved = 0;
+    this.totalRejected = 0;
 
-   this.idnService.getAccessRequestApprovalsSummary()
-   .subscribe(
-     results => {
-      this.totalPending = results.pending;
-      this.totalApproved = results.approved;
-      this.totalRejected = results.rejected;
+    this.idnService.getAccessRequestApprovalsSummary()
+      .subscribe(
+        results => {
+          this.totalPending = results.pending;
+          this.totalApproved = results.approved;
+          this.totalRejected = results.rejected;
 
-   });
+        });
 
-   this.idnService.getAccessRequestStatus()
-   .subscribe(
-     results => {
-     this.accessRequestStatuses = [];
-     for (let each of results) {
-       let accessRequestStatus = new AccessRequestStatus();
-       accessRequestStatus.accessName = each.name;
-       accessRequestStatus.accessType = each.type;
-       accessRequestStatus.requestType = each.requestType;
-       accessRequestStatus.state = each.state;
-       accessRequestStatus.created = each.created;
-       accessRequestStatus.requester = each.requester.name;
-       accessRequestStatus.requestedFor = each.requestedFor.name;
+    this.idnService.getAccessRequestStatus()
+      .subscribe(
+        results => {
+          this.accessRequestStatuses = [];
+          for (const each of results) {
+            const accessRequestStatus = new AccessRequestStatus();
+            accessRequestStatus.accessName = each.name;
+            accessRequestStatus.accessType = each.type;
+            accessRequestStatus.requestType = each.requestType;
+            accessRequestStatus.state = each.state;
+            accessRequestStatus.created = each.created;
+            accessRequestStatus.requester = each.requester.name;
+            accessRequestStatus.requestedFor = each.requestedFor.name;
 
-       if(each.requesterComment && each.requesterComment.comment) {
-        accessRequestStatus.requesterComment = each.requesterComment.comment;
-       }
+            if (each.requesterComment && each.requesterComment.comment) {
+              accessRequestStatus.requesterComment = each.requesterComment.comment;
+            }
 
-       if(each.sodViolationContext && each.sodViolationContext.state) {
-        accessRequestStatus.sodViolationState = each.sodViolationContext.state;
-       }
+            if (each.sodViolationContext && each.sodViolationContext.state) {
+              accessRequestStatus.sodViolationState = each.sodViolationContext.state;
+            }
 
-       this.accessRequestStatuses.push(accessRequestStatus);
-     }
-     this.loading = false;
-   });
+            this.accessRequestStatuses.push(accessRequestStatus);
+          }
+          this.loading = false;
+        });
 
   }
 
 
   saveInCsv() {
-    var options = { 
+    const options = {
       fieldSeparator: ',',
       quoteStrings: '"',
       decimalseparator: '.',
@@ -95,16 +95,15 @@ export class AccessRequestStatusComponent implements OnInit {
     };
 
     const currentUser = this.authenticationService.currentUserValue;
-    let fileName = `${currentUser.tenant}-access-request-status`;
+    const fileName = `${currentUser.tenant}-access-request-status`;
 
-    let arr = [];
-    for (let each of this.accessRequestStatuses) {
-      let record = Object.assign(each);
+    const arr = [];
+    for (const each of this.accessRequestStatuses) {
+      const record = Object.assign(each);
       arr.push(record);
     }
 
-
-    let angularCsv: AngularCsv = new AngularCsv(arr, fileName, options);
+    new AngularCsv(arr, fileName, options);
   }
 
 }

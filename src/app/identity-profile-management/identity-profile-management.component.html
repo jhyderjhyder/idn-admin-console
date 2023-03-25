@@ -51,7 +51,7 @@
       <th class="text-center" scope="col">
           Select All
           <br>
-          <input type="checkbox" [(ngModel)]="selectAll" (click)="changeOnSelectAll()" id="selectAll" [disabled]="searchText != null && searchText.trim() != ''">
+          <input type="checkbox" [(ngModel)]="selectAll" (click)="changeOnSelectAll()" id="selectAll" [disabled]="searchText !== null && searchText.trim() !== ''">
       </th>
       <th class="text-center align-middle" scope="col">Name</th>
       <th class="text-center align-middle" scope="col">Description</th>

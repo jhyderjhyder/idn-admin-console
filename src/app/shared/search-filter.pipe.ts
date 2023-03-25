@@ -30,12 +30,13 @@ export class SearchFilterPipe implements PipeTransform {
     const toCompare = term.toLowerCase();
 
     function checkInside(item: any, term: string) {
-      
+
       if (typeof item === "string" && item.toString().toLowerCase().includes(toCompare)) {
         return true;
       }
 
-      for (let property in item) {
+      for (const property in item) {
+        if (property.hasOwnProperty(item)) {
         //should skip this item?
         let skipItem = false;
         if (includes != null && includes.length > 0) {
@@ -53,11 +54,13 @@ export class SearchFilterPipe implements PipeTransform {
           return true;
         }
       }
-      return false;
-    }
+      }
+    
+    return false;
+  }
 
     return items.filter(function (item) {
-      return checkInside(item, term);
-    });
+    return checkInside(item, term);
+  });
   }
 }

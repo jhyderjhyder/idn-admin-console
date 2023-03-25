@@ -1,6 +1,4 @@
-import { StringLiteralLike } from "typescript";
 import { SourceOwner } from "./source-owner";
-
 export class Role {
     name: string;
     id: string;

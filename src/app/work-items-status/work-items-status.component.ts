@@ -20,8 +20,8 @@ export class WorkItemsStatusComponent implements OnInit {
   totalOpen: number;
   totalCompleted: number;
   totalWorkItems: number;
-  
-  constructor(private idnService: IDNService, 
+
+  constructor(private idnService: IDNService,
     private authenticationService: AuthenticationService,
     private messageService: MessageService) { }
 
@@ -37,156 +37,156 @@ export class WorkItemsStatusComponent implements OnInit {
     this.loading = false;
     this.messageService.clearAll();
   }
-  
+
   getAllWorkItemsStatus() {
-   this.loading = true;
+    this.loading = true;
 
-   this.totalOpen = 0;
-   this.totalCompleted = 0;
-   this.totalWorkItems = 0;
+    this.totalOpen = 0;
+    this.totalCompleted = 0;
+    this.totalWorkItems = 0;
 
-   this.idnService.getWorkItemsSummary()
-   .subscribe(
-     results => {
-      this.totalOpen = results.open;
-      this.totalCompleted = results.completed;
-      this.totalWorkItems = results.total;
+    this.idnService.getWorkItemsSummary()
+      .subscribe(
+        results => {
+          this.totalOpen = results.open;
+          this.totalCompleted = results.completed;
+          this.totalWorkItems = results.total;
 
-   });
+        });
 
-   this.workItemsStatuses = [];
+    this.workItemsStatuses = [];
 
-   this.idnService.getWorkItemsPending()
-   .subscribe(
-     results => {
-     for (let each of results) {
-      let workItemsStatus = new WorkItem();
-       workItemsStatus.id = each.id;
+    this.idnService.getWorkItemsPending()
+      .subscribe(
+        results => {
+          for (const each of results) {
+            const workItemsStatus = new WorkItem();
+            workItemsStatus.id = each.id;
 
-       if (each.requesterDisplayName) {
-        workItemsStatus.requesterDisplayName = each.requesterDisplayName;
-       }
-       else {
-        workItemsStatus.requesterDisplayName = "NULL";
-       }
-       
-       workItemsStatus.ownerName = each.ownerName;
-       workItemsStatus.created = each.created;
-       workItemsStatus.description = each.description;
-       workItemsStatus.state = each.state;
-       workItemsStatus.type = each.type;
+            if (each.requesterDisplayName) {
+              workItemsStatus.requesterDisplayName = each.requesterDisplayName;
+            }
+            else {
+              workItemsStatus.requesterDisplayName = "NULL";
+            }
 
-       if (each.remediationItems && each.remediationItems.length) {
-        workItemsStatus.remediationItems = each.remediationItems.length;
-       } 
-       else {
-        workItemsStatus.remediationItems = "0";
-       }
+            workItemsStatus.ownerName = each.ownerName;
+            workItemsStatus.created = each.created;
+            workItemsStatus.description = each.description;
+            workItemsStatus.state = each.state;
+            workItemsStatus.type = each.type;
 
-       if (each.approvalItems && each.approvalItems.length) {
-        workItemsStatus.approvalItems = each.approvalItems.length;
-       }
-       else {
-        workItemsStatus.approvalItems = "0";
-       }
+            if (each.remediationItems && each.remediationItems.length) {
+              workItemsStatus.remediationItems = each.remediationItems.length;
+            }
+            else {
+              workItemsStatus.remediationItems = "0";
+            }
 
-       if (each.ownerId) {
-        let query = new SimpleQueryCondition();
-        query.attribute = "id";
-        query.value = each.ownerId;
-        
-        this.idnService.searchAccounts(query)
-        .subscribe(searchResult => { 
-          if (searchResult.length > 0) {
-            workItemsStatus.ownerDisplayName = searchResult[0].displayName;
-          }
-          else {
-            workItemsStatus.ownerDisplayName = "NULL";
+            if (each.approvalItems && each.approvalItems.length) {
+              workItemsStatus.approvalItems = each.approvalItems.length;
+            }
+            else {
+              workItemsStatus.approvalItems = "0";
+            }
+
+            if (each.ownerId) {
+              const query = new SimpleQueryCondition();
+              query.attribute = "id";
+              query.value = each.ownerId;
+
+              this.idnService.searchAccounts(query)
+                .subscribe(searchResult => {
+                  if (searchResult.length > 0) {
+                    workItemsStatus.ownerDisplayName = searchResult[0].displayName;
+                  }
+                  else {
+                    workItemsStatus.ownerDisplayName = "NULL";
+                  }
+                });
+            }
+            else {
+              workItemsStatus.ownerDisplayName = "NULL";
+            }
+
+            this.workItemsStatuses.push(workItemsStatus);
           }
         });
-        }
-        else {
-          workItemsStatus.ownerDisplayName = "NULL";
-        }
-
-       this.workItemsStatuses.push(workItemsStatus);
-      }
-    });
 
     this.idnService.getWorkItemsCompleted()
-    .subscribe(
-      results => {
-        for (let each of results) {
-          let workItemsStatus = new WorkItem();
-          workItemsStatus.id = each.id;
-          workItemsStatus.created = each.created;
-          workItemsStatus.description = each.description;
-          workItemsStatus.state = each.state;
-          workItemsStatus.type = each.type;
-          
-          if (each.remediationItems && each.remediationItems.length) {
-            workItemsStatus.remediationItems = each.remediationItems.length;
-          }
-          else {
-            workItemsStatus.remediationItems = "0";
-           }
+      .subscribe(
+        results => {
+          for (const each of results) {
+            const workItemsStatus = new WorkItem();
+            workItemsStatus.id = each.id;
+            workItemsStatus.created = each.created;
+            workItemsStatus.description = each.description;
+            workItemsStatus.state = each.state;
+            workItemsStatus.type = each.type;
 
-          if (each.approvalItems && each.approvalItems.length) {
-            workItemsStatus.approvalItems = each.approvalItems.length;
-          }
-          else {
-            workItemsStatus.approvalItems = "0";
-           }
+            if (each.remediationItems && each.remediationItems.length) {
+              workItemsStatus.remediationItems = each.remediationItems.length;
+            }
+            else {
+              workItemsStatus.remediationItems = "0";
+            }
 
-          let query = new SimpleQueryCondition();
-          query.attribute = "name";
+            if (each.approvalItems && each.approvalItems.length) {
+              workItemsStatus.approvalItems = each.approvalItems.length;
+            }
+            else {
+              workItemsStatus.approvalItems = "0";
+            }
 
-          if (each.ownerName) {
-            query.value = each.ownerName;
-            
-            this.idnService.searchAccounts(query)
-            .subscribe(searchResult => {
-              if (searchResult.length > 0) {
-                workItemsStatus.ownerDisplayName = searchResult[0].displayName;
-              }
-              else {
-                workItemsStatus.ownerDisplayName = "NULL";
-              }
-            });
-          }
-          else {
-            workItemsStatus.ownerDisplayName = "NULL";
-          }
+            const query = new SimpleQueryCondition();
+            query.attribute = "name";
 
-          if (each.requesterDisplayName) {
-            query.value = each.requesterDisplayName;
-            
-            this.idnService.searchAccounts(query)
-            .subscribe(searchResult => {
-              if (searchResult.length > 0) {
-                workItemsStatus.requesterDisplayName = searchResult[0].displayName;
-              }
-              else {
-                workItemsStatus.requesterDisplayName = "NULL";
-              }
-            });
-          }
-          else {
-            workItemsStatus.requesterDisplayName = "NULL";
-          }
-          
-          this.workItemsStatuses.push(workItemsStatus);
-        }
-      });
-      
-      //To Sort in created date order on combining both API calls
-      this.workItemsStatuses.sort((a,b) => a.created.localeCompare(b.created))
+            if (each.ownerName) {
+              query.value = each.ownerName;
 
-      this.loading = false;
-    }
+              this.idnService.searchAccounts(query)
+                .subscribe(searchResult => {
+                  if (searchResult.length > 0) {
+                    workItemsStatus.ownerDisplayName = searchResult[0].displayName;
+                  }
+                  else {
+                    workItemsStatus.ownerDisplayName = "NULL";
+                  }
+                });
+            }
+            else {
+              workItemsStatus.ownerDisplayName = "NULL";
+            }
+
+            if (each.requesterDisplayName) {
+              query.value = each.requesterDisplayName;
+
+              this.idnService.searchAccounts(query)
+                .subscribe(searchResult => {
+                  if (searchResult.length > 0) {
+                    workItemsStatus.requesterDisplayName = searchResult[0].displayName;
+                  }
+                  else {
+                    workItemsStatus.requesterDisplayName = "NULL";
+                  }
+                });
+            }
+            else {
+              workItemsStatus.requesterDisplayName = "NULL";
+            }
+
+            this.workItemsStatuses.push(workItemsStatus);
+          }
+        });
+
+    //To Sort in created date order on combining both API calls
+    this.workItemsStatuses.sort((a, b) => a.created.localeCompare(b.created));
+
+    this.loading = false;
+  }
 
   saveInCsv() {
-    var options = { 
+    const options = {
       fieldSeparator: ',',
       quoteStrings: '"',
       decimalseparator: '.',
@@ -197,16 +197,15 @@ export class WorkItemsStatusComponent implements OnInit {
     };
 
     const currentUser = this.authenticationService.currentUserValue;
-    let fileName = `${currentUser.tenant}-work-items-status`;
+    const fileName = `${currentUser.tenant}-work-items-status`;
 
-    let arr = [];
-    for (let each of this.workItemsStatuses) {
-      let record = Object.assign(each);
+    const arr = [];
+    for (const each of this.workItemsStatuses) {
+      const record = Object.assign(each);
       arr.push(record);
     }
 
-
-    let angularCsv: AngularCsv = new AngularCsv(arr, fileName, options);
+    new AngularCsv(arr, fileName, options);
   }
-
+  
 }

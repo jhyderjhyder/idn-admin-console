@@ -55,7 +55,7 @@
     </button>
   </div>
 </div>
-<div class="form-group row" *ngIf="bulkAction == 'EnableRoles'">
+<div class="form-group row" *ngIf="bulkAction === 'EnableRoles'">
   <div class="col-sm-8 text-start">
     <span class="fw-bold">To enable roles, select the items and click the 'Submit to Enable' button.</span>
   </div>
@@ -65,7 +65,7 @@
     </button>
   </div>
 </div>
-<div class="form-group row" *ngIf="bulkAction == 'DisableRoles'">
+<div class="form-group row" *ngIf="bulkAction === 'DisableRoles'">
   <div class="col-sm-8 text-start">
     <span class="fw-bold">To disable roles, select the items and click the 'Submit to Disable' button.</span>
   </div>
@@ -75,7 +75,7 @@
     </button>
   </div>
 </div>
-<div class="form-group row" *ngIf="bulkAction == 'MakeRolesRequestable'">
+<div class="form-group row" *ngIf="bulkAction === 'MakeRolesRequestable'">
   <div class="col-sm-8 text-start">
     <span class="fw-bold">To make roles reqestable, select the items and click the 'Submit to Make Requestable' button.</span>
   </div>
@@ -85,7 +85,7 @@
     </button>
   </div>
 </div>
-<div class="form-group row" *ngIf="bulkAction == 'MakeRolesNonRequestable'">
+<div class="form-group row" *ngIf="bulkAction === 'MakeRolesNonRequestable'">
   <div class="col-sm-8 text-start">
     <span class="fw-bold">To make roles non reqestable, select the items and click the 'Submit to Make Non Requestable' button.</span>
   </div>
@@ -95,7 +95,7 @@
     </button>
   </div>
 </div>
-<div class="form-group row" *ngIf="bulkAction == 'DeleteRoles'">
+<div class="form-group row" *ngIf="bulkAction === 'DeleteRoles'">
   <div class="col-sm-8 text-start">
     <span class="fw-bold">To delete roles, select the items and click the 'Submit to Delete Roles' button.</span>
   </div>
@@ -157,19 +157,19 @@
     <div class="modal-content">
       <div class="modal-header">
         <h6 id="dialog-child-name" class="modal-title pull-left">
-          <span *ngIf="bulkAction == 'EnableRoles' && atLeastOneSelected">
+          <span *ngIf="bulkAction === 'EnableRoles' && atLeastOneSelected">
             Are you sure you want to enable selected roles?
           </span>
-          <span *ngIf="bulkAction == 'DisableRoles' && atLeastOneSelected">
+          <span *ngIf="bulkAction === 'DisableRoles' && atLeastOneSelected">
             Are you sure you want to disable selected roles?
           </span>
-          <span *ngIf="bulkAction == 'MakeRolesRequestable' && atLeastOneSelected">
+          <span *ngIf="bulkAction === 'MakeRolesRequestable' && atLeastOneSelected">
             Are you sure you want to make the roles requestable for the selected roles?
           </span>
-          <span *ngIf="bulkAction == 'MakeRolesNonRequestable' && atLeastOneSelected">
+          <span *ngIf="bulkAction === 'MakeRolesNonRequestable' && atLeastOneSelected">
             Are you sure you want to make the roles non requestable for the selected roles?
           </span>
-          <span *ngIf="bulkAction == 'DeleteRoles' && atLeastOneSelected">
+          <span *ngIf="bulkAction === 'DeleteRoles' && atLeastOneSelected">
             Are you sure you want to delete the selected roles?
           </span>      
           <span *ngIf="!atLeastOneSelected">
@@ -193,27 +193,27 @@
             <div class="col-md-12 text-center">
               <button type="button" (click)="hideSubmitConfirmModal()" class="btn btn-danger btn-sm">Cancel</button>
               &nbsp;&nbsp;&nbsp;
-              <span *ngIf="bulkAction == 'EnableRoles' && atLeastOneSelected">
+              <span *ngIf="bulkAction === 'EnableRoles' && atLeastOneSelected">
                 <button type="button" class="btn btn-success btn-sm" (click)="updateRoles('enabled',true)">
                   Enable
                 </button>
               </span>
-              <span *ngIf="bulkAction == 'DisableRoles' && atLeastOneSelected">
+              <span *ngIf="bulkAction === 'DisableRoles' && atLeastOneSelected">
                 <button type="button" class="btn btn-success btn-sm" (click)="updateRoles('enabled',false)">
                   Disable
                 </button>
               </span>
-              <span *ngIf="bulkAction == 'MakeRolesRequestable' && atLeastOneSelected">
+              <span *ngIf="bulkAction === 'MakeRolesRequestable' && atLeastOneSelected">
                 <button type="button" class="btn btn-success btn-sm" (click)="updateRoles('requestable',true)">
                   Enable
                 </button>
               </span>
-              <span *ngIf="bulkAction == 'MakeRolesNonRequestable' && atLeastOneSelected">
+              <span *ngIf="bulkAction === 'MakeRolesNonRequestable' && atLeastOneSelected">
                 <button type="button" class="btn btn-success btn-sm" (click)="updateRoles('requestable',false)">
                   Disable
                 </button>
               </span>
-              <span *ngIf="bulkAction == 'DeleteRoles' && atLeastOneSelected">
+              <span *ngIf="bulkAction === 'DeleteRoles' && atLeastOneSelected">
                 <button type="button" class="btn btn-success btn-sm" (click)="showDeleteRoleConfirmModal()">
                   Delete
                 </button>

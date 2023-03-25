@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Papa } from 'ngx-papaparse';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { ModalDirective } from 'ngx-bootstrap/modal';
@@ -61,8 +61,8 @@ export class IdentityAttributeIndexComponent implements OnInit {
           .subscribe(allIdentityAttributes => {
             this.indexedAttributes = [];
             this.unindexedAttributes = [];
-            for (let each of allIdentityAttributes) {
-              let identityAttribute = new IdentityAttribute();
+            for (const each of allIdentityAttributes) {
+              const identityAttribute = new IdentityAttribute();
               identityAttribute.displayName = each.displayName;
               identityAttribute.extendedNumber = each.extendedNumber;
               identityAttribute.name = each.name;
@@ -85,7 +85,7 @@ export class IdentityAttributeIndexComponent implements OnInit {
     this.validToSubmit = true;
     
     this.idnService.updateAttributeIndex(this.attributeToChange)
-          .subscribe(results => {
+          .subscribe(() => {
             this.submitUnindexConfirmModal.hide();
             this.messageService.add("Changes saved successfully.");
             this.reset(false);
@@ -105,7 +105,7 @@ export class IdentityAttributeIndexComponent implements OnInit {
     this.validToSubmit = true;
     
     this.idnService.updateAttributeIndex(this.attributeToChange)
-          .subscribe(results => {
+          .subscribe(() => {
             this.submitIndexConfirmModal.hide();
             this.messageService.add("Changes saved successfully.");
             this.reset(false);

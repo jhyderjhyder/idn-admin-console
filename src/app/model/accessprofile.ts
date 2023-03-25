@@ -1,4 +1,3 @@
-import { StringLiteralLike } from "typescript";
 import { SourceOwner } from "./source-owner";
 
 export class AccessProfile {

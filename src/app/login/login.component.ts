@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import { UntypedFormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
-import { first } from 'rxjs/operators';
 
 import { User } from './../model/user';
 import { AuthenticationService } from '../service/authentication-service.service';
@@ -60,7 +59,7 @@ export class LoginComponent implements OnInit {
         this.router.navigate([this.returnUrl]);
         */
 
-        let user  = new User();
+        const user  = new User();
         user.tenant = this.f.tenant.value;
         user.clientId = this.f.clientId.value;
         user.clientSecret = this.f.clientSecret.value;
@@ -74,7 +73,7 @@ export class LoginComponent implements OnInit {
         this.authenticationService.authenticate(user).subscribe(
             response => {
                 this.loading = true;
-                let authUser  = new User();
+                const authUser  = new User();
                 authUser.clientId = user.clientId;
                 authUser.tenant = user.tenant;
                 authUser.domain = user.domain;
@@ -92,7 +91,7 @@ export class LoginComponent implements OnInit {
                                 this.loading = false;
                             }
                         },
-                        err => {
+                        () => {
                             console.log('error onSubmit');
                             this.error = "403 Forbidden: Given Client ID should have Org Admin Rights";
                             this.loading = false;
@@ -107,7 +106,7 @@ export class LoginComponent implements OnInit {
                 }
                 
               },
-              err => {
+              () => {
                 console.log('error onSubmit');
                 this.error = "Failed to authenticate.";
                 this.loading = false;

@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { Papa } from 'ngx-papaparse';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { ModalDirective } from 'ngx-bootstrap/modal';
@@ -6,7 +6,6 @@ import { IDNService } from '../service/idn.service';
 import { MessageService } from '../service/message.service';
 import { AuthenticationService } from '../service/authentication-service.service';
 import { IdentityProfile } from '../model/identity-profile';
-import { animateChild } from '@angular/animations';
 import * as JSZip from 'jszip';
 import { saveAs } from 'file-saver';
 
@@ -65,8 +64,8 @@ export class IdentityProfileManagementComponent implements OnInit {
     this.idnService.getIdentityProfilesv1()
           .subscribe(allIdentityProfiles => {
             this.identityProfiles = [];
-            for (let each of allIdentityProfiles) {
-              let identityProfile = new IdentityProfile();
+            for (const each of allIdentityProfiles) {
+              const identityProfile = new IdentityProfile();
               identityProfile.id = each.id;
               identityProfile.name = each.name;
               if (each.description) {
@@ -118,7 +117,7 @@ export class IdentityProfileManagementComponent implements OnInit {
 
     this.idnService.refreshIdentityProfilev1(this.profileToRefresh)
       .subscribe(
-        result => {
+        () => {
           this.submitRefreshConfirmModal.hide();
           this.profileToRefresh = null;
           this.messageService.add("Identity Profile Refresh Started");
@@ -161,8 +160,8 @@ export class IdentityProfileManagementComponent implements OnInit {
     this.messageService.clearError();
     this.validToSubmit = true;
     this.invalidMessage = [];
-    let selectedIdentityProfiles = [];
-    for (let each of this.identityProfiles) {
+    const selectedIdentityProfiles = [];
+    for (const each of this.identityProfiles) {
       if (each.selected) {
         if (each.newPriority == null || each.newPriority.toString().trim() == '') {
           this.invalidMessage.push(`Priority of Identity Profile (name: ${each.name}) can not be empty.`);
@@ -207,10 +206,10 @@ showRefreshSubmitConfirmModal(profileId: string) {
   }
 
   async updateProfilePriority() {
-    let arr = this.identityProfiles.filter(each => each.selected);
+    const arr = this.identityProfiles.filter(each => each.selected);
     let processedCount = 0;
     let index = 0;
-    for (let each of arr) {
+    for (const each of arr) {
       if (index > 0 && (index % 10) == 0) {
         // After processing every batch (10 sources), wait for 2 seconds before calling another API to avoid 429 
         // Too Many Requests Error
@@ -219,7 +218,7 @@ showRefreshSubmitConfirmModal(profileId: string) {
       index++;
 
       this.idnService.updateProfilePriorityv1(each)
-          .subscribe(searchResult => {
+          .subscribe(() => {
             processedCount++;
             if (processedCount == arr.length) {
              this.closeModalDisplayMsg();
@@ -227,7 +226,7 @@ showRefreshSubmitConfirmModal(profileId: string) {
              this.ngOnInit();
             }
           },
-          err => {
+          () => {
             this.errorMessage = "Error to submit the changes.";
             processedCount++;
             if (processedCount == arr.length) {
@@ -259,16 +258,16 @@ showRefreshSubmitConfirmModal(profileId: string) {
           .subscribe(
             results => {
             this.identityProfiles = [];
-            for (let each of results) {
-              let identityProfile = new IdentityProfile();
-              let jsonData = JSON.stringify(each, null, 4);
+            for (const each of results) {
+              const identityProfile = new IdentityProfile();
+              const jsonData = JSON.stringify(each, null, 4);
               identityProfile.name = each.name;
-              let fileName = "IdentityProfile - " + identityProfile.name + ".json";
+              const fileName = "IdentityProfile - " + identityProfile.name + ".json";
               this.zip.file(`${fileName}`, jsonData);
               
             }
             const currentUser = this.authenticationService.currentUserValue;
-            let zipFileName = `${currentUser.tenant}-identityprofiles.zip`;
+            const zipFileName = `${currentUser.tenant}-identityprofiles.zip`;
   
            this.zip.generateAsync({type:"blob"}).then(function(content) {
               saveAs(content, zipFileName);

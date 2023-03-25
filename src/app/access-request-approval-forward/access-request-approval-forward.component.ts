@@ -27,11 +27,11 @@ export class AccessRequestApprovalForwardComponent implements OnInit {
   identityInfo: IdentityAttribute;
 
   public modalRef: BsModalRef;
-  
+
   @ViewChild('forwardApprovalConfirmModal', { static: false }) forwardApprovalConfirmModal: ModalDirective;
 
 
-  constructor(private idnService: IDNService, 
+  constructor(private idnService: IDNService,
     private authenticationService: AuthenticationService,
     private messageService: MessageService) { }
 
@@ -53,36 +53,36 @@ export class AccessRequestApprovalForwardComponent implements OnInit {
     this.identityInfo = null;
     if (clearMsg) {
       this.messageService.clearAll();
-    } 
+    }
   }
 
   getAllAccessRequestApprovalsPending() {
-   this.loading = true;
-   this.idnService.getAccessRequestApprovalsPending()
-   .subscribe(
-     results => {
-     this.pendingApprovals = [];
-     for (let each of results) {
-       let pendingApproval = new AccessRequestApprovalsPending();
-       pendingApproval.id = each.id;
-       pendingApproval.name = each.name;
-       pendingApproval.requestedObjectName = each.requestedObject.name;
-       pendingApproval.requestedObjectType = each.requestedObject.type;
-       pendingApproval.requestType = each.requestType;
-       pendingApproval.requester = each.requester.name;
-       pendingApproval.requestedFor = each.requestedFor.name;
-       pendingApproval.owner = each.owner.name;
-       pendingApproval.requestCreated = each.requestCreated;
-       pendingApproval.created = each.created;
+    this.loading = true;
+    this.idnService.getAccessRequestApprovalsPending()
+      .subscribe(
+        results => {
+          this.pendingApprovals = [];
+          for (const each of results) {
+            const pendingApproval = new AccessRequestApprovalsPending();
+            pendingApproval.id = each.id;
+            pendingApproval.name = each.name;
+            pendingApproval.requestedObjectName = each.requestedObject.name;
+            pendingApproval.requestedObjectType = each.requestedObject.type;
+            pendingApproval.requestType = each.requestType;
+            pendingApproval.requester = each.requester.name;
+            pendingApproval.requestedFor = each.requestedFor.name;
+            pendingApproval.owner = each.owner.name;
+            pendingApproval.requestCreated = each.requestCreated;
+            pendingApproval.created = each.created;
 
-       if(each.sodViolationContext && each.sodViolationContext.state) {
-        pendingApproval.sodViolationState = each.sodViolationContext.state;
-       }
+            if (each.sodViolationContext && each.sodViolationContext.state) {
+              pendingApproval.sodViolationState = each.sodViolationContext.state;
+            }
 
-       this.pendingApprovals.push(pendingApproval);
-     }
-     this.loading = false;
-   });
+            this.pendingApprovals.push(pendingApproval);
+          }
+          this.loading = false;
+        });
 
   }
 
@@ -99,21 +99,21 @@ export class AccessRequestApprovalForwardComponent implements OnInit {
 
     if (this.newOwner && this.newOwner.trim() != '') {
 
-      let query = new SimpleQueryCondition();
+      const query = new SimpleQueryCondition();
       query.attribute = "name";
       query.value = this.newOwner;
 
       this.idnService.searchAccounts(query)
-      .subscribe(searchResult => { 
-        if (searchResult && searchResult.length == 1) {
-          this.forwardApproval(searchResult);
-         
-        } else {
-          this.validToSubmit = false;
-          this.invalidMessage.push(`Identity Account Name is Invalid.`);
-        }
-       
-    });
+        .subscribe(searchResult => {
+          if (searchResult && searchResult.length == 1) {
+            this.forwardApproval(searchResult);
+
+          } else {
+            this.validToSubmit = false;
+            this.invalidMessage.push(`Identity Account Name is Invalid.`);
+          }
+
+        });
 
     } else {
       this.invalidMessage.push("Identity Account Name cannot be null.");
@@ -121,27 +121,27 @@ export class AccessRequestApprovalForwardComponent implements OnInit {
 
   }
 
-  forwardApproval(identity){
+  forwardApproval(identity) {
 
     this.identityInfo = new IdentityAttribute();
 
     this.identityInfo.id = identity[0].id;
 
     this.idnService.forwardAccessRequestApproval(this.approvalToForward.id, this.identityInfo.id, this.forwardComment)
-    .subscribe(
-      result => {
-        this.forwardApprovalConfirmModal.hide();
-        this.messageService.add("Approval forwarded succesfully.");
-        this.approvalToForward = null;
-        this.reset(false);
-        this.getAllAccessRequestApprovalsPending();
-      },
-      err => {
-        this.forwardApprovalConfirmModal.hide();
-        this.approvalToForward = null;
-        this.messageService.handleIDNError(err);
-      }
-    );
+      .subscribe(
+        () => {
+          this.forwardApprovalConfirmModal.hide();
+          this.messageService.add("Approval forwarded succesfully.");
+          this.approvalToForward = null;
+          this.reset(false);
+          this.getAllAccessRequestApprovalsPending();
+        },
+        err => {
+          this.forwardApprovalConfirmModal.hide();
+          this.approvalToForward = null;
+          this.messageService.handleIDNError(err);
+        }
+      );
 
 
   }
@@ -167,7 +167,7 @@ export class AccessRequestApprovalForwardComponent implements OnInit {
   }
 
   saveInCsv() {
-    var options = { 
+    const options = {
       fieldSeparator: ',',
       quoteStrings: '"',
       decimalseparator: '.',
@@ -178,16 +178,14 @@ export class AccessRequestApprovalForwardComponent implements OnInit {
     };
 
     const currentUser = this.authenticationService.currentUserValue;
-    let fileName = `${currentUser.tenant}-access-request-approval-pending`;
+    const fileName = `${currentUser.tenant}-access-request-approval-pending`;
 
-    let arr = [];
-    for (let each of this.pendingApprovals) {
-      let record = Object.assign(each);
+    const arr = [];
+    for (const each of this.pendingApprovals) {
+      const record = Object.assign(each);
       arr.push(record);
     }
 
-
-    let angularCsv: AngularCsv = new AngularCsv(arr, fileName, options);
+    new AngularCsv(arr, fileName, options);
   }
-
 }

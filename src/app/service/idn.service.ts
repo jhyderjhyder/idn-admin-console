@@ -39,7 +39,7 @@ export class IDNService {
   }
 
   startAggTaskPolling(cloudExternalID: string, taskId: string) {
-    let aggTaskPollingStatus = new AggTaskPollingStatus();
+    const aggTaskPollingStatus = new AggTaskPollingStatus();
     aggTaskPollingStatus.taskId = taskId;
     this.aggTaskPollingStatusMap[cloudExternalID] = aggTaskPollingStatus;
   }
@@ -49,16 +49,16 @@ export class IDNService {
   }
 
   finishAggTaskPolling(cloudExternalID: string): AggTaskPollingStatus {
-    let aggTaskPollingStatus: AggTaskPollingStatus  = this.aggTaskPollingStatusMap[cloudExternalID];
+    const aggTaskPollingStatus: AggTaskPollingStatus  = this.aggTaskPollingStatusMap[cloudExternalID];
     aggTaskPollingStatus.completed = true; 
     return aggTaskPollingStatus;
   }
 
   searchMultipleAccounts(): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/search/aggregate`;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/search/aggregate`;
 
-    let payload = {
+    const payload = {
       "query": {
           "query": "*"
       },
@@ -104,9 +104,9 @@ export class IDNService {
 
   searchIdentities(identityId: string): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/search/identities`;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/search/identities`;
 
-    let payload = {
+    const payload = {
       "query": {
           "query": `id:${identityId}`
       }
@@ -117,7 +117,7 @@ export class IDNService {
 
   getAllSources(): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/sources`;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/sources`;
 
     return this.http.get(url, this.httpOptions).pipe(
       catchError(this.handleError(`getAllSources`))
@@ -126,7 +126,7 @@ export class IDNService {
 
   getSource(sourceId: string): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/sources/${sourceId}`;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/sources/${sourceId}`;
 
     return this.http.get(url, this.httpOptions).pipe(
       catchError(this.handleError(`getAggregationSources`))
@@ -135,7 +135,7 @@ export class IDNService {
 
   getSourceCCApi(cloudExternalID: string): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/cc/api/source/get/${cloudExternalID}`;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/cc/api/source/get/${cloudExternalID}`;
     return this.http.get(url);
     /*
     return this.http.get(url).pipe(
@@ -146,9 +146,9 @@ export class IDNService {
 
   resetSource(cloudExternalID: string, skipType: string): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/cc/api/source/reset/${cloudExternalID}`;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/cc/api/source/reset/${cloudExternalID}`;
 
-    let myHttpOptions = {
+    const myHttpOptions = {
       headers: new HttpHeaders({
         'Content-Type': 'application/x-www-form-urlencoded'
       })
@@ -167,7 +167,7 @@ export class IDNService {
 
   refreshAllRoles(): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/cc/api/role/refresh`;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/cc/api/role/refresh`;
 
     return this.http.post(url, null, { responseType: 'text' }).pipe(
       catchError(this.handleError(`refreshAllRoles`))
@@ -176,7 +176,7 @@ export class IDNService {
 
   getAllRoles(): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/roles`;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/roles`;
 
     return this.http.get(url, this.httpOptions).pipe(
       catchError(this.handleError(`getAllRoles`))
@@ -185,7 +185,7 @@ export class IDNService {
 
   getRoleIdentityCount(role: Role): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/roles/${role.id}/assigned-identities?limit=1&count=true`;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/roles/${role.id}/assigned-identities?limit=1&count=true`;
 
     return this.http.get(url, {observe: 'response'}).pipe(
       catchError(this.handleError(`getRoleIdentityCount`))
@@ -194,15 +194,15 @@ export class IDNService {
 
   updateRoleOwner(role: Role): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/roles/${role.id}`;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/roles/${role.id}`;
     
-    let myHttpOptions = {
+    const myHttpOptions = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json-patch+json'
       })
     };
 
-    let payload = [
+    const payload = [
       {
           "op": "replace",
           "path": "/owner",
@@ -222,15 +222,15 @@ export class IDNService {
 
   updateRole(role: Role, path: string, enable: boolean): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/roles/${role.id}`;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/roles/${role.id}`;
     
-    let myHttpOptions = {
+    const myHttpOptions = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json-patch+json'
       })
     };
 
-    let payload = [
+    const payload = [
       {
           "op": "replace",
           "path": `/${path}`,
@@ -243,9 +243,9 @@ export class IDNService {
 
   duplicateRole(role: Role, newRoleName: string): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/roles`;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/roles`;
 
-    let payload = 
+    const payload = 
       {
         "name": `${newRoleName}`,
         "description": `${role.description}`,
@@ -261,9 +261,9 @@ export class IDNService {
 
   deleteRole(role: Role): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/roles/${role.id}`;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/roles/${role.id}`;
     
-    let myHttpOptions = {
+    const myHttpOptions = {
       headers: new HttpHeaders({
       })
     };
@@ -273,7 +273,7 @@ export class IDNService {
 
   getAllAccessProfiles(): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/access-profiles`;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/access-profiles`;
 
     return this.http.get(url, this.httpOptions).pipe(
       catchError(this.handleError(`getAllAccessProfiles`))
@@ -282,15 +282,15 @@ export class IDNService {
 
   updateAccessProfileOwner(accessProfile: AccessProfile): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/access-profiles/${accessProfile.id}`;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/access-profiles/${accessProfile.id}`;
     
-    let myHttpOptions = {
+    const myHttpOptions = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json-patch+json'
       })
     };
 
-    let payload = [
+    const payload = [
       {
           "op": "replace",
           "path": "/owner",
@@ -310,15 +310,15 @@ export class IDNService {
 
   updateAccessProfile(accessProfile: AccessProfile, path: string, enable: boolean): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/access-profiles/${accessProfile.id}`;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/access-profiles/${accessProfile.id}`;
     
-    let myHttpOptions = {
+    const myHttpOptions = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json-patch+json'
       })
     };
 
-    let payload = [
+    const payload = [
       {
           "op": "replace",
           "path": `/${path}`,
@@ -331,9 +331,9 @@ export class IDNService {
 
   deleteAccessProfile(accessProfile: AccessProfile): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/access-profiles/${accessProfile.id}`;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/access-profiles/${accessProfile.id}`;
     
-    let myHttpOptions = {
+    const myHttpOptions = {
       headers: new HttpHeaders({
       })
     };
@@ -343,7 +343,7 @@ export class IDNService {
 
   getAggregationSchedules(cloudExternalID: string): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/cc/api/source/getAggregationSchedules/${cloudExternalID}`;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/cc/api/source/getAggregationSchedules/${cloudExternalID}`;
     return this.http.get(url);
     /*
     return this.http.get(url).pipe(
@@ -354,7 +354,7 @@ export class IDNService {
 
   getEntitlementAggregationSchedules(cloudExternalID: string): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/cc/api/source/getEntitlementAggregationSchedules/${cloudExternalID}`;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/cc/api/source/getEntitlementAggregationSchedules/${cloudExternalID}`;
     return this.http.get(url);
     /*
     return this.http.get(url).pipe(
@@ -367,9 +367,9 @@ export class IDNService {
     const currentUser = this.authenticationService.currentUserValue;
     let encodedCronExp = this.codec.encodeValue(source.accountAggCronExp);
     encodedCronExp = encodedCronExp.replace('?', '%3F');
-    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/cc/api/source/scheduleAggregation/${source.cloudExternalID}?enable=${enable}&cronExp=${encodedCronExp}`;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/cc/api/source/scheduleAggregation/${source.cloudExternalID}?enable=${enable}&cronExp=${encodedCronExp}`;
     
-    let myHttpOptions = {
+    const myHttpOptions = {
       headers: new HttpHeaders({
       })
     };
@@ -380,9 +380,11 @@ export class IDNService {
     const currentUser = this.authenticationService.currentUserValue;
     let encodedCronExp = this.codec.encodeValue(source.entAggCronExp);
     encodedCronExp = encodedCronExp.replace('?', '%3F');
-    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/cc/api/source/scheduleEntitlementAggregation/${source.cloudExternalID}?enable=${enable}&cronExp=${encodedCronExp}`;
+    const url = `https://${currentUser.tenant}.
+                  api.${currentUser.domain}/cc/api/source/scheduleEntitlementAggregation/
+                  ${source.cloudExternalID}?enable=${enable}&cronExp=${encodedCronExp}`;
     
-    let myHttpOptions = {
+    const myHttpOptions = {
       headers: new HttpHeaders({
       })
     };
@@ -391,9 +393,9 @@ export class IDNService {
 
   searchAccounts(query: SimpleQueryCondition): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/search/`;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/search/`;
 
-    let payload = {
+    const payload = {
       "query": {
           "query": `${query.attribute}:\"${query.value}\"`
       }
@@ -406,15 +408,15 @@ export class IDNService {
 
   updateSourceOwner(source: Source): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/sources/${source.id}`;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/sources/${source.id}`;
     
-    let myHttpOptions = {
+    const myHttpOptions = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json-patch+json'
       })
     };
 
-    let payload = [
+    const payload = [
       {
           "op": "replace",
           "path": "/owner",
@@ -434,9 +436,9 @@ export class IDNService {
 
   aggregateSourceOwner(cloudExternalID: string, formData: FormData): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/cc/api/source/loadAccounts/${cloudExternalID}`;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/cc/api/source/loadAccounts/${cloudExternalID}`;
     
-    let myHttpOptions = {
+    const myHttpOptions = {
       headers: new HttpHeaders({
       })
     };
@@ -446,7 +448,7 @@ export class IDNService {
 
   getAccountAggregationStatus(taskId: string): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/account-aggregations/${taskId}/status`;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/account-aggregations/${taskId}/status`;
 
     return this.http.get(url).pipe(
       catchError(this.handleError(`getAccountAggregationStatus`))
@@ -455,28 +457,28 @@ export class IDNService {
 
   getConnectorRules(): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/connector-rules`;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/connector-rules`;
 
     return this.http.get(url, this.httpOptions);
   }
 
   getConnectorRuleById(ruleId: string): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/connector-rules/${ruleId}`;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/connector-rules/${ruleId}`;
 
     return this.http.get(url, this.httpOptions);
   }
 
   importConnectorRule(rule: Rule): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/connector-rules`;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/connector-rules`;
     
-    let myHttpOptions = {
+    const myHttpOptions = {
       headers: new HttpHeaders({
       })
     };
 
-    let payload = {
+    const payload = {
       "name": `${rule.name}`,
       "type": `${rule.type}`,
       "sourceCode": {
@@ -495,14 +497,14 @@ export class IDNService {
 
   updateConnectorRule(rule: Rule): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/connector-rules/${rule.id}`;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/connector-rules/${rule.id}`;
     
-    let myHttpOptions = {
+    const myHttpOptions = {
       headers: new HttpHeaders({
       })
     };
 
-    let payload = {
+    const payload = {
       "name": `${rule.name}`,
       "type": `${rule.type}`,
       "id": `${rule.id}`,
@@ -523,9 +525,9 @@ export class IDNService {
 
   deleteConnectorRule(rule: Rule): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/connector-rules/${rule.id}`;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/connector-rules/${rule.id}`;
     
-    let myHttpOptions = {
+    const myHttpOptions = {
       headers: new HttpHeaders({
       })
     };
@@ -536,23 +538,23 @@ export class IDNService {
 
   getOrgConfig(): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/org-config`;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/org-config`;
 
     return this.http.get(url, this.httpOptions);
   }
 
   getHostingData(): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/tenant-data/hosting-data`;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/tenant-data/hosting-data`;
 
     return this.http.get(url, this.httpOptions);
   }
 
   getIdentityCount(): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/search/identities?limit=1&count=true`;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/search/identities?limit=1&count=true`;
 
-    let payload = {
+    const payload = {
       "query": {
           "query": `*`
       }
@@ -563,72 +565,72 @@ export class IDNService {
 
   getAccountCount(): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/accounts?limit=1&count=true`;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/accounts?limit=1&count=true`;
 
     return this.http.get(url, {observe: 'response'});
   }
 
   getIdentityProfileCount(): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/identity-profiles?limit=1&count=true`;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/identity-profiles?limit=1&count=true`;
 
     return this.http.get(url, {observe: 'response'});
   }
 
   getSourceCount(): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/sources?limit=1&count=true`;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/sources?limit=1&count=true`;
 
     return this.http.get(url, {observe: 'response'});
   }
 
   getAccessProfileCount(): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/access-profiles?limit=1&count=true`;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/access-profiles?limit=1&count=true`;
 
     return this.http.get(url, {observe: 'response'});
   }
 
   getRoleCount(): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/roles?limit=1&count=true`;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/roles?limit=1&count=true`;
 
     return this.http.get(url, {observe: 'response'});
   }
 
   getEntitlementCount(): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/entitlements?limit=1&count=true`;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/entitlements?limit=1&count=true`;
 
     return this.http.get(url, {observe: 'response'});
   }
 
   getTotalCampaignCount(): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/campaigns?limit=1&count=true`;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/campaigns?limit=1&count=true`;
 
     return this.http.get(url, {observe: 'response'});
   }
 
   getActiveCampaignCount(): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/campaigns?limit=1&count=true&filters=status eq "ACTIVE"`;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/campaigns?limit=1&count=true&filters=status eq "ACTIVE"`;
 
     return this.http.get(url, {observe: 'response'});
   }
 
   getCompletedCampaignCount(): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/campaigns?limit=1&count=true&filters=status eq "COMPLETED"`;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/campaigns?limit=1&count=true&filters=status eq "COMPLETED"`;
 
     return this.http.get(url, {observe: 'response'});
   }
 
   getPasswordChangeCount(): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/search?limit=1&count=true`;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/search?limit=1&count=true`;
 
-    let payload = {
+    const payload = {
       "query": {
           "query": "technicalName:PASSWORD_ACTION_CHANGE_PASSED AND created:[now-7d/d TO now]"
       },
@@ -642,11 +644,17 @@ export class IDNService {
 
   getProvisioningActivityCount(): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/search?limit=1&count=true`;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/search?limit=1&count=true`;
 
-    let payload = {
+    const payload = {
       "query": {
-          "query": "technicalName:(\"ACCOUNT_CREATE_PASSED\" OR \"ACCOUNT_ENABLE_PASSED\" OR \"ACCOUNT_DISABLE_PASSED\" OR \"ENTITLEMENT_ADD_PASSED\" OR \"APP_REQUEST_PASSED\" OR \"PASSWORD_ACTION_CHANGE_PASSED\") AND created:[now-7d/d TO now]"
+          "query": `technicalName:(\"ACCOUNT_CREATE_PASSED\" 
+          OR \"ACCOUNT_ENABLE_PASSED\" OR 
+          \"ACCOUNT_DISABLE_PASSED\" OR 
+          \"ENTITLEMENT_ADD_PASSED\" OR 
+          \"APP_REQUEST_PASSED\" OR 
+          \"PASSWORD_ACTION_CHANGE_PASSED\") 
+          AND created:[now-7d/d TO now]`
       },
       "indices": [
           "events"
@@ -658,22 +666,22 @@ export class IDNService {
 
   getValidTimeZones(): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/org-config/valid-time-zones`;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/org-config/valid-time-zones`;
 
     return this.http.get(url, this.httpOptions);
   }
 
   updateOrgTimeConfig(timeZoneValue: string): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/org-config`;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/org-config`;
     
-    let myHttpOptions = {
+    const myHttpOptions = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json-patch+json'
       })
     };
 
-    let payload = [
+    const payload = [
       {
           "op": "replace",
           "path": "/timeZone",
@@ -686,16 +694,16 @@ export class IDNService {
 
   getAllPAT(): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/personal-access-tokens`;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/personal-access-tokens`;
 
     return this.http.get(url, this.httpOptions);
   }
 
   deletePAT(pat: PAT): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/personal-access-tokens/${pat.id}`;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/personal-access-tokens/${pat.id}`;
     
-    let myHttpOptions = {
+    const myHttpOptions = {
       headers: new HttpHeaders({
       })
     };
@@ -705,7 +713,7 @@ export class IDNService {
 
   getUserByAlias(alias: string): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/cc/api/user/get?alias=${alias}`;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/cc/api/user/get?alias=${alias}`;
 
     return this.http.get(url, this.httpOptions);
   }
@@ -713,9 +721,9 @@ export class IDNService {
 
   exportCloudRules(): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/sp-config/export`;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/sp-config/export`;
 
-    let payload = 
+    const payload = 
       {
         "description": "Export Rules - Call by IDN Admin Console",
         "includeTypes": [
@@ -730,7 +738,7 @@ export class IDNService {
 
   checkSPConfigJobStatus(jobId: string): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/sp-config/export/${jobId}`;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/sp-config/export/${jobId}`;
 
     return this.http.get(url, this.httpOptions).pipe(
       catchError(this.handleError(`checkSPConfigJobStatus`))
@@ -739,7 +747,7 @@ export class IDNService {
 
   downloadSPConfigExport(jobId: string): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/sp-config/export/${jobId}/download`;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/sp-config/export/${jobId}/download`;
 
     return this.http.get(url, this.httpOptions).pipe(
       catchError(this.handleError(`downloadSPConfigExport`))
@@ -748,7 +756,7 @@ export class IDNService {
 
   getAllIdentityProfiles(): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/identity-profiles?sorters=priority`;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/identity-profiles?sorters=priority`;
 
     return this.http.get(url, this.httpOptions).pipe(
       catchError(this.handleError(`getAllIdentityProfiles`))
@@ -757,22 +765,22 @@ export class IDNService {
 
   refreshIdentityProfile(profileId: string): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/identity-profiles/${profileId}/refresh-identities`;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/identity-profiles/${profileId}/refresh-identities`;
 
     return this.http.post(url, this.httpOptions);
   }
 
   updateProfilePriority(profile: IdentityProfile): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/identity-profiles/${profile.id}`;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/identity-profiles/${profile.id}`;
     
-    let myHttpOptions = {
+    const myHttpOptions = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json-patch+json'
       })
     };
 
-    let payload = [
+    const payload = [
       {
           "op": "replace",
           "path": "/priority",
@@ -785,7 +793,7 @@ export class IDNService {
 
   getIdentityProfilesv1(): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/cc/api/profile/list?sorters=priority`;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/cc/api/profile/list?sorters=priority`;
 
     return this.http.get(url, this.httpOptions).pipe(
       catchError(this.handleError(`getAllIdentityProfilesv1`))
@@ -794,9 +802,9 @@ export class IDNService {
 
   updateProfilePriorityv1(profile: IdentityProfile): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/cc/api/profile/update/${profile.id}`;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/cc/api/profile/update/${profile.id}`;
 
-    var formdata = new FormData();
+    const  formdata = new FormData();
     formdata.append("priority", `${profile.newPriority}`);
 
     return this.http.post(url, formdata);
@@ -804,9 +812,9 @@ export class IDNService {
 
   refreshIdentityProfilev1(profileId: string): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/cc/api/profile/refresh/${profileId}`;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/cc/api/profile/refresh/${profileId}`;
 
-    let myHttpOptions = {
+    const myHttpOptions = {
       headers: new HttpHeaders({
       })
     };
@@ -816,7 +824,7 @@ export class IDNService {
 
   getAllIdentityAttributes(): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/cc/api/identityAttribute/list`;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/cc/api/identityAttribute/list`;
 
     return this.http.get(url, this.httpOptions).pipe(
       catchError(this.handleError(`getAllIdentityAttributes`))
@@ -825,10 +833,10 @@ export class IDNService {
 
   updateAttributeIndex(attribute: IdentityAttribute): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/cc/api/identityAttribute/update?name=${attribute.name}`;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/cc/api/identityAttribute/update?name=${attribute.name}`;
 
 
-    let payload = 
+    const payload = 
       {
         "displayName": attribute.displayName,
         "name": attribute.name,
@@ -842,7 +850,7 @@ export class IDNService {
 
   getAllTransforms(): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/transforms`;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/transforms`;
 
     return this.http.get(url, this.httpOptions).pipe(
       catchError(this.handleError(`getAllTransforms`))
@@ -851,48 +859,48 @@ export class IDNService {
 
   getTransformById(transformId: string): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/transforms/${transformId}`;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/transforms/${transformId}`;
 
     return this.http.get(url, this.httpOptions);
   }
 
   updateTransform(transform: Transform): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/transforms/${transform.id}`;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/transforms/${transform.id}`;
     
-    let payload = transform;
+    const payload = transform;
 
     return this.http.put(url, payload, this.httpOptions);
   }
 
   deleteTransform(transformId: string): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/transforms/${transformId}`;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/transforms/${transformId}`;
 
     return this.http.delete(url, this.httpOptions);
   }
 
   createTransform(transform: Transform): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/transforms/`;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/transforms/`;
     
-    let payload = transform;
+    const payload = transform;
 
     return this.http.post(url, payload, this.httpOptions);
   }
 
   getSourceCreateProfile(sourceId: string): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/sources/${sourceId}/provisioning-policies/CREATE`;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/sources/${sourceId}/provisioning-policies/CREATE`;
 
     return this.http.get(url, this.httpOptions);
   }
 
   createSourceCreateProfile(sourceId: string, attribute: string): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/sources/${sourceId}/provisioning-policies`;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/sources/${sourceId}/provisioning-policies`;
 
-    let payload = {
+    const payload = {
       "name": "Account",
       "description": null,
       "usageType": "CREATE",
@@ -913,15 +921,15 @@ export class IDNService {
 
   createSourceCreateProfileAttribute(sourceId: string, attribute: string): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/sources/${sourceId}/provisioning-policies/CREATE`;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/sources/${sourceId}/provisioning-policies/CREATE`;
 
-    let myHttpOptions = {
+    const myHttpOptions = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json-patch+json'
       })
     };
 
-    let payload = [
+    const payload = [
       {
         "op": "add",
         "path": "/fields/-",
@@ -941,15 +949,15 @@ export class IDNService {
 
   deleteSourceCreateProfileAttribute(sourceId: string, attributeJSONIndex: number): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/sources/${sourceId}/provisioning-policies/CREATE`;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/sources/${sourceId}/provisioning-policies/CREATE`;
 
-    let myHttpOptions = {
+    const myHttpOptions = {
       headers: new HttpHeaders({
         'Content-Type': 'application/json-patch+json'
       })
     };
 
-    let payload = [
+    const payload = [
       {
         "op": "remove",
         "path": `/fields/${attributeJSONIndex}`
@@ -961,24 +969,24 @@ export class IDNService {
 
   getAccessRequestStatus(): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/access-request-status?sorters=-created`;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/access-request-status?sorters=-created`;
 
     return this.http.get(url, this.httpOptions);
   }
 
   getAccessRequestApprovalsPending(): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/access-request-approvals/pending?sorters=-created`;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/access-request-approvals/pending?sorters=-created`;
 
     return this.http.get(url, this.httpOptions);
   }
 
   forwardAccessRequestApproval(approvalToForwardId: string, newOwnerId: string, comment: string): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/access-request-approvals/${approvalToForwardId}/forward`;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/access-request-approvals/${approvalToForwardId}/forward`;
 
 
-    let payload = 
+    const payload = 
       {
         "newOwnerId": newOwnerId,
         "comment": comment,
@@ -989,31 +997,31 @@ export class IDNService {
 
   getWorkItemsPending(): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/work-items?sorters=-created`;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/work-items?sorters=-created`;
 
     return this.http.get(url, this.httpOptions);
   }
 
   getWorkItemsCompleted(): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/work-items/completed?sorters=-created`;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/work-items/completed?sorters=-created`;
 
     return this.http.get(url, this.httpOptions);
   }
 
   getWorkItemsSummary(): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/work-items/summary`;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/work-items/summary`;
 
     return this.http.get(url, this.httpOptions);
   }
 
   forwardPendingWorkItem(workItemId: string, newOwnerId: string, comment: string): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/work-items/${workItemId}/forward`;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/work-items/${workItemId}/forward`;
 
 
-    let payload = 
+    const payload = 
       {
         "targetOwnerId": newOwnerId,
         "comment": comment,
@@ -1025,14 +1033,14 @@ export class IDNService {
 
   getAccessRequestApprovalsSummary(): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/access-request-approvals/approval-summary`;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/access-request-approvals/approval-summary`;
 
     return this.http.get(url, this.httpOptions);
   }
 
   getIdentityProfile(profileId: string): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/identity-profiles/${profileId}`;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/identity-profiles/${profileId}`;
 
     return this.http.get(url, this.httpOptions);
   }
@@ -1040,16 +1048,16 @@ export class IDNService {
   
   getIdentityProfileLCS(profileId: string): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/identity-profiles/${profileId}/lifecycle-states`;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/identity-profiles/${profileId}/lifecycle-states`;
 
     return this.http.get(url, this.httpOptions);
   }
 
   deleteIdentityProfileLCS(profileId: string, lcsId: string): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/identity-profiles/${profileId}/lifecycle-states/${lcsId}`;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/identity-profiles/${profileId}/lifecycle-states/${lcsId}`;
     
-    let myHttpOptions = {
+    const myHttpOptions = {
       headers: new HttpHeaders({
       })
     };
@@ -1059,10 +1067,10 @@ export class IDNService {
 
   refreshSingleIdentity(identityId: string): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/cc/api/system/refreshIdentities`;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/cc/api/system/refreshIdentities`;
 
 
-    let payload = 
+    const payload = 
     {
       "filter" : `name == \"${identityId}\"`,
       "refreshArgs" : {
@@ -1089,7 +1097,7 @@ export class IDNService {
 
    /**
     * Handle Http operation that failed.
-    * Let the app continue.
+    * const the app continue.
     * @param operation - name of the operation that failed
     * @param result - optional value to return as the observable result
     */
@@ -1103,12 +1111,12 @@ export class IDNService {
        if (logErr) {
           this.logError(`${operation} failed: ${error.message}`);
        }
-       // Let the app keep running by returning an empty result.
+       // const the app keep running by returning an empty result.
        return of(result as T);
      };
    }
 
-   private handleException<T> (operation = 'operation', errorMessage?: string , propagateAPIError?:boolean) {
+   private handleException<T> (operation: string, errorMessage?: string , propagateAPIError?:boolean) {
     return (error: any): Observable<T> => {
       console.error(error); // log to console instead
       if (propagateAPIError) {

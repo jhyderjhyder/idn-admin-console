@@ -1,11 +1,8 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { AngularCsv } from 'angular-csv-ext/dist/Angular-csv';
 import { Papa } from 'ngx-papaparse';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { ModalDirective } from 'ngx-bootstrap/modal';
-import cron from 'cron-validate'
 import { Source } from '../model/source';
-import { Schedule } from '../model/schedule';
 import { IDNService } from '../service/idn.service';
 import { MessageService } from '../service/message.service';
 import { AuthenticationService } from '../service/authentication-service.service';
@@ -74,8 +71,8 @@ export class SourceCreateProfileComponent implements OnInit {
           .subscribe(allSources => {
 
             this.sources = [];
-            for (let each of allSources) {
-              let source = new Source();
+            for (const each of allSources) {
+              const source = new Source();
               source.id = each.id;
               source.name = each.name;
 
@@ -101,7 +98,7 @@ export class SourceCreateProfileComponent implements OnInit {
         this.createProfileAttributes = result.fields;
   
       },
-      err => {
+      () => {
         this.createProfileExists = false;
 
       });  
@@ -117,7 +114,7 @@ export class SourceCreateProfileComponent implements OnInit {
 
     if (!this.createProfileExists) {
       this.idnService.createSourceCreateProfile(this.selectedSourceID, this.newCreateProfileAttribute)
-      .subscribe(results => {
+      .subscribe(() => {
          this.submitAddAttributeSubmitConfirmModal.hide();
          this.reset(false);
          this.getSourceCreateProfile(this.selectedSourceID);
@@ -132,7 +129,7 @@ export class SourceCreateProfileComponent implements OnInit {
 
     }else {
       this.idnService.createSourceCreateProfileAttribute(this.selectedSourceID, this.newCreateProfileAttribute)
-        .subscribe(results => {
+        .subscribe(() => {
             this.submitAddAttributeSubmitConfirmModal.hide();
             this.reset(false);
             this.getSourceCreateProfile(this.selectedSourceID);
@@ -153,10 +150,10 @@ export class SourceCreateProfileComponent implements OnInit {
     this.messageService.clearError();
     this.loading = true;
 
-   let attrIndex = this.createProfileAttributes.findIndex(result => result === this.selectedCreateProfileAttribute);
+    const attrIndex = this.createProfileAttributes.findIndex(result => result === this.selectedCreateProfileAttribute);
     
     this.idnService.deleteSourceCreateProfileAttribute(this.selectedSourceID, attrIndex)
-          .subscribe(results => {
+          .subscribe(() => {
             this.submitDeleteAttributeSubmitConfirmModal.hide();
              this.reset(false);
              this.ngOnInit();
@@ -199,7 +196,7 @@ export class SourceCreateProfileComponent implements OnInit {
 
  downloadCreateProfile() {
 
-  let source = new Source();
+  const source = new Source();
 
   this.idnService.getSource(this.selectedSourceID)
   .subscribe(
@@ -211,8 +208,8 @@ export class SourceCreateProfileComponent implements OnInit {
          result => {
            result = JSON.stringify(result, null, 4);
            
-           var blob = new Blob([result], {type: "application/json"});
-           let fileName = "Source - CREATE - " + source.name + ".json";
+           const blob = new Blob([result], {type: "application/json"});
+           const fileName = "Source - CREATE - " + source.name + ".json";
            saveAs(blob, fileName);
      
          },

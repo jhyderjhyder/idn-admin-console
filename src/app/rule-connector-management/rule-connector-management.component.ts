@@ -8,7 +8,6 @@ import { IDNService } from '../service/idn.service';
 import { MessageService } from '../service/message.service';
 import { AuthenticationService } from '../service/authentication-service.service';
 import * as JSZip from 'jszip';
-import { access } from 'fs';
 
 const RuleDescriptionMaxLength = 50;
 
@@ -34,15 +33,15 @@ export class ImportRuleComponent implements OnInit {
   allRules: Rule[];
 
   public modalRef: BsModalRef;
-  
+
   @ViewChild('importRuleConfirmModal', { static: false }) importRuleConfirmModal: ModalDirective;
   @ViewChild('updateRuleConfirmModal', { static: false }) updateRuleConfirmModal: ModalDirective;
   @ViewChild('deleteRuleConfirmModal', { static: false }) deleteRuleConfirmModal: ModalDirective;
-  @ViewChild('importRuleFile', {static: false}) importRuleFile: ElementRef;
-  @ViewChild('updateRuleFile', {static: false}) updateRuleFile: ElementRef;
+  @ViewChild('importRuleFile', { static: false }) importRuleFile: ElementRef;
+  @ViewChild('updateRuleFile', { static: false }) updateRuleFile: ElementRef;
 
   constructor(
-    private idnService: IDNService, 
+    private idnService: IDNService,
     private messageService: MessageService,
     private authenticationService: AuthenticationService) {
   }
@@ -62,42 +61,42 @@ export class ImportRuleComponent implements OnInit {
     this.invalidMessage = [];
     if (clearMsg) {
       this.messageService.clearAll();
-    } 
+    }
   }
 
   getConnectorRules() {
     this.loading = true;
     this.idnService.getConnectorRules()
-          .subscribe(
-            results => {
-            this.rules = [];
-            this.allRules = results;
+      .subscribe(
+        results => {
+          this.rules = [];
+          this.allRules = results;
 
-            for (let each of results) {
-              let rule = new Rule();
-              rule.id = each.id;
-              rule.name = each.name;
-              if (each.description) {
-                if (each.description.length > RuleDescriptionMaxLength) {
-                  rule.description = each.description.substring(0, RuleDescriptionMaxLength) + "...";
-                }
-                else {
-                  rule.description = each.description;
-                }
+          for (const each of results) {
+            const rule = new Rule();
+            rule.id = each.id;
+            rule.name = each.name;
+            if (each.description) {
+              if (each.description.length > RuleDescriptionMaxLength) {
+                rule.description = each.description.substring(0, RuleDescriptionMaxLength) + "...";
               }
-              rule.type = each.type;
-
-              this.rules.push(rule);
+              else {
+                rule.description = each.description;
+              }
             }
-            this.loading = false;
-          });
+            rule.type = each.type;
+
+            this.rules.push(rule);
+          }
+          this.loading = false;
+        });
   }
 
   showImportRuleConfirmModal() {
     this.messageService.clearError();
     this.validToSubmit = true;
     this.invalidMessage = [];
-    
+
     if (this.ruleToImport == null) {
       this.invalidMessage.push("No rule is chosen!");
       this.validToSubmit = false;
@@ -161,7 +160,7 @@ export class ImportRuleComponent implements OnInit {
 
     this.idnService.deleteConnectorRule(this.ruleToDelete)
       .subscribe(
-        result => {
+        () => {
           //this.closeModalDisplayMsg();
           this.deleteRuleConfirmModal.hide();
           this.messageService.add("Rule deleted successfully.");
@@ -181,7 +180,7 @@ export class ImportRuleComponent implements OnInit {
     this.messageService.clearAll();
     this.idnService.importConnectorRule(this.ruleToImport)
       .subscribe(
-        result => {
+        () => {
           this.importRuleConfirmModal.hide();
           this.messageService.add("Rule imported successfully.");
           this.ruleToImport = null;
@@ -200,7 +199,7 @@ export class ImportRuleComponent implements OnInit {
     this.messageService.clearAll();
     this.idnService.updateConnectorRule(this.ruleToUpdate)
       .subscribe(
-        result => {
+        () => {
           this.updateRuleConfirmModal.hide();
           this.messageService.add("Rule updated successfully.");
           this.ruleToUpdate = null;
@@ -227,12 +226,12 @@ export class ImportRuleComponent implements OnInit {
 
   processFileForImportRule(evt) {
     this.messageService.clearError();
-    var files = evt.target.files; // FileList object
-    var file = files[0];
-    var reader = new FileReader();
+    const files = evt.target.files; // FileList object
+    const file = files[0];
+    const reader = new FileReader();
     reader.readAsText(file);
     reader.onload = (event: any) => {
-      var ruleXML = event.target.result; // Content of Rule XML file
+      const ruleXML = event.target.result; // Content of Rule XML file
       const parser = new xml2js.Parser({ strict: false, trim: true });
       parser.parseString(ruleXML, (err, result) => {
         let valid: boolean = true;
@@ -247,7 +246,7 @@ export class ImportRuleComponent implements OnInit {
           }
           //verify rule type
           if (result.RULE.$.TYPE) {
-              this.ruleToImport.type = result.RULE.$.TYPE;
+            this.ruleToImport.type = result.RULE.$.TYPE;
           } else {
             valid = false;
             this.messageService.setError("Invalid Rule XML file: rule type is not specified.");
@@ -269,9 +268,9 @@ export class ImportRuleComponent implements OnInit {
         if (valid) {
           if (result.RULE.DESCRIPTION && result.RULE.DESCRIPTION.length == 1) {
             this.ruleToImport.description = result.RULE.DESCRIPTION[0];
-          } 
+          }
 
-          let ruleAttributes = this.processRuleAttributes(result);
+          const ruleAttributes = this.processRuleAttributes(result);
           if (ruleAttributes) {
             this.ruleToImport.attributes = ruleAttributes;
           }
@@ -280,17 +279,17 @@ export class ImportRuleComponent implements OnInit {
           this.ruleToImport = null;
         }
       });
-    }
+    };
   }
 
   processRuleAttributes(result) {
     if (result.RULE.ATTRIBUTES && result.RULE.ATTRIBUTES.length > 0) {
-      let attrMap = result.RULE.ATTRIBUTES[0].MAP;
+      const attrMap = result.RULE.ATTRIBUTES[0].MAP;
       if (attrMap && attrMap.length > 0) {
-        let entry = attrMap[0];
+        const entry = attrMap[0];
         if (entry && entry.ENTRY && entry.ENTRY.length > 0) {
-          let ruleAttributes = {};
-          for (let each of entry.ENTRY) {
+          const ruleAttributes = {};
+          for (const each of entry.ENTRY) {
             ruleAttributes[each.$.KEY] = each.$.VALUE;
           }
           return ruleAttributes;
@@ -303,12 +302,12 @@ export class ImportRuleComponent implements OnInit {
 
   processFileForUpdatRule(evt) {
     this.messageService.clearError();
-    var files = evt.target.files; // FileList object
-    var file = files[0];
-    var reader = new FileReader();
+    const files = evt.target.files; // FileList object
+    const file = files[0];
+    const reader = new FileReader();
     reader.readAsText(file);
     reader.onload = (event: any) => {
-      var ruleXML = event.target.result; // Content of Rule XML file
+      const ruleXML = event.target.result; // Content of Rule XML file
       const parser = new xml2js.Parser({ strict: false, trim: true });
       parser.parseString(ruleXML, (err, result) => {
         let valid: boolean = true;
@@ -351,8 +350,8 @@ export class ImportRuleComponent implements OnInit {
           if (result.RULE.DESCRIPTION && result.RULE.DESCRIPTION.length == 1) {
             this.ruleToUpdate.description = result.RULE.DESCRIPTION[0];
           }
-          
-          let ruleAttributes = this.processRuleAttributes(result);
+
+          const ruleAttributes = this.processRuleAttributes(result);
           if (ruleAttributes) {
             this.ruleToUpdate.attributes = ruleAttributes;
           }
@@ -360,7 +359,7 @@ export class ImportRuleComponent implements OnInit {
 
         this.validToSubmit = valid;
       });
-    }
+    };
   }
 
   convertRuleToXML(rule: Rule, buttonClicked: string) {
@@ -372,22 +371,22 @@ export class ImportRuleComponent implements OnInit {
       ruleDesc = "";
     }
 
-    const builder = new xml2js.Builder({doctype: {sysID: "sailpoint.dtd sailpoint.dtd"}});
-    let xmlObject = {
-                      Rule: {
-                        $: {
-                          name: rule.name,
-                          type: rule.type  
-                        },
-                        "Attributes": [this.prepareRuleAttributes(rule.attributes)],
-                        'Description': {
-                          _: ruleDesc
-                        },
-                        'Source': {
-                          _: rule.script
-                        },
-                      }
-                    };
+    const builder = new xml2js.Builder({ doctype: { sysID: "sailpoint.dtd sailpoint.dtd" } });
+    const xmlObject = {
+      Rule: {
+        $: {
+          name: rule.name,
+          type: rule.type
+        },
+        "Attributes": [this.prepareRuleAttributes(rule.attributes)],
+        'Description': {
+          _: ruleDesc
+        },
+        'Source': {
+          _: rule.script
+        },
+      }
+    };
 
     let xml: string = builder.buildObject(xmlObject);
     // xml.replace is a hack to format certain elements that xml2js does not support
@@ -398,7 +397,7 @@ export class ImportRuleComponent implements OnInit {
     xml = xml.replace("&lt;#", "<#");
     xml = xml.replace("#&gt;", "#>");
     // replace carriage return characters, if exist
-    var re = /&#xD;/gi;
+    let re = /&#xD;/gi;
     xml = xml.replace(re, "");
 
     re = /&amp;/gi;
@@ -409,15 +408,15 @@ export class ImportRuleComponent implements OnInit {
 
     re = /&lt;/gi;
     xml = xml.replace(re, "<");
-    
-    var blob = new Blob([xml], {type: "application/xml"});
+
+    const blob = new Blob([xml], { type: "application/xml" });
 
     if (buttonClicked === 'downloadRule') {
-      let fileName = "Rule - " + rule.type + " - " + rule.name + ".xml";
+      const fileName = "Rule - " + rule.type + " - " + rule.name + ".xml";
       saveAs(blob, fileName);
     }
     else {
-      return(blob);
+      return (blob);
     }
   }
 
@@ -425,23 +424,23 @@ export class ImportRuleComponent implements OnInit {
 
     let returnObject = null;
     if (attributes) {
-      let attrs = [];
-      for (let name of Object.keys(attributes)) {
-        let attr = {
-                    "$": {
-                      "key": name, 
-                      "value": attributes[name]
-                    }
-                  };
-                  attrs.push(attr);
+      const attrs = [];
+      for (const name of Object.keys(attributes)) {
+        const attr = {
+          "$": {
+            "key": name,
+            "value": attributes[name]
+          }
+        };
+        attrs.push(attr);
       }
-      returnObject = { 
-                      "Map": [ 
-                        { 
-                          "entry": attrs
-                        }
-                      ]
-                    };
+      returnObject = {
+        "Map": [
+          {
+            "entry": attrs
+          }
+        ]
+      };
     }
 
     return returnObject;
@@ -456,7 +455,7 @@ export class ImportRuleComponent implements OnInit {
     this.idnService.getConnectorRuleById(ruleId)
       .subscribe(
         result => {
-          let donwloadedRule = this.processDownloadRule(result);
+          const donwloadedRule = this.processDownloadRule(result);
           if (donwloadedRule != null) {
             this.convertRuleToXML(donwloadedRule, this.buttonClicked);
           }
@@ -467,7 +466,7 @@ export class ImportRuleComponent implements OnInit {
 
   processDownloadRule(result): Rule {
     if (result) {
-      let processedRule = new Rule();
+      const processedRule = new Rule();
       processedRule.id = result.id;
       processedRule.type = result.type;
       processedRule.name = result.name;
@@ -496,20 +495,20 @@ export class ImportRuleComponent implements OnInit {
       this.buttonClicked = $event.target.name;
     }
 
-    for (let each of this.allRules) {
-  
-          let donwloadedRule = this.processDownloadRule(each);
-          if (donwloadedRule != null) {
-            let converted = this.convertRuleToXML(donwloadedRule, this.buttonClicked);
-            let fileName = "Rule - " + each.type + " - " + each.name + ".xml";
-            this.zip.file(`${fileName}`, converted);
-          }
+    for (const each of this.allRules) {
+
+      const donwloadedRule = this.processDownloadRule(each);
+      if (donwloadedRule != null) {
+        const converted = this.convertRuleToXML(donwloadedRule, this.buttonClicked);
+        const fileName = "Rule - " + each.type + " - " + each.name + ".xml";
+        this.zip.file(`${fileName}`, converted);
+      }
     }
-      const currentUser = this.authenticationService.currentUserValue;
-      let zipFileName = `${currentUser.tenant}-connector-rules.zip`;
-      
-      this.zip.generateAsync({type:"blob"}).then(function(content) {
-        saveAs(content, zipFileName);
+    const currentUser = this.authenticationService.currentUserValue;
+    const zipFileName = `${currentUser.tenant}-connector-rules.zip`;
+
+    this.zip.generateAsync({ type: "blob" }).then(function (content) {
+      saveAs(content, zipFileName);
 
     });
   }

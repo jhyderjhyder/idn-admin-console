@@ -48,7 +48,7 @@
     </button>
   </div>
 </div>
-<div class="form-group row" *ngIf="bulkAction == 'EnableAccessProfiles'">
+<div class="form-group row" *ngIf="bulkAction === 'EnableAccessProfiles'">
   <div class="col-sm-8 text-start">
     <span class="fw-bold">To enable Access Profiles, select the items and click the 'Submit to Enable' button.</span>
   </div>
@@ -58,7 +58,7 @@
     </button>
   </div>
 </div>
-<div class="form-group row" *ngIf="bulkAction == 'DisableAccessProfiles'">
+<div class="form-group row" *ngIf="bulkAction === 'DisableAccessProfiles'">
   <div class="col-sm-8 text-start">
     <span class="fw-bold">To disable Access Profiles, select the items and click the 'Submit to Disable' button.</span>
   </div>
@@ -68,7 +68,7 @@
     </button>
   </div>
 </div>
-<div class="form-group row" *ngIf="bulkAction == 'DeleteAccessProfiles'">
+<div class="form-group row" *ngIf="bulkAction === 'DeleteAccessProfiles'">
   <div class="col-sm-8 text-start">
     <span class="fw-bold">To delete Access Profiles, select the items and click the 'Submit to Delete Access Profiles' button.</span>
   </div>
@@ -124,13 +124,13 @@
     <div class="modal-content">
       <div class="modal-header">
         <h6 id="dialog-child-name" class="modal-title pull-left">
-          <span *ngIf="bulkAction == 'EnableAccessProfiles' && atLeastOneSelected">
+          <span *ngIf="bulkAction === 'EnableAccessProfiles' && atLeastOneSelected">
             Are you sure you want to enable selected access profiles?
           </span>
-          <span *ngIf="bulkAction == 'DisableAccessProfiles' && atLeastOneSelected">
+          <span *ngIf="bulkAction === 'DisableAccessProfiles' && atLeastOneSelected">
             Are you sure you want to disable selected access profiles?
           </span>
-          <span *ngIf="bulkAction == 'DeleteAccessProfiles' && atLeastOneSelected">
+          <span *ngIf="bulkAction === 'DeleteAccessProfiles' && atLeastOneSelected">
             Are you sure you want to delete the selected access profiles?
           </span>      
           <span *ngIf="!atLeastOneSelected">
@@ -154,17 +154,17 @@
             <div class="col-md-12 text-center">
               <button type="button" (click)="hideSubmitConfirmModal()" class="btn btn-danger btn-sm">Cancel</button>
               &nbsp;&nbsp;&nbsp;
-              <span *ngIf="bulkAction == 'EnableAccessProfiles' && atLeastOneSelected">
+              <span *ngIf="bulkAction === 'EnableAccessProfiles' && atLeastOneSelected">
                 <button type="button" class="btn btn-success btn-sm" (click)="updateAccessProfiles('enabled',true)">
                   Enable
                 </button>
               </span>
-              <span *ngIf="bulkAction == 'DisableAccessProfiles' && atLeastOneSelected">
+              <span *ngIf="bulkAction === 'DisableAccessProfiles' && atLeastOneSelected">
                 <button type="button" class="btn btn-success btn-sm" (click)="updateAccessProfiles('enabled',false)">
                   Disable
                 </button>
               </span>
-              <span *ngIf="bulkAction == 'DeleteAccessProfiles' && atLeastOneSelected">
+              <span *ngIf="bulkAction === 'DeleteAccessProfiles' && atLeastOneSelected">
                 <button type="button" class="btn btn-success btn-sm" (click)="showdeleteAccessProfileConfirmModal()">
                   Delete
                 </button>
