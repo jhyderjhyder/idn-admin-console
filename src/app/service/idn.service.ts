@@ -646,13 +646,7 @@ export class IDNService {
 
     const payload = {
       query: {
-        query: `technicalName:(\"ACCOUNT_CREATE_PASSED\" 
-          OR \"ACCOUNT_ENABLE_PASSED\" OR 
-          \"ACCOUNT_DISABLE_PASSED\" OR 
-          \"ENTITLEMENT_ADD_PASSED\" OR 
-          \"APP_REQUEST_PASSED\" OR 
-          \"PASSWORD_ACTION_CHANGE_PASSED\") 
-          AND created:[now-7d/d TO now]`,
+        query: `technicalName:(\"ACCOUNT_CREATE_PASSED\" OR \"ACCOUNT_ENABLE_PASSED\" OR \"ACCOUNT_DISABLE_PASSED\" OR \"ENTITLEMENT_ADD_PASSED\" OR \"APP_REQUEST_PASSED\" OR \"PASSWORD_ACTION_CHANGE_PASSED\") AND created:[now-7d/d TO now]`,
       },
       indices: ['events'],
     };
