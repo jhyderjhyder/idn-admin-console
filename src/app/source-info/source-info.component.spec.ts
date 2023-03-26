@@ -1,5 +1,10 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-
+import { HttpClientModule } from '@angular/common/http';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { FormsModule } from '@angular/forms';
+import { ModalModule } from 'ngx-bootstrap/modal';
+import { IDNService } from '../service/idn.service';
+import { MockIDNService } from '../service/idn.service.mock.spec';
 import { SourceInfoComponent } from './source-info.component';
 
 describe('SourceInfoComponent', () => {
@@ -8,7 +13,10 @@ describe('SourceInfoComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ SourceInfoComponent ]
+      declarations: [ SourceInfoComponent ],
+      providers: [IDNService,
+        { provide: IDNService, useClass: MockIDNService }],
+        imports: [HttpClientModule, HttpClientTestingModule,FormsModule, ModalModule ] 
     })
     .compileComponents();
   }));
