@@ -15,10 +15,9 @@ const RoleDescriptionMaxLength = 50;
 @Component({
   selector: 'app-role-owner-update',
   templateUrl: './role-owner-update.component.html',
-  styleUrls: ['./role-owner-update.component.css']
+  styleUrls: ['./role-owner-update.component.css'],
 })
 export class ChangeRoleOwnerComponent implements OnInit {
-
   roles: Role[];
   loading: boolean;
   allOwnersFetched: boolean;
@@ -31,16 +30,19 @@ export class ChangeRoleOwnerComponent implements OnInit {
 
   public modalRef: BsModalRef;
 
-  @ViewChild('submitConfirmModal', { static: false }) submitConfirmModal: ModalDirective;
-  @ViewChild('submitRoleRefreshConfirmModal', { static: false }) submitRoleRefreshConfirmModal: ModalDirective;
+  @ViewChild('submitConfirmModal', { static: false })
+  submitConfirmModal: ModalDirective;
+  @ViewChild('submitRoleRefreshConfirmModal', { static: false })
+  submitRoleRefreshConfirmModal: ModalDirective;
 
   @ViewChild('fileInput', { static: false }) fileInput: ElementRef;
 
-  constructor(private papa: Papa,
+  constructor(
+    private papa: Papa,
     private idnService: IDNService,
     private messageService: MessageService,
-    private authenticationService: AuthenticationService) {
-  }
+    private authenticationService: AuthenticationService
+  ) {}
 
   ngOnInit() {
     this.reset(true);
@@ -64,58 +66,56 @@ export class ChangeRoleOwnerComponent implements OnInit {
   getAllRoles() {
     this.allOwnersFetched = false;
     this.loading = true;
-    this.idnService.getAllRoles()
-      .subscribe(allRoles => {
-        this.roles = [];
-        const roleCount = allRoles.length;
-        let fetchedOwnerCount = 0;
-        for (const each of allRoles) {
-          const role = new Role();
-          role.id = each.id;
-          role.name = each.name;
-          if (each.description) {
-            if (each.description.length > RoleDescriptionMaxLength) {
-              role.description = each.description.substring(0, RoleDescriptionMaxLength) + "...";
-            }
-            else {
-              role.description = each.description;
-            }
-          }
-          role.id = each.id;
-          role.enabled = each.enabled;
-          role.requestable = each.requestable;
-          if (each.membership && each.membership.criteria != null) {
-            role.criteria = true;
+    this.idnService.getAllRoles().subscribe(allRoles => {
+      this.roles = [];
+      const roleCount = allRoles.length;
+      let fetchedOwnerCount = 0;
+      for (const each of allRoles) {
+        const role = new Role();
+        role.id = each.id;
+        role.name = each.name;
+        if (each.description) {
+          if (each.description.length > RoleDescriptionMaxLength) {
+            role.description =
+              each.description.substring(0, RoleDescriptionMaxLength) + '...';
           } else {
-            role.criteria = false;
+            role.description = each.description;
           }
-
-          role.accessProfiles = each.accessProfiles.length;
-
-          const query = new SimpleQueryCondition();
-          query.attribute = "id";
-          query.value = each.owner.id;
-
-          this.idnService.searchAccounts(query)
-            .subscribe(searchResult => {
-              if (searchResult.length > 0) {
-                role.owner = new SourceOwner();
-                role.owner.accountId = searchResult[0].id;
-                role.owner.accountName = searchResult[0].name;
-                role.owner.displayName = searchResult[0].displayName;
-                role.currentOwnerAccountName = searchResult[0].name;
-                role.currentOwnerDisplayName = searchResult[0].displayName;
-              }
-              fetchedOwnerCount++;
-              if (fetchedOwnerCount == roleCount) {
-                this.allOwnersFetched = true;
-              }
-            });
-
-          this.roles.push(role);
         }
-        this.loading = false;
-      });
+        role.id = each.id;
+        role.enabled = each.enabled;
+        role.requestable = each.requestable;
+        if (each.membership && each.membership.criteria != null) {
+          role.criteria = true;
+        } else {
+          role.criteria = false;
+        }
+
+        role.accessProfiles = each.accessProfiles.length;
+
+        const query = new SimpleQueryCondition();
+        query.attribute = 'id';
+        query.value = each.owner.id;
+
+        this.idnService.searchAccounts(query).subscribe(searchResult => {
+          if (searchResult.length > 0) {
+            role.owner = new SourceOwner();
+            role.owner.accountId = searchResult[0].id;
+            role.owner.accountName = searchResult[0].name;
+            role.owner.displayName = searchResult[0].displayName;
+            role.currentOwnerAccountName = searchResult[0].name;
+            role.currentOwnerDisplayName = searchResult[0].displayName;
+          }
+          fetchedOwnerCount++;
+          if (fetchedOwnerCount == roleCount) {
+            this.allOwnersFetched = true;
+          }
+        });
+
+        this.roles.push(role);
+      }
+      this.loading = false;
+    });
   }
 
   saveInCsv() {
@@ -125,7 +125,17 @@ export class ChangeRoleOwnerComponent implements OnInit {
       decimalseparator: '.',
       showLabels: true,
       useHeader: true,
-      headers: ["name", "description", "id", "enabled", "requestable", "criteria", "accessProfiles", "ownerAccountID", "ownerDisplayName"],
+      headers: [
+        'name',
+        'description',
+        'id',
+        'enabled',
+        'requestable',
+        'criteria',
+        'accessProfiles',
+        'ownerAccountID',
+        'ownerDisplayName',
+      ],
       nullToEmptyString: true,
     };
 
@@ -151,12 +161,19 @@ export class ChangeRoleOwnerComponent implements OnInit {
     this.invalidMessage = [];
     for (const each of this.roles) {
       if (each.selected) {
-        if (each.newOwner == null || each.newOwner.accountName == null || each.newOwner.accountName.trim() == '') {
-          this.invalidMessage.push(`Owner of Role (name: ${each.name}) can not be empty.`);
+        if (
+          each.newOwner == null ||
+          each.newOwner.accountName == null ||
+          each.newOwner.accountName.trim() == ''
+        ) {
+          this.invalidMessage.push(
+            `Owner of Role (name: ${each.name}) can not be empty.`
+          );
           this.validToSubmit = false;
-        }
-        else if (each.newOwner.accountName == each.owner.accountName) {
-          this.invalidMessage.push(`Owner of Role (name: ${each.name}) is not changed.`);
+        } else if (each.newOwner.accountName == each.owner.accountName) {
+          this.invalidMessage.push(
+            `Owner of Role (name: ${each.name}) is not changed.`
+          );
           this.validToSubmit = false;
         }
 
@@ -165,7 +182,7 @@ export class ChangeRoleOwnerComponent implements OnInit {
     }
 
     if (selectedRoles.length == 0) {
-      this.invalidMessage.push("Select at least one item to submit.");
+      this.invalidMessage.push('Select at least one item to submit.');
       this.validToSubmit = false;
     }
 
@@ -174,23 +191,24 @@ export class ChangeRoleOwnerComponent implements OnInit {
       //check if account name of new owner is valid
       for (const each of selectedRoles) {
         const query = new SimpleQueryCondition();
-        query.attribute = "name";
+        query.attribute = 'name';
         query.value = each.newOwner.accountName;
 
-        this.idnService.searchAccounts(query)
-          .subscribe(searchResult => {
-            if (searchResult && searchResult.length == 1) {
-              each.newOwner.accountId = searchResult[0].id;
-              each.newOwner.displayName = searchResult[0].displayName;
-            } else {
-              this.validToSubmit = false;
-              this.invalidMessage.push(`New owner's account name (${each.newOwner.accountName}) of Role (${each.name}) is invalid.`);
-            }
-            count++;
-            if (count == selectedRoles.length) {
-              this.submitConfirmModal.show();
-            }
-          });
+        this.idnService.searchAccounts(query).subscribe(searchResult => {
+          if (searchResult && searchResult.length == 1) {
+            each.newOwner.accountId = searchResult[0].id;
+            each.newOwner.displayName = searchResult[0].displayName;
+          } else {
+            this.validToSubmit = false;
+            this.invalidMessage.push(
+              `New owner's account name (${each.newOwner.accountName}) of Role (${each.name}) is invalid.`
+            );
+          }
+          count++;
+          if (count == selectedRoles.length) {
+            this.submitConfirmModal.show();
+          }
+        });
       }
     } else {
       this.submitConfirmModal.show();
@@ -211,10 +229,14 @@ export class ChangeRoleOwnerComponent implements OnInit {
         }
       }
       if (!anythingSelected) {
-        this.messageService.setError("No item is selected to apply the new owner account name.");
+        this.messageService.setError(
+          'No item is selected to apply the new owner account name.'
+        );
       }
     } else {
-      this.messageService.setError("Owner account name is required to apply to the selected items.");
+      this.messageService.setError(
+        'Owner account name is required to apply to the selected items.'
+      );
     }
   }
 
@@ -247,13 +269,14 @@ export class ChangeRoleOwnerComponent implements OnInit {
       if (this.roles[index].newOwner == null) {
         this.roles[index].newOwner = new SourceOwner();
       }
-      this.roles[index].newOwner.accountName = this.roles[index].owner.accountName;
+      this.roles[index].newOwner.accountName =
+        this.roles[index].owner.accountName;
     }
   }
 
   clearFileSelect() {
     this.messageService.clearError();
-    this.fileInput.nativeElement.value = "";
+    this.fileInput.nativeElement.value = '';
   }
 
   hideSubmitConfirmModal() {
@@ -264,7 +287,7 @@ export class ChangeRoleOwnerComponent implements OnInit {
     if (this.errorMessage != null) {
       this.messageService.setError(this.errorMessage);
     } else {
-      this.messageService.add("Changes saved successfully.");
+      this.messageService.add('Changes saved successfully.');
     }
     this.submitConfirmModal.hide();
   }
@@ -274,15 +297,15 @@ export class ChangeRoleOwnerComponent implements OnInit {
     let processedCount = 0;
     let index = 0;
     for (const each of arr) {
-      if (index > 0 && (index % 10) == 0) {
-        // After processing every batch (10 roles), wait for 2 seconds before calling another API to avoid 429 
+      if (index > 0 && index % 10 == 0) {
+        // After processing every batch (10 roles), wait for 2 seconds before calling another API to avoid 429
         // Too Many Requests Error
         await this.sleep(2000);
       }
       index++;
 
-      this.idnService.updateRoleOwner(each)
-        .subscribe(() => {
+      this.idnService.updateRoleOwner(each).subscribe(
+        () => {
           processedCount++;
           if (processedCount == arr.length) {
             this.closeModalDisplayMsg();
@@ -290,24 +313,22 @@ export class ChangeRoleOwnerComponent implements OnInit {
             this.getAllRoles();
           }
         },
-          () => {
-            this.errorMessage = "Error to submit the changes.";
-            processedCount++;
-            if (processedCount == arr.length) {
-              this.closeModalDisplayMsg();
-              this.reset(false);
-              this.getAllRoles();
-            }
+        () => {
+          this.errorMessage = 'Error to submit the changes.';
+          processedCount++;
+          if (processedCount == arr.length) {
+            this.closeModalDisplayMsg();
+            this.reset(false);
+            this.getAllRoles();
           }
-        );
+        }
+      );
     }
-
   }
 
   sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
-
 
   handleFileSelect(evt) {
     this.messageService.clearError();
@@ -321,7 +342,7 @@ export class ChangeRoleOwnerComponent implements OnInit {
       this.papa.parse(csv, {
         skipEmptyLines: true,
         header: true,
-        complete: (results) => {
+        complete: results => {
           for (let i = 0; i < results.data.length; i++) {
             const id = results.data[i].id;
             newOwnerAccountNameMap[id] = results.data[i].ownerAccountID;
@@ -341,13 +362,16 @@ export class ChangeRoleOwnerComponent implements OnInit {
             }
           }
           if (!anythingSelected) {
-            this.messageService.setError("No item is selected to apply the change.");
+            this.messageService.setError(
+              'No item is selected to apply the change.'
+            );
           } else if (!anythingMatched) {
-            this.messageService.setError("No role record in uploaded file is matched with the selected items.");
+            this.messageService.setError(
+              'No role record in uploaded file is matched with the selected items.'
+            );
           }
-        }
+        },
       });
     };
   }
-
 }

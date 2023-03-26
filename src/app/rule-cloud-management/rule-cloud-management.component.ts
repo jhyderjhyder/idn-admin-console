@@ -13,9 +13,8 @@ const RuleDescriptionMaxLength = 50;
 @Component({
   selector: 'app-rule-cloud-management',
   templateUrl: './rule-cloud-management.component.html',
-  styleUrls: ['./rule-cloud-management.component.css']
+  styleUrls: ['./rule-cloud-management.component.css'],
 })
-
 export class CloudRuleComponent implements OnInit {
   rules: Rule[];
   invalidMessage: string[];
@@ -31,8 +30,8 @@ export class CloudRuleComponent implements OnInit {
   constructor(
     private idnService: IDNService,
     private messageService: MessageService,
-    private authenticationService: AuthenticationService) {
-  }
+    private authenticationService: AuthenticationService
+  ) {}
 
   ngOnInit() {
     this.reset(true);
@@ -52,91 +51,81 @@ export class CloudRuleComponent implements OnInit {
 
   exportSPConfigRules() {
     this.loading = true;
-    this.idnService.exportCloudRules()
-      .subscribe(
-        results => {
-          if (results != null) {
-            this.jobId = results.jobId;
-            this.checkExportJobStatus(this.jobId);
-            this.loading = true;
-          }
-        });
+    this.idnService.exportCloudRules().subscribe(results => {
+      if (results != null) {
+        this.jobId = results.jobId;
+        this.checkExportJobStatus(this.jobId);
+        this.loading = true;
+      }
+    });
   }
 
   async checkExportJobStatus(jobId: string) {
     this.loading = true;
-    this.idnService.checkSPConfigJobStatus(jobId)
-      .subscribe(
-        async results => {
-          if (results != null) {
-            this.jobStatus = results.status;
+    this.idnService.checkSPConfigJobStatus(jobId).subscribe(async results => {
+      if (results != null) {
+        this.jobStatus = results.status;
 
-            //should work but not tested
-            if (this.jobStatus === "CANCELLED" || this.jobStatus === "FAILED") {
-              this.messageService.addError("Export JobStatus Error: `${this.jobStatus}`");
-              return null;
-            }
-            else if (this.jobStatus === "COMPLETE") {
-              this.getSPConfigExports(this.jobId);
-            }
-            else {
-              await this.sleep(2000);
-              this.checkExportJobStatus(this.jobId);
-            }
-            this.loading = true;
-          }
-        });
-
-
+        //should work but not tested
+        if (this.jobStatus === 'CANCELLED' || this.jobStatus === 'FAILED') {
+          this.messageService.addError(
+            'Export JobStatus Error: `${this.jobStatus}`'
+          );
+          return null;
+        } else if (this.jobStatus === 'COMPLETE') {
+          this.getSPConfigExports(this.jobId);
+        } else {
+          await this.sleep(2000);
+          this.checkExportJobStatus(this.jobId);
+        }
+        this.loading = true;
+      }
+    });
   }
 
   getSPConfigExports(jobId: string) {
     this.loading = true;
-    this.idnService.downloadSPConfigExport(jobId)
-      .subscribe(
-        results => {
-          this.rules = [];
-          for (const each of results.objects) {
-            const rule = new Rule();
-            rule.type = each.object.type;
+    this.idnService.downloadSPConfigExport(jobId).subscribe(results => {
+      this.rules = [];
+      for (const each of results.objects) {
+        const rule = new Rule();
+        rule.type = each.object.type;
 
-            if (rule.type == "IdentityAttribute" ||
-              rule.type == "AttributeGenerator" ||
-              rule.type == "AttributeGeneratorFromTemplate" ||
-              rule.type == "Correlation" ||
-              rule.type == "ManagerCorrelation" ||
-              rule.type == "BeforeProvisioning" ||
-              rule.type == "Generic" ||
-              rule.type == "" ||
-              rule.type == null) {
+        if (
+          rule.type == 'IdentityAttribute' ||
+          rule.type == 'AttributeGenerator' ||
+          rule.type == 'AttributeGeneratorFromTemplate' ||
+          rule.type == 'Correlation' ||
+          rule.type == 'ManagerCorrelation' ||
+          rule.type == 'BeforeProvisioning' ||
+          rule.type == 'Generic' ||
+          rule.type == '' ||
+          rule.type == null
+        ) {
+          rule.id = each.object.id;
+          rule.name = each.object.name;
+          rule.object = each.object;
 
-              rule.id = each.object.id;
-              rule.name = each.object.name;
-              rule.object = each.object;
-
-              if (each.object.description) {
-                if (each.object.description.length > RuleDescriptionMaxLength) {
-                  rule.description = each.object.description.substring(0, RuleDescriptionMaxLength) + "...";
-                }
-                else {
-                  rule.description = each.object.description;
-                }
-              }
-
-              this.rules.push(rule);
-
+          if (each.object.description) {
+            if (each.object.description.length > RuleDescriptionMaxLength) {
+              rule.description =
+                each.object.description.substring(0, RuleDescriptionMaxLength) +
+                '...';
+            } else {
+              rule.description = each.object.description;
             }
-
           }
-          this.loading = false;
-        });
 
+          this.rules.push(rule);
+        }
+      }
+      this.loading = false;
+    });
   }
 
   async sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
-
 
   processRuleAttributes(result) {
     if (result.RULE.ATTRIBUTES && result.RULE.ATTRIBUTES.length > 0) {
@@ -161,84 +150,86 @@ export class CloudRuleComponent implements OnInit {
 
     if (rule.description) {
       ruleDesc = rule.description;
-    }
-    else {
-      ruleDesc = "";
+    } else {
+      ruleDesc = '';
     }
 
-    const builder = new xml2js.Builder({ doctype: { sysID: "sailpoint.dtd sailpoint.dtd" } });
+    const builder = new xml2js.Builder({
+      doctype: { sysID: 'sailpoint.dtd sailpoint.dtd' },
+    });
     const xmlObject = {
       Rule: {
         $: {
           name: rule.name,
-          type: rule.type
+          type: rule.type,
         },
-        "Attributes": [this.prepareRuleAttributes(rule.attributes)],
-        'Description': {
-          _: ruleDesc
+        Attributes: [this.prepareRuleAttributes(rule.attributes)],
+        Description: {
+          _: ruleDesc,
         },
-        'Source': {
-          _: rule.script
+        Source: {
+          _: rule.script,
         },
-      }
+      },
     };
 
     let xml: string = builder.buildObject(xmlObject);
     // xml.replace is a hack to format certain elements that xml2js does not support
-    xml = xml.replace("Rule SYSTEM \"sailpoint.dtd sailpoint.dtd\"", "Rule PUBLIC \"sailpoint.dtd\" \"sailpoint.dtd\"");
-    xml = xml.replace(" standalone=\"yes\"?>", "?>");
-    xml = xml.replace("<Source>", "<Source><![CDATA[\n");
-    xml = xml.replace("</Source>", "\n]]></Source>");
-    xml = xml.replace("&lt;#", "<#");
-    xml = xml.replace("#&gt;", "#>");
+    xml = xml.replace(
+      'Rule SYSTEM "sailpoint.dtd sailpoint.dtd"',
+      'Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd"'
+    );
+    xml = xml.replace(' standalone="yes"?>', '?>');
+    xml = xml.replace('<Source>', '<Source><![CDATA[\n');
+    xml = xml.replace('</Source>', '\n]]></Source>');
+    xml = xml.replace('&lt;#', '<#');
+    xml = xml.replace('#&gt;', '#>');
     // replace carriage return characters, if exist
     let re = /&#xD;/gi;
-    xml = xml.replace(re, "");
+    xml = xml.replace(re, '');
 
     re = /&amp;/gi;
-    xml = xml.replace(re, "&");
+    xml = xml.replace(re, '&');
 
     re = /&gt;/gi;
-    xml = xml.replace(re, ">");
+    xml = xml.replace(re, '>');
 
     re = /&lt;/gi;
-    xml = xml.replace(re, "<");
+    xml = xml.replace(re, '<');
 
-    const blob = new Blob([xml], { type: "application/xml" });
+    const blob = new Blob([xml], { type: 'application/xml' });
 
-    if (rule.type === "" || rule.type == null) {
-      rule.type = "Generic";
+    if (rule.type === '' || rule.type == null) {
+      rule.type = 'Generic';
     }
 
     if (buttonClicked === 'downloadRule') {
-      const fileName = "Rule - " + rule.type + " - " + rule.name + ".xml";
+      const fileName = 'Rule - ' + rule.type + ' - ' + rule.name + '.xml';
       saveAs(blob, fileName);
-    }
-    else {
-      return (blob);
+    } else {
+      return blob;
     }
   }
 
   prepareRuleAttributes(attributes) {
-
     let returnObject = null;
     if (attributes) {
       const attrs = [];
       for (const name of Object.keys(attributes)) {
         const attr = {
-          "$": {
-            "key": name,
-            "value": attributes[name]
-          }
+          $: {
+            key: name,
+            value: attributes[name],
+          },
         };
         attrs.push(attr);
       }
       returnObject = {
-        "Map": [
+        Map: [
           {
-            "entry": attrs
-          }
-        ]
+            entry: attrs,
+          },
+        ],
       };
     }
 
@@ -246,13 +237,11 @@ export class CloudRuleComponent implements OnInit {
   }
 
   downloadRule(ruleId: string, $event) {
-
     if ($event && $event != '') {
       this.buttonClicked = $event.target.name;
     }
 
     for (const selectedRule of this.rules) {
-
       if (selectedRule.id === ruleId) {
         const donwloadedRule = this.processDownloadRule(selectedRule);
         if (donwloadedRule != null) {
@@ -278,38 +267,35 @@ export class CloudRuleComponent implements OnInit {
         processedRule.script = result.object.sourceCode.script;
         return processedRule;
       } else {
-        this.messageService.addError("Invalid Rule: missing source code script.");
+        this.messageService.addError(
+          'Invalid Rule: missing source code script.'
+        );
         return null;
       }
     } else {
-      this.messageService.addError("Failed to download rule");
+      this.messageService.addError('Failed to download rule');
       return null;
     }
   }
 
   exportAllRules($event) {
-
     if ($event && $event != '') {
       this.buttonClicked = $event.target.name;
     }
 
     for (const each of this.rules) {
-
       const downloadrule = this.processDownloadRule(each);
 
       const result = this.convertRuleToXML(downloadrule, this.buttonClicked);
 
-      const fileName = "Rule - " + each.type + " - " + each.name + ".xml";
+      const fileName = 'Rule - ' + each.type + ' - ' + each.name + '.xml';
       this.zip.file(`${fileName}`, result);
-
     }
     const currentUser = this.authenticationService.currentUserValue;
     const zipFileName = `${currentUser.tenant}-cloud-rules.zip`;
 
-    this.zip.generateAsync({ type: "blob" }).then(function (content) {
+    this.zip.generateAsync({ type: 'blob' }).then(function (content) {
       saveAs(content, zipFileName);
-
     });
   }
-
 }

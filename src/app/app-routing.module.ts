@@ -36,39 +36,147 @@ import { AuthGuard } from './helper/auth.guard';
 
 const routes: Routes = [
   { path: '', redirectTo: '/identity-info', pathMatch: 'full' },
-  { path: 'multiple-accounts-report', component: MultipleAccountsComponent, canActivate: [AuthGuard] },
-  { path: 'access-request-status', component: AccessRequestStatusComponent, canActivate: [AuthGuard] },
-  { path: 'access-request-approval-forward', component: AccessRequestApprovalForwardComponent, canActivate: [AuthGuard] },
-  { path: 'work-items-status', component: WorkItemsStatusComponent, canActivate: [AuthGuard] },
-  { path: 'work-items-forward', component: WorkItemsForwardComponent, canActivate: [AuthGuard] },
-  { path: 'source-aggregation-management', component: AggregationManagementComponent, canActivate: [AuthGuard] },
-  { path: 'source-owner-update', component: ChangeSourceOwnerComponent, canActivate: [AuthGuard] },
-  { path: 'source-aggregation-run', component: AggregateSourceComponent, canActivate: [AuthGuard] },
-  { path: 'source-create-profile', component: SourceCreateProfileComponent, canActivate: [AuthGuard] },
-  { path: 'source-reset', component: ResetSourceComponent, canActivate: [AuthGuard] },
-  { path: 'source-info', component: SourceInfoComponent, canActivate: [AuthGuard] },
-  { path: 'rule-connector-management', component: ImportRuleComponent, canActivate: [AuthGuard] },
-  { path: 'rule-cloud-management', component: CloudRuleComponent, canActivate: [AuthGuard] },
-  { path: 'role-owner-update', component: ChangeRoleOwnerComponent, canActivate: [AuthGuard] },
-  { path: 'role-duplicate', component: DuplicateRoleComponent, canActivate: [AuthGuard] },
-  { path: 'accessprofile-owner-update', component: ChangeAccessProfileOwnerComponent, canActivate: [AuthGuard] },
-  { path: 'role-management', component: RoleManagementComponent, canActivate: [AuthGuard] },
-  { path: 'accessprofile-management', component: AccessProfileManagementComponent, canActivate: [AuthGuard] },
-  { path: 'identity-profile-management', component: IdentityProfileManagementComponent, canActivate: [AuthGuard] },
-  { path: 'identity-attribute-index', component: IdentityAttributeIndexComponent, canActivate: [AuthGuard] },
-  { path: 'identity-transform-management', component: IdentityTransformManagementComponent, canActivate: [AuthGuard] },
-  { path: 'identity-lcs-management', component: IdentityLCSComponent, canActivate: [AuthGuard] },
-  { path: 'identity-info', component: IdentityInfoComponent, canActivate: [AuthGuard] },
-  { path: 'release-history', component: ReleaseHistoryComponent, canActivate: [AuthGuard] },
+  {
+    path: 'multiple-accounts-report',
+    component: MultipleAccountsComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'access-request-status',
+    component: AccessRequestStatusComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'access-request-approval-forward',
+    component: AccessRequestApprovalForwardComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'work-items-status',
+    component: WorkItemsStatusComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'work-items-forward',
+    component: WorkItemsForwardComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'source-aggregation-management',
+    component: AggregationManagementComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'source-owner-update',
+    component: ChangeSourceOwnerComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'source-aggregation-run',
+    component: AggregateSourceComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'source-create-profile',
+    component: SourceCreateProfileComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'source-reset',
+    component: ResetSourceComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'source-info',
+    component: SourceInfoComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'rule-connector-management',
+    component: ImportRuleComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'rule-cloud-management',
+    component: CloudRuleComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'role-owner-update',
+    component: ChangeRoleOwnerComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'role-duplicate',
+    component: DuplicateRoleComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'accessprofile-owner-update',
+    component: ChangeAccessProfileOwnerComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'role-management',
+    component: RoleManagementComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'accessprofile-management',
+    component: AccessProfileManagementComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'identity-profile-management',
+    component: IdentityProfileManagementComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'identity-attribute-index',
+    component: IdentityAttributeIndexComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'identity-transform-management',
+    component: IdentityTransformManagementComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'identity-lcs-management',
+    component: IdentityLCSComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'identity-info',
+    component: IdentityInfoComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'release-history',
+    component: ReleaseHistoryComponent,
+    canActivate: [AuthGuard],
+  },
   { path: 'credits', component: CreditsComponent, canActivate: [AuthGuard] },
-  { path: 'misc-org-time-update', component: OrgTimeComponent, canActivate: [AuthGuard] },
-  { path: 'misc-manage-pat', component: ManagePATComponent, canActivate: [AuthGuard] },
-  { path: 'misc-org-stats', component: OrgStatsComponent, canActivate: [AuthGuard] },
-  { path: 'login', component: LoginComponent }
+  {
+    path: 'misc-org-time-update',
+    component: OrgTimeComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'misc-manage-pat',
+    component: ManagePATComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'misc-org-stats',
+    component: OrgStatsComponent,
+    canActivate: [AuthGuard],
+  },
+  { path: 'login', component: LoginComponent },
 ];
 
 @NgModule({
   imports: [RouterModule.forRoot(routes, {})],
-  exports: [RouterModule]
+  exports: [RouterModule],
 })
-export class AppRoutingModule { }
+export class AppRoutingModule {}

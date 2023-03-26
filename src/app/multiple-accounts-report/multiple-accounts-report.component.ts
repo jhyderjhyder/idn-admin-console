@@ -4,13 +4,21 @@ import { Account } from '../model/account';
 import { IDNService } from '../service/idn.service';
 import { AuthenticationService } from '../service/authentication-service.service';
 import { MessageService } from '../service/message.service';
-import { bufferCount, catchError, concatMap, delay, map, mergeMap, retryWhen } from 'rxjs/operators';
+import {
+  bufferCount,
+  catchError,
+  concatMap,
+  delay,
+  map,
+  mergeMap,
+  retryWhen,
+} from 'rxjs/operators';
 import { from, forkJoin, throwError, of } from 'rxjs';
 
 @Component({
   selector: 'app-multiple-accounts-report',
   templateUrl: './multiple-accounts-report.component.html',
-  styleUrls: ['./multiple-accounts-report.component.css']
+  styleUrls: ['./multiple-accounts-report.component.css'],
 })
 export class MultipleAccountsComponent implements OnInit {
   accounts: Account[];
@@ -19,9 +27,11 @@ export class MultipleAccountsComponent implements OnInit {
   loading: boolean;
   totalCount: number;
 
-  constructor(private idnService: IDNService,
+  constructor(
+    private idnService: IDNService,
     private authenticationService: AuthenticationService,
-    private messageService: MessageService) { }
+    private messageService: MessageService
+  ) {}
 
   ngOnInit() {
     this.reset();
@@ -42,47 +52,70 @@ export class MultipleAccountsComponent implements OnInit {
     this.accounts = [];
     this.totalCount = 0;
 
-    this.idnService.searchMultipleAccounts().pipe(
-      map(searchResults => searchResults.aggregations.accounts.source_id.buckets.filter(each => each.identities.buckets.length > 0)),
-      map(accnts => {
-        if (accnts.length == 0) {
-          this.messageService.add("No Multiple Accounts Found"); return [];
-        } else return [].concat.apply([], accnts.map(acc => acc.identities.buckets));
-      }),
-      mergeMap(buckets => from(buckets)),
-      bufferCount<any>(10),
-      concatMap(bucketsBuffer => forkJoin(bucketsBuffer.map(bucket => this.searchIdentitiesWithRetry(bucket.key.replace("identity#", "")).pipe(delay(1000), map(rec => ({ rec, bucket }))))))
-    ).subscribe({
-      next: searchResult => {
-        let identityName: string;
-        let identityDisplayName: string;
+    this.idnService
+      .searchMultipleAccounts()
+      .pipe(
+        map(searchResults =>
+          searchResults.aggregations.accounts.source_id.buckets.filter(
+            each => each.identities.buckets.length > 0
+          )
+        ),
+        map(accnts => {
+          if (accnts.length == 0) {
+            this.messageService.add('No Multiple Accounts Found');
+            return [];
+          } else
+            return [].concat.apply(
+              [],
+              accnts.map(acc => acc.identities.buckets)
+            );
+        }),
+        mergeMap(buckets => from(buckets)),
+        bufferCount<any>(10),
+        concatMap(bucketsBuffer =>
+          forkJoin(
+            bucketsBuffer.map(bucket =>
+              this.searchIdentitiesWithRetry(
+                bucket.key.replace('identity#', '')
+              ).pipe(
+                delay(1000),
+                map(rec => ({ rec, bucket }))
+              )
+            )
+          )
+        )
+      )
+      .subscribe({
+        next: searchResult => {
+          let identityName: string;
+          let identityDisplayName: string;
 
-        for (const result of searchResult) {
-          for (const rec of result.rec) {
-            identityName = rec.name;
-            identityDisplayName = rec.displayName;
+          for (const result of searchResult) {
+            for (const rec of result.rec) {
+              identityName = rec.name;
+              identityDisplayName = rec.displayName;
+            }
+
+            for (const hit of result.bucket.accounts.hits.hits) {
+              const account = new Account();
+              //Account level fields
+              account.accountId = hit._source.accountId;
+              account.accountName = hit._source.name;
+              account.sourceId = hit._source.source.id;
+              account.sourceName = hit._source.source.name;
+              account.accountDisabled = hit._source.disabled;
+              account.accountCreated = hit._source.created;
+              //Identity level fields
+              account.identityName = identityName;
+              account.displayName = identityDisplayName;
+
+              this.accounts.push(account);
+            }
           }
-
-          for (const hit of result.bucket.accounts.hits.hits) {
-            const account = new Account();
-            //Account level fields
-            account.accountId = hit._source.accountId;
-            account.accountName = hit._source.name;
-            account.sourceId = hit._source.source.id;
-            account.sourceName = hit._source.source.name;
-            account.accountDisabled = hit._source.disabled;
-            account.accountCreated = hit._source.created;
-            //Identity level fields
-            account.identityName = identityName;
-            account.displayName = identityDisplayName;
-
-            this.accounts.push(account);
-          }
-        }
-        this.totalCount = this.accounts.length;
-      },
-      complete: () => this.loading = false
-    });
+          this.totalCount = this.accounts.length;
+        },
+        complete: () => (this.loading = false),
+      });
   }
 
   searchIdentitiesWithRetry(search) {
@@ -90,16 +123,17 @@ export class MultipleAccountsComponent implements OnInit {
       catchError(err => {
         return throwError(err);
       }),
-      retryWhen(obs => obs.pipe(
-        concatMap(response => {
-          if (response.status === 429) {
-            ;
-            return of(response).pipe(delay(5000));
-          } else {
-            return throwError(response);
-          }
-        })
-      ))
+      retryWhen(obs =>
+        obs.pipe(
+          concatMap(response => {
+            if (response.status === 429) {
+              return of(response).pipe(delay(5000));
+            } else {
+              return throwError(response);
+            }
+          })
+        )
+      )
     );
   }
 
@@ -110,7 +144,15 @@ export class MultipleAccountsComponent implements OnInit {
       decimalseparator: '.',
       showLabels: true,
       useHeader: true,
-      headers: ["identityName", "displayName", "sourceName", "accountId", "accountName", "accountDisabled", "accountCreated"],
+      headers: [
+        'identityName',
+        'displayName',
+        'sourceName',
+        'accountId',
+        'accountName',
+        'accountDisabled',
+        'accountCreated',
+      ],
       nullToEmptyString: true,
     };
 
@@ -121,14 +163,13 @@ export class MultipleAccountsComponent implements OnInit {
     for (const each of this.accounts) {
       const record = Object.assign(each);
       if (each.accountDisabled) {
-        record.accountDisabled = "Yes";
+        record.accountDisabled = 'Yes';
       } else {
-        record.accountDisabled = "No";
+        record.accountDisabled = 'No';
       }
       arr.push(record);
     }
 
     new AngularCsv(arr, fileName, options);
   }
-
 }

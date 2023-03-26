@@ -15,13 +15,21 @@ import { RouterModule } from '@angular/router';
 describe('AppComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [
-        AppComponent, MessagesComponent
-      ],
-      providers: [IDNService, Idle, Keepalive,
+      declarations: [AppComponent, MessagesComponent],
+      providers: [
+        IDNService,
+        Idle,
+        Keepalive,
         { provide: IdleExpiry, useClass: MockExpiry },
-        { provide: IDNService, useClass: MockIDNService }],
-      imports: [HttpClientModule, HttpClientTestingModule, FormsModule, ModalModule, RouterModule]
+        { provide: IDNService, useClass: MockIDNService },
+      ],
+      imports: [
+        HttpClientModule,
+        HttpClientTestingModule,
+        FormsModule,
+        ModalModule,
+        RouterModule,
+      ],
     }).compileComponents();
   }));
 

@@ -15,11 +15,17 @@ describe('ResetSourceComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ResetSourceComponent],
-      providers: [IDNService,
-        { provide: IDNService, useClass: MockIDNService }],
-      imports: [HttpClientModule, HttpClientTestingModule, FormsModule, ModalModule]
-    })
-      .compileComponents();
+      providers: [
+        IDNService,
+        { provide: IDNService, useClass: MockIDNService },
+      ],
+      imports: [
+        HttpClientModule,
+        HttpClientTestingModule,
+        FormsModule,
+        ModalModule,
+      ],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

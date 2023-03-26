@@ -8,10 +8,9 @@ import { IdentityAttribute } from '../model/identity-attribute';
 @Component({
   selector: 'app-identity-attribute-index',
   templateUrl: './identity-attribute-index.component.html',
-  styleUrls: ['./identity-attribute-index.component.css']
+  styleUrls: ['./identity-attribute-index.component.css'],
 })
 export class IdentityAttributeIndexComponent implements OnInit {
-  
   loading: boolean;
   errorMessage: string;
   invalidMessage: string[];
@@ -24,13 +23,16 @@ export class IdentityAttributeIndexComponent implements OnInit {
   attributeToChange: IdentityAttribute;
 
   public modalRef: BsModalRef;
-  
-  @ViewChild('submitUnindexConfirmModal', { static: false }) submitUnindexConfirmModal: ModalDirective;
-  @ViewChild('submitIndexConfirmModal', { static: false }) submitIndexConfirmModal: ModalDirective;
 
-  constructor(private idnService: IDNService, 
-    private messageService: MessageService) {
-  }
+  @ViewChild('submitUnindexConfirmModal', { static: false })
+  submitUnindexConfirmModal: ModalDirective;
+  @ViewChild('submitIndexConfirmModal', { static: false })
+  submitIndexConfirmModal: ModalDirective;
+
+  constructor(
+    private idnService: IDNService,
+    private messageService: MessageService
+  ) {}
 
   ngOnInit() {
     this.reset(true);
@@ -48,72 +50,73 @@ export class IdentityAttributeIndexComponent implements OnInit {
     if (clearMsg) {
       this.messageService.clearAll();
       this.errorMessage = null;
-    } 
+    }
   }
 
   getAllIdentityAttributes() {
     this.loading = true;
-    this.idnService.getAllIdentityAttributes()
-          .subscribe(allIdentityAttributes => {
-            this.indexedAttributes = [];
-            this.unindexedAttributes = [];
-            for (const each of allIdentityAttributes) {
-              const identityAttribute = new IdentityAttribute();
-              identityAttribute.displayName = each.displayName;
-              identityAttribute.extendedNumber = each.extendedNumber;
-              identityAttribute.name = each.name;
-              identityAttribute.searchable = each.searchable;
-              identityAttribute.sources = each.sources;
-              identityAttribute.type = each.type;
+    this.idnService
+      .getAllIdentityAttributes()
+      .subscribe(allIdentityAttributes => {
+        this.indexedAttributes = [];
+        this.unindexedAttributes = [];
+        for (const each of allIdentityAttributes) {
+          const identityAttribute = new IdentityAttribute();
+          identityAttribute.displayName = each.displayName;
+          identityAttribute.extendedNumber = each.extendedNumber;
+          identityAttribute.name = each.name;
+          identityAttribute.searchable = each.searchable;
+          identityAttribute.sources = each.sources;
+          identityAttribute.type = each.type;
 
-              if (each.searchable && each.extendedNumber > 9) {
-                this.indexedAttributes.push(identityAttribute);
-              } else if (!each.searchable) {
-                this.unindexedAttributes.push(identityAttribute);
-              }
-            }
-            this.loading = false;
-          });
+          if (each.searchable && each.extendedNumber > 9) {
+            this.indexedAttributes.push(identityAttribute);
+          } else if (!each.searchable) {
+            this.unindexedAttributes.push(identityAttribute);
+          }
+        }
+        this.loading = false;
+      });
   }
-  
+
   unindexAttribute() {
     this.messageService.clearAll();
     this.validToSubmit = true;
-    
-    this.idnService.updateAttributeIndex(this.attributeToChange)
-          .subscribe(() => {
-            this.submitUnindexConfirmModal.hide();
-            this.messageService.add("Changes saved successfully.");
-            this.reset(false);
-            this.getAllIdentityAttributes();
-          },
-          err => {
-            this.submitUnindexConfirmModal.hide();
-            this.messageService.handleIDNError(err);
-            this.reset(false);
-            this.getAllIdentityAttributes();
-          }
-        );;
+
+    this.idnService.updateAttributeIndex(this.attributeToChange).subscribe(
+      () => {
+        this.submitUnindexConfirmModal.hide();
+        this.messageService.add('Changes saved successfully.');
+        this.reset(false);
+        this.getAllIdentityAttributes();
+      },
+      err => {
+        this.submitUnindexConfirmModal.hide();
+        this.messageService.handleIDNError(err);
+        this.reset(false);
+        this.getAllIdentityAttributes();
+      }
+    );
   }
 
   indexAttribute() {
     this.messageService.clearAll();
     this.validToSubmit = true;
-    
-    this.idnService.updateAttributeIndex(this.attributeToChange)
-          .subscribe(() => {
-            this.submitIndexConfirmModal.hide();
-            this.messageService.add("Changes saved successfully.");
-            this.reset(false);
-            this.getAllIdentityAttributes();
-          },
-          err => {
-            this.submitIndexConfirmModal.hide();
-            this.messageService.handleIDNError(err);
-            this.reset(false);
-            this.getAllIdentityAttributes();
-          }
-        );;
+
+    this.idnService.updateAttributeIndex(this.attributeToChange).subscribe(
+      () => {
+        this.submitIndexConfirmModal.hide();
+        this.messageService.add('Changes saved successfully.');
+        this.reset(false);
+        this.getAllIdentityAttributes();
+      },
+      err => {
+        this.submitIndexConfirmModal.hide();
+        this.messageService.handleIDNError(err);
+        this.reset(false);
+        this.getAllIdentityAttributes();
+      }
+    );
   }
 
   showUnindexSubmitConfirmModal(selectedAttribute: IdentityAttribute) {
@@ -146,7 +149,7 @@ export class IdentityAttributeIndexComponent implements OnInit {
 
     if (!selectedAttribute) {
       this.invalidMessage.push(`Must select an attribute from dropdown list`);
-       this.validToSubmit = false;
+      this.validToSubmit = false;
     }
 
     if (this.validToSubmit) {
@@ -169,5 +172,4 @@ export class IdentityAttributeIndexComponent implements OnInit {
   hideIndexConfirmModal() {
     this.submitIndexConfirmModal.hide();
   }
-
 }

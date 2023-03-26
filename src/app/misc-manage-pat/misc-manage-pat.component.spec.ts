@@ -13,12 +13,18 @@ describe('ManagePATComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ ManagePATComponent ],
-      providers: [IDNService,
-        { provide: IDNService, useClass: MockIDNService }],
-        imports: [HttpClientModule, HttpClientTestingModule,FormsModule, ModalModule ]  
-    })
-    .compileComponents();
+      declarations: [ManagePATComponent],
+      providers: [
+        IDNService,
+        { provide: IDNService, useClass: MockIDNService },
+      ],
+      imports: [
+        HttpClientModule,
+        HttpClientTestingModule,
+        FormsModule,
+        ModalModule,
+      ],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

@@ -14,11 +14,17 @@ describe('AggregationManagementComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [ChangeSourceOwnerComponent],
-      providers: [IDNService,
-        { provide: IDNService, useClass: MockIDNService }],
-      imports: [HttpClientModule, HttpClientTestingModule, FormsModule, ModalModule]
-    })
-      .compileComponents();
+      providers: [
+        IDNService,
+        { provide: IDNService, useClass: MockIDNService },
+      ],
+      imports: [
+        HttpClientModule,
+        HttpClientTestingModule,
+        FormsModule,
+        ModalModule,
+      ],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

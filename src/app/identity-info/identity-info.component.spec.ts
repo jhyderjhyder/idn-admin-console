@@ -14,11 +14,17 @@ describe('IdentityInfoComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [IdentityInfoComponent],
-      providers: [IDNService,
-        { provide: IDNService, useClass: MockIDNService }],
-      imports: [HttpClientModule, HttpClientTestingModule, FormsModule, ModalModule]
-    })
-      .compileComponents();
+      providers: [
+        IDNService,
+        { provide: IDNService, useClass: MockIDNService },
+      ],
+      imports: [
+        HttpClientModule,
+        HttpClientTestingModule,
+        FormsModule,
+        ModalModule,
+      ],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

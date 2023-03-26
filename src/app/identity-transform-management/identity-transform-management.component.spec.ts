@@ -9,16 +9,22 @@ import { IdentityTransformManagementComponent } from './identity-transform-manag
 
 describe('IdentityTransformManagementComponent', () => {
   let component: IdentityTransformManagementComponent;
-  let fixture: ComponentFixture<IdentityTransformManagementComponent>; 
+  let fixture: ComponentFixture<IdentityTransformManagementComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ IdentityTransformManagementComponent ],
-      providers: [IDNService,
-        { provide: IDNService, useClass: MockIDNService }],
-        imports: [HttpClientModule, HttpClientTestingModule,FormsModule, ModalModule ] 
-    })
-    .compileComponents();
+      declarations: [IdentityTransformManagementComponent],
+      providers: [
+        IDNService,
+        { provide: IDNService, useClass: MockIDNService },
+      ],
+      imports: [
+        HttpClientModule,
+        HttpClientTestingModule,
+        FormsModule,
+        ModalModule,
+      ],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

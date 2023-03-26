@@ -10,11 +10,9 @@ import { IdentityProfile } from '../model/identity-profile';
 @Component({
   selector: 'app-identity-lcs-management',
   templateUrl: './identity-lcs-management.component.html',
-  styleUrls: ['./identity-lcs-management.component.css']
+  styleUrls: ['./identity-lcs-management.component.css'],
 })
-
 export class IdentityLCSComponent implements OnInit {
-
   identityProfiles: IdentityProfile[];
   loading: boolean;
   validToSubmit: boolean;
@@ -29,11 +27,13 @@ export class IdentityLCSComponent implements OnInit {
 
   public modalRef: BsModalRef;
 
-  @ViewChild('submitDeleteLCSSubmitConfirmModal', { static: false }) submitDeleteLCSSubmitConfirmModal: ModalDirective;
+  @ViewChild('submitDeleteLCSSubmitConfirmModal', { static: false })
+  submitDeleteLCSSubmitConfirmModal: ModalDirective;
 
-  constructor(private idnService: IDNService,
-    private messageService: MessageService) {
-  }
+  constructor(
+    private idnService: IDNService,
+    private messageService: MessageService
+  ) {}
 
   ngOnInit() {
     this.reset(true);
@@ -41,7 +41,6 @@ export class IdentityLCSComponent implements OnInit {
   }
 
   reset(clearMsg: boolean) {
-
     this.loading = false;
     this.invalidMessage = [];
     this.validToSubmit = false;
@@ -54,56 +53,51 @@ export class IdentityLCSComponent implements OnInit {
 
     if (clearMsg) {
       this.messageService.clearAll();
-
     }
   }
 
   getAllIdentityProfiles() {
     this.loading = true;
-    this.idnService.getAllIdentityProfiles()
-      .subscribe(allIdentityProfiles => {
+    this.idnService.getAllIdentityProfiles().subscribe(allIdentityProfiles => {
+      this.identityProfiles = [];
+      for (const each of allIdentityProfiles) {
+        const identityProfile = new IdentityProfile();
+        identityProfile.id = each.id;
+        identityProfile.name = each.name;
 
-        this.identityProfiles = [];
-        for (const each of allIdentityProfiles) {
-          const identityProfile = new IdentityProfile();
-          identityProfile.id = each.id;
-          identityProfile.name = each.name;
+        this.identityProfiles.push(identityProfile);
+      }
 
-          this.identityProfiles.push(identityProfile);
-        }
-
-        this.loading = false;
-      });
+      this.loading = false;
+    });
   }
-
 
   getIdentityProfileLCS(profileId: string) {
     if (profileId != null) {
-
       this.selectedIdentityProfileId = profileId;
 
-      this.idnService.getIdentityProfileLCS(this.selectedIdentityProfileId)
-        .subscribe(result => {
+      this.idnService
+        .getIdentityProfileLCS(this.selectedIdentityProfileId)
+        .subscribe(
+          result => {
+            this.identityProfileLCSExists = true;
 
-          this.identityProfileLCSExists = true;
+            this.lcsAttributes = [];
+            for (const each of result) {
+              const lcsAttribute = new IdentityProfile();
+              lcsAttribute.lcsId = each.id;
+              lcsAttribute.lcsDisplayName = each.name;
+              lcsAttribute.lcsTechnicalName = each.technicalName;
+              lcsAttribute.lcsEnabled = each.enabled;
+              lcsAttribute.lcsIdentityCount = each.identityCount;
 
-          this.lcsAttributes = [];
-          for (const each of result) {
-            const lcsAttribute = new IdentityProfile();
-            lcsAttribute.lcsId = each.id;
-            lcsAttribute.lcsDisplayName = each.name;
-            lcsAttribute.lcsTechnicalName = each.technicalName;
-            lcsAttribute.lcsEnabled = each.enabled;
-            lcsAttribute.lcsIdentityCount = each.identityCount;
-
-
-            this.lcsAttributes.push(lcsAttribute);
-          }
-        },
+              this.lcsAttributes.push(lcsAttribute);
+            }
+          },
           () => {
             this.identityProfileLCSExists = false;
-
-          });
+          }
+        );
     }
   }
 
@@ -111,43 +105,47 @@ export class IdentityLCSComponent implements OnInit {
     this.messageService.clearError();
     this.loading = true;
 
-    this.idnService.deleteIdentityProfileLCS(this.selectedIdentityProfileId, this.lcsToDeleteId)
-      .subscribe(() => {
-        this.submitDeleteLCSSubmitConfirmModal.hide();
-        this.reset(false);
-        this.ngOnInit();
-      },
+    this.idnService
+      .deleteIdentityProfileLCS(
+        this.selectedIdentityProfileId,
+        this.lcsToDeleteId
+      )
+      .subscribe(
+        () => {
+          this.submitDeleteLCSSubmitConfirmModal.hide();
+          this.reset(false);
+          this.ngOnInit();
+        },
         err => {
           this.messageService.handleIDNError(err);
           this.submitDeleteLCSSubmitConfirmModal.hide();
           this.reset(false);
           this.ngOnInit();
         }
-      );;
+      );
   }
 
   downloadLCS() {
-
     const identityProfile = new IdentityProfile();
 
-    this.idnService.getIdentityProfile(this.selectedIdentityProfileId)
+    this.idnService
+      .getIdentityProfile(this.selectedIdentityProfileId)
       .subscribe(
         result => {
           identityProfile.name = result.name;
 
-          this.idnService.getIdentityProfileLCS(this.selectedIdentityProfileId)
+          this.idnService
+            .getIdentityProfileLCS(this.selectedIdentityProfileId)
             .subscribe(
               result => {
                 result = JSON.stringify(result, null, 4);
 
-                const blob = new Blob([result], { type: "application/json" });
-                const fileName = "LCS - " + identityProfile.name + ".json";
+                const blob = new Blob([result], { type: 'application/json' });
+                const fileName = 'LCS - ' + identityProfile.name + '.json';
                 saveAs(blob, fileName);
-
               },
               err => this.messageService.handleIDNError(err)
             );
-
         },
         err => this.messageService.handleIDNError(err)
       );
@@ -187,7 +185,7 @@ export class IdentityLCSComponent implements OnInit {
 
   //         this.ngOnInit();
 
-  //         });    
+  //         });
   // }
 
   showDeleteLCSSubmitConfirmModal(lcsId: string) {
@@ -207,4 +205,3 @@ export class IdentityLCSComponent implements OnInit {
     this.submitDeleteLCSSubmitConfirmModal.hide();
   }
 }
-

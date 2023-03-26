@@ -8,6 +8,7 @@
     "build": "ng build",
     "test": "ng test",
     "lint": "ng lint",
+    "format": "npx prettier --write .",
     "e2e": "ng e2e",
     "electron": "electron .",
     "build-prod": "ng build",
@@ -99,9 +100,13 @@
     "@typescript-eslint/parser": "5.48.2",
     "eslint": "^8.33.0",
     "eslint-config-airbnb-typescript": "^17.0.0",
+    "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-deprecation": "^1.3.3",
     "eslint-plugin-import": "^2.27.5",
-    "eslint-plugin-jasmine": "^4.1.3"
+    "eslint-plugin-jasmine": "^4.1.3",
+    "eslint-plugin-prettier": "^4.2.1",
+    "prettier": "^2.8.7",
+    "prettier-eslint": "^15.0.1"
   },
   "lint": {
     "builder": "@angular-eslint/builder:lint",

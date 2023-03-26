@@ -10,7 +10,7 @@ describe('AuthenticationService', () => {
     TestBed.configureTestingModule({
       imports: [HttpClientTestingModule],
     });
-    service = TestBed.inject(AuthenticationService); 
+    service = TestBed.inject(AuthenticationService);
   });
 
   it('should be created', () => {

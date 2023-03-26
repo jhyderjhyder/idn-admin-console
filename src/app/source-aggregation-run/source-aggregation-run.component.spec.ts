@@ -13,12 +13,18 @@ describe('AggregateSourceComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ AggregateSourceComponent ],
-      providers: [IDNService,
-        { provide: IDNService, useClass: MockIDNService }],
-        imports: [HttpClientModule, HttpClientTestingModule,FormsModule, ModalModule ]  
-    })
-    .compileComponents();
+      declarations: [AggregateSourceComponent],
+      providers: [
+        IDNService,
+        { provide: IDNService, useClass: MockIDNService },
+      ],
+      imports: [
+        HttpClientModule,
+        HttpClientTestingModule,
+        FormsModule,
+        ModalModule,
+      ],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

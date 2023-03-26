@@ -13,5 +13,4 @@ export class Account {
   sourceName: string;
   accountDisabled: boolean;
   accountCreated: Date;
-
 }

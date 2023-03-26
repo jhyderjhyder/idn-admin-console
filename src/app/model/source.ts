@@ -1,6 +1,6 @@
-import { Schedule } from ".././model/schedule";
-import { SourceOwner } from ".././model/source-owner";
-import { AggregationTask } from ".././model/aggregation-task";
+import { Schedule } from '.././model/schedule';
+import { SourceOwner } from '.././model/source-owner';
+import { AggregationTask } from '.././model/aggregation-task';
 
 export class Source {
   id: string;

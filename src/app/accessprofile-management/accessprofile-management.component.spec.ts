@@ -15,11 +15,17 @@ describe('AccessProfileManagementComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
       declarations: [AccessProfileManagementComponent],
-      providers: [IDNService,
-      { provide: IDNService, useClass: MockIDNService }],
-      imports: [HttpClientModule, HttpClientTestingModule, FormsModule, ModalModule]
-    })
-      .compileComponents();
+      providers: [
+        IDNService,
+        { provide: IDNService, useClass: MockIDNService },
+      ],
+      imports: [
+        HttpClientModule,
+        HttpClientTestingModule,
+        FormsModule,
+        ModalModule,
+      ],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

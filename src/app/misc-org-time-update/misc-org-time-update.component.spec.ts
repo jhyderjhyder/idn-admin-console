@@ -9,16 +9,22 @@ import { OrgTimeComponent } from './misc-org-time-update.component';
 
 describe('OrgTimeComponent', () => {
   let component: OrgTimeComponent;
-  let fixture: ComponentFixture<OrgTimeComponent>; 
+  let fixture: ComponentFixture<OrgTimeComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ OrgTimeComponent ],
-      providers: [IDNService,
-        { provide: IDNService, useClass: MockIDNService }],
-        imports: [HttpClientModule, HttpClientTestingModule,FormsModule, ModalModule ] 
-    })
-    .compileComponents();
+      declarations: [OrgTimeComponent],
+      providers: [
+        IDNService,
+        { provide: IDNService, useClass: MockIDNService },
+      ],
+      imports: [
+        HttpClientModule,
+        HttpClientTestingModule,
+        FormsModule,
+        ModalModule,
+      ],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

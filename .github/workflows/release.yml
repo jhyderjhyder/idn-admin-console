@@ -3,7 +3,7 @@ name: Build Release
 on:
   push:
     tags:
-      - "*"
+      - '*'
 
 jobs:
   # release:
@@ -42,10 +42,10 @@ jobs:
         uses: thedoctor0/zip-release@main
         id: create_release
         with:
-          type: "zip"
-          path: "./idn-admin-console-darwin-x64"
-          filename: "idn-admin-console-darwin-x64.zip"
-          exclusions: "*.git* /*node_modules/* .editorconfig /idn-admin-console-darwin-x64/version"
+          type: 'zip'
+          path: './idn-admin-console-darwin-x64'
+          filename: 'idn-admin-console-darwin-x64.zip'
+          exclusions: '*.git* /*node_modules/* .editorconfig /idn-admin-console-darwin-x64/version'
 
       - name: Upload to Release
         uses: svenstaro/upload-release-action@v2
@@ -120,10 +120,10 @@ jobs:
         uses: thedoctor0/zip-release@main
         id: create_release
         with:
-          type: "zip"
-          path: "./idn-admin-console-win32-x64"
-          filename: "idn-admin-console-win32-x64.zip"
-          exclusions: "*.git* /*node_modules/* .editorconfig /idn-admin-console-win32-x64/version"
+          type: 'zip'
+          path: './idn-admin-console-win32-x64'
+          filename: 'idn-admin-console-win32-x64.zip'
+          exclusions: '*.git* /*node_modules/* .editorconfig /idn-admin-console-win32-x64/version'
 
       - name: Upload to Release
         uses: svenstaro/upload-release-action@v2
@@ -159,10 +159,10 @@ jobs:
         uses: thedoctor0/zip-release@main
         id: create_release
         with:
-          type: "zip"
-          path: "./idn-admin-console-linux-x64"
-          filename: "idn-admin-console-linux-x64"
-          exclusions: "*.git* /*node_modules/* .editorconfig /idn-admin-console-linux-x64/version"
+          type: 'zip'
+          path: './idn-admin-console-linux-x64'
+          filename: 'idn-admin-console-linux-x64'
+          exclusions: '*.git* /*node_modules/* .editorconfig /idn-admin-console-linux-x64/version'
 
       - name: Upload to Release
         uses: svenstaro/upload-release-action@v2

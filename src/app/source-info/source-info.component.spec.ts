@@ -13,12 +13,18 @@ describe('SourceInfoComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ SourceInfoComponent ],
-      providers: [IDNService,
-        { provide: IDNService, useClass: MockIDNService }],
-        imports: [HttpClientModule, HttpClientTestingModule,FormsModule, ModalModule ] 
-    })
-    .compileComponents();
+      declarations: [SourceInfoComponent],
+      providers: [
+        IDNService,
+        { provide: IDNService, useClass: MockIDNService },
+      ],
+      imports: [
+        HttpClientModule,
+        HttpClientTestingModule,
+        FormsModule,
+        ModalModule,
+      ],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

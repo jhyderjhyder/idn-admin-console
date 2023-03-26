@@ -8,7 +8,7 @@ import { MessageService } from '../service/message.service';
 @Component({
   selector: 'app-source-reset',
   templateUrl: './source-reset.component.html',
-  styleUrls: ['./source-reset.component.css']
+  styleUrls: ['./source-reset.component.css'],
 })
 export class ResetSourceComponent implements OnInit {
   sources: Source[];
@@ -25,14 +25,17 @@ export class ResetSourceComponent implements OnInit {
 
   public modalRef: BsModalRef;
 
-  @ViewChild('resetSourceAccountsConfirmModal', { static: false }) resetSourceAccountsConfirmModal: ModalDirective;
-  @ViewChild('resetSourceEntitlementsConfirmModal', { static: false }) resetSourceEntitlementsConfirmModal: ModalDirective;
-  @ViewChild('resetSourceBothConfirmModal', { static: false }) resetSourceBothConfirmModal: ModalDirective;
+  @ViewChild('resetSourceAccountsConfirmModal', { static: false })
+  resetSourceAccountsConfirmModal: ModalDirective;
+  @ViewChild('resetSourceEntitlementsConfirmModal', { static: false })
+  resetSourceEntitlementsConfirmModal: ModalDirective;
+  @ViewChild('resetSourceBothConfirmModal', { static: false })
+  resetSourceBothConfirmModal: ModalDirective;
 
-
-  constructor(private idnService: IDNService,
-    private messageService: MessageService) {
-  }
+  constructor(
+    private idnService: IDNService,
+    private messageService: MessageService
+  ) {}
 
   ngOnInit() {
     this.reset(true);
@@ -56,32 +59,30 @@ export class ResetSourceComponent implements OnInit {
 
   search() {
     this.loading = true;
-    this.idnService.getAllSources()
-      .subscribe(allSources => {
-        this.sources = [];
-        for (const each of allSources) {
-          const source = new Source();
-          source.id = each.id;
-          source.cloudExternalID = each.connectorAttributes.cloudExternalId;
-          source.name = each.name;
-          source.description = each.description;
-          source.type = each.type;
+    this.idnService.getAllSources().subscribe(allSources => {
+      this.sources = [];
+      for (const each of allSources) {
+        const source = new Source();
+        source.id = each.id;
+        source.cloudExternalID = each.connectorAttributes.cloudExternalId;
+        source.name = each.name;
+        source.description = each.description;
+        source.type = each.type;
 
-          this.idnService.getSourceCCApi(source.cloudExternalID)
-            .subscribe(
-              searchResult => {
-                source.accountsCount = searchResult.accountsCount;
-                source.entitlementsCount = searchResult.entitlementsCount;
-              },
-              err => {
-                this.messageService.handleIDNError(err);
-              }
-            );
+        this.idnService.getSourceCCApi(source.cloudExternalID).subscribe(
+          searchResult => {
+            source.accountsCount = searchResult.accountsCount;
+            source.entitlementsCount = searchResult.entitlementsCount;
+          },
+          err => {
+            this.messageService.handleIDNError(err);
+          }
+        );
 
-          this.sources.push(source);
-        }
-        this.loading = false;
-      });
+        this.sources.push(source);
+      }
+      this.loading = false;
+    });
   }
 
   resetSourceAccounts() {
@@ -89,22 +90,26 @@ export class ResetSourceComponent implements OnInit {
     this.invalidMessage = [];
     // validation
     if (this.resetSourceNameText != this.sourceToReset.name) {
-      this.invalidMessage.push("Confirmed source name does not match source name!");
+      this.invalidMessage.push(
+        'Confirmed source name does not match source name!'
+      );
       this.validToSubmit = false;
       return;
-    }
-    else {
+    } else {
       this.validToSubmit = true;
     }
 
-    this.skipType = "entitlements";
+    this.skipType = 'entitlements';
 
-    this.idnService.resetSource(this.sourceToReset.cloudExternalID, this.skipType)
+    this.idnService
+      .resetSource(this.sourceToReset.cloudExternalID, this.skipType)
       .subscribe(
         () => {
           //this.closeModalDisplayMsg();
           this.resetSourceAccountsConfirmModal.hide();
-          this.messageService.add("Source account reset in progress. Please check Org -> Admin -> Dashboard -> Monitor. Hit Refresh to see the count drop for the source to 0 if successful");
+          this.messageService.add(
+            'Source account reset in progress. Please check Org -> Admin -> Dashboard -> Monitor. Hit Refresh to see the count drop for the source to 0 if successful'
+          );
           this.sourceToReset = null;
           this.skipType = null;
           this.reset(false);
@@ -117,7 +122,6 @@ export class ResetSourceComponent implements OnInit {
           this.messageService.handleIDNError(err);
         }
       );
-
   }
 
   resetSourceEntitlements() {
@@ -125,17 +129,19 @@ export class ResetSourceComponent implements OnInit {
     this.invalidMessage = [];
     // validation
     if (this.resetSourceNameText != this.sourceToReset.name) {
-      this.invalidMessage.push("Confirmed source name does not match source name!");
+      this.invalidMessage.push(
+        'Confirmed source name does not match source name!'
+      );
       this.validToSubmit = false;
       return;
-    }
-    else {
+    } else {
       this.validToSubmit = true;
     }
 
-    this.skipType = "accounts";
+    this.skipType = 'accounts';
 
-    this.idnService.resetSource(this.sourceToReset.cloudExternalID, this.skipType)
+    this.idnService
+      .resetSource(this.sourceToReset.cloudExternalID, this.skipType)
       .subscribe(
         () => {
           //this.closeModalDisplayMsg();
@@ -155,7 +161,6 @@ export class ResetSourceComponent implements OnInit {
           this.messageService.handleIDNError(err);
         }
       );
-
   }
 
   resetSourceBoth() {
@@ -163,22 +168,25 @@ export class ResetSourceComponent implements OnInit {
     this.invalidMessage = [];
     // validation
     if (this.resetSourceNameText != this.sourceToReset.name) {
-      this.invalidMessage.push("Confirmed source name does not match source name!");
+      this.invalidMessage.push(
+        'Confirmed source name does not match source name!'
+      );
       this.validToSubmit = false;
       return;
-    }
-    else {
+    } else {
       this.validToSubmit = true;
     }
 
     this.skipType = null;
 
-    this.idnService.resetSource(this.sourceToReset.cloudExternalID, this.skipType)
+    this.idnService
+      .resetSource(this.sourceToReset.cloudExternalID, this.skipType)
       .subscribe(
         () => {
           //this.closeModalDisplayMsg();
           this.resetSourceBothConfirmModal.hide();
-          this.messageService.add(`Source accounts and entitlements in progress. 
+          this.messageService
+            .add(`Source accounts and entitlements in progress. 
                           Please check Org -> Admin -> Dashboard -> Monitor. 
                           Hit Refresh to see the count drop for the source to 0 if successful`);
           this.sourceToReset = null;
@@ -193,7 +201,6 @@ export class ResetSourceComponent implements OnInit {
           this.messageService.handleIDNError(err);
         }
       );
-
   }
 
   showResetSourceAccountsConfirmModal(selectedSource: Source) {
@@ -220,7 +227,6 @@ export class ResetSourceComponent implements OnInit {
     this.sourceToReset.cloudExternalID = selectedSource.cloudExternalID;
     this.validToSubmit = false;
     this.resetSourceEntitlementsConfirmModal.show();
-
   }
 
   showResetSourceBothConfirmModal(selectedSource: Source) {
@@ -234,7 +240,6 @@ export class ResetSourceComponent implements OnInit {
     this.sourceToReset.cloudExternalID = selectedSource.cloudExternalID;
     this.validToSubmit = false;
     this.resetSourceBothConfirmModal.show();
-
   }
 
   hideResetSourceAccountsConfirmModal() {
@@ -248,5 +253,4 @@ export class ResetSourceComponent implements OnInit {
   hideResetSourceBothConfirmModal() {
     this.resetSourceBothConfirmModal.hide();
   }
-
 }

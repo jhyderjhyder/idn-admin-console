@@ -17,7 +17,7 @@ const RoleDescriptionMaxLength = 50;
 @Component({
   selector: 'app-role-management',
   templateUrl: './role-management.component.html',
-  styleUrls: ['./role-management.component.css']
+  styleUrls: ['./role-management.component.css'],
 })
 export class RoleManagementComponent implements OnInit {
   sources: Source[];
@@ -40,16 +40,20 @@ export class RoleManagementComponent implements OnInit {
 
   public modalRef: BsModalRef;
 
-  @ViewChild('submitConfirmModal', { static: false }) submitConfirmModal: ModalDirective;
-  @ViewChild('submitRoleRefreshConfirmModal', { static: false }) submitRoleRefreshConfirmModal: ModalDirective;
-  @ViewChild('deleteRoleConfirmModal', { static: false }) deleteRoleConfirmModal: ModalDirective;
+  @ViewChild('submitConfirmModal', { static: false })
+  submitConfirmModal: ModalDirective;
+  @ViewChild('submitRoleRefreshConfirmModal', { static: false })
+  submitRoleRefreshConfirmModal: ModalDirective;
+  @ViewChild('deleteRoleConfirmModal', { static: false })
+  deleteRoleConfirmModal: ModalDirective;
 
   @ViewChild('fileInput', { static: false }) fileInput: ElementRef;
 
-  constructor(private idnService: IDNService,
+  constructor(
+    private idnService: IDNService,
     private messageService: MessageService,
-    private authenticationService: AuthenticationService) {
-  }
+    private authenticationService: AuthenticationService
+  ) {}
 
   ngOnInit() {
     this.reset(true);
@@ -79,87 +83,83 @@ export class RoleManagementComponent implements OnInit {
   getAllRoles() {
     this.allOwnersFetched = false;
     this.loading = true;
-    this.idnService.getAllRoles()
-      .subscribe(allRoles => {
-        this.roles = [];
-        this.rolesToShow = [];
-        const roleCount = allRoles.length;
-        let fetchedOwnerCount = 0;
-        for (const each of allRoles) {
-          const role = new Role();
-          role.id = each.id;
-          role.name = each.name;
-          if (each.description) {
-            if (each.description.length > RoleDescriptionMaxLength) {
-              role.shortDescription = each.description.substring(0, RoleDescriptionMaxLength) + "...";
-            }
-            else {
-              role.description = each.description;
-              role.shortDescription = each.description;
-            }
-          }
-          role.id = each.id;
-          role.enabled = each.enabled;
-          role.requestable = each.requestable;
-
-          const identityNames = [];
-
-          if (each.membership && each.membership.criteria != null) {
-            role.criteriaDetail = JSON.stringify(each.membership.criteria);
-            role.criteria = true;
+    this.idnService.getAllRoles().subscribe(allRoles => {
+      this.roles = [];
+      this.rolesToShow = [];
+      const roleCount = allRoles.length;
+      let fetchedOwnerCount = 0;
+      for (const each of allRoles) {
+        const role = new Role();
+        role.id = each.id;
+        role.name = each.name;
+        if (each.description) {
+          if (each.description.length > RoleDescriptionMaxLength) {
+            role.shortDescription =
+              each.description.substring(0, RoleDescriptionMaxLength) + '...';
           } else {
-            role.criteria = false;
-            if (each.membership && each.membership.identities != null) {
-              for (const identities of each.membership.identities) {
-                identityNames.push(identities.name);
-              }
-              role.identityList = identityNames.join(";").toString();
-            }
+            role.description = each.description;
+            role.shortDescription = each.description;
           }
-
-          role.accessProfiles = each.accessProfiles.length;
-
-          const accessProfileNames = [];
-
-          if (each.accessProfiles) {
-            for (const accessprofile of each.accessProfiles) {
-              accessProfileNames.push(accessprofile.name);
-            }
-          }
-
-          role.accessProfilesNames = accessProfileNames.join(";").toString();
-
-          this.idnService.getRoleIdentityCount(each)
-            .subscribe(identityCount => {
-              role.identityCount = identityCount.headers.get('X-Total-Count');
-            });
-
-
-          const query = new SimpleQueryCondition();
-          query.attribute = "id";
-          query.value = each.owner.id;
-
-          this.idnService.searchAccounts(query)
-            .subscribe(searchResult => {
-              if (searchResult.length > 0) {
-                role.owner = new SourceOwner();
-                role.owner.accountId = searchResult[0].id;
-                role.owner.accountName = searchResult[0].name;
-                role.owner.displayName = searchResult[0].displayName;
-                role.currentOwnerAccountName = searchResult[0].name;
-                role.currentOwnerDisplayName = searchResult[0].displayName;
-              }
-              fetchedOwnerCount++;
-              if (fetchedOwnerCount == roleCount) {
-                this.allOwnersFetched = true;
-              }
-            });
-
-          this.roles.push(role);
-          this.rolesToShow.push(role);
         }
-        this.loading = false;
-      });
+        role.id = each.id;
+        role.enabled = each.enabled;
+        role.requestable = each.requestable;
+
+        const identityNames = [];
+
+        if (each.membership && each.membership.criteria != null) {
+          role.criteriaDetail = JSON.stringify(each.membership.criteria);
+          role.criteria = true;
+        } else {
+          role.criteria = false;
+          if (each.membership && each.membership.identities != null) {
+            for (const identities of each.membership.identities) {
+              identityNames.push(identities.name);
+            }
+            role.identityList = identityNames.join(';').toString();
+          }
+        }
+
+        role.accessProfiles = each.accessProfiles.length;
+
+        const accessProfileNames = [];
+
+        if (each.accessProfiles) {
+          for (const accessprofile of each.accessProfiles) {
+            accessProfileNames.push(accessprofile.name);
+          }
+        }
+
+        role.accessProfilesNames = accessProfileNames.join(';').toString();
+
+        this.idnService.getRoleIdentityCount(each).subscribe(identityCount => {
+          role.identityCount = identityCount.headers.get('X-Total-Count');
+        });
+
+        const query = new SimpleQueryCondition();
+        query.attribute = 'id';
+        query.value = each.owner.id;
+
+        this.idnService.searchAccounts(query).subscribe(searchResult => {
+          if (searchResult.length > 0) {
+            role.owner = new SourceOwner();
+            role.owner.accountId = searchResult[0].id;
+            role.owner.accountName = searchResult[0].name;
+            role.owner.displayName = searchResult[0].displayName;
+            role.currentOwnerAccountName = searchResult[0].name;
+            role.currentOwnerDisplayName = searchResult[0].displayName;
+          }
+          fetchedOwnerCount++;
+          if (fetchedOwnerCount == roleCount) {
+            this.allOwnersFetched = true;
+          }
+        });
+
+        this.roles.push(role);
+        this.rolesToShow.push(role);
+      }
+      this.loading = false;
+    });
   }
 
   resetRolesToShow() {
@@ -170,7 +170,6 @@ export class RoleManagementComponent implements OnInit {
         const copy = new Role();
         Object.assign(copy, each);
         this.rolesToShow.push(copy);
-
       });
     }
   }
@@ -180,13 +179,13 @@ export class RoleManagementComponent implements OnInit {
     if ($event && $event != '') {
       this.bulkAction = $event;
       if (this.bulkAction === 'EnableRoles') {
-        this.rolesToShow = this.rolesToShow.filter(each => (!each.enabled));
+        this.rolesToShow = this.rolesToShow.filter(each => !each.enabled);
       } else if (this.bulkAction === 'DisableRoles') {
-        this.rolesToShow = this.rolesToShow.filter(each => (each.enabled));
+        this.rolesToShow = this.rolesToShow.filter(each => each.enabled);
       } else if (this.bulkAction === 'MakeRolesRequestable') {
-        this.rolesToShow = this.rolesToShow.filter(each => (!each.requestable));
+        this.rolesToShow = this.rolesToShow.filter(each => !each.requestable);
       } else if (this.bulkAction === 'MakeRolesNonRequestable') {
-        this.rolesToShow = this.rolesToShow.filter(each => (each.requestable));
+        this.rolesToShow = this.rolesToShow.filter(each => each.requestable);
       }
     } else {
       this.bulkAction = null;
@@ -197,13 +196,13 @@ export class RoleManagementComponent implements OnInit {
   unselectAll() {
     this.selectAll = false;
     this.atLeastOneSelected = false;
-    this.rolesToShow.forEach(each => each.selected = false);
+    this.rolesToShow.forEach(each => (each.selected = false));
   }
 
   changeOnSelectAll() {
     this.messageService.clearError();
     this.searchText = null;
-    this.rolesToShow.forEach(each => each.selected = !this.selectAll);
+    this.rolesToShow.forEach(each => (each.selected = !this.selectAll));
   }
 
   changeOnSelect($event) {
@@ -241,7 +240,7 @@ export class RoleManagementComponent implements OnInit {
 
   closeModalDisplayMsg() {
     if (!this.errorInvokeApi) {
-      this.messageService.add("Changes saved successfully.");
+      this.messageService.add('Changes saved successfully.');
     }
     this.submitConfirmModal.hide();
   }
@@ -250,8 +249,8 @@ export class RoleManagementComponent implements OnInit {
     const arr = this.getSelectedRoles();
     let processedCount = 0;
     for (const each of arr) {
-      this.idnService.updateRole(each, path, enabled)
-        .subscribe(() => {
+      this.idnService.updateRole(each, path, enabled).subscribe(
+        () => {
           processedCount++;
           if (processedCount == arr.length) {
             this.closeModalDisplayMsg();
@@ -259,17 +258,17 @@ export class RoleManagementComponent implements OnInit {
             this.getAllRoles();
           }
         },
-          err => {
-            this.errorInvokeApi = true;
-            this.messageService.handleIDNError(err);
-            processedCount++;
-            if (processedCount == arr.length) {
-              this.closeModalDisplayMsg();
-              this.reset(false);
-              this.getAllRoles();
-            }
+        err => {
+          this.errorInvokeApi = true;
+          this.messageService.handleIDNError(err);
+          processedCount++;
+          if (processedCount == arr.length) {
+            this.closeModalDisplayMsg();
+            this.reset(false);
+            this.getAllRoles();
           }
-        );
+        }
+      );
     }
   }
 
@@ -281,18 +280,19 @@ export class RoleManagementComponent implements OnInit {
       showLabels: true,
       useHeader: true,
       headers: [
-        "name",
-        "description",
-        "id",
-        "enabled",
-        "requestable",
-        "criteria",
-        "criteriaDetail",
-        "accessProfiles",
-        "accessProfilesNames",
-        "identityList",
-        "ownerAccountID",
-        "ownerDisplayName"],
+        'name',
+        'description',
+        'id',
+        'enabled',
+        'requestable',
+        'criteria',
+        'criteriaDetail',
+        'accessProfiles',
+        'accessProfilesNames',
+        'identityList',
+        'ownerAccountID',
+        'ownerDisplayName',
+      ],
       nullToEmptyString: true,
     };
 
@@ -314,41 +314,40 @@ export class RoleManagementComponent implements OnInit {
   async deleteRoles() {
     this.messageService.clearAll();
     this.invalidMessage = [];
-    if (this.deleteRoleConfirmText !== "YES TO DELETE") {
-      this.invalidMessage.push("Text does not match");
+    if (this.deleteRoleConfirmText !== 'YES TO DELETE') {
+      this.invalidMessage.push('Text does not match');
       this.validToSubmit = false;
       return;
-    }
-    else {
+    } else {
       this.validToSubmit = true;
     }
 
     const arr = this.getSelectedRoles();
     let processedCount = 0;
     for (const each of arr) {
-      this.idnService.deleteRole(each)
-        .subscribe(async () => {
+      this.idnService.deleteRole(each).subscribe(
+        async () => {
           processedCount++;
           if (processedCount == arr.length) {
             this.deleteRoleConfirmModal.hide();
-            this.messageService.add("Roles deleted successfully.");
+            this.messageService.add('Roles deleted successfully.');
             this.hideSubmitConfirmModal();
             this.reset(false);
             await this.sleep(2000);
             this.getAllRoles();
           }
         },
-          err => {
-            this.errorInvokeApi = true;
+        err => {
+          this.errorInvokeApi = true;
+          this.messageService.handleIDNError(err);
+          processedCount++;
+          if (processedCount == arr.length) {
+            this.deleteRoleConfirmModal.hide();
+            this.hideSubmitConfirmModal();
             this.messageService.handleIDNError(err);
-            processedCount++;
-            if (processedCount == arr.length) {
-              this.deleteRoleConfirmModal.hide();
-              this.hideSubmitConfirmModal();
-              this.messageService.handleIDNError(err);
-            }
           }
-        );
+        }
+      );
     }
   }
 
@@ -363,20 +362,20 @@ export class RoleManagementComponent implements OnInit {
   }
 
   roleRefresh() {
-    this.idnService.refreshAllRoles()
-      .subscribe(() => {
-        this.closeRoleRefreshModalDisplayMsg();
-        this.reset(false);
-        this.getAllRoles();
-      });
-
+    this.idnService.refreshAllRoles().subscribe(() => {
+      this.closeRoleRefreshModalDisplayMsg();
+      this.reset(false);
+      this.getAllRoles();
+    });
   }
 
   closeRoleRefreshModalDisplayMsg() {
     if (this.errorMessage != null) {
       this.messageService.setError(this.errorMessage);
     } else {
-      this.messageService.add("Org Role Refresh Kicked off. Please check Org -> Admin -> Dashboard -> Monitor");
+      this.messageService.add(
+        'Org Role Refresh Kicked off. Please check Org -> Admin -> Dashboard -> Monitor'
+      );
     }
     this.submitRoleRefreshConfirmModal.hide();
   }
@@ -398,29 +397,23 @@ export class RoleManagementComponent implements OnInit {
   }
 
   exportAllRoles() {
+    this.idnService.getAllRoles().subscribe(results => {
+      this.roles = [];
+      for (const each of results) {
+        const role = new Role();
+        const jsonData = JSON.stringify(each, null, 4);
+        role.name = each.name;
+        const fileName = 'Role - ' + role.name + '.json';
+        this.zip.file(`${fileName}`, jsonData);
+      }
+      const currentUser = this.authenticationService.currentUserValue;
+      const zipFileName = `${currentUser.tenant}-roles.zip`;
 
-    this.idnService.getAllRoles()
-      .subscribe(
-        results => {
-          this.roles = [];
-          for (const each of results) {
-            const role = new Role();
-            const jsonData = JSON.stringify(each, null, 4);
-            role.name = each.name;
-            const fileName = "Role - " + role.name + ".json";
-            this.zip.file(`${fileName}`, jsonData);
+      this.zip.generateAsync({ type: 'blob' }).then(function (content) {
+        saveAs(content, zipFileName);
+      });
 
-          }
-          const currentUser = this.authenticationService.currentUserValue;
-          const zipFileName = `${currentUser.tenant}-roles.zip`;
-
-          this.zip.generateAsync({ type: "blob" }).then(function (content) {
-            saveAs(content, zipFileName);
-          });
-
-          this.ngOnInit();
-
-        });
+      this.ngOnInit();
+    });
   }
-
 }

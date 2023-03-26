@@ -1,17 +1,16 @@
-import { Pipe, PipeTransform, Injectable } from "@angular/core";
+import { Pipe, PipeTransform, Injectable } from '@angular/core';
 
 @Pipe({
   name: 'filter',
-  pure: false
+  pure: false,
 })
 @Injectable()
 export class SearchFilterPipe implements PipeTransform {
-
   /**
-     * @param items object from array
-     * @param term term's search
-     * @param includes array of keys used to filter the search result
-     */
+   * @param items object from array
+   * @param term term's search
+   * @param includes array of keys used to filter the search result
+   */
   transform(items: any, term: string, includes: any = []): any {
     if (!term || !items) return items;
 
@@ -25,42 +24,52 @@ export class SearchFilterPipe implements PipeTransform {
    * @param includes List of keys used to filter the search result
    *
    */
-  static filter(items: Array<{ [key: string]: any }>, term: string, includes: any): Array<{ [key: string]: any }> {
-
+  static filter(
+    items: Array<{ [key: string]: any }>,
+    term: string,
+    includes: any
+  ): Array<{ [key: string]: any }> {
     const toCompare = term.toLowerCase();
 
     function checkInside(item: any, term: string) {
-
-      if (typeof item === "string" && item.toString().toLowerCase().includes(toCompare)) {
+      if (
+        typeof item === 'string' &&
+        item.toString().toLowerCase().includes(toCompare)
+      ) {
         return true;
       }
 
       for (const property in item) {
         if (property.hasOwnProperty(item)) {
-        //should skip this item?
-        let skipItem = false;
-        if (includes != null && includes.length > 0) {
-          skipItem = !includes.includes(property);
-        }
-        if (item[property] === null || item[property] == undefined || skipItem) {
-          continue;
-        }
-        if (typeof item[property] === 'object') {
-          if (checkInside(item[property], term)) {
+          //should skip this item?
+          let skipItem = false;
+          if (includes != null && includes.length > 0) {
+            skipItem = !includes.includes(property);
+          }
+          if (
+            item[property] === null ||
+            item[property] == undefined ||
+            skipItem
+          ) {
+            continue;
+          }
+          if (typeof item[property] === 'object') {
+            if (checkInside(item[property], term)) {
+              return true;
+            }
+          } else if (
+            item[property].toString().toLowerCase().includes(toCompare)
+          ) {
             return true;
           }
         }
-        else if (item[property].toString().toLowerCase().includes(toCompare)) {
-          return true;
-        }
       }
-      }
-    
-    return false;
-  }
+
+      return false;
+    }
 
     return items.filter(function (item) {
-    return checkInside(item, term);
-  });
+      return checkInside(item, term);
+    });
   }
 }

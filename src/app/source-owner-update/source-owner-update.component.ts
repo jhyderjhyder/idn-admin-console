@@ -13,7 +13,7 @@ import { AuthenticationService } from '../service/authentication-service.service
 @Component({
   selector: 'app-source-owner-update',
   templateUrl: './source-owner-update.component.html',
-  styleUrls: ['./source-owner-update.component.css']
+  styleUrls: ['./source-owner-update.component.css'],
 })
 export class ChangeSourceOwnerComponent implements OnInit {
   sources: Source[];
@@ -28,15 +28,17 @@ export class ChangeSourceOwnerComponent implements OnInit {
 
   public modalRef: BsModalRef;
 
-  @ViewChild('submitConfirmModal', { static: false }) submitConfirmModal: ModalDirective;
+  @ViewChild('submitConfirmModal', { static: false })
+  submitConfirmModal: ModalDirective;
 
   @ViewChild('fileInput', { static: false }) fileInput: ElementRef;
 
-  constructor(private papa: Papa,
+  constructor(
+    private papa: Papa,
     private idnService: IDNService,
     private messageService: MessageService,
-    private authenticationService: AuthenticationService) {
-  }
+    private authenticationService: AuthenticationService
+  ) {}
 
   ngOnInit() {
     this.reset(true);
@@ -60,43 +62,41 @@ export class ChangeSourceOwnerComponent implements OnInit {
   search() {
     this.allOwnersFetched = false;
     this.loading = true;
-    this.idnService.getAllSources()
-      .subscribe(allSources => {
-        this.sources = [];
-        const sourceCount = allSources.length;
-        let fetchedOwnerCount = 0;
-        for (const each of allSources) {
-          const source = new Source();
-          source.id = each.id;
-          source.cloudExternalID = each.connectorAttributes.cloudExternalId;
-          source.name = each.name;
-          source.description = each.description;
-          source.type = each.type;
+    this.idnService.getAllSources().subscribe(allSources => {
+      this.sources = [];
+      const sourceCount = allSources.length;
+      let fetchedOwnerCount = 0;
+      for (const each of allSources) {
+        const source = new Source();
+        source.id = each.id;
+        source.cloudExternalID = each.connectorAttributes.cloudExternalId;
+        source.name = each.name;
+        source.description = each.description;
+        source.type = each.type;
 
-          const query = new SimpleQueryCondition();
-          query.attribute = "id";
-          query.value = each.owner.id;
+        const query = new SimpleQueryCondition();
+        query.attribute = 'id';
+        query.value = each.owner.id;
 
-          this.idnService.searchAccounts(query)
-            .subscribe(searchResult => {
-              if (searchResult.length > 0) {
-                source.owner = new SourceOwner();
-                source.owner.accountId = searchResult[0].id;
-                source.owner.accountName = searchResult[0].name;
-                source.owner.displayName = searchResult[0].displayName;
-                source.currentOwnerAccountName = searchResult[0].name;
-                source.currentOwnerDisplayName = searchResult[0].displayName;
-              }
-              fetchedOwnerCount++;
-              if (fetchedOwnerCount == sourceCount) {
-                this.allOwnersFetched = true;
-              }
-            });
+        this.idnService.searchAccounts(query).subscribe(searchResult => {
+          if (searchResult.length > 0) {
+            source.owner = new SourceOwner();
+            source.owner.accountId = searchResult[0].id;
+            source.owner.accountName = searchResult[0].name;
+            source.owner.displayName = searchResult[0].displayName;
+            source.currentOwnerAccountName = searchResult[0].name;
+            source.currentOwnerDisplayName = searchResult[0].displayName;
+          }
+          fetchedOwnerCount++;
+          if (fetchedOwnerCount == sourceCount) {
+            this.allOwnersFetched = true;
+          }
+        });
 
-          this.sources.push(source);
-        }
-        this.loading = false;
-      });
+        this.sources.push(source);
+      }
+      this.loading = false;
+    });
   }
 
   changeOnSelectAll() {
@@ -128,7 +128,8 @@ export class ChangeSourceOwnerComponent implements OnInit {
       if (this.sources[index].newOwner == null) {
         this.sources[index].newOwner = new SourceOwner();
       }
-      this.sources[index].newOwner.accountName = this.sources[index].owner.accountName;
+      this.sources[index].newOwner.accountName =
+        this.sources[index].owner.accountName;
     }
   }
 
@@ -146,10 +147,14 @@ export class ChangeSourceOwnerComponent implements OnInit {
         }
       }
       if (!anythingSelected) {
-        this.messageService.setError("No item is selected to apply the new owner account name.");
+        this.messageService.setError(
+          'No item is selected to apply the new owner account name.'
+        );
       }
     } else {
-      this.messageService.setError("Owner account name is required to apply to the selected items.");
+      this.messageService.setError(
+        'Owner account name is required to apply to the selected items.'
+      );
     }
   }
 
@@ -160,12 +165,19 @@ export class ChangeSourceOwnerComponent implements OnInit {
     this.invalidMessage = [];
     for (const each of this.sources) {
       if (each.selected) {
-        if (each.newOwner == null || each.newOwner.accountName == null || each.newOwner.accountName.trim() == '') {
-          this.invalidMessage.push(`Owner of Source (name: ${each.name}) can not be empty.`);
+        if (
+          each.newOwner == null ||
+          each.newOwner.accountName == null ||
+          each.newOwner.accountName.trim() == ''
+        ) {
+          this.invalidMessage.push(
+            `Owner of Source (name: ${each.name}) can not be empty.`
+          );
           this.validToSubmit = false;
-        }
-        else if (each.newOwner.accountName == each.owner.accountName) {
-          this.invalidMessage.push(`Owner of Source (name: ${each.name}) is not changed.`);
+        } else if (each.newOwner.accountName == each.owner.accountName) {
+          this.invalidMessage.push(
+            `Owner of Source (name: ${each.name}) is not changed.`
+          );
           this.validToSubmit = false;
         }
 
@@ -174,7 +186,7 @@ export class ChangeSourceOwnerComponent implements OnInit {
     }
 
     if (selectedSources.length == 0) {
-      this.invalidMessage.push("Select at least one item to submit.");
+      this.invalidMessage.push('Select at least one item to submit.');
       this.validToSubmit = false;
     }
 
@@ -183,23 +195,24 @@ export class ChangeSourceOwnerComponent implements OnInit {
       //check if account name of new owner is valid
       for (const each of selectedSources) {
         const query = new SimpleQueryCondition();
-        query.attribute = "name";
+        query.attribute = 'name';
         query.value = each.newOwner.accountName;
 
-        this.idnService.searchAccounts(query)
-          .subscribe(searchResult => {
-            if (searchResult && searchResult.length == 1) {
-              each.newOwner.accountId = searchResult[0].id;
-              each.newOwner.displayName = searchResult[0].displayName;
-            } else {
-              this.validToSubmit = false;
-              this.invalidMessage.push(`New owner's account name (${each.newOwner.accountName}) of Source (${each.name}) is invalid.`);
-            }
-            count++;
-            if (count == selectedSources.length) {
-              this.submitConfirmModal.show();
-            }
-          });
+        this.idnService.searchAccounts(query).subscribe(searchResult => {
+          if (searchResult && searchResult.length == 1) {
+            each.newOwner.accountId = searchResult[0].id;
+            each.newOwner.displayName = searchResult[0].displayName;
+          } else {
+            this.validToSubmit = false;
+            this.invalidMessage.push(
+              `New owner's account name (${each.newOwner.accountName}) of Source (${each.name}) is invalid.`
+            );
+          }
+          count++;
+          if (count == selectedSources.length) {
+            this.submitConfirmModal.show();
+          }
+        });
       }
     } else {
       this.submitConfirmModal.show();
@@ -214,7 +227,7 @@ export class ChangeSourceOwnerComponent implements OnInit {
     if (this.errorMessage != null) {
       this.messageService.setError(this.errorMessage);
     } else {
-      this.messageService.add("Changes saved successfully.");
+      this.messageService.add('Changes saved successfully.');
     }
     this.submitConfirmModal.hide();
   }
@@ -224,15 +237,15 @@ export class ChangeSourceOwnerComponent implements OnInit {
     let processedCount = 0;
     let index = 0;
     for (const each of arr) {
-      if (index > 0 && (index % 10) == 0) {
-        // After processing every batch (10 sources), wait for 2 seconds before calling another API to avoid 429 
+      if (index > 0 && index % 10 == 0) {
+        // After processing every batch (10 sources), wait for 2 seconds before calling another API to avoid 429
         // Too Many Requests Error
         await this.sleep(2000);
       }
       index++;
 
-      this.idnService.updateSourceOwner(each)
-        .subscribe(() => {
+      this.idnService.updateSourceOwner(each).subscribe(
+        () => {
           processedCount++;
           if (processedCount == arr.length) {
             this.closeModalDisplayMsg();
@@ -240,18 +253,17 @@ export class ChangeSourceOwnerComponent implements OnInit {
             this.search();
           }
         },
-          () => {
-            this.errorMessage = "Error to submit the changes.";
-            processedCount++;
-            if (processedCount == arr.length) {
-              this.closeModalDisplayMsg();
-              this.reset(false);
-              this.search();
-            }
+        () => {
+          this.errorMessage = 'Error to submit the changes.';
+          processedCount++;
+          if (processedCount == arr.length) {
+            this.closeModalDisplayMsg();
+            this.reset(false);
+            this.search();
           }
-        );
+        }
+      );
     }
-
   }
 
   sleep(ms) {
@@ -265,7 +277,14 @@ export class ChangeSourceOwnerComponent implements OnInit {
       decimalseparator: '.',
       showLabels: true,
       useHeader: true,
-      headers: ["name", "description", "type", "cloudExternalID", "ownerAccountID", "ownerDisplayName"],
+      headers: [
+        'name',
+        'description',
+        'type',
+        'cloudExternalID',
+        'ownerAccountID',
+        'ownerDisplayName',
+      ],
       nullToEmptyString: true,
     };
 
@@ -286,7 +305,7 @@ export class ChangeSourceOwnerComponent implements OnInit {
 
   clearFileSelect() {
     this.messageService.clearError();
-    this.fileInput.nativeElement.value = "";
+    this.fileInput.nativeElement.value = '';
   }
 
   handleFileSelect(evt) {
@@ -301,10 +320,11 @@ export class ChangeSourceOwnerComponent implements OnInit {
       this.papa.parse(csv, {
         skipEmptyLines: true,
         header: true,
-        complete: (results) => {
+        complete: results => {
           for (let i = 0; i < results.data.length; i++) {
             const cloudExternalID = results.data[i].cloudExternalID;
-            newOwnerAccountNameMap[cloudExternalID] = results.data[i].ownerAccountID;
+            newOwnerAccountNameMap[cloudExternalID] =
+              results.data[i].ownerAccountID;
           }
 
           let anythingSelected = false;
@@ -312,7 +332,8 @@ export class ChangeSourceOwnerComponent implements OnInit {
 
           for (const each of this.sources) {
             if (each.selected) {
-              const newOwnerAccountName = newOwnerAccountNameMap[each.cloudExternalID];
+              const newOwnerAccountName =
+                newOwnerAccountNameMap[each.cloudExternalID];
               if (newOwnerAccountName && newOwnerAccountName != '') {
                 each.newOwner.accountName = newOwnerAccountName;
                 anythingMatched = true;
@@ -321,11 +342,15 @@ export class ChangeSourceOwnerComponent implements OnInit {
             }
           }
           if (!anythingSelected) {
-            this.messageService.setError("No item is selected to apply the change.");
+            this.messageService.setError(
+              'No item is selected to apply the change.'
+            );
           } else if (!anythingMatched) {
-            this.messageService.setError("No source record in uploaded file is matched with the selected items.");
+            this.messageService.setError(
+              'No source record in uploaded file is matched with the selected items.'
+            );
           }
-        }
+        },
       });
     };
   }

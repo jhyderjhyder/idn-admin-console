@@ -1,28 +1,38 @@
 {
   "root": true,
- /*  "extends": "standard", */
- "ignorePatterns": [
-  "**/*.html"
-],
+  "ignorePatterns": [
+    "**/*.html"
+  ],
   "parser": "@typescript-eslint/parser",
-  "plugins": ["@typescript-eslint"],
+  "plugins": [
+    "@typescript-eslint"
+  ],
   "env": {
     "browser": true
   },
   "rules": {
-    "semi": ["error", "always"],
+    "semi": [
+      "error",
+      "always"
+    ],
     "no-var": "error",
     "no-unused-vars": "off",
     "no-global-assign": "off",
     "guard-for-in": "error",
-    "@typescript-eslint/no-unused-vars": ["error", {
-      "vars": "all",
-      "args": "after-used",
-      "ignoreRestSiblings": true
-    }],
-    "prefer-const": ["error", {
-      "destructuring": "all"
-    }],
+    "@typescript-eslint/no-unused-vars": [
+      "error",
+      {
+        "vars": "all",
+        "args": "after-used",
+        "ignoreRestSiblings": true
+      }
+    ],
+    "prefer-const": [
+      "error",
+      {
+        "destructuring": "all"
+      }
+    ],
     "standard/no-callback-literal": "off",
     "node/no-deprecated-api": "off"
   },
@@ -32,26 +42,20 @@
   },
   "overrides": [
     {
-      "files": "*.js",
-      "rules": {
-        "@typescript-eslint/no-unused-vars": "off"
-      }
-    },
-    {
       "files": "*.ts",
       "rules": {
         "no-undef": "off",
         "no-redeclare": "off",
-        "@typescript-eslint/no-redeclare": ["error"],
+        "@typescript-eslint/no-unused-vars": "off",
+        "@typescript-eslint/no-redeclare": [
+          "error"
+        ],
         "no-use-before-define": "off"
-      }
-    },
-    {
-      "files": "*.d.ts",
-      "rules": {
-        "no-useless-constructor": "off",
-        "@typescript-eslint/no-unused-vars": "off"
-      }
+      },
+      "extends": [
+       " prettier/@typescript-eslint",
+        "plugin:prettier/recommended"
+      ]
     }
   ]
 }

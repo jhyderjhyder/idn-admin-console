@@ -9,16 +9,22 @@ import { AccessRequestStatusComponent } from './access-request-status.component'
 
 describe('AccessRequestStatusComponent', () => {
   let component: AccessRequestStatusComponent;
-  let fixture: ComponentFixture<AccessRequestStatusComponent>; 
+  let fixture: ComponentFixture<AccessRequestStatusComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ AccessRequestStatusComponent ],
-      providers: [IDNService,
-        { provide: IDNService, useClass: MockIDNService }],
-        imports: [HttpClientModule, HttpClientTestingModule,FormsModule, ModalModule ] 
-    })
-    .compileComponents();
+      declarations: [AccessRequestStatusComponent],
+      providers: [
+        IDNService,
+        { provide: IDNService, useClass: MockIDNService },
+      ],
+      imports: [
+        HttpClientModule,
+        HttpClientTestingModule,
+        FormsModule,
+        ModalModule,
+      ],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

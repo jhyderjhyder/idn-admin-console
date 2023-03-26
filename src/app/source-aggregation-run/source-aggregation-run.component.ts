@@ -1,17 +1,17 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
-import { interval } from "rxjs/internal/observable/interval";
-import { startWith, switchMap, takeWhile } from "rxjs/operators";
+import { interval } from 'rxjs/internal/observable/interval';
+import { startWith, switchMap, takeWhile } from 'rxjs/operators';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { Source } from '../model/source';
-import { AggregationTask } from "../model/aggregation-task";
+import { AggregationTask } from '../model/aggregation-task';
 import { IDNService } from '../service/idn.service';
 import { MessageService } from '../service/message.service';
 
 @Component({
   selector: 'app-source-aggregation-run',
   templateUrl: './source-aggregation-run.component.html',
-  styleUrls: ['./source-aggregation-run.component.css']
+  styleUrls: ['./source-aggregation-run.component.css'],
 })
 export class AggregateSourceComponent implements OnInit {
   sources: Source[];
@@ -28,12 +28,13 @@ export class AggregateSourceComponent implements OnInit {
 
   public modalRef: BsModalRef;
 
-  @ViewChild('submitConfirmModal', { static: false }) submitConfirmModal: ModalDirective;
+  @ViewChild('submitConfirmModal', { static: false })
+  submitConfirmModal: ModalDirective;
 
   constructor(
     private idnService: IDNService,
-    private messageService: MessageService) {
-  }
+    private messageService: MessageService
+  ) {}
 
   ngOnInit() {
     this.reset(true);
@@ -54,27 +55,28 @@ export class AggregateSourceComponent implements OnInit {
 
   search() {
     this.loading = true;
-    this.idnService.getAllSources()
-      .subscribe(allSources => {
-        this.sources = [];
-        for (const each of allSources) {
-          const source = new Source();
-          source.id = each.id;
-          source.cloudExternalID = each.connectorAttributes.cloudExternalId;
-          source.name = each.name;
-          source.description = each.description;
-          source.type = each.type;
-          const aggTaskPollingStatus = this.idnService.getAggTaskPolling(source.cloudExternalID);
-          if (aggTaskPollingStatus && aggTaskPollingStatus.completed) {
-            source.aggTask = new AggregationTask();
-            source.aggTask.id = aggTaskPollingStatus.taskId;
-            this.pollAggTaskStatus(source);
-          }
-
-          this.sources.push(source);
+    this.idnService.getAllSources().subscribe(allSources => {
+      this.sources = [];
+      for (const each of allSources) {
+        const source = new Source();
+        source.id = each.id;
+        source.cloudExternalID = each.connectorAttributes.cloudExternalId;
+        source.name = each.name;
+        source.description = each.description;
+        source.type = each.type;
+        const aggTaskPollingStatus = this.idnService.getAggTaskPolling(
+          source.cloudExternalID
+        );
+        if (aggTaskPollingStatus && aggTaskPollingStatus.completed) {
+          source.aggTask = new AggregationTask();
+          source.aggTask.id = aggTaskPollingStatus.taskId;
+          this.pollAggTaskStatus(source);
         }
-        this.loading = false;
-      });
+
+        this.sources.push(source);
+      }
+      this.loading = false;
+    });
   }
 
   changeOnSelectAll() {
@@ -104,8 +106,13 @@ export class AggregateSourceComponent implements OnInit {
     for (const each of this.sources) {
       if (each.selected) {
         if (each.type == 'DelimitedFile' || each.type == 'Non-Employee') {
-          if (each.aggregateSourceFormData == null || each.aggregateSourceFormData.get("file") == null) {
-            this.invalidMessage.push(`CSV file of Source (name: ${each.name}) needs to be uploaded.`);
+          if (
+            each.aggregateSourceFormData == null ||
+            each.aggregateSourceFormData.get('file') == null
+          ) {
+            this.invalidMessage.push(
+              `CSV file of Source (name: ${each.name}) needs to be uploaded.`
+            );
             this.validToSubmit = false;
           }
         }
@@ -113,7 +120,7 @@ export class AggregateSourceComponent implements OnInit {
       }
     }
     if (selectedSources.length == 0) {
-      this.invalidMessage.push("Select at least one item to submit.");
+      this.invalidMessage.push('Select at least one item to submit.');
       this.validToSubmit = false;
     }
     this.submitConfirmModal.show();
@@ -127,7 +134,9 @@ export class AggregateSourceComponent implements OnInit {
     if (this.errorMessage != null) {
       this.messageService.setError(this.errorMessage);
     } else {
-      this.messageService.add("Source Aggregation request was submitted successfully.");
+      this.messageService.add(
+        'Source Aggregation request was submitted successfully.'
+      );
     }
     this.submitConfirmModal.hide();
   }
@@ -141,34 +150,43 @@ export class AggregateSourceComponent implements OnInit {
         each.aggregateSourceFormData = new FormData();
       }
       if (each.aggSourceDisableOptimization) {
-        each.aggregateSourceFormData.append("disableOptimization", "true");
+        each.aggregateSourceFormData.append('disableOptimization', 'true');
       } else {
-        each.aggregateSourceFormData.append("disableOptimization", "false");
+        each.aggregateSourceFormData.append('disableOptimization', 'false');
       }
 
-      if (index > 0 && (index % 10) == 0) {
-        // After processing every batch (10 sources), wait for 2 seconds before calling another API to avoid 429 
+      if (index > 0 && index % 10 == 0) {
+        // After processing every batch (10 sources), wait for 2 seconds before calling another API to avoid 429
         // Too Many Requests Error
         await this.sleep(2000);
       }
       index++;
 
-      this.idnService.aggregateSourceOwner(each.cloudExternalID, each.aggregateSourceFormData)
-        .subscribe(searchResult => {
-          processedCount++;
-          each.aggTask = new AggregationTask();
-          each.aggTask.id = searchResult.task.id;
-          this.idnService.startAggTaskPolling(each.cloudExternalID, each.aggTask.id);
+      this.idnService
+        .aggregateSourceOwner(
+          each.cloudExternalID,
+          each.aggregateSourceFormData
+        )
+        .subscribe(
+          searchResult => {
+            processedCount++;
+            each.aggTask = new AggregationTask();
+            each.aggTask.id = searchResult.task.id;
+            this.idnService.startAggTaskPolling(
+              each.cloudExternalID,
+              each.aggTask.id
+            );
 
-          if (processedCount == arr.length) {
-            this.closeModalDisplayMsg();
-            this.checkAggTaskStatus(arr);
-            //  this.reset(false);
-            //  this.search();
-          }
-        },
+            if (processedCount == arr.length) {
+              this.closeModalDisplayMsg();
+              this.checkAggTaskStatus(arr);
+              //  this.reset(false);
+              //  this.search();
+            }
+          },
           () => {
-            this.errorMessage = "Error to send request to aggregate the source.";
+            this.errorMessage =
+              'Error to send request to aggregate the source.';
             processedCount++;
             if (processedCount == arr.length) {
               this.closeModalDisplayMsg();
@@ -195,7 +213,7 @@ export class AggregateSourceComponent implements OnInit {
 
         this.cleanup();
       } else {
-        this.messageService.setError("Only CSV files are allowed.");
+        this.messageService.setError('Only CSV files are allowed.');
       }
       this.uploadFilePath = file.name;
     }
@@ -221,8 +239,14 @@ export class AggregateSourceComponent implements OnInit {
       source.aggTask.startTime = response.start;
       source.aggTask.totalAccounts = response.totalAccounts;
       source.aggTask.processedAccounts = response.processedAccounts;
-      if (response.processedAccounts && response.totalAccounts && response.totalAccounts > 0) {
-        source.aggTask.processedPct = Math.round(100 * response.processedAccounts / response.totalAccounts);
+      if (
+        response.processedAccounts &&
+        response.totalAccounts &&
+        response.totalAccounts > 0
+      ) {
+        source.aggTask.processedPct = Math.round(
+          (100 * response.processedAccounts) / response.totalAccounts
+        );
         if (source.aggTask.processedPct == 0) {
           source.aggTask.processedPct = 1;
         }
@@ -248,7 +272,7 @@ export class AggregateSourceComponent implements OnInit {
     for (const source of sources) {
       setTimeout(() => {
         this.pollAggTaskStatus(source);
-      }, (waitMillSeconds + 1000 * index));
+      }, waitMillSeconds + 1000 * index);
       index++;
     }
   }
@@ -257,8 +281,10 @@ export class AggregateSourceComponent implements OnInit {
     interval(5000)
       .pipe(
         startWith(0),
-        switchMap(() => this.idnService.getAccountAggregationStatus(source.aggTask.id)),
-        takeWhile((response) => this.populateAggTaskStatus(response, source))
+        switchMap(() =>
+          this.idnService.getAccountAggregationStatus(source.aggTask.id)
+        ),
+        takeWhile(response => this.populateAggTaskStatus(response, source))
       )
       .subscribe();
   }

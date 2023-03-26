@@ -14,9 +14,8 @@ const RuleDescriptionMaxLength = 50;
 @Component({
   selector: 'app-rule-connector-management',
   templateUrl: './rule-connector-management.component.html',
-  styleUrls: ['./rule-connector-management.component.css']
+  styleUrls: ['./rule-connector-management.component.css'],
 })
-
 export class ImportRuleComponent implements OnInit {
   ruleToImport: Rule;
   ruleToUpdate: Rule;
@@ -34,17 +33,20 @@ export class ImportRuleComponent implements OnInit {
 
   public modalRef: BsModalRef;
 
-  @ViewChild('importRuleConfirmModal', { static: false }) importRuleConfirmModal: ModalDirective;
-  @ViewChild('updateRuleConfirmModal', { static: false }) updateRuleConfirmModal: ModalDirective;
-  @ViewChild('deleteRuleConfirmModal', { static: false }) deleteRuleConfirmModal: ModalDirective;
+  @ViewChild('importRuleConfirmModal', { static: false })
+  importRuleConfirmModal: ModalDirective;
+  @ViewChild('updateRuleConfirmModal', { static: false })
+  updateRuleConfirmModal: ModalDirective;
+  @ViewChild('deleteRuleConfirmModal', { static: false })
+  deleteRuleConfirmModal: ModalDirective;
   @ViewChild('importRuleFile', { static: false }) importRuleFile: ElementRef;
   @ViewChild('updateRuleFile', { static: false }) updateRuleFile: ElementRef;
 
   constructor(
     private idnService: IDNService,
     private messageService: MessageService,
-    private authenticationService: AuthenticationService) {
-  }
+    private authenticationService: AuthenticationService
+  ) {}
 
   ngOnInit() {
     this.reset(true);
@@ -66,30 +68,28 @@ export class ImportRuleComponent implements OnInit {
 
   getConnectorRules() {
     this.loading = true;
-    this.idnService.getConnectorRules()
-      .subscribe(
-        results => {
-          this.rules = [];
-          this.allRules = results;
+    this.idnService.getConnectorRules().subscribe(results => {
+      this.rules = [];
+      this.allRules = results;
 
-          for (const each of results) {
-            const rule = new Rule();
-            rule.id = each.id;
-            rule.name = each.name;
-            if (each.description) {
-              if (each.description.length > RuleDescriptionMaxLength) {
-                rule.description = each.description.substring(0, RuleDescriptionMaxLength) + "...";
-              }
-              else {
-                rule.description = each.description;
-              }
-            }
-            rule.type = each.type;
-
-            this.rules.push(rule);
+      for (const each of results) {
+        const rule = new Rule();
+        rule.id = each.id;
+        rule.name = each.name;
+        if (each.description) {
+          if (each.description.length > RuleDescriptionMaxLength) {
+            rule.description =
+              each.description.substring(0, RuleDescriptionMaxLength) + '...';
+          } else {
+            rule.description = each.description;
           }
-          this.loading = false;
-        });
+        }
+        rule.type = each.type;
+
+        this.rules.push(rule);
+      }
+      this.loading = false;
+    });
   }
 
   showImportRuleConfirmModal() {
@@ -98,7 +98,7 @@ export class ImportRuleComponent implements OnInit {
     this.invalidMessage = [];
 
     if (this.ruleToImport == null) {
-      this.invalidMessage.push("No rule is chosen!");
+      this.invalidMessage.push('No rule is chosen!');
       this.validToSubmit = false;
     }
 
@@ -114,7 +114,7 @@ export class ImportRuleComponent implements OnInit {
   }
 
   showUpdateRuleConfirmModal(selectedRule: Rule) {
-    this.updateRuleFile.nativeElement.value = "";
+    this.updateRuleFile.nativeElement.value = '';
     this.invalidMessage = [];
     this.ruleToUpdate = new Rule();
     this.ruleToUpdate.id = selectedRule.id;
@@ -150,77 +150,73 @@ export class ImportRuleComponent implements OnInit {
     this.invalidMessage = [];
     // validation
     if (this.deleteRuleNameText != this.ruleToDelete.name) {
-      this.invalidMessage.push("Confirmed rule name does not match rule name!");
+      this.invalidMessage.push('Confirmed rule name does not match rule name!');
       this.validToSubmit = false;
       return;
-    }
-    else {
+    } else {
       this.validToSubmit = true;
     }
 
-    this.idnService.deleteConnectorRule(this.ruleToDelete)
-      .subscribe(
-        () => {
-          //this.closeModalDisplayMsg();
-          this.deleteRuleConfirmModal.hide();
-          this.messageService.add("Rule deleted successfully.");
-          this.ruleToDelete = null;
-          this.reset(false);
-          this.getConnectorRules();
-        },
-        err => {
-          this.deleteRuleConfirmModal.hide();
-          this.ruleToDelete = null;
-          this.messageService.handleIDNError(err);
-        }
-      );
+    this.idnService.deleteConnectorRule(this.ruleToDelete).subscribe(
+      () => {
+        //this.closeModalDisplayMsg();
+        this.deleteRuleConfirmModal.hide();
+        this.messageService.add('Rule deleted successfully.');
+        this.ruleToDelete = null;
+        this.reset(false);
+        this.getConnectorRules();
+      },
+      err => {
+        this.deleteRuleConfirmModal.hide();
+        this.ruleToDelete = null;
+        this.messageService.handleIDNError(err);
+      }
+    );
   }
 
   importRule() {
     this.messageService.clearAll();
-    this.idnService.importConnectorRule(this.ruleToImport)
-      .subscribe(
-        () => {
-          this.importRuleConfirmModal.hide();
-          this.messageService.add("Rule imported successfully.");
-          this.ruleToImport = null;
-          this.reset(false);
-          this.getConnectorRules();
-        },
-        err => {
-          this.importRuleConfirmModal.hide();
-          this.ruleToImport = null;
-          this.messageService.handleIDNError(err);
-        }
-      );
+    this.idnService.importConnectorRule(this.ruleToImport).subscribe(
+      () => {
+        this.importRuleConfirmModal.hide();
+        this.messageService.add('Rule imported successfully.');
+        this.ruleToImport = null;
+        this.reset(false);
+        this.getConnectorRules();
+      },
+      err => {
+        this.importRuleConfirmModal.hide();
+        this.ruleToImport = null;
+        this.messageService.handleIDNError(err);
+      }
+    );
   }
 
   updatedRule() {
     this.messageService.clearAll();
-    this.idnService.updateConnectorRule(this.ruleToUpdate)
-      .subscribe(
-        () => {
-          this.updateRuleConfirmModal.hide();
-          this.messageService.add("Rule updated successfully.");
-          this.ruleToUpdate = null;
-        },
-        err => {
-          this.updateRuleConfirmModal.hide();
-          this.ruleToUpdate = null;
-          this.messageService.handleIDNError(err);
-        }
-      );
+    this.idnService.updateConnectorRule(this.ruleToUpdate).subscribe(
+      () => {
+        this.updateRuleConfirmModal.hide();
+        this.messageService.add('Rule updated successfully.');
+        this.ruleToUpdate = null;
+      },
+      err => {
+        this.updateRuleConfirmModal.hide();
+        this.ruleToUpdate = null;
+        this.messageService.handleIDNError(err);
+      }
+    );
   }
 
   clearFileForImportRule() {
     this.ruleToImport = null;
     this.messageService.clearError();
-    this.importRuleFile.nativeElement.value = "";
+    this.importRuleFile.nativeElement.value = '';
   }
 
   clearFileForUpdateRule() {
     this.invalidMessage = [];
-    this.updateRuleFile.nativeElement.value = "";
+    this.updateRuleFile.nativeElement.value = '';
     this.validToSubmit = false;
   }
 
@@ -242,18 +238,22 @@ export class ImportRuleComponent implements OnInit {
             this.ruleToImport.name = result.RULE.$.NAME;
           } else {
             valid = false;
-            this.messageService.setError("Invalid Rule XML file: rule name is not specified.");
+            this.messageService.setError(
+              'Invalid Rule XML file: rule name is not specified.'
+            );
           }
           //verify rule type
           if (result.RULE.$.TYPE) {
             this.ruleToImport.type = result.RULE.$.TYPE;
           } else {
             valid = false;
-            this.messageService.setError("Invalid Rule XML file: rule type is not specified.");
+            this.messageService.setError(
+              'Invalid Rule XML file: rule type is not specified.'
+            );
           }
         } else {
           valid = false;
-          this.messageService.setError("Invalid Rule XML file.");
+          this.messageService.setError('Invalid Rule XML file.');
         }
         //verify source
         if (valid) {
@@ -261,7 +261,9 @@ export class ImportRuleComponent implements OnInit {
             this.ruleToImport.script = result.RULE.SOURCE[0];
           } else {
             valid = false;
-            this.messageService.setError("Invalid Rule XML file: source is not specified.");
+            this.messageService.setError(
+              'Invalid Rule XML file: source is not specified.'
+            );
           }
         }
         //now update description
@@ -274,7 +276,6 @@ export class ImportRuleComponent implements OnInit {
           if (ruleAttributes) {
             this.ruleToImport.attributes = ruleAttributes;
           }
-
         } else {
           this.ruleToImport = null;
         }
@@ -316,25 +317,33 @@ export class ImportRuleComponent implements OnInit {
           if (result.RULE.$.NAME) {
             if (this.ruleToUpdate.name != result.RULE.$.NAME) {
               valid = false;
-              this.invalidMessage.push("Invalid Rule XML file: rule name can not be changed.");
+              this.invalidMessage.push(
+                'Invalid Rule XML file: rule name can not be changed.'
+              );
             }
           } else {
             valid = false;
-            this.invalidMessage.push("Invalid Rule XML file: rule name is not specified.");
+            this.invalidMessage.push(
+              'Invalid Rule XML file: rule name is not specified.'
+            );
           }
           //verify rule type
           if (result.RULE.$.TYPE) {
             if (this.ruleToUpdate.type != result.RULE.$.TYPE) {
               valid = false;
-              this.invalidMessage.push("Invalid Rule XML file: rule type can not be changed.");
+              this.invalidMessage.push(
+                'Invalid Rule XML file: rule type can not be changed.'
+              );
             }
           } else {
             valid = false;
-            this.invalidMessage.push("Invalid Rule XML file: rule type is not specified.");
+            this.invalidMessage.push(
+              'Invalid Rule XML file: rule type is not specified.'
+            );
           }
         } else {
           valid = false;
-          this.invalidMessage.push("Invalid Rule XML file.");
+          this.invalidMessage.push('Invalid Rule XML file.');
         }
         //verify source
         if (valid) {
@@ -342,7 +351,9 @@ export class ImportRuleComponent implements OnInit {
             this.ruleToUpdate.script = result.RULE.SOURCE[0];
           } else {
             valid = false;
-            this.messageService.setError("Invalid Rule XML file: source is not specified.");
+            this.messageService.setError(
+              'Invalid Rule XML file: source is not specified.'
+            );
           }
         }
         //now update description
@@ -366,80 +377,82 @@ export class ImportRuleComponent implements OnInit {
     let ruleDesc = null;
     if (rule.description) {
       ruleDesc = rule.description;
-    }
-    else {
-      ruleDesc = "";
+    } else {
+      ruleDesc = '';
     }
 
-    const builder = new xml2js.Builder({ doctype: { sysID: "sailpoint.dtd sailpoint.dtd" } });
+    const builder = new xml2js.Builder({
+      doctype: { sysID: 'sailpoint.dtd sailpoint.dtd' },
+    });
     const xmlObject = {
       Rule: {
         $: {
           name: rule.name,
-          type: rule.type
+          type: rule.type,
         },
-        "Attributes": [this.prepareRuleAttributes(rule.attributes)],
-        'Description': {
-          _: ruleDesc
+        Attributes: [this.prepareRuleAttributes(rule.attributes)],
+        Description: {
+          _: ruleDesc,
         },
-        'Source': {
-          _: rule.script
+        Source: {
+          _: rule.script,
         },
-      }
+      },
     };
 
     let xml: string = builder.buildObject(xmlObject);
     // xml.replace is a hack to format certain elements that xml2js does not support
-    xml = xml.replace("Rule SYSTEM \"sailpoint.dtd sailpoint.dtd\"", "Rule PUBLIC \"sailpoint.dtd\" \"sailpoint.dtd\"");
-    xml = xml.replace(" standalone=\"yes\"?>", "?>");
-    xml = xml.replace("<Source>", "<Source><![CDATA[\n");
-    xml = xml.replace("</Source>", "\n]]></Source>");
-    xml = xml.replace("&lt;#", "<#");
-    xml = xml.replace("#&gt;", "#>");
+    xml = xml.replace(
+      'Rule SYSTEM "sailpoint.dtd sailpoint.dtd"',
+      'Rule PUBLIC "sailpoint.dtd" "sailpoint.dtd"'
+    );
+    xml = xml.replace(' standalone="yes"?>', '?>');
+    xml = xml.replace('<Source>', '<Source><![CDATA[\n');
+    xml = xml.replace('</Source>', '\n]]></Source>');
+    xml = xml.replace('&lt;#', '<#');
+    xml = xml.replace('#&gt;', '#>');
     // replace carriage return characters, if exist
     let re = /&#xD;/gi;
-    xml = xml.replace(re, "");
+    xml = xml.replace(re, '');
 
     re = /&amp;/gi;
-    xml = xml.replace(re, "&");
+    xml = xml.replace(re, '&');
 
     re = /&gt;/gi;
-    xml = xml.replace(re, ">");
+    xml = xml.replace(re, '>');
 
     re = /&lt;/gi;
-    xml = xml.replace(re, "<");
+    xml = xml.replace(re, '<');
 
-    const blob = new Blob([xml], { type: "application/xml" });
+    const blob = new Blob([xml], { type: 'application/xml' });
 
     if (buttonClicked === 'downloadRule') {
-      const fileName = "Rule - " + rule.type + " - " + rule.name + ".xml";
+      const fileName = 'Rule - ' + rule.type + ' - ' + rule.name + '.xml';
       saveAs(blob, fileName);
-    }
-    else {
-      return (blob);
+    } else {
+      return blob;
     }
   }
 
   prepareRuleAttributes(attributes) {
-
     let returnObject = null;
     if (attributes) {
       const attrs = [];
       for (const name of Object.keys(attributes)) {
         const attr = {
-          "$": {
-            "key": name,
-            "value": attributes[name]
-          }
+          $: {
+            key: name,
+            value: attributes[name],
+          },
         };
         attrs.push(attr);
       }
       returnObject = {
-        "Map": [
+        Map: [
           {
-            "entry": attrs
-          }
-        ]
+            entry: attrs,
+          },
+        ],
       };
     }
 
@@ -447,21 +460,19 @@ export class ImportRuleComponent implements OnInit {
   }
 
   downloadRule(ruleId: string, $event) {
-
     if ($event && $event != '') {
       this.buttonClicked = $event.target.name;
     }
 
-    this.idnService.getConnectorRuleById(ruleId)
-      .subscribe(
-        result => {
-          const donwloadedRule = this.processDownloadRule(result);
-          if (donwloadedRule != null) {
-            this.convertRuleToXML(donwloadedRule, this.buttonClicked);
-          }
-        },
-        err => this.messageService.handleIDNError(err)
-      );
+    this.idnService.getConnectorRuleById(ruleId).subscribe(
+      result => {
+        const donwloadedRule = this.processDownloadRule(result);
+        if (donwloadedRule != null) {
+          this.convertRuleToXML(donwloadedRule, this.buttonClicked);
+        }
+      },
+      err => this.messageService.handleIDNError(err)
+    );
   }
 
   processDownloadRule(result): Rule {
@@ -480,37 +491,38 @@ export class ImportRuleComponent implements OnInit {
         processedRule.script = result.sourceCode.script;
         return processedRule;
       } else {
-        this.messageService.addError("Invalid Rule: missing source code script.");
+        this.messageService.addError(
+          'Invalid Rule: missing source code script.'
+        );
         return null;
       }
     } else {
-      this.messageService.addError("Failed to download rule");
+      this.messageService.addError('Failed to download rule');
       return null;
     }
   }
 
   exportAllRules($event) {
-
     if ($event && $event != '') {
       this.buttonClicked = $event.target.name;
     }
 
     for (const each of this.allRules) {
-
       const donwloadedRule = this.processDownloadRule(each);
       if (donwloadedRule != null) {
-        const converted = this.convertRuleToXML(donwloadedRule, this.buttonClicked);
-        const fileName = "Rule - " + each.type + " - " + each.name + ".xml";
+        const converted = this.convertRuleToXML(
+          donwloadedRule,
+          this.buttonClicked
+        );
+        const fileName = 'Rule - ' + each.type + ' - ' + each.name + '.xml';
         this.zip.file(`${fileName}`, converted);
       }
     }
     const currentUser = this.authenticationService.currentUserValue;
     const zipFileName = `${currentUser.tenant}-connector-rules.zip`;
 
-    this.zip.generateAsync({ type: "blob" }).then(function (content) {
+    this.zip.generateAsync({ type: 'blob' }).then(function (content) {
       saveAs(content, zipFileName);
-
     });
   }
-
 }

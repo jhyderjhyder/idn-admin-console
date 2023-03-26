@@ -10,7 +10,7 @@ import { saveAs } from 'file-saver';
 @Component({
   selector: 'app-source-info',
   templateUrl: './source-info.component.html',
-  styleUrls: ['./source-info.component.css']
+  styleUrls: ['./source-info.component.css'],
 })
 export class SourceInfoComponent implements OnInit {
   sources: Source[];
@@ -26,8 +26,8 @@ export class SourceInfoComponent implements OnInit {
   constructor(
     private idnService: IDNService,
     private messageService: MessageService,
-    private authenticationService: AuthenticationService) {
-  }
+    private authenticationService: AuthenticationService
+  ) {}
 
   ngOnInit() {
     this.reset(true);
@@ -45,61 +45,56 @@ export class SourceInfoComponent implements OnInit {
 
   search() {
     this.loading = true;
-    this.idnService.getAllSources()
-      .subscribe(allSources => {
-        this.sources = [];
-        for (const each of allSources) {
-          const source = new Source();
-          source.id = each.id;
-          source.cloudExternalID = each.connectorAttributes.cloudExternalId;
-          source.name = each.name;
-          source.description = each.description;
-          source.type = each.type;
-          source.authoritative = each.authoritative;
+    this.idnService.getAllSources().subscribe(allSources => {
+      this.sources = [];
+      for (const each of allSources) {
+        const source = new Source();
+        source.id = each.id;
+        source.cloudExternalID = each.connectorAttributes.cloudExternalId;
+        source.name = each.name;
+        source.description = each.description;
+        source.type = each.type;
+        source.authoritative = each.authoritative;
 
-          if (source.authoritative) {
-            source.name = source.name + " (Authoritative)";
-          }
-
-          this.idnService.getSourceCCApi(source.cloudExternalID)
-            .subscribe(
-              searchResult => {
-                source.accountsCount = searchResult.accountsCount;
-                source.entitlementsCount = searchResult.entitlementsCount;
-                source.internalName = searchResult.health.name;
-              },
-              err => {
-                this.messageService.handleIDNError(err);
-              }
-            );
-
-          this.sources.push(source);
+        if (source.authoritative) {
+          source.name = source.name + ' (Authoritative)';
         }
-        this.loading = false;
-      });
+
+        this.idnService.getSourceCCApi(source.cloudExternalID).subscribe(
+          searchResult => {
+            source.accountsCount = searchResult.accountsCount;
+            source.entitlementsCount = searchResult.entitlementsCount;
+            source.internalName = searchResult.health.name;
+          },
+          err => {
+            this.messageService.handleIDNError(err);
+          }
+        );
+
+        this.sources.push(source);
+      }
+      this.loading = false;
+    });
   }
 
   exportAllSources() {
+    this.idnService.getAllSources().subscribe(results => {
+      this.sources = [];
+      for (const each of results) {
+        const source = new Source();
+        const jsonData = JSON.stringify(each, null, 4);
+        source.name = each.name;
+        const fileName = 'Source - ' + source.name + '.json';
+        this.zip.file(`${fileName}`, jsonData);
+      }
 
-    this.idnService.getAllSources()
-      .subscribe(
-        results => {
-          this.sources = [];
-          for (const each of results) {
-            const source = new Source();
-            const jsonData = JSON.stringify(each, null, 4);
-            source.name = each.name;
-            const fileName = "Source - " + source.name + ".json";
-            this.zip.file(`${fileName}`, jsonData);
-          }
+      const currentUser = this.authenticationService.currentUserValue;
+      const zipFileName = `${currentUser.tenant}-sources.zip`;
 
-          const currentUser = this.authenticationService.currentUserValue;
-          const zipFileName = `${currentUser.tenant}-sources.zip`;
-
-          this.zip.generateAsync({ type: "blob" }).then(function (content) {
-            saveAs(content, zipFileName);
-          });
-          this.ngOnInit();
-        });
+      this.zip.generateAsync({ type: 'blob' }).then(function (content) {
+        saveAs(content, zipFileName);
+      });
+      this.ngOnInit();
+    });
   }
 }

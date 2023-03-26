@@ -17,7 +17,7 @@ const AccessProfileDescriptionMaxLength = 50;
 @Component({
   selector: 'app-accessprofile-management',
   templateUrl: './accessprofile-management.component.html',
-  styleUrls: ['./accessprofile-management.component.css']
+  styleUrls: ['./accessprofile-management.component.css'],
 })
 export class AccessProfileManagementComponent implements OnInit {
   sources: Source[];
@@ -40,15 +40,18 @@ export class AccessProfileManagementComponent implements OnInit {
 
   public modalRef: BsModalRef;
 
-  @ViewChild('submitConfirmModal', { static: false }) submitConfirmModal: ModalDirective;
-  @ViewChild('deleteAccessProfileConfirmModal', { static: false }) deleteAccessProfileConfirmModal: ModalDirective;
+  @ViewChild('submitConfirmModal', { static: false })
+  submitConfirmModal: ModalDirective;
+  @ViewChild('deleteAccessProfileConfirmModal', { static: false })
+  deleteAccessProfileConfirmModal: ModalDirective;
 
   @ViewChild('fileInput', { static: false }) fileInput: ElementRef;
 
-  constructor(private idnService: IDNService,
+  constructor(
+    private idnService: IDNService,
     private messageService: MessageService,
-    private authenticationService: AuthenticationService) {
-  }
+    private authenticationService: AuthenticationService
+  ) {}
 
   ngOnInit() {
     this.reset(true);
@@ -78,66 +81,65 @@ export class AccessProfileManagementComponent implements OnInit {
   getAllAccessProfiles() {
     this.allOwnersFetched = false;
     this.loading = true;
-    this.idnService.getAllAccessProfiles()
-      .subscribe(allAccessProfiles => {
-        this.accessProfiles = [];
-        this.accessProfilesToShow = [];
-        const accessProfileCount = allAccessProfiles.length;
-        let fetchedOwnerCount = 0;
-        for (const each of allAccessProfiles) {
-          const accessProfile = new AccessProfile();
-          accessProfile.id = each.id;
-          accessProfile.name = each.name;
-          if (each.description) {
-            if (each.description.length > AccessProfileDescriptionMaxLength) {
-              accessProfile.shortDescription = each.description.substring(0, AccessProfileDescriptionMaxLength) + "...";
-            }
-            else {
-              accessProfile.description = each.description;
-              accessProfile.shortDescription = each.description;
-            }
+    this.idnService.getAllAccessProfiles().subscribe(allAccessProfiles => {
+      this.accessProfiles = [];
+      this.accessProfilesToShow = [];
+      const accessProfileCount = allAccessProfiles.length;
+      let fetchedOwnerCount = 0;
+      for (const each of allAccessProfiles) {
+        const accessProfile = new AccessProfile();
+        accessProfile.id = each.id;
+        accessProfile.name = each.name;
+        if (each.description) {
+          if (each.description.length > AccessProfileDescriptionMaxLength) {
+            accessProfile.shortDescription =
+              each.description.substring(0, AccessProfileDescriptionMaxLength) +
+              '...';
+          } else {
+            accessProfile.description = each.description;
+            accessProfile.shortDescription = each.description;
           }
-          accessProfile.id = each.id;
-          accessProfile.enabled = each.enabled;
-
-          accessProfile.entitlements = each.entitlements.length;
-
-          accessProfile.sourceName = each.source.name;
-
-          const entitlementList = [];
-
-          if (each.entitlements != null) {
-            for (const entitlement of each.entitlements) {
-              entitlementList.push(entitlement.name);
-            }
-            accessProfile.entitlementList = entitlementList.join(";").toString();
-          }
-
-          const query = new SimpleQueryCondition();
-          query.attribute = "id";
-          query.value = each.owner.id;
-
-          this.idnService.searchAccounts(query)
-            .subscribe(searchResult => {
-              if (searchResult.length > 0) {
-                accessProfile.owner = new SourceOwner();
-                accessProfile.owner.accountId = searchResult[0].id;
-                accessProfile.owner.accountName = searchResult[0].name;
-                accessProfile.owner.displayName = searchResult[0].displayName;
-                accessProfile.currentOwnerAccountName = searchResult[0].name;
-                accessProfile.currentOwnerDisplayName = searchResult[0].displayName;
-              }
-              fetchedOwnerCount++;
-              if (fetchedOwnerCount == accessProfileCount) {
-                this.allOwnersFetched = true;
-              }
-            });
-
-          this.accessProfiles.push(accessProfile);
-          this.accessProfilesToShow.push(accessProfile);
         }
-        this.loading = false;
-      });
+        accessProfile.id = each.id;
+        accessProfile.enabled = each.enabled;
+
+        accessProfile.entitlements = each.entitlements.length;
+
+        accessProfile.sourceName = each.source.name;
+
+        const entitlementList = [];
+
+        if (each.entitlements != null) {
+          for (const entitlement of each.entitlements) {
+            entitlementList.push(entitlement.name);
+          }
+          accessProfile.entitlementList = entitlementList.join(';').toString();
+        }
+
+        const query = new SimpleQueryCondition();
+        query.attribute = 'id';
+        query.value = each.owner.id;
+
+        this.idnService.searchAccounts(query).subscribe(searchResult => {
+          if (searchResult.length > 0) {
+            accessProfile.owner = new SourceOwner();
+            accessProfile.owner.accountId = searchResult[0].id;
+            accessProfile.owner.accountName = searchResult[0].name;
+            accessProfile.owner.displayName = searchResult[0].displayName;
+            accessProfile.currentOwnerAccountName = searchResult[0].name;
+            accessProfile.currentOwnerDisplayName = searchResult[0].displayName;
+          }
+          fetchedOwnerCount++;
+          if (fetchedOwnerCount == accessProfileCount) {
+            this.allOwnersFetched = true;
+          }
+        });
+
+        this.accessProfiles.push(accessProfile);
+        this.accessProfilesToShow.push(accessProfile);
+      }
+      this.loading = false;
+    });
   }
 
   resetaccessProfilesToShow() {
@@ -148,7 +150,6 @@ export class AccessProfileManagementComponent implements OnInit {
         const copy = new AccessProfile();
         Object.assign(copy, each);
         this.accessProfilesToShow.push(copy);
-
       });
     }
   }
@@ -158,9 +159,13 @@ export class AccessProfileManagementComponent implements OnInit {
     if ($event && $event != '') {
       this.bulkAction = $event;
       if (this.bulkAction === 'EnableAccessProfiles') {
-        this.accessProfilesToShow = this.accessProfilesToShow.filter(each => (!each.enabled));
+        this.accessProfilesToShow = this.accessProfilesToShow.filter(
+          each => !each.enabled
+        );
       } else if (this.bulkAction === 'DisableAccessProfiles') {
-        this.accessProfilesToShow = this.accessProfilesToShow.filter(each => (each.enabled));
+        this.accessProfilesToShow = this.accessProfilesToShow.filter(
+          each => each.enabled
+        );
       }
     } else {
       this.bulkAction = null;
@@ -171,13 +176,15 @@ export class AccessProfileManagementComponent implements OnInit {
   unselectAll() {
     this.selectAll = false;
     this.atLeastOneSelected = false;
-    this.accessProfilesToShow.forEach(each => each.selected = false);
+    this.accessProfilesToShow.forEach(each => (each.selected = false));
   }
 
   changeOnSelectAll() {
     this.messageService.clearError();
     this.searchText = null;
-    this.accessProfilesToShow.forEach(each => each.selected = !this.selectAll);
+    this.accessProfilesToShow.forEach(
+      each => (each.selected = !this.selectAll)
+    );
   }
 
   changeOnSelect($event) {
@@ -215,7 +222,7 @@ export class AccessProfileManagementComponent implements OnInit {
 
   closeModalDisplayMsg() {
     if (!this.errorInvokeApi) {
-      this.messageService.add("Changes saved successfully.");
+      this.messageService.add('Changes saved successfully.');
     }
     this.submitConfirmModal.hide();
   }
@@ -224,8 +231,8 @@ export class AccessProfileManagementComponent implements OnInit {
     const arr = this.getSelectedAccessProfiles();
     let processedCount = 0;
     for (const each of arr) {
-      this.idnService.updateAccessProfile(each, path, enabled)
-        .subscribe(() => {
+      this.idnService.updateAccessProfile(each, path, enabled).subscribe(
+        () => {
           processedCount++;
           if (processedCount == arr.length) {
             this.closeModalDisplayMsg();
@@ -233,17 +240,17 @@ export class AccessProfileManagementComponent implements OnInit {
             this.getAllAccessProfiles();
           }
         },
-          err => {
-            this.errorInvokeApi = true;
-            this.messageService.handleIDNError(err);
-            processedCount++;
-            if (processedCount == arr.length) {
-              this.closeModalDisplayMsg();
-              this.reset(false);
-              this.getAllAccessProfiles();
-            }
+        err => {
+          this.errorInvokeApi = true;
+          this.messageService.handleIDNError(err);
+          processedCount++;
+          if (processedCount == arr.length) {
+            this.closeModalDisplayMsg();
+            this.reset(false);
+            this.getAllAccessProfiles();
           }
-        );
+        }
+      );
     }
   }
 
@@ -254,7 +261,17 @@ export class AccessProfileManagementComponent implements OnInit {
       decimalseparator: '.',
       showLabels: true,
       useHeader: true,
-      headers: ["name", "description", "id", "enabled", "entitlements", "sourceName", "entitlementList", "ownerAccountID", "ownerDisplayName"],
+      headers: [
+        'name',
+        'description',
+        'id',
+        'enabled',
+        'entitlements',
+        'sourceName',
+        'entitlementList',
+        'ownerAccountID',
+        'ownerDisplayName',
+      ],
       nullToEmptyString: true,
     };
 
@@ -276,41 +293,40 @@ export class AccessProfileManagementComponent implements OnInit {
   async deleteAccessProfiles() {
     this.messageService.clearAll();
     this.invalidMessage = [];
-    if (this.deleteAccessProfileConfirmText !== "YES TO DELETE") {
-      this.invalidMessage.push("Text does not match");
+    if (this.deleteAccessProfileConfirmText !== 'YES TO DELETE') {
+      this.invalidMessage.push('Text does not match');
       this.validToSubmit = false;
       return;
-    }
-    else {
+    } else {
       this.validToSubmit = true;
     }
 
     const arr = this.getSelectedAccessProfiles();
     let processedCount = 0;
     for (const each of arr) {
-      this.idnService.deleteAccessProfile(each)
-        .subscribe(async () => {
+      this.idnService.deleteAccessProfile(each).subscribe(
+        async () => {
           processedCount++;
           if (processedCount == arr.length) {
             this.deleteAccessProfileConfirmModal.hide();
-            this.messageService.add("Access Profiles deleted successfully.");
+            this.messageService.add('Access Profiles deleted successfully.');
             this.hideSubmitConfirmModal();
             this.reset(false);
             await this.sleep(2000);
             this.getAllAccessProfiles();
           }
         },
-          err => {
-            this.errorInvokeApi = true;
+        err => {
+          this.errorInvokeApi = true;
+          this.messageService.handleIDNError(err);
+          processedCount++;
+          if (processedCount == arr.length) {
+            this.deleteAccessProfileConfirmModal.hide();
+            this.hideSubmitConfirmModal();
             this.messageService.handleIDNError(err);
-            processedCount++;
-            if (processedCount == arr.length) {
-              this.deleteAccessProfileConfirmModal.hide();
-              this.hideSubmitConfirmModal();
-              this.messageService.handleIDNError(err);
-            }
           }
-        );
+        }
+      );
     }
   }
 
@@ -331,29 +347,23 @@ export class AccessProfileManagementComponent implements OnInit {
   }
 
   exportAllAccessProfiles() {
+    this.idnService.getAllAccessProfiles().subscribe(results => {
+      this.accessProfiles = [];
+      for (const each of results) {
+        const accessProfile = new AccessProfile();
+        const jsonData = JSON.stringify(each, null, 4);
+        accessProfile.name = each.name;
+        const fileName = 'AccessProfile - ' + accessProfile.name + '.json';
+        this.zip.file(`${fileName}`, jsonData);
+      }
+      const currentUser = this.authenticationService.currentUserValue;
+      const zipFileName = `${currentUser.tenant}-accessprofiles.zip`;
 
-    this.idnService.getAllAccessProfiles()
-      .subscribe(
-        results => {
-          this.accessProfiles = [];
-          for (const each of results) {
-            const accessProfile = new AccessProfile();
-            const jsonData = JSON.stringify(each, null, 4);
-            accessProfile.name = each.name;
-            const fileName = "AccessProfile - " + accessProfile.name + ".json";
-            this.zip.file(`${fileName}`, jsonData);
+      this.zip.generateAsync({ type: 'blob' }).then(function (content) {
+        saveAs(content, zipFileName);
+      });
 
-          }
-          const currentUser = this.authenticationService.currentUserValue;
-          const zipFileName = `${currentUser.tenant}-accessprofiles.zip`;
-
-          this.zip.generateAsync({ type: "blob" }).then(function (content) {
-            saveAs(content, zipFileName);
-          });
-
-          this.ngOnInit();
-
-        });
+      this.ngOnInit();
+    });
   }
-
 }
