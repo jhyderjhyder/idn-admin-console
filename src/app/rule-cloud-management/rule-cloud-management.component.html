@@ -34,7 +34,7 @@
 </div>
 <br>
 <table class="table table-striped table-bordered">
-  <thead class="thead-light text-center align-middle">
+  <thead class="table-secondary align-middle">
     <tr>
       <th scope="col">Name</th>
       <th scope="col">Type</th>
@@ -44,7 +44,7 @@
     </tr>
   </thead>
   <tbody *ngIf="rules">
-    <tr class="text-center align-middle" *ngFor="let r of rules | filter:searchText:['name', 'type']">
+    <tr class="align-middle" *ngFor="let r of rules | filter:searchText:['name', 'type']">
       <td>{{ r.name }}</td>
       <td>{{ r.type }}</td>
       <td>{{ r.description }}</td>

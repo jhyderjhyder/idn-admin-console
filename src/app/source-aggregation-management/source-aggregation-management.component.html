@@ -85,7 +85,7 @@
 </div>
 
 <table class="table table-striped table-bordered">
-  <thead class="thead-light text-center align-middle">
+  <thead class="table-secondary align-middle">
     <tr>
       <th scope="col" *ngIf="bulkAction">
           Select All
@@ -103,7 +103,7 @@
     </tr>
   </thead>
   <tbody *ngIf="sourcesToShow">
-    <tr class="text-center align-middle" *ngFor="let s of sourcesToShow | filter:searchText:['cloudExternalID', 'name', 'description', 'type']">
+    <tr class="align-middle" *ngFor="let s of sourcesToShow | filter:searchText:['cloudExternalID', 'name', 'description', 'type']">
       <td *ngIf="bulkAction">
         <input type="checkbox" [(ngModel)]="s.selected" (click)="changeOnSelect($event)">
       </td>
