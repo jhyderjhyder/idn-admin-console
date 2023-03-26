@@ -33,7 +33,7 @@ jobs:
         run: npm install
 
       - name: Build
-        run: npm run build-prod
+        run: npm run build
 
       - name: Package
         run: npm run electron-mac-x64-package
@@ -72,7 +72,7 @@ jobs:
   #       run: npm install
 
   #     - name: Build
-  #       run: npm run build-prod
+  #       run: npm run build
 
   #     - name: Package
   #       run: npm run electron-mac-arm64-package
@@ -111,7 +111,7 @@ jobs:
         run: npm install
 
       - name: Build
-        run: npm run build-prod
+        run: npm run build
 
       - name: Package
         run: npm run electron-win-x64-package
@@ -150,7 +150,7 @@ jobs:
         run: npm install
 
       - name: Build
-        run: npm run build-prod
+        run: npm run build
 
       - name: Package
         run: npm run electron-linux-x64-package

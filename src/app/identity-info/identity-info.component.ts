@@ -182,7 +182,7 @@ export class IdentityInfoComponent implements OnInit {
     if (this.accountName && this.accountName.trim() != '') {
       this.idnService.refreshSingleIdentity(this.accountName).subscribe(
         () => {
-          this.messageService.add(`Trigerred Identity Refresh`);
+          this.messageService.add(`Triggered Identity Refresh`);
         },
         err => {
           this.messageService.handleIDNError(err);

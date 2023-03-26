@@ -86,11 +86,12 @@ The application can be run as a standalone web application, inside docker contai
         * npm install -g @angular/cli
     * Run command in root directory:
         * npm install
+* Build Package
+    * npm run build
 * Run in local
     * ng serve --open
-    * Type URL in browser: http://localhost:4200
-* Build Package
-    * npm run build-prod
+    * Will open URL in browser: http://localhost:4200
+
 
 ### Run as electron app ###
 * Prerequisites
@@ -98,19 +99,19 @@ The application can be run as a standalone web application, inside docker contai
     * npm install electron-packager -g
     * brew install --cask wine-stable
 * Run in local
-    * npm run build-prod
+    * npm run build
 * Build electron package for Mac OS
-    * npm run build-prod
+    * npm run build
     * electron-packager . --platform=darwin --overwrite
 * Build electron package for Windows
-    * npm run build-prod
+    * npm run build
     * electron-packager . --platform=win32 --overwrite
 
 ### Run as container app ###
 * Prerequisites
     * Install docker
 * Run in local
-    * npm run build-prod
+    * npm run build
     * docker build -t idn-admin-console-image .
     * docker run --name idn-admin-console-container -d -p 8080:80 idn-admin-console-image
     * Type URL in browser:  http://localhost:8080
