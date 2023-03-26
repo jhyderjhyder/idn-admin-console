@@ -39,7 +39,18 @@
             "optimization": false,
             "namedChunks": true,
             "allowedCommonJsDependencies": [
-              "rxjs-compat"
+              "rxjs-compat", 
+              "lodash/mapValues",
+              "angular-csv-ext/dist/Angular-csv",
+              "property-expr",
+              "lodash/camelCase",
+              "lodash/has",
+              "lodash/mapKeys",
+              "lodash/snakeCase",
+              "jszip",
+              "xml2js",
+              "cron-validate",
+              "file-saver"
            ]
           },
           "configurations": {
