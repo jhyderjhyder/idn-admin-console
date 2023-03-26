@@ -39,7 +39,6 @@
             "optimization": false,
             "namedChunks": true,
             "allowedCommonJsDependencies": [
-              "rxjs-compat", 
               "lodash/mapValues",
               "angular-csv-ext/dist/Angular-csv",
               "property-expr",
