@@ -9,9 +9,7 @@
     "test": "ng test",
     "lint": "ng lint",
     "format": "npx prettier --write .",
-    "e2e": "ng e2e",
     "electron": "electron .",
-    "build-prod": "ng build",
     "electron-mac-x64-package": "electron-packager . --platform=darwin --arch=x64 --overwrite",
     "electron-mac-arm64-package": "electron-packager . --platform=darwin --arch=arm64 --overwrite",
     "electron-win-x64-package": "electron-packager . --platform=win32 --arch=x64 --overwrite",
@@ -105,16 +103,8 @@
     "eslint-plugin-import": "^2.27.5",
     "eslint-plugin-jasmine": "^4.1.3",
     "eslint-plugin-prettier": "^4.2.1",
+    "karma-coverage": "^2.2.0",
     "prettier": "^2.8.7",
     "prettier-eslint": "^15.0.1"
-  },
-  "lint": {
-    "builder": "@angular-eslint/builder:lint",
-    "options": {
-      "lintFilePatterns": [
-        "src/**/*.ts",
-        "src/**/*.component.html"
-      ]
-    }
   }
 }
