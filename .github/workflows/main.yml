@@ -1,0 +1,11 @@
+on:
+  workflow_dispatch:
+
+jobs:
+  Test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Echo
+        run: | 
+          echo Value ${{ vars.DOCKERHUB_REPO }}
+          echo ${{ vars.DOCKERHUB_REPO }}:latest
