@@ -160,9 +160,7 @@ jobs:
           uses: docker/build-push-action@v4
           with:
             push: false
-            tags: |
-              ${{ secrets.DOCKERHUB_REPO }}:latest
-              ${{ secrets.DOCKERHUB_REPO }}:${{ env.VER }}
+            tags: ${{ secrets.DOCKERHUB_REPO }}:latest
 
         - name: Login to Docker Hub
           if: github.event_name == 'release' && github.event.action == 'published' 
