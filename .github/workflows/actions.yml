@@ -157,7 +157,7 @@ jobs:
 
         - name: Build Test Package
           if: github.event_name != 'release' 
-          uses: docker/build-push-action@v4
+          uses: docker/build-push-action@v3
           with:
             push: false
             tags: |
@@ -173,7 +173,7 @@ jobs:
 
         - name: Build and Deploy to Docker Hub
           if: github.event_name == 'release' && github.event.action == 'published' 
-          uses: docker/build-push-action@v4
+          uses: docker/build-push-action@v3
           with:
             push: true
             tags: |
