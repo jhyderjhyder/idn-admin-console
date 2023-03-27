@@ -38,17 +38,16 @@ export class SearchFilterPipe implements PipeTransform {
       ) {
         return true;
       }
-
       for (const property in item) {
-        if (property.hasOwnProperty(item)) {
+        if (!property.hasOwnProperty(item)) {
           //should skip this item?
           let skipItem = false;
-          if (includes != null && includes.length > 0) {
+          if (includes !== null && includes.length > 0) {
             skipItem = !includes.includes(property);
           }
           if (
             item[property] === null ||
-            item[property] == undefined ||
+            item[property] === undefined ||
             skipItem
           ) {
             continue;
