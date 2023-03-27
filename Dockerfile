@@ -1,7 +1,7 @@
 ### STAGE 1: Build ###
-# Use official nginx and node tested image as the base image
 
-FROM nginx:1.22.1-alpine AS build
+# Use official nginx and node tested image as the base image
+FROM nginx:stable-alpine AS build
 FROM node:18.15.0 AS build
 #RUN apk add --update nodejs nodejs-npm
 
@@ -21,8 +21,9 @@ COPY . .
 RUN npm run build
 
 ### STAGE 2: Run ###
+
 # Use official nginx tested image as the base image
-FROM nginx:1.22.1-alpine
+FROM nginx:stable-alpine
 
 # Copy the build output to replace the default nginx contents.
 COPY nginx.conf /etc/nginx/nginx.conf
