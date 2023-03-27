@@ -1,13 +1,29 @@
 ### STAGE 1: Build ###
-FROM nginx:1.17.1-alpine AS build
-RUN apk add --update nodejs nodejs-npm
+# Use official nginx and node tested image as the base image
+
+FROM nginx:1.22.1-alpine AS build
+FROM node:18.15.0 AS build
+#RUN apk add --update nodejs nodejs-npm
+
+# Set the working directory
 WORKDIR /usr/src/app
+
+# Add the source code to app
 COPY package.json ./
+
+# Install all the dependencies
 RUN npm install
+
+# Copy Files
 COPY . .
+
+# Generate the build of the application
 RUN npm run build
 
 ### STAGE 2: Run ###
-FROM nginx:1.17.1-alpine
+# Use official nginx tested image as the base image
+FROM nginx:1.22.1-alpine
+
+# Copy the build output to replace the default nginx contents.
 COPY nginx.conf /etc/nginx/nginx.conf
 COPY --from=build /usr/src/app/dist/idn-admin-console /usr/share/nginx/html
