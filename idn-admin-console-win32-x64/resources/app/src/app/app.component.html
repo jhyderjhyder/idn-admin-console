@@ -1,0 +1,176 @@
+<div class="container col-10">
+  <br>
+  <a class="navbar-brand" href="#">
+    <img src="./assets/images/sp_logo.png" alt="IdentityNow" class="navbar-brand-image">
+  </a>
+  <nav class="navbar navbar-custom navbar-dark navbar-expand-lg">
+    <div class="col-sm-12 text-center text-white" *ngIf="!currentUser">
+      IdentityNow Admin Console
+    </div>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar" *ngIf="currentUser">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse row m-1" id="collapsibleNavbar" *ngIf="currentUser">
+      <ul class="navbar-nav col-md-10">
+        <li class="nav-item dropdown ">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarIdentityProfile" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Identity Profiles
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarIdentityProfile">
+            <a class="dropdown-item" routerLink="/identity-info">Identity Info</a>
+            <a class="dropdown-item" routerLink="/identity-profile-management">Manage Identity Profile</a>
+            <a class="dropdown-item" routerLink="/identity-attribute-index">Manage Identity Attribute Index</a>
+            <a class="dropdown-item" routerLink="/identity-transform-management">Manage Transforms</a>
+            <a class="dropdown-item" routerLink="/identity-lcs-management">Manage LCS</a>
+          </div>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarAccounts" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Accounts
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarAccounts">
+            <a class="dropdown-item" routerLink="/multiple-accounts-report">Multiple Accounts Report</a>
+          </div>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarAccessProfiles" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Access Profiles
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarAccessProfiles">
+            <a class="dropdown-item" routerLink="/accessprofile-management">Manage Access Profiles</a>
+            <a class="dropdown-item" routerLink="/accessprofile-owner-update">Manage Access Profile Owners</a>
+          </div>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarRoles" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Roles
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarRoles">
+            <a class="dropdown-item" routerLink="/role-management">Manage Roles</a>
+            <a class="dropdown-item" routerLink="/role-owner-update">Manage Role Owners</a>
+            <a class="dropdown-item" routerLink="/role-duplicate">Duplicate Role</a>
+          </div>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarManageSource" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Sources
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarManageSource">
+            <a class="dropdown-item" routerLink="/source-aggregation-management">Manage Aggregation Schedules</a>
+            <a class="dropdown-item" routerLink="/source-owner-update">Manage Source Owners</a>
+            <a class="dropdown-item" routerLink="/source-aggregation-run">Run Aggregations</a>
+            <a class="dropdown-item" routerLink="/source-create-profile">Manage Create Profile</a>
+            <a class="dropdown-item" routerLink="/source-reset">Reset Source</a>
+            <a class="dropdown-item" routerLink="/source-info">Source Info</a>
+          </div>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarRules" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Rules
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarRules">
+            <a class="dropdown-item" routerLink="/rule-cloud-management">Manage Cloud Rules</a>
+            <a class="dropdown-item" routerLink="/rule-connector-management">Manage Connector Rules</a>
+          </div>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarRules" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Requests
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarRules">
+            <a class="dropdown-item" routerLink="/access-request-status">Access Request Status</a>
+            <a class="dropdown-item" routerLink="/access-request-approval-forward">Access Request Approval Forward</a>
+          </div>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarRules" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Work Items
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarRules">
+            <a class="dropdown-item" routerLink="/work-items-status">Work Items Status</a>
+            <a class="dropdown-item" routerLink="/work-items-forward">Work Items Pending Forward</a>
+          </div>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarRules" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Misc
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarRules">
+            <a class="dropdown-item" routerLink="/misc-org-time-update">Set Org Time</a>
+            <a class="dropdown-item" routerLink="/misc-manage-pat">Manage PAT</a>
+            <a class="dropdown-item" routerLink="/misc-org-stats">Org Statistics</a>
+          </div>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarRules" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            About
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarRules">
+            <a class="dropdown-item" routerLink="/release-history">Release History</a>
+            <a class="dropdown-item" routerLink="/credits">Credits</a>
+          </div>
+        </li>
+      </ul>
+      <div class="col-sm-2 text-end">
+        <div class="row align-items-center">
+        <small class="col-md-6 col-sm-6 text-center">
+          <span class="text-white">
+            Tenant: {{currentUser.tenant}}
+          </span>
+          &nbsp;&nbsp;
+          <span class="text-white">
+            v1.21.0
+          </span>
+        </small>
+        <a class=" col-sm-6 btn btn-link text-white" (click)="logout()"><i class="fa fa-sign-out" aria-hidden="true">Logout</i></a>
+      </div>
+      </div>
+    </div>
+  </nav>
+</div>
+<div class="container col-10" style="margin-top:30px">
+  <div class="row">
+    <div class="col-sm-12">
+      <app-messages></app-messages>
+    </div>
+    <div class="col-sm-12">
+      <router-outlet></router-outlet>
+    </div>
+  </div>
+</div>
+<div class="container col-10">
+  <nav class="navbar navbar-custom navbar-expand-lg">
+    <div class="col-sm-12 text-center text-white">
+      <small></small>
+    </div>
+  </nav>
+  <br>
+</div>
+<div bsModal #childModal="bs-modal" class="modal fade" tabindex="-1"
+     role="dialog" aria-labelledby="dialog-child-name">
+  <div class="modal-dialog modal-md">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 id="dialog-child-name" class="modal-title pull-left">You Have Been Idle!</h4>
+        <button type="button" class="btn close pull-right" aria-label="Close" (click)="hideChildModal()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+         {{idleState}}
+        <div class="row mrgbtm">
+          <div class="col-md-6 text-start">
+              <button type="button" (click)="logout()" class="btn btn-danger">Logout</button>
+          </div>
+          <div class="col-md-6 text-end">
+              <button type="button" (click)="stay()" class="btn btn-success">Stay</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
