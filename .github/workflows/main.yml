@@ -9,3 +9,4 @@ jobs:
         run: | 
           echo Value ${{ vars.DOCKERHUB_REPO }}
           echo ${{ vars.DOCKERHUB_REPO }}:latest
+          echo $GITHUB_ENV
