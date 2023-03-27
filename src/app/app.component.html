@@ -11,7 +11,7 @@
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse row m-1" id="collapsibleNavbar" *ngIf="currentUser">
-      <ul class="navbar-nav col-md-10">
+      <ul class="navbar-nav col-md-9 me-auto">
         <li class="nav-item dropdown ">
           <a class="nav-link dropdown-toggle" href="#" id="navbarIdentityProfile" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             Identity Profiles
@@ -111,18 +111,19 @@
           </div>
         </li>
       </ul>
-      <div class="col-sm-2 text-end">
+      <div class="col-sm-2 text-end me-3">
         <div class="row align-items-center">
-        <small class="col-md-6 col-sm-6 text-center">
-          <span class="text-white">
-            Tenant: {{currentUser.tenant}}
-          </span>
-          &nbsp;&nbsp;
-          <span class="text-white">
+        <small class="col-md-4 col-sm-4 text-center">
+            <span class="text-white">
+              Tenant: {{currentUser.tenant}}
+            </span>
+        </small>
+        <small class="col-md-4 col-sm-4 text-center">
+          <span class=" text-white">
             v1.21.0
           </span>
-        </small>
-        <a class=" col-sm-6 btn btn-link text-white" (click)="logout()"><i class="fa fa-sign-out" aria-hidden="true">Logout</i></a>
+      </small>
+        <a class="col-sm-4 btn btn-link text-white" (click)="logout()"><i class="fa fa-sign-out" aria-hidden="true">Logout</i></a>
       </div>
       </div>
     </div>
@@ -170,7 +171,3 @@
     </div>
   </div>
 </div>
-
-
-
-
