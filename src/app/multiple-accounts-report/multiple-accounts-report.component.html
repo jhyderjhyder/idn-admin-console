@@ -51,7 +51,7 @@
 </div>
 <br>
 <table class="table table-striped table-bordered">
-  <thead class="table-secondary align-middle">
+  <thead class="table-secondary text-center align-middle">
     <tr>
       <th scope="col" class="col-1">Identity Name</th>
       <th scope="col" class="col-2">Display Name</th>
@@ -62,8 +62,8 @@
       <th scope="col" class="col-2">Account Created</th>
     </tr>
   </thead>
-  <tbody *ngIf="accounts && !loading">
-    <tr class="align-middle" *ngFor="let a of accounts | filter:searchText:['identityName', 'displayName', 'sourceName']">
+  <tbody class="text-center align-middle" *ngIf="accounts && !loading">
+    <tr *ngFor="let a of accounts | filter:searchText:['identityName', 'displayName', 'sourceName']">
       <td class="col-1">{{ a.identityName }}</td>
       <td class="col-2">{{ a.displayName }}</td>
       <td class="col-1">{{ a.sourceName }}</td>

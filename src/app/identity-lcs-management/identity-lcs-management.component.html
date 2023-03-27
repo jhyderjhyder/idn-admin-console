@@ -43,23 +43,23 @@
   </div>
 </div>
 <table class="table table-striped table-bordered">
-  <thead class="table-secondary align-middle">
+  <thead class="table-secondary text-center align-middle">
     <tr>
-      <th scope="col">Display Name</th>
-      <th scope="col">Technical Name</th>
-      <th scope="col">Enabled</th>
-      <th scope="col">Identity Count</th>
-      <th scope="col">Actions</th>
+      <th>Display Name</th>
+      <th>Technical Name</th>
+      <th>Enabled</th>
+      <th>Identity Count</th>
+      <th>Actions</th>
     </tr>
   </thead>
-  <tbody *ngIf="identityProfileLCSExists">
-    <tr class="align-middle" *ngFor="let attr of lcsAttributes">
+  <tbody class="text-center align-middle" *ngIf="identityProfileLCSExists">
+    <tr *ngFor="let attr of lcsAttributes">
       <td>{{ attr.lcsDisplayName }}</td>
       <td>{{ attr.lcsTechnicalName }}</td>
       <td>{{ attr.lcsEnabled }}</td>
       <td>{{ attr.lcsIdentityCount }}</td>
       <td>
-        <div class="text-center align-middle">
+        <div>
           <button type="button" [disabled]="loading" (click)="showDeleteLCSSubmitConfirmModal(attr.lcsId)"class="btn btn-primary btn-sm">
             Delete
           </button>

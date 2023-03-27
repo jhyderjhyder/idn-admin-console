@@ -72,7 +72,7 @@
       <td>Cloud Status</td>
       <td>{{ identityInfo.cloudStatus }}</td>
     </tr>
-    <tr class="align-middle" *ngIf="identityInfo.managerDisplayName">
+    <tr *ngIf="identityInfo.managerDisplayName">
       <td>Manager</td>
       <td style="color:royalblue; cursor: pointer;" (click)="getManagerInfo()">{{ identityInfo.managerDisplayName }}</td>
     </tr>
@@ -103,7 +103,7 @@
       <td>Accounts</td>
       <td>{{ identityInfo.accountCount }}</td>
     </tr>
-    <tr class="align-middle" *ngIf="identityInfo.accountSourceNames">
+    <tr *ngIf="identityInfo.accountSourceNames">
       <td>Account Source Names</td>
       <td>{{ identityInfo.accountSourceNames }}</td>
     </tr>
@@ -111,7 +111,7 @@
       <td>Applications</td>
       <td>{{ identityInfo.appCount }}</td>
     </tr>
-    <tr class="align-middle" *ngIf="identityInfo.appNames">
+    <tr *ngIf="identityInfo.appNames">
       <td>Application Names</td>
       <td>{{ identityInfo.appNames }}</td>
     </tr>
@@ -123,7 +123,7 @@
       <td>Roles</td>
       <td>{{ identityInfo.roleCount }}</td>
     </tr>
-    <tr class="align-middle" *ngIf="identityInfo.roleNames">
+    <tr *ngIf="identityInfo.roleNames">
       <td>Role Names</td>
       <td>{{ identityInfo.roleNames }}</td>
     </tr>
@@ -131,7 +131,7 @@
       <td>Access Profiles</td>
       <td>{{ identityInfo.accessProfileCount }}</td>
     </tr>
-    <tr class="align-middle" *ngIf="identityInfo.accessProfileNames">
+    <tr *ngIf="identityInfo.accessProfileNames">
       <td>Access Profile Names</td>
       <td>{{ identityInfo.accessProfileNames }}</td>
     </tr>
@@ -139,7 +139,7 @@
       <td>Entitlements</td>
       <td>{{ identityInfo.entitlementCount }}</td>
     </tr>
-    <tr class="align-middle" *ngIf="identityInfo.entitlementNames">
+    <tr *ngIf="identityInfo.entitlementNames">
       <td>Entitlement Names</td>
       <td>{{ identityInfo.entitlementNames }}</td>
     </tr>
@@ -147,7 +147,7 @@
       <td>Tags</td>
       <td>{{ identityInfo.tagsCount }}</td>
     </tr>
-    <tr class="align-middle" *ngIf="identityInfo.tagNames">
+    <tr *ngIf="identityInfo.tagNames">
       <td>Tag Names</td>
       <td>{{ identityInfo.tagNames }}</td>
     </tr>
@@ -162,7 +162,7 @@
       <td>Sources</td>
       <td>{{ identityInfo.ownSources }}</td>
     </tr>
-    <tr class="align-middle" *ngIf="identityInfo.ownSourcesNames">
+    <tr *ngIf="identityInfo.ownSourcesNames">
       <td>Source Names</td>
       <td>{{ identityInfo.ownSourcesNames }}</td>
     </tr>
@@ -170,7 +170,7 @@
       <td>Access Profiles</td>
       <td>{{ identityInfo.ownAccessProfiles }}</td>
     </tr>
-    <tr class="align-middle" *ngIf="identityInfo.ownAccessProfilesNames">
+    <tr *ngIf="identityInfo.ownAccessProfilesNames">
       <td>Access Profiles Names</td>
       <td>{{ identityInfo.ownAccessProfilesNames }}</td>
     </tr>
@@ -178,7 +178,7 @@
       <td>Applications</td>
       <td>{{ identityInfo.ownApps }}</td>
     </tr>
-    <tr class="align-middle" *ngIf="identityInfo.ownAppsNames">
+    <tr *ngIf="identityInfo.ownAppsNames">
       <td>Application Names</td>
       <td>{{ identityInfo.ownAppsNames }}</td>
     </tr>
@@ -186,7 +186,7 @@
       <td>Roles</td>
       <td>{{ identityInfo.ownRoles }}</td>
     </tr>
-    <tr class="align-middle" *ngIf="identityInfo.ownRolesNames">
+    <tr *ngIf="identityInfo.ownRolesNames">
       <td>Role Names</td>
       <td>{{ identityInfo.ownRolesNames }}</td>
     </tr>
@@ -194,7 +194,7 @@
       <td>Governance Groups</td>
       <td>{{ identityInfo.ownGovernanceGroups }}</td>
     </tr>
-    <tr class="align-middle" *ngIf="identityInfo.ownGovernanceGroupsNames">
+    <tr *ngIf="identityInfo.ownGovernanceGroupsNames">
       <td>Governance Groups Names</td>
       <td>{{ identityInfo.ownGovernanceGroupsNames }}</td>
     </tr>

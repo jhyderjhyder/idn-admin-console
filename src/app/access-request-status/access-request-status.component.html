@@ -59,7 +59,7 @@
 </div>
 <br>
 <table class="table table-striped table-bordered">
-  <thead class="table-secondary align-middle">
+  <thead class="table-secondary text-center align-middle">
     <tr>
       <th scope="col" class="col-1">Access Name</th>
       <th scope="col" class="col-2">Access Type</th>
@@ -72,8 +72,8 @@
       <th scope="col" class="col-1">Requester Comment</th>
     </tr>
   </thead>
-  <tbody *ngIf="accessRequestStatuses && !loading">
-    <tr class="align-middle" *ngFor="let a of accessRequestStatuses | filter:searchText:['accessName', 'accessType', 'requestType', 'state', 'requester', 'requestedFor']">
+  <tbody class="text-center align-middle" *ngIf="accessRequestStatuses && !loading">
+    <tr *ngFor="let a of accessRequestStatuses | filter:searchText:['accessName', 'accessType', 'requestType', 'state', 'requester', 'requestedFor']">
       <td class="col-1">{{ a.accessName }}</td>
       <td class="col-2">{{ a.accessType }}</td>
       <td class="col-2">{{ a.requestType }}</td>
