@@ -1,9 +1,7 @@
 ### STAGE 1: Build ###
 
 # Use official nginx and node tested image as the base image
-FROM nginx:stable-alpine AS build
 FROM node:18.15.0 AS build
-#RUN apk add --update nodejs nodejs-npm
 
 # Set the working directory
 WORKDIR /usr/src/app

@@ -2,6 +2,7 @@
 
 # compiled output
 /dist
+/idn-admin-console-*
 
 # dependencies
 /node_modules
