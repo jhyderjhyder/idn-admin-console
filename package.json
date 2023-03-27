@@ -10,10 +10,10 @@
     "lint": "ng lint",
     "format": "npx prettier --write .",
     "electron": "electron .",
-    "electron-mac-x64-package": "electron-packager . --platform=darwin --arch=x64 --overwrite",
-    "electron-mac-arm64-package": "electron-packager . --platform=darwin --arch=arm64 --overwrite",
-    "electron-win-x64-package": "electron-packager . --platform=win32 --arch=x64 --overwrite",
-    "electron-linux-x64-package": "electron-packager . --platform=linux --arch=x64 --overwrite"
+    "electron-mac-x64-package": "electron-packager . --platform=darwin --arch=x64 --overwrite --ignore=^/.angular",
+    "electron-mac-arm64-package": "electron-packager . --platform=darwin --arch=arm64 --overwrite --ignore=^/.angular",
+    "electron-win-x64-package": "electron-packager . --platform=win32 --arch=x64 --overwrite --ignore=^/.angular",
+    "electron-linux-x64-package": "electron-packager . --platform=linux --arch=x64 --overwrite --ignore=^/.angular"
   },
   "private": true,
   "dependencies": {
