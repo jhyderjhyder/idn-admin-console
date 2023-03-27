@@ -34,7 +34,7 @@
   </div>
 </div>
 <table class="table table-striped table-bordered">
-  <thead class="table-secondary align-middle">
+  <thead class="table-secondary text-center align-middle">
     <tr>
       <th scope="col">PAT ID</th>
       <th scope="col">Description</th>
@@ -46,8 +46,8 @@
       <th scope="col">Actions</th>
     </tr>
   </thead>
-  <tbody *ngIf="pats">
-    <tr class="align-middle" *ngFor="let p of pats | filter:searchText:['name', 'ownerAccountName', 'ownerDisplayName']">
+  <tbody class="text-center align-middle" *ngIf="pats">
+    <tr *ngFor="let p of pats | filter:searchText:['name', 'ownerAccountName', 'ownerDisplayName']">
       <td>{{ p.id }}</td>
       <td>{{ p.name }}</td>
       <td>        

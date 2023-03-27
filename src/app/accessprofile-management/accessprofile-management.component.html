@@ -79,7 +79,7 @@
   </div>
 </div>
 <table class="table table-striped table-bordered">
-  <thead class="table-secondary align-middle">
+  <thead class="table-secondary text-center align-middle">
     <tr>
       <th scope="col" *ngIf="bulkAction">
           Select All
@@ -94,8 +94,8 @@
       <th scope="col">Owner Display Name</th>
     </tr>
   </thead>
-  <tbody *ngIf="accessProfilesToShow">
-    <tr class="align-middle" *ngFor="let ap of accessProfilesToShow | filter:searchText:['name', 'shortDescription', 'currentOwnerAccountName', 'currentOwnerDisplayName']">
+  <tbody class="text-center align-middle" *ngIf="accessProfilesToShow">
+    <tr *ngFor="let ap of accessProfilesToShow | filter:searchText:['name', 'shortDescription', 'currentOwnerAccountName', 'currentOwnerDisplayName']">
       <td *ngIf="bulkAction">
         <input type="checkbox" [(ngModel)]="ap.selected" (click)="changeOnSelect($event)">
       </td>

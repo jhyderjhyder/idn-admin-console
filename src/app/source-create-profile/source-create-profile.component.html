@@ -43,21 +43,21 @@
   </div>
 </div>
 <table class="table table-striped table-bordered" *ngIf="!loading && selectedSourceID">
-  <thead class="thead-light">
-    <tr>
+  <thead class="table-secondary text-center align-middle">
+    <tr class="text-center align-middle">
       <th scope="col" class="col-sm-4">Type</th>
       <th scope="col" class="col-sm-6">Attribute List</th>
       <th scope="col" class="col-sm-2">Actions</th>
     </tr>
   </thead>
-  <tbody>
+  <tbody class="text-center align-middle">
     <tr>
       <td class="col-sm-4">Create Attribute</td>
       <td class="col-sm-2">
           <input class="border" type="text" [(ngModel)]="newCreateProfileAttribute" placeholder="Enter Attribute Name">
       </td>
       <td>
-        <div class="col-sm-2 text-end">
+        <div>
           <button type="button" [disabled]="!newCreateProfileAttribute" (click)="showAddAttributeSubmitConfirmModal()" class="btn btn-primary btn-sm">
             Create
           </button>
@@ -73,8 +73,8 @@
           </option>
         </select>
       </td>
-      <td>
-        <div class="col-sm-2 text-end">
+      <td class="text-center align-middle">
+        <div>
           <button type="button" [disabled]="loading" (click)="showDeleteAttributeSubmitConfirmModal()"class="btn btn-primary btn-sm">
             Delete
           </button>

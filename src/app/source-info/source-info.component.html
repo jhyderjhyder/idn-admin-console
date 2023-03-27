@@ -34,7 +34,7 @@
   </div>
 </div>
 <table class="table table-striped table-bordered">
-  <thead class="table-secondary align-middle">
+  <thead class="table-secondary text-center align-middle">
     <tr>
       <th scope="col">Source Name</th>
       <th scope="col">Internal Name</th>
@@ -46,8 +46,8 @@
       <th scope="col">Entitlement Count</th>
     </tr>
   </thead>
-  <tbody *ngIf="sources">
-    <tr class="align-middle" *ngFor="let s of sources | filter:searchText:['cloudExternalID', 'name', 'description', 'type']">
+  <tbody class="text-center align-middle" *ngIf="sources">
+    <tr *ngFor="let s of sources | filter:searchText:['cloudExternalID', 'name', 'description', 'type']">
       <td [ngStyle]="{'color':s.name.includes('Authoritative') ? 'blue' : 'black' }">{{ s.name }}</td>
       <td>{{ s.internalName }}</td>
       <td>{{ s.description }}</td>
