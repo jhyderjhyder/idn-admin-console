@@ -23,7 +23,7 @@ export class AppComponent {
   currentUser: User;
   launchedFromIframe: boolean;
 
-  idleState = 'Not started.';
+  idleState = "Not started.";
   lastPing?: Date = null;
 
   public modalRef: BsModalRef;
