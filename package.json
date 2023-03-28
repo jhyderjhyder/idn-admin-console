@@ -40,16 +40,9 @@
     "file-saver": "^2.0.5",
     "follow-redirects": "^1.15.2",
     "font-awesome": "^4.7.0",
-    "jasmine-core": "^4.6.0",
-    "jasmine-spec-reporter": "^7.0.0",
     "jquery": "^3.6.4",
     "json-schema": "^0.4.0",
     "jszip": "^3.10.1",
-    "karma": "^6.4.1",
-    "karma-chrome-launcher": "^3.1.1",
-    "karma-coverage-istanbul-reporter": "^3.0.3",
-    "karma-jasmine": "^5.1.0",
-    "karma-jasmine-html-reporter": "^2.0.0",
     "nanoid": "^4.0.1",
     "ngx-bootstrap": "^10.2.0",
     "ngx-papaparse": "^7.0.0",
@@ -91,6 +84,13 @@
     "husky": "^8.0.3",
     "karma-coverage": "^2.2.0",
     "prettier": "^2.8.7",
-    "prettier-eslint": "^15.0.1"
+    "prettier-eslint": "^15.0.1",
+    "karma": "^6.4.1",
+    "karma-chrome-launcher": "^3.1.1",
+    "karma-coverage-istanbul-reporter": "^3.0.3",
+    "karma-jasmine": "^5.1.0",
+    "karma-jasmine-html-reporter": "^2.0.0",
+    "jasmine-core": "^4.6.0",
+    "jasmine-spec-reporter": "^7.0.0"
   }
 }
