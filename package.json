@@ -93,11 +93,5 @@
     "karma-coverage": "^2.2.0",
     "prettier": "^2.8.7",
     "prettier-eslint": "^15.0.1"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "pretty-quick --staged",
-      "pre-push": "npm test"
-    }
   }
 }
