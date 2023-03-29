@@ -62,6 +62,7 @@ export class ManagePATComponent implements OnInit {
         pat.name = each.name;
         pat.scope = each.scope;
         pat.created = each.created;
+        pat.lastUsed = each.lastUsed;
 
         const query = new SimpleQueryCondition();
         query.attribute = 'id';

@@ -30,7 +30,7 @@
 </div>
 <div class="form-group row mb-3" *ngIf="!loading">
   <div class="col-sm-12 text-start">
-    <span class="fw-bold"><b style='color:red;'>Please be aware that PAT token could be used in scripts or extensibility options. Deleting could affect them...</b></span>
+    <span class="fw-bold">Please be aware that PAT token could be used in scripts or extensibility options. Deleting could affect them. Last Used timestamp does not get updated on every PAT usage, but only once a day.</span>
   </div>
 </div>
 <table class="table table-striped table-bordered">
@@ -40,6 +40,7 @@
       <th scope="col">Description</th>
       <th scope="col">Scope</th>
       <th scope="col">Created</th>
+      <th scope="col">Last Used</th>
       <th scope="col">Owner Account Name</th>
       <th scope="col">Owner Display Name</th>
       <th scope="col">Owner Org Permissions</th>
@@ -56,6 +57,7 @@
         </option>
       </td>
       <td>{{ p.created | date:'yyyy-MM-dd hh:mm:ss aa' }}</td>
+      <td>{{ (p.lastUsed !== null) ? (p.lastUsed | date:'yyyy-MM-dd hh:mm:ss aa'): "Never" }} </td>
       <td>{{ p.ownerAccountName }}</td>
       <td>{{ p.ownerDisplayName }}</td>
       <td>          
