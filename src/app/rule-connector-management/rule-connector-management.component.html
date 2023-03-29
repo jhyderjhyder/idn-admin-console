@@ -63,7 +63,7 @@
       <th scope="col">Type</th>
       <th scope="col">Description</th>
       <th scope="col">Created</th>
-      <th scope="col">Modified</th>
+      <th scope="col">Last Modified</th>
       <th scope="col">Actions</th>
     </tr>
   </thead>
@@ -74,7 +74,7 @@
       <td>{{ r.type }}</td>
       <td>{{ r.description }}</td>
       <td>{{ r.created | date:'yyyy-MM-dd hh:mm:ss aa' }}</td>
-      <td>{{ r.modified | date:'yyyy-MM-dd hh:mm:ss aa' }}</td>
+      <td>{{ (r.modified !== null) ? (r.modified | date:'yyyy-MM-dd hh:mm:ss aa') : 'Never' }} </td>
       <td>
         <div class="btn-group" role="group">
           <button id="btnGroupDrop1" type="button" class="btn btn-primary btn-sm dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">

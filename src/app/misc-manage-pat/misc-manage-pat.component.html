@@ -57,7 +57,7 @@
         </option>
       </td>
       <td>{{ p.created | date:'yyyy-MM-dd hh:mm:ss aa' }}</td>
-      <td>{{ (p.lastUsed !== null) ? (p.lastUsed | date:'yyyy-MM-dd hh:mm:ss aa'): "Never" }} </td>
+      <td>{{ (p.lastUsed !== null) ? (p.lastUsed | date:'yyyy-MM-dd hh:mm:ss aa') : 'Never' }} </td>
       <td>{{ p.ownerAccountName }}</td>
       <td>{{ p.ownerDisplayName }}</td>
       <td>          
