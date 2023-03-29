@@ -64,7 +64,7 @@
       <td class="col-sm-6">{{ p.description }}</td>
       <td class="col-2">{{ p.requesterDisplayName }}</td>
       <td class="col-1">{{ p.ownerDisplayName }}</td>
-      <td class="col-1">{{ p.created }}</td>
+      <td class="col-1">{{ p.created | date:'yyyy-MM-dd hh:mm:ss aa' }}</td>
       <td class="col-2">{{ p.state }}</td>
       <td class="col-2">{{ p.type }}</td>
       <td class="col-2">{{ p.remediationItems }}</td>

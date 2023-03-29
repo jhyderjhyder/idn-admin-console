@@ -68,7 +68,7 @@
       <td class="col-2">{{ p.requestedObjectName }}</td>
       <td class="col-1">{{ p.requestedObjectType }}</td>
       <td class="col-1">{{ p.requestType }}</td>
-      <td class="col-2">{{ p.created }}</td>
+      <td class="col-2">{{ p.created | date:'yyyy-MM-dd hh:mm:ss aa' }}</td>
       <td class="col-2">{{ p.requester }}</td>
       <td class="col-2">{{ p.requestedFor }}</td>
       <td class="col-2">{{ p.owner }}</td>

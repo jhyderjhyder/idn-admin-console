@@ -78,7 +78,7 @@
       <td class="col-sm-6">{{ w.description }}</td>
       <td class="col-2">{{ w.requesterDisplayName }}</td>
       <td class="col-1">{{ w.ownerDisplayName }}</td>
-      <td class="col-1">{{ w.created }}</td>
+      <td class="col-1">{{ w.created | date:'yyyy-MM-dd hh:mm:ss aa' }}</td>
       <td class="col-2">{{ w.state }}</td>
       <td class="col-2">{{ w.type }}</td>
       <td class="col-2">{{ w.remediationItems }}</td>
