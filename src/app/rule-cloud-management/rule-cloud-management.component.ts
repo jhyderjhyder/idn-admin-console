@@ -104,6 +104,8 @@ export class CloudRuleComponent implements OnInit {
         ) {
           rule.id = each.object.id;
           rule.name = each.object.name;
+          rule.created = each.object.created;
+          rule.modified = each.object.modified;
           rule.object = each.object;
 
           if (each.object.description) {

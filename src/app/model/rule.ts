@@ -7,4 +7,6 @@ export class Rule {
   description: string;
   attributes: {};
   object: {};
+  created: Date;
+  modified: Date;
 }

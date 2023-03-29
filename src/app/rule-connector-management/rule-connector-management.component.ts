@@ -85,6 +85,8 @@ export class ImportRuleComponent implements OnInit {
           }
         }
         rule.type = each.type;
+        rule.created = each.created;
+        rule.modified = each.modified;
 
         this.rules.push(rule);
       }
