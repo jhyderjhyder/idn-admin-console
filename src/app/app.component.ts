@@ -12,6 +12,7 @@ import { ModalDirective } from 'ngx-bootstrap/modal';
 import { MessageService } from './service/message.service';
 import { AuthenticationService } from './service/authentication-service.service';
 import { User } from './model/user';
+import { environment } from 'src/environments/environment';
 
 @Component({
   selector: 'app-root',
@@ -22,6 +23,7 @@ export class AppComponent {
   title = 'IDN Admin Console';
   currentUser: User;
   launchedFromIframe: boolean;
+  version = environment.VERSION;
 
   idleState = 'Not started.';
   lastPing?: Date = null;
