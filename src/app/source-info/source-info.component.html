@@ -48,7 +48,7 @@
   </thead>
   <tbody class="text-center align-middle" *ngIf="sources">
     <tr *ngFor="let s of sources | filter:searchText:['cloudExternalID', 'name', 'description', 'type']">
-      <td [ngStyle]="{'color':s.name.includes('Authoritative') ? 'blue' : 'black' }">{{ s.name }}</td>
+      <td [ngStyle]="{'color':s.name.includes('Authoritative') ? 'green' : 'black' }">{{ s.name }}</td>
       <td>{{ s.internalName }}</td>
       <td>{{ s.description }}</td>
       <td>{{ s.type }}</td>
