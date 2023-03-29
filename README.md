@@ -12,15 +12,11 @@ This tool is build to help the community to manage SailPoint IdentityNow (IDN).
 
 [![Github Issues Open](https://img.shields.io/github/issues/piyush-khandelwal-sp/idn-admin-console)](https://github.com/piyush-khandelwal-sp/idn-admin-console/issues) [![Github Issues Closed](https://img.shields.io/github/issues-closed/piyush-khandelwal-sp/idn-admin-console)](https://github.com/piyush-khandelwal-sp/idn-admin-console/issues?q=is%3Aclosed) [![Github PR Open](https://img.shields.io/github/issues-pr/piyush-khandelwal-sp/idn-admin-console)](https://github.com/piyush-khandelwal-sp/idn-admin-console/pulls?q=is%3Apr+is%3Aopen+) [![Github PR Closed](https://img.shields.io/github/issues-pr-closed/piyush-khandelwal-sp/idn-admin-console)](https://github.com/piyush-khandelwal-sp/idn-admin-console/pulls?q=is%3Apr+is%3Aclosed+) [![Last Commit](https://img.shields.io/github/last-commit/piyush-khandelwal-sp/idn-admin-console)](https://github.com/piyush-khandelwal-sp/idn-admin-console/commits/main)
 
-[![Build](https://img.shields.io/github/actions/workflow/status/piyush-khandelwal-sp/idn-admin-console/actions.yml)](https://github.com/piyush-khandelwal-sp/idn-admin-console/actions/workflows/actions.yml)
+[![Build](https://img.shields.io/github/actions/workflow/status/piyush-khandelwal-sp/idn-admin-console/Build-Docker-Image.yml)](https://github.com/piyush-khandelwal-sp/idn-admin-console/actions/workflows/Build-Docker-Image.yml) [![Build](https://img.shields.io/github/actions/workflow/status/piyush-khandelwal-sp/idn-admin-console/Build-Mac-x64.yml)](https://github.com/piyush-khandelwal-sp/idn-admin-console/actions/workflows/Build-Mac-x64.yml) [![Build](https://img.shields.io/github/actions/workflow/status/piyush-khandelwal-sp/idn-admin-console/Build-Linux-x64.yml)](https://github.com/piyush-khandelwal-sp/idn-admin-console/actions/workflows/Build-Linux-x64.yml) [![Build](https://img.shields.io/github/actions/workflow/status/piyush-khandelwal-sp/idn-admin-console/Build-Windows-x64.yml)](https://github.com/piyush-khandelwal-sp/idn-admin-console/actions/workflows/Build-Windows-x64.yml)
 
 ### Docker
 
-[![Latest Version](https://img.shields.io/docker/v/khandelwalpiyush/idn-admin-console/latest)](http://hub.docker.com/r/khandelwalpiyush/idn-admin-console) [![Total Downloads](https://img.shields.io/docker/pulls/khandelwalpiyush/idn-admin-console)](http://hub.docker.com/r/khandelwalpiyush/idn-admin-console) [![Size](https://img.shields.io/docker/image-size/khandelwalpiyush/idn-admin-console?sort=date)](http://hub.docker.com/r/khandelwalpiyush/idn-admin-console) 
-
-### Security
-[![Known Vulnerabilities](https://snyk.io/test/github/piyush-khandelwal-sp/idn-admin-console/badge.svg)](https://snyk.io/test/github/piyush-khandelwal-sp/idn-admin-console)
-
+[![Latest Version](https://img.shields.io/docker/v/khandelwalpiyush/idn-admin-console/latest)](http://hub.docker.com/r/khandelwalpiyush/idn-admin-console) [![Total Downloads](https://img.shields.io/docker/pulls/khandelwalpiyush/idn-admin-console)](http://hub.docker.com/r/khandelwalpiyush/idn-admin-console) [![Size](https://img.shields.io/docker/image-size/khandelwalpiyush/idn-admin-console?sort=date)](http://hub.docker.com/r/khandelwalpiyush/idn-admin-console)
 
 
 ## Release
