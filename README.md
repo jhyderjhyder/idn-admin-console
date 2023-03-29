@@ -4,6 +4,25 @@
 
 This tool is build to help the community to manage SailPoint IdentityNow (IDN).
 
+## Badges
+
+### GitHub
+
+[![Latest Version](https://img.shields.io/github/package-json/v/piyush-khandelwal-sp/idn-admin-console)](https://github.com/piyush-khandelwal-sp/idn-admin-console) [![Latest Release](https://img.shields.io/github/v/release/piyush-khandelwal-sp/idn-admin-console)](https://github.com/piyush-khandelwal-sp/idn-admin-console/releases) [![Github Total Downloads](https://img.shields.io/github/downloads/piyush-khandelwal-sp/idn-admin-console/total.svg)](https://github.com/piyush-khandelwal-sp/idn-admin-console/releases) [![Github Repo Size](https://img.shields.io/github/repo-size/piyush-khandelwal-sp/idn-admin-console)]() [![Project License](https://img.shields.io/github/license/piyush-khandelwal-sp/idn-admin-console)](https://github.com/piyush-khandelwal-sp/idn-admin-console/blob/main/License)
+
+[![Github Issues Open](https://img.shields.io/github/issues/piyush-khandelwal-sp/idn-admin-console)](https://github.com/piyush-khandelwal-sp/idn-admin-console/issues) [![Github Issues Closed](https://img.shields.io/github/issues-closed/piyush-khandelwal-sp/idn-admin-console)](https://github.com/piyush-khandelwal-sp/idn-admin-console/issues?q=is%3Aclosed) [![Github PR Open](https://img.shields.io/github/issues-pr/piyush-khandelwal-sp/idn-admin-console)](https://github.com/piyush-khandelwal-sp/idn-admin-console/pulls?q=is%3Apr+is%3Aopen+) [![Github PR Closed](https://img.shields.io/github/issues-pr-closed/piyush-khandelwal-sp/idn-admin-console)](https://github.com/piyush-khandelwal-sp/idn-admin-console/pulls?q=is%3Apr+is%3Aclosed+) [![Last Commit](https://img.shields.io/github/last-commit/piyush-khandelwal-sp/idn-admin-console)](https://github.com/piyush-khandelwal-sp/idn-admin-console/commits/main)
+
+[![Build](https://img.shields.io/github/actions/workflow/status/piyush-khandelwal-sp/idn-admin-console/actions.yml)](https://github.com/piyush-khandelwal-sp/idn-admin-console/actions/workflows/actions.yml)
+
+### Docker
+
+[![Latest Version](https://img.shields.io/docker/v/khandelwalpiyush/idn-admin-console/latest)](http://hub.docker.com/r/khandelwalpiyush/idn-admin-console) [![Total Downloads](https://img.shields.io/docker/pulls/khandelwalpiyush/idn-admin-console)](http://hub.docker.com/r/khandelwalpiyush/idn-admin-console) [![Size](https://img.shields.io/docker/image-size/khandelwalpiyush/idn-admin-console?sort=date)](http://hub.docker.com/r/khandelwalpiyush/idn-admin-console) 
+
+### Security
+[![Known Vulnerabilities](https://snyk.io/test/github/piyush-khandelwal-sp/idn-admin-console/badge.svg)](https://snyk.io/test/github/piyush-khandelwal-sp/idn-admin-console)
+
+
+
 ## Release
 
 You can download the latest Windows/Mac/Linux build from [Release](https://github.com/piyush-khandelwal-sp/idn-admin-console/releases) page
@@ -66,7 +85,7 @@ We are looking for (list is not exhaustive)
     * Work Items Pending Forward (Forward Pending Work Items / Download Report)
 * Misc
     * Check and Set Org Time
-    * Manage PAT (See Permission / Delete Token)
+    * Manage PAT (See Permission / Last Usage / Delete Token)
     * Org Statistics (Pretty cool to see)
 
 ## Screenshots
