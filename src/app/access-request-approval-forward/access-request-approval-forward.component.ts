@@ -11,9 +11,8 @@ import { IdentityAttribute } from '../model/identity-attribute';
 @Component({
   selector: 'app-access-request-approval-forward',
   templateUrl: './access-request-approval-forward.component.html',
-  styleUrls: ['./access-request-approval-forward.component.css']
+  styleUrls: ['./access-request-approval-forward.component.css'],
 })
-
 export class AccessRequestApprovalForwardComponent implements OnInit {
   pendingApprovals: AccessRequestApprovalsPending[];
   approvalToForward: AccessRequestApprovalsPending;
@@ -27,13 +26,15 @@ export class AccessRequestApprovalForwardComponent implements OnInit {
   identityInfo: IdentityAttribute;
 
   public modalRef: BsModalRef;
-  
-  @ViewChild('forwardApprovalConfirmModal', { static: false }) forwardApprovalConfirmModal: ModalDirective;
 
+  @ViewChild('forwardApprovalConfirmModal', { static: false })
+  forwardApprovalConfirmModal: ModalDirective;
 
-  constructor(private idnService: IDNService, 
+  constructor(
+    private idnService: IDNService,
     private authenticationService: AuthenticationService,
-    private messageService: MessageService) { }
+    private messageService: MessageService
+  ) {}
 
   ngOnInit() {
     this.reset(true);
@@ -53,101 +54,94 @@ export class AccessRequestApprovalForwardComponent implements OnInit {
     this.identityInfo = null;
     if (clearMsg) {
       this.messageService.clearAll();
-    } 
+    }
   }
 
   getAllAccessRequestApprovalsPending() {
-   this.loading = true;
-   this.idnService.getAccessRequestApprovalsPending()
-   .subscribe(
-     results => {
-     this.pendingApprovals = [];
-     for (let each of results) {
-       let pendingApproval = new AccessRequestApprovalsPending();
-       pendingApproval.id = each.id;
-       pendingApproval.name = each.name;
-       pendingApproval.requestedObjectName = each.requestedObject.name;
-       pendingApproval.requestedObjectType = each.requestedObject.type;
-       pendingApproval.requestType = each.requestType;
-       pendingApproval.requester = each.requester.name;
-       pendingApproval.requestedFor = each.requestedFor.name;
-       pendingApproval.owner = each.owner.name;
-       pendingApproval.requestCreated = each.requestCreated;
-       pendingApproval.created = each.created;
+    this.loading = true;
+    this.idnService.getAccessRequestApprovalsPending().subscribe(results => {
+      this.pendingApprovals = [];
+      for (const each of results) {
+        const pendingApproval = new AccessRequestApprovalsPending();
+        pendingApproval.id = each.id;
+        pendingApproval.name = each.name;
+        pendingApproval.requestedObjectName = each.requestedObject.name;
+        pendingApproval.requestedObjectType = each.requestedObject.type;
+        pendingApproval.requestType = each.requestType;
+        pendingApproval.requester = each.requester.name;
+        pendingApproval.requestedFor = each.requestedFor.name;
+        pendingApproval.owner = each.owner.name;
+        pendingApproval.requestCreated = each.requestCreated;
+        pendingApproval.created = each.created;
 
-       if(each.sodViolationContext && each.sodViolationContext.state) {
-        pendingApproval.sodViolationState = each.sodViolationContext.state;
-       }
+        if (each.sodViolationContext && each.sodViolationContext.state) {
+          pendingApproval.sodViolationState = each.sodViolationContext.state;
+        }
 
-       this.pendingApprovals.push(pendingApproval);
-     }
-     this.loading = false;
-   });
-
+        this.pendingApprovals.push(pendingApproval);
+      }
+      this.loading = false;
+    });
   }
 
   checkForwardApproval() {
-
     this.messageService.clearAll();
     this.invalidMessage = [];
     // validation
     if (this.forwardComment == null) {
-      this.invalidMessage.push("Comment cannot be null.");
+      this.invalidMessage.push('Comment cannot be null.');
       this.validToSubmit = false;
       return;
     }
 
     if (this.newOwner && this.newOwner.trim() != '') {
-
-      let query = new SimpleQueryCondition();
-      query.attribute = "name";
+      const query = new SimpleQueryCondition();
+      query.attribute = 'name';
       query.value = this.newOwner;
 
-      this.idnService.searchAccounts(query)
-      .subscribe(searchResult => { 
+      this.idnService.searchAccounts(query).subscribe(searchResult => {
         if (searchResult && searchResult.length == 1) {
           this.forwardApproval(searchResult);
-         
         } else {
           this.validToSubmit = false;
           this.invalidMessage.push(`Identity Account Name is Invalid.`);
         }
-       
-    });
-
+      });
     } else {
-      this.invalidMessage.push("Identity Account Name cannot be null.");
+      this.invalidMessage.push('Identity Account Name cannot be null.');
     }
-
   }
 
-  forwardApproval(identity){
-
+  forwardApproval(identity) {
     this.identityInfo = new IdentityAttribute();
 
     this.identityInfo.id = identity[0].id;
 
-    this.idnService.forwardAccessRequestApproval(this.approvalToForward.id, this.identityInfo.id, this.forwardComment)
-    .subscribe(
-      result => {
-        this.forwardApprovalConfirmModal.hide();
-        this.messageService.add("Approval forwarded succesfully.");
-        this.approvalToForward = null;
-        this.reset(false);
-        this.getAllAccessRequestApprovalsPending();
-      },
-      err => {
-        this.forwardApprovalConfirmModal.hide();
-        this.approvalToForward = null;
-        this.messageService.handleIDNError(err);
-      }
-    );
-
-
+    this.idnService
+      .forwardAccessRequestApproval(
+        this.approvalToForward.id,
+        this.identityInfo.id,
+        this.forwardComment
+      )
+      .subscribe(
+        () => {
+          this.forwardApprovalConfirmModal.hide();
+          this.messageService.add('Approval forwarded succesfully.');
+          this.approvalToForward = null;
+          this.reset(false);
+          this.getAllAccessRequestApprovalsPending();
+        },
+        err => {
+          this.forwardApprovalConfirmModal.hide();
+          this.approvalToForward = null;
+          this.messageService.handleIDNError(err);
+        }
+      );
   }
 
-  showForwardApprovalConfirmModal(forwardApproval: AccessRequestApprovalsPending) {
-
+  showForwardApprovalConfirmModal(
+    forwardApproval: AccessRequestApprovalsPending
+  ) {
     this.invalidMessage = [];
     this.newOwner = null;
     this.forwardComment = null;
@@ -161,33 +155,40 @@ export class AccessRequestApprovalForwardComponent implements OnInit {
     this.forwardApprovalConfirmModal.show();
   }
 
-
   hideforwardApprovalConfirmModal() {
     this.forwardApprovalConfirmModal.hide();
   }
 
   saveInCsv() {
-    var options = { 
+    const options = {
       fieldSeparator: ',',
       quoteStrings: '"',
       decimalseparator: '.',
       showLabels: true,
       useHeader: true,
-      headers: ["id", "name", "requestedObjectName", "requestedObjectType", "requestType", "created", "requester", "requestedFor", "owner"],
+      headers: [
+        'id',
+        'name',
+        'requestedObjectName',
+        'requestedObjectType',
+        'requestType',
+        'created',
+        'requester',
+        'requestedFor',
+        'owner',
+      ],
       nullToEmptyString: true,
     };
 
     const currentUser = this.authenticationService.currentUserValue;
-    let fileName = `${currentUser.tenant}-access-request-approval-pending`;
+    const fileName = `${currentUser.tenant}-access-request-approval-pending`;
 
-    let arr = [];
-    for (let each of this.pendingApprovals) {
-      let record = Object.assign(each);
+    const arr = [];
+    for (const each of this.pendingApprovals) {
+      const record = Object.assign(each);
       arr.push(record);
     }
 
-
-    let angularCsv: AngularCsv = new AngularCsv(arr, fileName, options);
+    new AngularCsv(arr, fileName, options);
   }
-
 }

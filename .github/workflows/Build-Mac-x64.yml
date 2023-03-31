@@ -1,0 +1,50 @@
+name: Build-Mac-x64
+
+on:
+  release:
+    types: [published]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  Build-Mac-x64:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          persist-credentials: false
+
+      - name: Use HTTPS authentication
+        uses: GuillaumeFalourd/SSH-to-HTTPS@v1
+
+      - name: Install Node and NPM
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18.15.0
+
+      - name: Install Dependencies
+        run: npm install
+
+      - name: Build
+        run: npm run build
+
+      - name: Package
+        if: github.event_name == 'release' && github.event.action == 'published'
+        run: npm run electron-mac-x64-package
+
+      - name: Zip
+        if: github.event_name == 'release' && github.event.action == 'published'
+        uses: thedoctor0/zip-release@main
+        id: create_release
+        with:
+          type: 'zip'
+          path: './idn-admin-console-darwin-x64'
+          filename: 'idn-admin-console-darwin-x64.zip'
+          exclusions: '*.git* /*node_modules/* /*.angular/* /idn-admin-console-darwin-x64/version'
+
+      - name: Upload to Release
+        if: github.event_name == 'release' && github.event.action == 'published'
+        uses: svenstaro/upload-release-action@v2
+        with:
+          file: idn-admin-console-darwin-x64.zip

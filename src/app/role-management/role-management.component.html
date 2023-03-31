@@ -1,39 +1,41 @@
-<nav aria-label="breadcrumb">
-  <ol class="breadcrumb">
-    <li class="breadcrumb-item"><a routerLink="/identity-info">Home</a></li>
+<nav class="navbar navbar-expand-lg navbar-light bg-light p-3 mb-3 rounded" aria-label="breadcrumb">
+  <ol class="breadcrumb m-0">
+    <li class="breadcrumb-item"><a class="text-decoration-none" routerLink="/identity-info">Home</a></li>
     <li class="breadcrumb-item">Roles</li>
     <li class="breadcrumb-item active" aria-current="page">Manage Roles</li>
   </ol>
 </nav>
 <form name="form" #f="ngForm" novalidate contactRequired>
-  <div class="form-group row">
-    <div class="input-group col-sm-9">
-      <span class="input-group-prepend">
-        <div class="input-group-text bg-transparent border-right-0"><i class="fa fa-search"></i></div>
-      </span>
-      <input class="form-control py-2 border-left-0 border" type="text" name="search" [(ngModel)]="searchText" autocomplete="off" 
+  <div class="form-group row align-items-center mb-3">
+    <div class="col-sm-9">
+      <div class="input-group">
+        <span class="input-group-text bg-white border-end-0">
+          <i class="fa fa-search"></i>
+        </span>
+      <input class="form-control py-2 border-start-0 border" type="text" name="search" [(ngModel)]="searchText" autocomplete="off" 
         placeholder="Type Role Name, Description, Owner Account Name or Owner Display Name to filter the result.">
     </div>
-    <div class="col-sm-1 text-right">
+  </div>
+    <div class="col-sm-1 text-end">
       <button type="button" [disabled]="loading" (click)="ngOnInit()" class="btn btn-primary btn-sm">
         Refresh
       </button>
     </div>
-    <div class="col-sm-2 text-right">
+    <div class="col-sm-2 text-end">
       <button type="button" [disabled]="loading || !allOwnersFetched" (click)="showRoleRefreshSubmitConfirmModal()" class="btn btn-primary btn-sm">
         Refresh All Org Roles
       </button>
     </div>
   </div>
 </form>
-<div class="form-group row" *ngIf="loading">
-  <div class="col-sm-12 text-right">
-    <span class="spinner-border spinner-border-sm mr-1"></span>Loading...
+<div class="form-group row mb-4 mt-2" *ngIf="loading">
+  <div class="col-sm-12 text-end">
+    <span class="spinner-border spinner-border-sm me-1"></span>Loading...
   </div>
 </div>
-<div class="form-group row" *ngIf="!loading && allOwnersFetched">
-  <div class="col-sm-8">
-    <ng-select [(ngModel)]="bulkAction" appearance="outline" placeholder="Select Bulk Role Action" 
+<div class="form-group row align-items-center mb-4" *ngIf="!loading && allOwnersFetched">
+  <div class="col-sm-8 ">
+    <ng-select class="p-0" [(ngModel)]="bulkAction" appearance="outline" placeholder="Select Bulk Role Action" 
       (change)="changeOnBulkAction($event)">
         <ng-option value="EnableRoles">Bulk Enable Roles</ng-option>
         <ng-option value="DisableRoles">Bulk Disable Roles</ng-option>
@@ -42,69 +44,69 @@
         <ng-option value="DeleteRoles">Bulk Delete Roles</ng-option>
     </ng-select>
   </div>
-  <div class="col-sm-2 text-right" *ngIf="roles">
+  <div class="col-sm-2 text-end" *ngIf="roles">
     <button type="button" [disabled]="loading" (click)="saveInCsv()" class="btn btn-primary btn-sm">
       Download CSV
     </button>
   </div>
-  <div class="col-sm-2 text-right">
+  <div class="col-sm-2 text-end">
     <button type="button" [disabled]="loading" (click)="exportAllRoles()" class="btn btn-primary btn-sm">
       Export All
     </button>
   </div>
 </div>
-<div class="form-group row" *ngIf="bulkAction == 'EnableRoles'">
-  <div class="col-sm-8 text-left">
-    <span class="font-weight-bold">To enable roles, select the items and click the 'Submit to Enable' button.</span>
+<div class="form-group row" *ngIf="bulkAction === 'EnableRoles'">
+  <div class="col-sm-8 text-start">
+    <span class="fw-bold">To enable roles, select the items and click the 'Submit to Enable' button.</span>
   </div>
-  <div class="col-sm-2 text-right">
+  <div class="col-sm-2 text-end">
     <button type="button" (click)="showSubmitConfirmModal()" class="btn btn-primary btn-sm">
       Submit to Enable
     </button>
   </div>
 </div>
-<div class="form-group row" *ngIf="bulkAction == 'DisableRoles'">
-  <div class="col-sm-8 text-left">
-    <span class="font-weight-bold">To disable roles, select the items and click the 'Submit to Disable' button.</span>
+<div class="form-group row" *ngIf="bulkAction === 'DisableRoles'">
+  <div class="col-sm-8 text-start">
+    <span class="fw-bold">To disable roles, select the items and click the 'Submit to Disable' button.</span>
   </div>
-  <div class="col-sm-2 text-right">
+  <div class="col-sm-2 text-end">
     <button type="button" (click)="showSubmitConfirmModal()" class="btn btn-primary btn-sm">
       Submit to Disable
     </button>
   </div>
 </div>
-<div class="form-group row" *ngIf="bulkAction == 'MakeRolesRequestable'">
-  <div class="col-sm-8 text-left">
-    <span class="font-weight-bold">To make roles reqestable, select the items and click the 'Submit to Make Requestable' button.</span>
+<div class="form-group row" *ngIf="bulkAction === 'MakeRolesRequestable'">
+  <div class="col-sm-8 text-start">
+    <span class="fw-bold">To make roles reqestable, select the items and click the 'Submit to Make Requestable' button.</span>
   </div>
-  <div class="col-sm-2 text-right">
+  <div class="col-sm-2 text-end">
     <button type="button" (click)="showSubmitConfirmModal()" class="btn btn-primary btn-sm">
       Submit to Make Requestable
     </button>
   </div>
 </div>
-<div class="form-group row" *ngIf="bulkAction == 'MakeRolesNonRequestable'">
-  <div class="col-sm-8 text-left">
-    <span class="font-weight-bold">To make roles non reqestable, select the items and click the 'Submit to Make Non Requestable' button.</span>
+<div class="form-group row" *ngIf="bulkAction === 'MakeRolesNonRequestable'">
+  <div class="col-sm-8 text-start">
+    <span class="fw-bold">To make roles non reqestable, select the items and click the 'Submit to Make Non Requestable' button.</span>
   </div>
-  <div class="col-sm-2 text-right">
+  <div class="col-sm-2 text-end">
     <button type="button" (click)="showSubmitConfirmModal()" class="btn btn-primary btn-sm">
       Submit to Make Non Requestable
     </button>
   </div>
 </div>
-<div class="form-group row" *ngIf="bulkAction == 'DeleteRoles'">
-  <div class="col-sm-8 text-left">
-    <span class="font-weight-bold">To delete roles, select the items and click the 'Submit to Delete Roles' button.</span>
+<div class="form-group row" *ngIf="bulkAction === 'DeleteRoles'">
+  <div class="col-sm-8 text-start">
+    <span class="fw-bold">To delete roles, select the items and click the 'Submit to Delete Roles' button.</span>
   </div>
-  <div class="col-sm-2 text-right">
+  <div class="col-sm-2 text-end">
     <button type="button" (click)="showSubmitConfirmModal()" class="btn btn-primary btn-sm">
       Submit to Delete Roles
     </button>
   </div>
 </div>
 <table class="table table-striped table-bordered">
-  <thead class="thead-light">
+  <thead class="table-light text-center align-middle">
     <tr>
       <th scope="col" *ngIf="bulkAction">
           Select All
@@ -122,7 +124,7 @@
       <th scope="col">Owner Display Name</th>
     </tr>
   </thead>
-  <tbody *ngIf="rolesToShow">
+  <tbody class="text-center align-middle" *ngIf="rolesToShow">
     <tr *ngFor="let r of rolesToShow | filter:searchText:['name', 'shortDescription', 'currentOwnerAccountName', 'currentOwnerDisplayName']">
       <td *ngIf="bulkAction">
         <input type="checkbox" [(ngModel)]="r.selected" (click)="changeOnSelect($event)">
@@ -155,23 +157,23 @@
     <div class="modal-content">
       <div class="modal-header">
         <h6 id="dialog-child-name" class="modal-title pull-left">
-          <span *ngIf="bulkAction == 'EnableRoles' && atLeastOneSelected">
+          <span *ngIf="bulkAction === 'EnableRoles' && atLeastOneSelected">
             Are you sure you want to enable selected roles?
           </span>
-          <span *ngIf="bulkAction == 'DisableRoles' && atLeastOneSelected">
+          <span *ngIf="bulkAction === 'DisableRoles' && atLeastOneSelected">
             Are you sure you want to disable selected roles?
           </span>
-          <span *ngIf="bulkAction == 'MakeRolesRequestable' && atLeastOneSelected">
+          <span *ngIf="bulkAction === 'MakeRolesRequestable' && atLeastOneSelected">
             Are you sure you want to make the roles requestable for the selected roles?
           </span>
-          <span *ngIf="bulkAction == 'MakeRolesNonRequestable' && atLeastOneSelected">
+          <span *ngIf="bulkAction === 'MakeRolesNonRequestable' && atLeastOneSelected">
             Are you sure you want to make the roles non requestable for the selected roles?
           </span>
-          <span *ngIf="bulkAction == 'DeleteRoles' && atLeastOneSelected">
+          <span *ngIf="bulkAction === 'DeleteRoles' && atLeastOneSelected">
             Are you sure you want to delete the selected roles?
           </span>      
           <span *ngIf="!atLeastOneSelected">
-            <span class="font-weight-bold">Please fix the following error (errors) before submitting the changes: </span><br>
+            <span class="fw-bold">Please fix the following error (errors) before submitting the changes: </span><br>
             <span *ngIf="!atLeastOneSelected">
               Select at least one item to submit.
             </span>
@@ -181,7 +183,7 @@
             </span>
           </span>
         </h6>
-        <button type="button" class="close pull-right" aria-label="Close" (click)="hideSubmitConfirmModal()">
+        <button type="button" class="btn close pull-right" aria-label="Close" (click)="hideSubmitConfirmModal()">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
@@ -191,27 +193,27 @@
             <div class="col-md-12 text-center">
               <button type="button" (click)="hideSubmitConfirmModal()" class="btn btn-danger btn-sm">Cancel</button>
               &nbsp;&nbsp;&nbsp;
-              <span *ngIf="bulkAction == 'EnableRoles' && atLeastOneSelected">
+              <span *ngIf="bulkAction === 'EnableRoles' && atLeastOneSelected">
                 <button type="button" class="btn btn-success btn-sm" (click)="updateRoles('enabled',true)">
                   Enable
                 </button>
               </span>
-              <span *ngIf="bulkAction == 'DisableRoles' && atLeastOneSelected">
+              <span *ngIf="bulkAction === 'DisableRoles' && atLeastOneSelected">
                 <button type="button" class="btn btn-success btn-sm" (click)="updateRoles('enabled',false)">
                   Disable
                 </button>
               </span>
-              <span *ngIf="bulkAction == 'MakeRolesRequestable' && atLeastOneSelected">
+              <span *ngIf="bulkAction === 'MakeRolesRequestable' && atLeastOneSelected">
                 <button type="button" class="btn btn-success btn-sm" (click)="updateRoles('requestable',true)">
                   Enable
                 </button>
               </span>
-              <span *ngIf="bulkAction == 'MakeRolesNonRequestable' && atLeastOneSelected">
+              <span *ngIf="bulkAction === 'MakeRolesNonRequestable' && atLeastOneSelected">
                 <button type="button" class="btn btn-success btn-sm" (click)="updateRoles('requestable',false)">
                   Disable
                 </button>
               </span>
-              <span *ngIf="bulkAction == 'DeleteRoles' && atLeastOneSelected">
+              <span *ngIf="bulkAction === 'DeleteRoles' && atLeastOneSelected">
                 <button type="button" class="btn btn-success btn-sm" (click)="showDeleteRoleConfirmModal()">
                   Delete
                 </button>
@@ -232,7 +234,7 @@
             Are you sure you want to kick off an org role refresh?
           </span>
         </h6>
-        <button type="button" class="close pull-right" aria-label="Close" (click)="hideRoleRefreshSubmitConfirmModal()">
+        <button type="button" class="btn close pull-right" aria-label="Close" (click)="hideRoleRefreshSubmitConfirmModal()">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
@@ -261,13 +263,13 @@
         <h5 id="dialog-child-name" class="modal-title pull-left font-weight-bold">
           Delete Roles
         </h5>
-        <button type="button" class="close pull-right" aria-label="Close" (click)="hideDeleteRoleConfirmModal()">
+        <button type="button" class="btn close pull-right" aria-label="Close" (click)="hideDeleteRoleConfirmModal()">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
         <div class="form-group row">
-          <div class="col-sm-12 text-left" *ngIf="deleteRoleConfirmText">
+          <div class="col-sm-12 text-start" *ngIf="deleteRoleConfirmText">
               <div *ngIf="!validToSubmit && invalidMessage && invalidMessage.length > 0">
                 <br>
                 <span class="font-weight-bold text-danger">Please fix following error:</span><br>
@@ -279,13 +281,13 @@
           </div>
         </div>
           <div class="form-group row">
-            <div class="col-sm-12 text-left">
+            <div class="col-sm-12 text-start">
               To delete the roles, enter "YES TO DELETE" in below textbox for confirmation and click 'Delete' button
               &nbsp;<input type="text" class="form-control col-sm-8" id="rule-name" [(ngModel)]="deleteRoleConfirmText" placeholder="Confirmation Text" aria-describedby="basic-addon3" autocomplete="off">
             </div>
           </div>
           <div class="row mrgbtm small">
-            <div class="col-md-12 text-right">
+            <div class="col-md-12 text-end">
               <button type="button" (click)="hideDeleteRoleConfirmModal()" class="btn btn-danger btn-sm">Cancel</button>
               &nbsp;&nbsp;&nbsp;
               <span>

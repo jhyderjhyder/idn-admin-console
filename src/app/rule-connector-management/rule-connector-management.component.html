@@ -1,77 +1,83 @@
-<nav aria-label="breadcrumb">
-  <ol class="breadcrumb">
-    <li class="breadcrumb-item"><a routerLink="/identity-info">Home</a></li>
+<nav class="navbar navbar-expand-lg navbar-light bg-light p-3 mb-3 rounded" aria-label="breadcrumb">
+  <ol class="breadcrumb m-0">
+    <li class="breadcrumb-item"><a class="text-decoration-none" routerLink="/identity-info">Home</a></li>
     <li class="breadcrumb-item">Rules</li>
     <li class="breadcrumb-item active" aria-current="page">Manage Connector Rules</li>
   </ol>
 </nav>
 <form name="form" #f="ngForm" novalidate contactRequired>
-  <div class="form-group row">
-    <div class="input-group col-md-10">
-      <span class="input-group-prepend">
-        <div class="input-group-text bg-transparent border-right-0"><i class="fa fa-search"></i></div>
-      </span>
-      <input class="form-control py-2 border-left-0 border" type="text" name="search" [(ngModel)]="searchText" autocomplete="off" placeholder="Type rule name or type to filter the result.">
+  <div class="form-group row align-items-center  mb-3">
+    <div class="col-md-10">
+      <div class="input-group">
+        <span class="input-group-text bg-white border-end-0">
+          <i class="fa fa-search"></i>
+        </span>
+        <input class="form-control py-2 border-start-0 border" type="text" name="search" [(ngModel)]="searchText" autocomplete="off" placeholder="Type rule name or type to filter the result.">
+      </div>
     </div>
-    <div class="col-sm-2 text-right">
+    <div class="col-sm-2 text-end">
       <button type="button" [disabled]="loading" (click)="ngOnInit()" class="btn btn-primary btn-sm">
         Refresh
       </button>
     </div>
   </div>
 </form>
-<div class="form-group row" *ngIf="loading">
-  <div class="col-sm-12 text-right">
-    <span class="spinner-border spinner-border-sm mr-1"></span>Loading...
+<div class="form-group row  mb-3" *ngIf="loading">
+  <div class="col-sm-12 text-end">
+    <span class="spinner-border spinner-border-sm me-1"></span>Loading...
   </div>
 </div>
-<div class="form-group row" *ngIf="!loading">
-  <div class="col-sm-12 text-left">
-    <span class="font-weight-bold">- To import a new rule, click 'Choose File' button below to select a rule file (.xml extension) from your local directory and click 'Import Rule' button to import it.</span>
-    <br/><span class="font-weight-bold">- To clear selected rule file, click 'Clear File' button.</span>
+<div class="form-group row mb-3" *ngIf="!loading">
+  <div class="col-sm-12 text-start">
+    <span class="fw-bold">- To import a new rule, click 'Choose File' button below to select a rule file (.xml extension) from your local directory and click 'Import Rule' button to import it.</span>
+    <br/><span class="fw-bold">- To clear selected rule file, click 'Clear File' button.</span>
   </div>
 </div>
-<div class="form-group row" *ngIf="!loading">
-  <div class="col-sm-8 text-left">
+<div class="form-group row  mb-3" *ngIf="!loading">
+  <div class="col-sm-8 text-start">
     <input #importRuleFile type="file" accept=".xml" (change)="processFileForImportRule($event)" class="btn btn-primary btn-sm">
     &nbsp;&nbsp;
     <button (click)="clearFileForImportRule()" class="btn btn-primary btn-sm">Clear File</button>
   </div>
-  <div class="col-sm-2 text-right">
-    <button type="button" [disabled]="ruleToImport == null" (click)="showImportRuleConfirmModal()" class="btn btn-primary btn-sm">
+  <div class="col-sm-2 text-end">
+    <button type="button" [disabled]="ruleToImport === null" (click)="showImportRuleConfirmModal()" class="btn btn-primary btn-sm">
       Import Rule
     </button>
   </div>
-  <div class="col-sm-2 text-right">
+  <div class="col-sm-2 text-end">
     <button type="button" [disabled]="loading" (click)="exportAllRules($event)" class="btn btn-primary btn-sm" name="exportAllRules">
       Export All
     </button>
   </div>
 </div>
 <div class="form-group row" *ngIf="!loading">
-  <div class="col-sm-12 text-left">
-    <span class="font-weight-bold">Click 'Select' button in Actions column and select 'Download', 'Update', or 'Delete' to download, update, or delete a rule</span>
+  <div class="col-sm-12 text-start">
+    <span class="fw-bold">Click 'Select' button in Actions column and select 'Download', 'Update', or 'Delete' to download, update, or delete a rule</span>
   </div>
 </div>
 <table class="table table-striped table-bordered">
-  <thead class="thead-light">
+  <thead class="table-secondary text-center align-middle">
     <tr>
+      <th scope="col">Id</th>
       <th scope="col">Name</th>
       <th scope="col">Type</th>
       <th scope="col">Description</th>
-      <th scope="col">Id</th>
+      <th scope="col">Created</th>
+      <th scope="col">Last Modified</th>
       <th scope="col">Actions</th>
     </tr>
   </thead>
-  <tbody *ngIf="rules">
+  <tbody class="text-center align-middle" *ngIf="rules">
     <tr *ngFor="let r of rules | filter:searchText:['name', 'type']">
+      <td>{{ r.id }}</td>
       <td>{{ r.name }}</td>
       <td>{{ r.type }}</td>
       <td>{{ r.description }}</td>
-      <td>{{ r.id }}</td>
+      <td>{{ r.created | date:'yyyy-MM-dd hh:mm:ss aa' }}</td>
+      <td>{{ (r.modified !== null) ? (r.modified | date:'yyyy-MM-dd hh:mm:ss aa') : 'Never' }} </td>
       <td>
         <div class="btn-group" role="group">
-          <button id="btnGroupDrop1" type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <button id="btnGroupDrop1" type="button" class="btn btn-primary btn-sm dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             Select
           </button>
           <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
@@ -92,18 +98,18 @@
         <h5 id="dialog-child-name" class="modal-title pull-left pull-left font-weight-bold">
           Import Rule
         </h5>
-        <button type="button" class="close pull-right" aria-label="Close" (click)="hideImportRuleConfirmModal()">
+        <button type="button" class="btn close pull-right" aria-label="Close" (click)="hideImportRuleConfirmModal()">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
         <form name="form" novalidate>
           <div class="form-group row">
-            <div class="col-sm-12 text-left" *ngIf="ruleToImport">
+            <div class="col-sm-12 text-start" *ngIf="ruleToImport">
               <span *ngIf="ruleToImport && validToSubmit">
-                <span class="font-weight-bold">Name:</span>&nbsp;{{ ruleToImport.name }}<br>
-                <span class="font-weight-bold">Type:</span>&nbsp;{{ ruleToImport.type }}<br>
-                <span class="font-weight-bold">Description:</span>&nbsp;{{ ruleToImport.description }}<br>
+                <span class="fw-bold">Name:</span>&nbsp;{{ ruleToImport.name }}<br>
+                <span class="fw-bold">Type:</span>&nbsp;{{ ruleToImport.type }}<br>
+                <span class="fw-bold">Description:</span>&nbsp;{{ ruleToImport.description }}<br>
               </span>
               <div *ngIf="!validToSubmit && invalidMessage && invalidMessage.length > 0">
                 <br>
@@ -116,7 +122,7 @@
             </div>
           </div>
           <div class="row mrgbtm small">
-            <div class="col-md-12 text-right">
+            <div class="col-md-12 text-end">
               <button type="button" (click)="hideImportRuleConfirmModal()" class="btn btn-danger btn-sm">Cancel</button>
               &nbsp;&nbsp;&nbsp;
               <button type="button" [disabled]="!validToSubmit" class="btn btn-success btn-sm" (click)="importRule()">Import</button>
@@ -135,17 +141,17 @@
         <h5 id="dialog-child-name" class="modal-title pull-left font-weight-bold">
           Update Rule
         </h5>
-        <button type="button" class="close pull-right" aria-label="Close" (click)="hideUpdateRuleConfirmModal()">
+        <button type="button" class="btn close pull-right" aria-label="Close" (click)="hideUpdateRuleConfirmModal()">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
         <form name="form" novalidate>
-          <div class="form-group row">
-            <div class="col-sm-12 text-left" *ngIf="ruleToUpdate">
-                <span class="font-weight-bold">Name:</span>&nbsp;{{ ruleToUpdate.name }}<br>
-                <span class="font-weight-bold">Type:</span>&nbsp;{{ ruleToUpdate.type }}<br>
-                <span class="font-weight-bold">Description:</span>&nbsp;{{ ruleToUpdate.description }}<br>
+          <div class="form-group row mb-3">
+            <div class="col-sm-12 text-start" *ngIf="ruleToUpdate">
+                <span class="fw-bold">Name:</span>&nbsp;{{ ruleToUpdate.name }}<br>
+                <span class="fw-bold">Type:</span>&nbsp;{{ ruleToUpdate.type }}<br>
+                <span class="fw-bold">Description:</span>&nbsp;{{ ruleToUpdate.description }}<br>
               <div *ngIf="!validToSubmit && invalidMessage && invalidMessage.length > 0">
                 <br>
                 <span class="font-weight-bold text-danger">Please fix following error(s): </span><br>
@@ -156,14 +162,14 @@
               </div>
             </div>
           </div>
-          <div class="form-group row">
-            <div class="col-sm-12 text-left">
+          <div class="form-group row mb-3">
+            <div class="col-sm-12 text-start">
               To update the rule, click 'Choose File' button to select a rule file from your local directory and click 'Update' button to submit. 
               Please note that you cannot change rule name or rule type.
             </div>
           </div>
           <div class="form-group row">
-            <div class="col-sm-12 text-left">
+            <div class="col-sm-12 text-start">
               <input #updateRuleFile type="file" accept=".xml" (change)="processFileForUpdatRule($event)" class="btn btn-primary btn-sm">
               &nbsp;&nbsp;
               <button (click)="clearFileForUpdateRule()" class="btn btn-primary btn-sm">Clear File</button>
@@ -171,7 +177,7 @@
           </div>
 
           <div class="row mrgbtm small">
-            <div class="col-md-12 text-right">
+            <div class="col-md-12 text-end">
               <button type="button" (click)="hideUpdateRuleConfirmModal()" class="btn btn-danger btn-sm">Cancel</button>
               &nbsp;&nbsp;&nbsp;
               <button type="button" [disabled]="!validToSubmit" class="btn btn-success btn-sm" (click)="updatedRule()">Update</button>
@@ -190,16 +196,16 @@
         <h5 id="dialog-child-name" class="modal-title pull-left font-weight-bold">
           Delete Rule
         </h5>
-        <button type="button" class="close pull-right" aria-label="Close" (click)="hideDeleteRuleConfirmModal()">
+        <button type="button" class="btn close pull-right" aria-label="Close" (click)="hideDeleteRuleConfirmModal()">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
-          <div class="form-group row">
-            <div class="col-sm-12 text-left" *ngIf="ruleToDelete">
-                <span class="font-weight-bold">Name:</span>&nbsp;{{ ruleToDelete.name }}<br>
-                <span class="font-weight-bold">Type:</span>&nbsp;{{ ruleToDelete.type }}<br>
-                <span class="font-weight-bold">Description:</span>&nbsp;{{ ruleToDelete.description }}<br>
+          <div class="form-group row mb-3">
+            <div class="col-sm-12 text-start" *ngIf="ruleToDelete">
+                <span class="fw-bold">Name:</span>&nbsp;{{ ruleToDelete.name }}<br>
+                <span class="fw-bold">Type:</span>&nbsp;{{ ruleToDelete.type }}<br>
+                <span class="fw-bold">Description:</span>&nbsp;{{ ruleToDelete.description }}<br>
                 <div *ngIf="!validToSubmit && invalidMessage && invalidMessage.length > 0">
                   <br>
                   <span class="font-weight-bold text-danger">Please fix following error:</span><br>
@@ -211,18 +217,18 @@
             </div>
           </div>
           <div class="form-group row">
-            <div class="col-sm-12 text-left">
+            <div class="col-sm-12 text-start">
               
             </div>
           </div>
           <div class="form-group row">
-            <div class="col-sm-12 text-left">
+            <div class="col-sm-12 text-start mb-3">
               To delete the rule, enter exact rule name in below textbox for confirmation and click 'Delete' button
-              &nbsp;<input type="text" class="form-control col-sm-8" id="rule-name" [(ngModel)]="deleteRuleNameText" placeholder="Rule name" aria-describedby="basic-addon3" autocomplete="off">
+              &nbsp;<input type="text" class="form-control col-sm-8 mt-3" id="rule-name" [(ngModel)]="deleteRuleNameText" placeholder="Rule name" aria-describedby="basic-addon3" autocomplete="off">
             </div>
           </div>
           <div class="row mrgbtm small">
-            <div class="col-md-12 text-right">
+            <div class="col-md-12 text-end">
               <button type="button" (click)="hideDeleteRuleConfirmModal()" class="btn btn-danger btn-sm">Cancel</button>
               &nbsp;&nbsp;&nbsp;
               <span>

@@ -1,75 +1,79 @@
-<nav aria-label="breadcrumb">
-  <ol class="breadcrumb">
-    <li class="breadcrumb-item"><a routerLink="/identity-info">Home</a></li>
+<nav class="navbar navbar-expand-lg navbar-light bg-light p-3 mb-3 rounded" aria-label="breadcrumb">
+  <ol class="breadcrumb m-0">
+    <li class="breadcrumb-item"><a class="text-decoration-none" routerLink="/identity-info">Home</a></li>
     <li class="breadcrumb-item">Roles</li>
     <li class="breadcrumb-item active" aria-current="page">Manage Role Owners</li>
   </ol>
 </nav>
 <form name="form" #f="ngForm" novalidate contactRequired>
-  <div class="form-group row">
-    <div class="input-group col-sm-10">
-      <span class="input-group-prepend">
-        <div class="input-group-text bg-transparent border-right-0"><i class="fa fa-search"></i></div>
-      </span>
-      <input class="form-control py-2 border-left-0 border" type="text" name="search" [(ngModel)]="searchText" autocomplete="off" 
+  <div class="form-group row align-items-center mb-3">
+ 
+    <div class="col-md-10">
+      <div class="input-group">
+        <span class="input-group-text bg-white border-end-0">
+          <i class="fa fa-search"></i>
+        </span>
+        <input class="form-control py-2 border-start-0 border" type="text" name="search" [(ngModel)]="searchText" autocomplete="off" 
         placeholder="Type Role Name, Description, Owner Account Name or Owner Display Name to filter the result.">
+      </div>
     </div>
-    <div class="col-sm-2 text-left">
+
+    <div class="col-sm-2 text-end">
       <button type="button" [disabled]="loading || !allOwnersFetched" (click)="ngOnInit()" class="btn btn-primary btn-sm">
         Refresh
       </button>
     </div>
   </div>
 </form>
-<div class="form-group row" *ngIf="loading || !allOwnersFetched">
-  <div class="col-sm-12 text-right">
-    <span class="spinner-border spinner-border-sm mr-1"></span>Loading...
+<div class="form-group row mb-3" *ngIf="loading || !allOwnersFetched">
+  <div class="col-sm-12 text-end">
+    <span class="spinner-border spinner-border-sm me-1"></span>Loading...
   </div>
 </div>
-<div class="form-group row" *ngIf="!loading && allOwnersFetched">
-  <div class="col-sm-10 text-left">
-    <span class="font-weight-bold">To change the owner, select the items, enter the new owner account name and click the 'Submit to Change' button. </span>
-    <span class="font-weight-bold">To apply change in bulk:
+<div class="form-group row mb-3" *ngIf="!loading && allOwnersFetched">
+  <div class="col-sm-10 text-start">
+    <span class="fw-bold">To change the owner, select the items, enter the new owner account name and click the 'Submit to Change' button. </span>
+    <span class="fw-bold">To apply change in bulk:
       <br>
       &nbsp;&nbsp;&nbsp;&nbsp; 1) either select the items, enter the new owner account name in the text field below and then click the 'Apply to Selected' button,
       <br>
       &nbsp;&nbsp;&nbsp;&nbsp; 2) or select the items and then upload the saved csv file by clicking 'Choose file' button.
     </span>
   </div>
-  <div class="col-sm-2 text-right" *ngIf="roles">
+  <div class="col-sm-2 text-end" *ngIf="roles">
     <button type="button" (click)="saveInCsv()" class="btn btn-primary btn-sm">
       Download
     </button>
   </div>
 </div>
-<div class="form-group row" *ngIf="!loading && allOwnersFetched">
-  <div class="col-sm-3 text-left">
-    <input class="form-control py-2 border-left-0 border" type="text" [(ngModel)]="newOwnerAll"
+<div class="form-group row mb-3 align-items-center" *ngIf="!loading && allOwnersFetched">
+  <div class="col-sm-3 text-start">
+    <input class="form-control py-2 border-start-0 border" type="text" [(ngModel)]="newOwnerAll"
           placeholder="Enter Owner Account Name">
   </div>
-  <div class="col-sm-2 text-right">
+  <div class="col-sm-2 text-end">
     <button type="button" (click)="applyNewOwnerToAllSelected()" class="btn btn-primary btn-sm">
       Apply to Selected
     </button>
   </div>
-  <div class="col-sm-5 text-left">
+  <div class="col-sm-5 text-start">
     <input #fileInput type="file" accept=".csv" (change)="handleFileSelect($event)" class="btn btn-primary btn-sm">
     &nbsp;&nbsp;
     <button (click)="clearFileSelect()" class="btn btn-primary btn-sm">Clear file</button>
   </div>
-  <div class="col-sm-2 text-right">
+  <div class="col-sm-2 text-end">
     <button type="button" (click)="showSubmitConfirmModal()" class="btn btn-primary btn-sm">
       Submit to Change
     </button>
   </div>
 </div>
 <table class="table table-striped table-bordered">
-  <thead class="thead-light">
+  <thead class="table-secondary text-center align-middle">
     <tr>
       <th scope="col">
           Select All
           <br>
-          <input type="checkbox" [(ngModel)]="selectAll" (click)="changeOnSelectAll()" id="selectAll" [disabled]="searchText != null && searchText.trim() != ''">
+          <input type="checkbox" [(ngModel)]="selectAll" (click)="changeOnSelectAll()" id="selectAll" [disabled]="searchText !== null && searchText.trim() !== ''">
       </th>
       <th scope="col">Name</th>
       <th scope="col">Description</th>
@@ -81,7 +85,7 @@
       <th scope="col">Owner Display Name</th>
     </tr>
   </thead>
-  <tbody *ngIf="roles">
+  <tbody class="text-center align-middle" *ngIf="roles">
     <tr *ngFor="let r of roles | filter:searchText:['name', 'description', 'currentOwnerAccountName', 'currentOwnerDisplayName']">
       <td>
         <input type="checkbox" [(ngModel)]="r.selected" (click)="changeOnSelect($event, roles.indexOf(r))">
@@ -97,7 +101,7 @@
           {{ r.owner.accountName }}
         </span>
         <span *ngIf="r.selected">
-          <input class="form-control py-2 border-left-0 border" type="text" [(ngModel)]="r.newOwner.accountName"
+          <input class="text-center align-middle form-control py-2 border-start-0 border" type="text" [(ngModel)]="r.newOwner.accountName"
               placeholder="Enter Owner account name">
         </span>
       </td>
@@ -119,14 +123,14 @@
             Are you sure to change the owner of the selected roles?
           </span>
           <div *ngIf="!validToSubmit">
-            <span class="font-weight-bold">Please fix the following error (errors) before submitting the changes: </span><br>
+            <span class="fw-bold">Please fix the following error (errors) before submitting the changes: </span><br>
             <span *ngFor="let err of invalidMessage">
               {{ err }}
               <br>
             </span>
           </div>
         </h6>
-        <button type="button" class="close pull-right" aria-label="Close" (click)="hideSubmitConfirmModal()">
+        <button type="button" class="btn close pull-right" aria-label="Close" (click)="hideSubmitConfirmModal()">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>

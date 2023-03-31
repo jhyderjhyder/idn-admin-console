@@ -1,83 +1,85 @@
-<nav aria-label="breadcrumb">
-  <ol class="breadcrumb">
-    <li class="breadcrumb-item"><a routerLink="/identity-info">Home</a></li>
+<nav class="navbar navbar-expand-lg navbar-light bg-light p-3 mb-3 rounded" aria-label="breadcrumb">
+  <ol class="breadcrumb m-0">
+    <li class="breadcrumb-item"><a class="text-decoration-none" routerLink="/identity-info">Home</a></li>
     <li class="breadcrumb-item">Access Profiles</li>
     <li class="breadcrumb-item active" aria-current="page">Manage Access Profiles</li>
   </ol>
 </nav>
 <form name="form" #f="ngForm" novalidate contactRequired>
-  <div class="form-group row">
-    <div class="input-group col-sm-10">
-      <span class="input-group-prepend">
-        <div class="input-group-text bg-transparent border-right-0"><i class="fa fa-search"></i></div>
-      </span>
-      <input class="form-control py-2 border-left-0 border" type="text" name="search" [(ngModel)]="searchText" autocomplete="off" 
+  <div class="form-group row align-items-center mb-3">
+    <div class="col-md-10">
+      <div class="input-group">
+        <span class="input-group-text bg-white border-end-0">
+          <i class="fa fa-search"></i>
+        </span>
+        <input class="form-control py-2 border-start-0 border" type="text" name="search" [(ngModel)]="searchText" autocomplete="off" 
         placeholder="Type Access Profile Name, Description, Owner Account Name or Owner Display Name to filter the result.">
+      </div>
     </div>
-    <div class="col-sm-2 text-right">
+    <div class="col-sm-2 text-end">
       <button type="button" [disabled]="loading" (click)="ngOnInit()" class="btn btn-primary btn-sm">
         Refresh
       </button>
     </div>
   </div>
 </form>
-<div class="form-group row" *ngIf="loading">
-  <div class="col-sm-12 text-right">
-    <span class="spinner-border spinner-border-sm mr-1"></span>Loading...
+<div class="form-group row mb-3" *ngIf="loading">
+  <div class="col-sm-12 text-end">
+    <span class="spinner-border spinner-border-sm me-1"></span>Loading...
   </div>
 </div>
-<div class="form-group row" *ngIf="!loading && allOwnersFetched">
-  <div class="col-sm-8">
-    <ng-select [(ngModel)]="bulkAction" appearance="outline" placeholder="Select Bulk Access Profile Action" 
+<div class="form-group row align-items-center mb-3" *ngIf="!loading && allOwnersFetched">
+  <div class="col-sm-8 ">
+    <ng-select class="p-0" [(ngModel)]="bulkAction" appearance="outline" placeholder="Select Bulk Access Profile Action" 
       (change)="changeOnBulkAction($event)">
         <ng-option value="EnableAccessProfiles">Bulk Enable Access Profile</ng-option>
         <ng-option value="DisableAccessProfiles">Bulk Disable Access Profile</ng-option>
         <ng-option value="DeleteAccessProfiles">Bulk Delete Access Profile</ng-option>
     </ng-select>
   </div>
-  <div class="col-sm-2 text-right" *ngIf="accessProfiles">
+  <div class="col-sm-2 text-end" *ngIf="accessProfiles">
     <button type="button" [disabled]="loading" (click)="saveInCsv()" class="btn btn-primary btn-sm">
       Download CSV
     </button>
   </div>
-  <div class="col-sm-2 text-right">
+  <div class="col-sm-2 text-end">
     <button type="button" [disabled]="loading" (click)="exportAllAccessProfiles()" class="btn btn-primary btn-sm">
       Export All
     </button>
   </div>
 </div>
-<div class="form-group row" *ngIf="bulkAction == 'EnableAccessProfiles'">
-  <div class="col-sm-8 text-left">
-    <span class="font-weight-bold">To enable Access Profiles, select the items and click the 'Submit to Enable' button.</span>
+<div class="form-group row" *ngIf="bulkAction === 'EnableAccessProfiles'">
+  <div class="col-sm-8 text-start">
+    <span class="fw-bold">To enable Access Profiles, select the items and click the 'Submit to Enable' button.</span>
   </div>
-  <div class="col-sm-2 text-right">
+  <div class="col-sm-2 text-end">
     <button type="button" (click)="showSubmitConfirmModal()" class="btn btn-primary btn-sm">
       Submit to Enable
     </button>
   </div>
 </div>
-<div class="form-group row" *ngIf="bulkAction == 'DisableAccessProfiles'">
-  <div class="col-sm-8 text-left">
-    <span class="font-weight-bold">To disable Access Profiles, select the items and click the 'Submit to Disable' button.</span>
+<div class="form-group row" *ngIf="bulkAction === 'DisableAccessProfiles'">
+  <div class="col-sm-8 text-start">
+    <span class="fw-bold">To disable Access Profiles, select the items and click the 'Submit to Disable' button.</span>
   </div>
-  <div class="col-sm-2 text-right">
+  <div class="col-sm-2 text-end">
     <button type="button" (click)="showSubmitConfirmModal()" class="btn btn-primary btn-sm">
       Submit to Disable
     </button>
   </div>
 </div>
-<div class="form-group row" *ngIf="bulkAction == 'DeleteAccessProfiles'">
-  <div class="col-sm-8 text-left">
-    <span class="font-weight-bold">To delete Access Profiles, select the items and click the 'Submit to Delete Access Profiles' button.</span>
+<div class="form-group row" *ngIf="bulkAction === 'DeleteAccessProfiles'">
+  <div class="col-sm-8 text-start">
+    <span class="fw-bold">To delete Access Profiles, select the items and click the 'Submit to Delete Access Profiles' button.</span>
   </div>
-  <div class="col-sm-2 text-right">
+  <div class="col-sm-2 text-end">
     <button type="button" (click)="showSubmitConfirmModal()" class="btn btn-primary btn-sm">
       Submit to Delete Access Profiles
     </button>
   </div>
 </div>
 <table class="table table-striped table-bordered">
-  <thead class="thead-light">
+  <thead class="table-secondary text-center align-middle">
     <tr>
       <th scope="col" *ngIf="bulkAction">
           Select All
@@ -92,7 +94,7 @@
       <th scope="col">Owner Display Name</th>
     </tr>
   </thead>
-  <tbody *ngIf="accessProfilesToShow">
+  <tbody class="text-center align-middle" *ngIf="accessProfilesToShow">
     <tr *ngFor="let ap of accessProfilesToShow | filter:searchText:['name', 'shortDescription', 'currentOwnerAccountName', 'currentOwnerDisplayName']">
       <td *ngIf="bulkAction">
         <input type="checkbox" [(ngModel)]="ap.selected" (click)="changeOnSelect($event)">
@@ -122,17 +124,17 @@
     <div class="modal-content">
       <div class="modal-header">
         <h6 id="dialog-child-name" class="modal-title pull-left">
-          <span *ngIf="bulkAction == 'EnableAccessProfiles' && atLeastOneSelected">
+          <span *ngIf="bulkAction === 'EnableAccessProfiles' && atLeastOneSelected">
             Are you sure you want to enable selected access profiles?
           </span>
-          <span *ngIf="bulkAction == 'DisableAccessProfiles' && atLeastOneSelected">
+          <span *ngIf="bulkAction === 'DisableAccessProfiles' && atLeastOneSelected">
             Are you sure you want to disable selected access profiles?
           </span>
-          <span *ngIf="bulkAction == 'DeleteAccessProfiles' && atLeastOneSelected">
+          <span *ngIf="bulkAction === 'DeleteAccessProfiles' && atLeastOneSelected">
             Are you sure you want to delete the selected access profiles?
           </span>      
           <span *ngIf="!atLeastOneSelected">
-            <span class="font-weight-bold">Please fix the following error (errors) before submitting the changes: </span><br>
+            <span class="fw-bold">Please fix the following error (errors) before submitting the changes: </span><br>
             <span *ngIf="!atLeastOneSelected">
               Select at least one item to submit.
             </span>
@@ -142,7 +144,7 @@
             </span>
           </span>
         </h6>
-        <button type="button" class="close pull-right" aria-label="Close" (click)="hideSubmitConfirmModal()">
+        <button type="button" class="btn close pull-right" aria-label="Close" (click)="hideSubmitConfirmModal()">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
@@ -152,17 +154,17 @@
             <div class="col-md-12 text-center">
               <button type="button" (click)="hideSubmitConfirmModal()" class="btn btn-danger btn-sm">Cancel</button>
               &nbsp;&nbsp;&nbsp;
-              <span *ngIf="bulkAction == 'EnableAccessProfiles' && atLeastOneSelected">
+              <span *ngIf="bulkAction === 'EnableAccessProfiles' && atLeastOneSelected">
                 <button type="button" class="btn btn-success btn-sm" (click)="updateAccessProfiles('enabled',true)">
                   Enable
                 </button>
               </span>
-              <span *ngIf="bulkAction == 'DisableAccessProfiles' && atLeastOneSelected">
+              <span *ngIf="bulkAction === 'DisableAccessProfiles' && atLeastOneSelected">
                 <button type="button" class="btn btn-success btn-sm" (click)="updateAccessProfiles('enabled',false)">
                   Disable
                 </button>
               </span>
-              <span *ngIf="bulkAction == 'DeleteAccessProfiles' && atLeastOneSelected">
+              <span *ngIf="bulkAction === 'DeleteAccessProfiles' && atLeastOneSelected">
                 <button type="button" class="btn btn-success btn-sm" (click)="showdeleteAccessProfileConfirmModal()">
                   Delete
                 </button>
@@ -181,13 +183,13 @@
         <h5 id="dialog-child-name" class="modal-title pull-left font-weight-bold">
           Delete Access Profiles
         </h5>
-        <button type="button" class="close pull-right" aria-label="Close" (click)="hidedeleteAccessProfileConfirmModal()">
+        <button type="button" class="btn close pull-right" aria-label="Close" (click)="hidedeleteAccessProfileConfirmModal()">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
         <div class="form-group row">
-          <div class="col-sm-12 text-left" *ngIf="deleteAccessProfileConfirmText">
+          <div class="col-sm-12 text-start" *ngIf="deleteAccessProfileConfirmText">
               <div *ngIf="!validToSubmit && invalidMessage && invalidMessage.length > 0">
                 <br>
                 <span class="font-weight-bold text-danger">Please fix following error:</span><br>
@@ -199,13 +201,13 @@
           </div>
         </div>
           <div class="form-group row">
-            <div class="col-sm-12 text-left">
+            <div class="col-sm-12 text-start">
               To delete the access profiles, enter "YES TO DELETE" in below textbox for confirmation and click 'Delete' button
               &nbsp;<input type="text" class="form-control col-sm-8" id="rule-name" [(ngModel)]="deleteAccessProfileConfirmText" placeholder="Confirmation Text" aria-describedby="basic-addon3" autocomplete="off">
             </div>
           </div>
           <div class="row mrgbtm small">
-            <div class="col-md-12 text-right">
+            <div class="col-md-12 text-end">
               <button type="button" (click)="hidedeleteAccessProfileConfirmModal()" class="btn btn-danger btn-sm">Cancel</button>
               &nbsp;&nbsp;&nbsp;
               <span>

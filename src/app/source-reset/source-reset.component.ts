@@ -1,16 +1,14 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { Papa } from 'ngx-papaparse';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { Source } from '../model/source';
 import { IDNService } from '../service/idn.service';
 import { MessageService } from '../service/message.service';
-import { AuthenticationService } from '../service/authentication-service.service';
 
 @Component({
   selector: 'app-source-reset',
   templateUrl: './source-reset.component.html',
-  styleUrls: ['./source-reset.component.css']
+  styleUrls: ['./source-reset.component.css'],
 })
 export class ResetSourceComponent implements OnInit {
   sources: Source[];
@@ -26,17 +24,18 @@ export class ResetSourceComponent implements OnInit {
   invalidMessage: string[];
 
   public modalRef: BsModalRef;
-  
-  @ViewChild('resetSourceAccountsConfirmModal', { static: false }) resetSourceAccountsConfirmModal: ModalDirective;
-  @ViewChild('resetSourceEntitlementsConfirmModal', { static: false }) resetSourceEntitlementsConfirmModal: ModalDirective;
-  @ViewChild('resetSourceBothConfirmModal', { static: false }) resetSourceBothConfirmModal: ModalDirective;
 
+  @ViewChild('resetSourceAccountsConfirmModal', { static: false })
+  resetSourceAccountsConfirmModal: ModalDirective;
+  @ViewChild('resetSourceEntitlementsConfirmModal', { static: false })
+  resetSourceEntitlementsConfirmModal: ModalDirective;
+  @ViewChild('resetSourceBothConfirmModal', { static: false })
+  resetSourceBothConfirmModal: ModalDirective;
 
-  constructor(private papa: Papa,
-    private idnService: IDNService, 
-    private messageService: MessageService,
-    private authenticationService: AuthenticationService) {
-  }
+  constructor(
+    private idnService: IDNService,
+    private messageService: MessageService
+  ) {}
 
   ngOnInit() {
     this.reset(true);
@@ -55,37 +54,35 @@ export class ResetSourceComponent implements OnInit {
     if (clearMsg) {
       this.messageService.clearAll();
       this.errorInvokeApi = false;
-    } 
+    }
   }
 
   search() {
     this.loading = true;
-    this.idnService.getAllSources()
-          .subscribe(allSources => {
-            this.sources = [];
-            for (let each of allSources) {
-              let source = new Source();
-              source.id = each.id;
-              source.cloudExternalID = each.connectorAttributes.cloudExternalId;
-              source.name = each.name;
-              source.description = each.description;
-              source.type = each.type;
+    this.idnService.getAllSources().subscribe(allSources => {
+      this.sources = [];
+      for (const each of allSources) {
+        const source = new Source();
+        source.id = each.id;
+        source.cloudExternalID = each.connectorAttributes.cloudExternalId;
+        source.name = each.name;
+        source.description = each.description;
+        source.type = each.type;
 
-              this.idnService.getSourceCCApi(source.cloudExternalID)
-              .subscribe(
-                searchResult => {
-                    source.accountsCount = searchResult.accountsCount;
-                    source.entitlementsCount = searchResult.entitlementsCount;
-                },
-                err => {
-                  this.messageService.handleIDNError(err);
-                }
-            );
-              
-              this.sources.push(source);
-            }
-            this.loading = false;
-          });
+        this.idnService.getSourceCCApi(source.cloudExternalID).subscribe(
+          searchResult => {
+            source.accountsCount = searchResult.accountsCount;
+            source.entitlementsCount = searchResult.entitlementsCount;
+          },
+          err => {
+            this.messageService.handleIDNError(err);
+          }
+        );
+
+        this.sources.push(source);
+      }
+      this.loading = false;
+    });
   }
 
   resetSourceAccounts() {
@@ -93,22 +90,26 @@ export class ResetSourceComponent implements OnInit {
     this.invalidMessage = [];
     // validation
     if (this.resetSourceNameText != this.sourceToReset.name) {
-      this.invalidMessage.push("Confirmed source name does not match source name!");
+      this.invalidMessage.push(
+        'Confirmed source name does not match source name!'
+      );
       this.validToSubmit = false;
       return;
-    }
-    else {
+    } else {
       this.validToSubmit = true;
     }
 
-    this.skipType = "entitlements";
+    this.skipType = 'entitlements';
 
-    this.idnService.resetSource(this.sourceToReset.cloudExternalID, this.skipType)
+    this.idnService
+      .resetSource(this.sourceToReset.cloudExternalID, this.skipType)
       .subscribe(
-        result => {
+        () => {
           //this.closeModalDisplayMsg();
           this.resetSourceAccountsConfirmModal.hide();
-          this.messageService.add("Source account reset in progress. Please check Org -> Admin -> Dashboard -> Monitor. Hit Refresh to see the count drop for the source to 0 if successful");
+          this.messageService.add(
+            'Source account reset in progress. Please check Org -> Admin -> Dashboard -> Monitor. Hit Refresh to see the count drop for the source to 0 if successful'
+          );
           this.sourceToReset = null;
           this.skipType = null;
           this.reset(false);
@@ -121,7 +122,6 @@ export class ResetSourceComponent implements OnInit {
           this.messageService.handleIDNError(err);
         }
       );
-
   }
 
   resetSourceEntitlements() {
@@ -129,22 +129,26 @@ export class ResetSourceComponent implements OnInit {
     this.invalidMessage = [];
     // validation
     if (this.resetSourceNameText != this.sourceToReset.name) {
-      this.invalidMessage.push("Confirmed source name does not match source name!");
+      this.invalidMessage.push(
+        'Confirmed source name does not match source name!'
+      );
       this.validToSubmit = false;
       return;
-    }
-    else {
+    } else {
       this.validToSubmit = true;
     }
 
-    this.skipType = "accounts";
+    this.skipType = 'accounts';
 
-    this.idnService.resetSource(this.sourceToReset.cloudExternalID, this.skipType)
+    this.idnService
+      .resetSource(this.sourceToReset.cloudExternalID, this.skipType)
       .subscribe(
-        result => {
+        () => {
           //this.closeModalDisplayMsg();
           this.resetSourceEntitlementsConfirmModal.hide();
-          this.messageService.add("Source entitlements reset in progress. Please check Org -> Admin -> Dashboard -> Monitor. Hit Refresh to see the count drop for the source to 0 if successful");
+          this.messageService.add(`Source entitlements reset in progress. 
+                                Please check Org -> Admin -> Dashboard -> Monitor. 
+                                Hit Refresh to see the count drop for the source to 0 if successful`);
           this.sourceToReset = null;
           this.skipType = null;
           this.reset(false);
@@ -157,7 +161,6 @@ export class ResetSourceComponent implements OnInit {
           this.messageService.handleIDNError(err);
         }
       );
-
   }
 
   resetSourceBoth() {
@@ -165,22 +168,27 @@ export class ResetSourceComponent implements OnInit {
     this.invalidMessage = [];
     // validation
     if (this.resetSourceNameText != this.sourceToReset.name) {
-      this.invalidMessage.push("Confirmed source name does not match source name!");
+      this.invalidMessage.push(
+        'Confirmed source name does not match source name!'
+      );
       this.validToSubmit = false;
       return;
-    }
-    else {
+    } else {
       this.validToSubmit = true;
     }
 
     this.skipType = null;
 
-    this.idnService.resetSource(this.sourceToReset.cloudExternalID, this.skipType)
+    this.idnService
+      .resetSource(this.sourceToReset.cloudExternalID, this.skipType)
       .subscribe(
-        result => {
+        () => {
           //this.closeModalDisplayMsg();
           this.resetSourceBothConfirmModal.hide();
-          this.messageService.add("Source accounts and entitlements in progress. Please check Org -> Admin -> Dashboard -> Monitor. Hit Refresh to see the count drop for the source to 0 if successful");
+          this.messageService
+            .add(`Source accounts and entitlements in progress. 
+                          Please check Org -> Admin -> Dashboard -> Monitor. 
+                          Hit Refresh to see the count drop for the source to 0 if successful`);
           this.sourceToReset = null;
           this.skipType = null;
           this.reset(false);
@@ -193,7 +201,6 @@ export class ResetSourceComponent implements OnInit {
           this.messageService.handleIDNError(err);
         }
       );
-
   }
 
   showResetSourceAccountsConfirmModal(selectedSource: Source) {
@@ -220,7 +227,6 @@ export class ResetSourceComponent implements OnInit {
     this.sourceToReset.cloudExternalID = selectedSource.cloudExternalID;
     this.validToSubmit = false;
     this.resetSourceEntitlementsConfirmModal.show();
-
   }
 
   showResetSourceBothConfirmModal(selectedSource: Source) {
@@ -234,7 +240,6 @@ export class ResetSourceComponent implements OnInit {
     this.sourceToReset.cloudExternalID = selectedSource.cloudExternalID;
     this.validToSubmit = false;
     this.resetSourceBothConfirmModal.show();
-
   }
 
   hideResetSourceAccountsConfirmModal() {
@@ -248,5 +253,4 @@ export class ResetSourceComponent implements OnInit {
   hideResetSourceBothConfirmModal() {
     this.resetSourceBothConfirmModal.hide();
   }
-
 }

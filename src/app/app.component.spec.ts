@@ -1,11 +1,34 @@
 import { TestBed, waitForAsync } from '@angular/core/testing';
 import { AppComponent } from './app.component';
+import { HttpClientModule } from '@angular/common/http';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { FormsModule } from '@angular/forms';
+import { ModalModule } from 'ngx-bootstrap/modal';
+import { MockIDNService } from './service/idn.service.mock.spec';
+import { IDNService } from './service/idn.service';
+import { Idle, IdleExpiry } from '@ng-idle/core';
+import { Keepalive } from '@ng-idle/keepalive';
+import { MockExpiry } from './mock/mock-expiry.mock.spec';
+import { MessagesComponent } from './messages/messages.component';
+import { RouterModule } from '@angular/router';
 
 describe('AppComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [
-        AppComponent
+      declarations: [AppComponent, MessagesComponent],
+      providers: [
+        IDNService,
+        Idle,
+        Keepalive,
+        { provide: IdleExpiry, useClass: MockExpiry },
+        { provide: IDNService, useClass: MockIDNService },
+      ],
+      imports: [
+        HttpClientModule,
+        HttpClientTestingModule,
+        FormsModule,
+        ModalModule,
+        RouterModule,
       ],
     }).compileComponents();
   }));
@@ -14,18 +37,5 @@ describe('AppComponent', () => {
     const fixture = TestBed.createComponent(AppComponent);
     const app = fixture.debugElement.componentInstance;
     expect(app).toBeTruthy();
-  });
-
-  it(`should have as title`, () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    const app = fixture.debugElement.componentInstance;
-    expect(app.title).toEqual('title');
-  });
-
-  it('should render title in a h1 tag', () => {
-    const fixture = TestBed.createComponent(AppComponent);
-    fixture.detectChanges();
-    const compiled = fixture.debugElement.nativeElement;
-    expect(compiled.querySelector('h1').textContent).toContain('');
   });
 });

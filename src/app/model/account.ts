@@ -1,5 +1,3 @@
-import { DateArray } from "ngx-bootstrap/chronos/types";
-
 export class Account {
   identityId: string;
   identityName: string;
@@ -15,5 +13,4 @@ export class Account {
   sourceName: string;
   accountDisabled: boolean;
   accountCreated: Date;
-
 }

@@ -7,9 +7,8 @@ import { MessageService } from '../service/message.service';
 @Component({
   selector: 'app-misc-org-time-update',
   templateUrl: './misc-org-time-update.component.html',
-  styleUrls: ['./misc-org-time-update.component.css']
+  styleUrls: ['./misc-org-time-update.component.css'],
 })
-
 export class OrgTimeComponent implements OnInit {
   loading: boolean;
   orgConfig: OrgConfig;
@@ -18,13 +17,14 @@ export class OrgTimeComponent implements OnInit {
   errorMessage: string;
   validToSubmit: boolean;
   invalidMessage: string[];
-  
-  constructor(
-    private idnService: IDNService, 
-    private messageService: MessageService) {
-  }
 
-  @ViewChild('submitConfirmModal', { static: false }) submitConfirmModal: ModalDirective;
+  constructor(
+    private idnService: IDNService,
+    private messageService: MessageService
+  ) {}
+
+  @ViewChild('submitConfirmModal', { static: false })
+  submitConfirmModal: ModalDirective;
 
   ngOnInit() {
     this.reset(true);
@@ -37,63 +37,55 @@ export class OrgTimeComponent implements OnInit {
     if (clearMsg) {
       this.messageService.clearAll();
       this.errorMessage = null;
-    } 
+    }
   }
 
   closeModalDisplayMsg() {
     if (this.errorMessage != null) {
       this.messageService.setError(this.errorMessage);
     } else {
-      this.messageService.add("Changes saved successfully.");
+      this.messageService.add('Changes saved successfully.');
     }
     this.submitConfirmModal.hide();
   }
 
   getOrgConfig() {
     this.loading = true;
-    this.idnService.getOrgConfig()
-          .subscribe(
-            results => {
-              this.orgConfig = new OrgConfig();
-              this.orgConfig.orgName = results.orgName;
-              this.orgConfig.currentTimeZone = results.timeZone;
+    this.idnService.getOrgConfig().subscribe(results => {
+      this.orgConfig = new OrgConfig();
+      this.orgConfig.orgName = results.orgName;
+      this.orgConfig.currentTimeZone = results.timeZone;
+    });
 
-          });
+    this.idnService.getValidTimeZones().subscribe(results => {
+      results.sort(function (a, b) {
+        return a.localeCompare(b);
+      });
 
-    this.idnService.getValidTimeZones()
-          .subscribe(
-            results => {
-              results.sort(function(a, b) {
-              return a.localeCompare(b);
-          });
+      this.validtimezones = results;
 
-          this.validtimezones = results;
-
-          this.loading = false;
-          });
-
+      this.loading = false;
+    });
   }
 
   updateOrgTimeZone() {
     this.messageService.clearError();
     this.validToSubmit = true;
     this.loading = true;
-    
-    this.idnService.updateOrgTimeConfig(this.selectedOption)
-          .subscribe(results => {
-            this.closeModalDisplayMsg();
-             this.reset(false);
-             this.ngOnInit();
-          },
-          err => {
-            this.errorMessage = "Error to submit the changes.";
-            this.closeModalDisplayMsg();
-            this.reset(false);
-            this.ngOnInit();
-          }
-        );;
 
-
+    this.idnService.updateOrgTimeConfig(this.selectedOption).subscribe(
+      () => {
+        this.closeModalDisplayMsg();
+        this.reset(false);
+        this.ngOnInit();
+      },
+      () => {
+        this.errorMessage = 'Error to submit the changes.';
+        this.closeModalDisplayMsg();
+        this.reset(false);
+        this.ngOnInit();
+      }
+    );
   }
 
   showSubmitConfirmModal() {
@@ -104,22 +96,22 @@ export class OrgTimeComponent implements OnInit {
     if (!this.selectedOption) {
       this.invalidMessage.push(`Must select a timezone from dropdown list`);
       this.validToSubmit = false;
-    }
-    else if (this.orgConfig.currentTimeZone == this.selectedOption) {
-      this.invalidMessage.push(`Selected Timezone ${this.selectedOption} is not changed.`);
+    } else if (this.orgConfig.currentTimeZone == this.selectedOption) {
+      this.invalidMessage.push(
+        `Selected Timezone ${this.selectedOption} is not changed.`
+      );
       this.validToSubmit = false;
     }
 
     if (this.validToSubmit) {
       this.submitConfirmModal.show();
-  } else {
-    this.submitConfirmModal.show();
+    } else {
+      this.submitConfirmModal.show();
+    }
   }
-}
 
   hideSubmitConfirmModal() {
     this.submitConfirmModal.hide();
     this.ngOnInit();
   }
-
 }

@@ -1,11 +1,8 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { AngularCsv } from 'angular-csv-ext/dist/Angular-csv';
-import { Papa } from 'ngx-papaparse';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { IDNService } from '../service/idn.service';
 import { MessageService } from '../service/message.service';
-import { AuthenticationService } from '../service/authentication-service.service';
 import * as JSZip from 'jszip';
 import { saveAs } from 'file-saver';
 import { IdentityProfile } from '../model/identity-profile';
@@ -13,11 +10,9 @@ import { IdentityProfile } from '../model/identity-profile';
 @Component({
   selector: 'app-identity-lcs-management',
   templateUrl: './identity-lcs-management.component.html',
-  styleUrls: ['./identity-lcs-management.component.css']
+  styleUrls: ['./identity-lcs-management.component.css'],
 })
-
 export class IdentityLCSComponent implements OnInit {
-
   identityProfiles: IdentityProfile[];
   loading: boolean;
   validToSubmit: boolean;
@@ -31,14 +26,14 @@ export class IdentityLCSComponent implements OnInit {
   invalidMessage: string[];
 
   public modalRef: BsModalRef;
-  
-  @ViewChild('submitDeleteLCSSubmitConfirmModal', { static: false }) submitDeleteLCSSubmitConfirmModal: ModalDirective;
 
-  constructor(private papa: Papa,
-    private idnService: IDNService, 
-    private messageService: MessageService,
-    private authenticationService: AuthenticationService) {
-  }
+  @ViewChild('submitDeleteLCSSubmitConfirmModal', { static: false })
+  submitDeleteLCSSubmitConfirmModal: ModalDirective;
+
+  constructor(
+    private idnService: IDNService,
+    private messageService: MessageService
+  ) {}
 
   ngOnInit() {
     this.reset(true);
@@ -46,7 +41,6 @@ export class IdentityLCSComponent implements OnInit {
   }
 
   reset(clearMsg: boolean) {
-   
     this.loading = false;
     this.invalidMessage = [];
     this.validToSubmit = false;
@@ -59,141 +53,140 @@ export class IdentityLCSComponent implements OnInit {
 
     if (clearMsg) {
       this.messageService.clearAll();
-
-    } 
+    }
   }
 
   getAllIdentityProfiles() {
     this.loading = true;
-    this.idnService.getAllIdentityProfiles()
-          .subscribe(allIdentityProfiles => {
+    this.idnService.getAllIdentityProfiles().subscribe(allIdentityProfiles => {
+      this.identityProfiles = [];
+      for (const each of allIdentityProfiles) {
+        const identityProfile = new IdentityProfile();
+        identityProfile.id = each.id;
+        identityProfile.name = each.name;
 
-            this.identityProfiles = [];
-            for (let each of allIdentityProfiles) {
-              let identityProfile = new IdentityProfile();
-              identityProfile.id = each.id;
-              identityProfile.name = each.name;
+        this.identityProfiles.push(identityProfile);
+      }
 
-              this.identityProfiles.push(identityProfile);
-            }
-
-            this.loading = false;
-          });
+      this.loading = false;
+    });
   }
 
-
-  getIdentityProfileLCS(profileId: string){
+  getIdentityProfileLCS(profileId: string) {
     if (profileId != null) {
-
       this.selectedIdentityProfileId = profileId;
-    
-      this.idnService.getIdentityProfileLCS(this.selectedIdentityProfileId)
-      .subscribe(result => {
 
-        this.identityProfileLCSExists = true;
+      this.idnService
+        .getIdentityProfileLCS(this.selectedIdentityProfileId)
+        .subscribe(
+          result => {
+            this.identityProfileLCSExists = true;
 
-        this.lcsAttributes = [];
-        for (let each of result) {
-          let lcsAttribute = new IdentityProfile();
-          lcsAttribute.lcsId = each.id;
-          lcsAttribute.lcsDisplayName = each.name;
-          lcsAttribute.lcsTechnicalName = each.technicalName;
-          lcsAttribute.lcsEnabled = each.enabled;
-          lcsAttribute.lcsIdentityCount = each.identityCount;
+            this.lcsAttributes = [];
+            for (const each of result) {
+              const lcsAttribute = new IdentityProfile();
+              lcsAttribute.lcsId = each.id;
+              lcsAttribute.lcsDisplayName = each.name;
+              lcsAttribute.lcsTechnicalName = each.technicalName;
+              lcsAttribute.lcsEnabled = each.enabled;
+              lcsAttribute.lcsIdentityCount = each.identityCount;
 
-
-          this.lcsAttributes.push(lcsAttribute);
-        }  
-      },
-      err => {
-        this.identityProfileLCSExists = false;
-
-      });
+              this.lcsAttributes.push(lcsAttribute);
+            }
+          },
+          () => {
+            this.identityProfileLCSExists = false;
+          }
+        );
     }
   }
 
-  deleteLCS(){
+  deleteLCS() {
     this.messageService.clearError();
     this.loading = true;
-      
-    this.idnService.deleteIdentityProfileLCS(this.selectedIdentityProfileId, this.lcsToDeleteId)
-          .subscribe(results => {
-            this.submitDeleteLCSSubmitConfirmModal.hide();
-             this.reset(false);
-             this.ngOnInit();
-          },
-          err => {
-            this.messageService.handleIDNError(err);
-            this.submitDeleteLCSSubmitConfirmModal.hide();
-            this.reset(false);
-            this.ngOnInit();
-          }
-        );;
+
+    this.idnService
+      .deleteIdentityProfileLCS(
+        this.selectedIdentityProfileId,
+        this.lcsToDeleteId
+      )
+      .subscribe(
+        () => {
+          this.submitDeleteLCSSubmitConfirmModal.hide();
+          this.reset(false);
+          this.ngOnInit();
+        },
+        err => {
+          this.messageService.handleIDNError(err);
+          this.submitDeleteLCSSubmitConfirmModal.hide();
+          this.reset(false);
+          this.ngOnInit();
+        }
+      );
   }
 
   downloadLCS() {
+    const identityProfile = new IdentityProfile();
 
-  let identityProfile = new IdentityProfile();
+    this.idnService
+      .getIdentityProfile(this.selectedIdentityProfileId)
+      .subscribe(
+        result => {
+          identityProfile.name = result.name;
 
-  this.idnService.getIdentityProfile(this.selectedIdentityProfileId)
-  .subscribe(
-    result => {
-       identityProfile.name = result.name;
+          this.idnService
+            .getIdentityProfileLCS(this.selectedIdentityProfileId)
+            .subscribe(
+              result => {
+                result = JSON.stringify(result, null, 4);
 
-       this.idnService.getIdentityProfileLCS(this.selectedIdentityProfileId)
-       .subscribe(
-         result => {
-           result = JSON.stringify(result, null, 4);
-           
-           var blob = new Blob([result], {type: "application/json"});
-           let fileName = "LCS - " + identityProfile.name + ".json";
-           saveAs(blob, fileName);
-     
-         },
-         err => this.messageService.handleIDNError(err)
-       );
+                const blob = new Blob([result], { type: 'application/json' });
+                const fileName = 'LCS - ' + identityProfile.name + '.json';
+                saveAs(blob, fileName);
+              },
+              err => this.messageService.handleIDNError(err)
+            );
+        },
+        err => this.messageService.handleIDNError(err)
+      );
+  }
 
-    },
-    err => this.messageService.handleIDNError(err)
-  );
- }
+  //  exportAllIdentityProfilesLCS() {
 
-//  exportAllIdentityProfilesLCS() {
-    
-//   this.idnService.getAllIdentityProfiles()
-//         .subscribe(
-//           results => {
-//           this.identityProfiles = [];
-//           for (let each of results) {
-//             let identityProfile = new IdentityProfile();
+  //   this.idnService.getAllIdentityProfiles()
+  //         .subscribe(
+  //           results => {
+  //           this.identityProfiles = [];
+  //           for (const each of results) {
+  //             const identityProfile = new IdentityProfile();
 
-//             identityProfile.name = each.name;
-//             identityProfile.id = each.id;
+  //             identityProfile.name = each.name;
+  //             identityProfile.id = each.id;
 
-//             this.idnService.getIdentityProfileLCS(identityProfile.id)
-//             .subscribe(
-//               result => {
-//                 result = JSON.stringify(result, null, 4);
-                
-//                 let fileName = "LCS - " + identityProfile.name + ".json";
-//                 this.zip.file(`${fileName}`, result);
-          
-//               },
-//               err => this.messageService.handleIDNError(err)
-//             );
-            
-//           }
-//           const currentUser = this.authenticationService.currentUserValue;
-//           let zipFileName = `${currentUser.tenant}-identityprofiles-lcs.zip`;
+  //             this.idnService.getIdentityProfileLCS(identityProfile.id)
+  //             .subscribe(
+  //               result => {
+  //                 result = JSON.stringify(result, null, 4);
 
-//          this.zip.generateAsync({type:"blob"}).then(function(content) {
-//             saveAs(content, zipFileName);
-//         });
+  //                 const fileName = "LCS - " + identityProfile.name + ".json";
+  //                 this.zip.file(`${fileName}`, result);
 
-//         this.ngOnInit();
+  //               },
+  //               err => this.messageService.handleIDNError(err)
+  //             );
 
-//         });    
-// }
+  //           }
+  //           const currentUser = this.authenticationService.currentUserValue;
+  //           const zipFileName = `${currentUser.tenant}-identityprofiles-lcs.zip`;
+
+  //          this.zip.generateAsync({type:"blob"}).then(function(content) {
+  //             saveAs(content, zipFileName);
+  //         });
+
+  //         this.ngOnInit();
+
+  //         });
+  // }
 
   showDeleteLCSSubmitConfirmModal(lcsId: string) {
     this.messageService.clearError();
@@ -212,4 +205,3 @@ export class IdentityLCSComponent implements OnInit {
     this.submitDeleteLCSSubmitConfirmModal.hide();
   }
 }
-

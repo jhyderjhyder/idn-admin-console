@@ -1,48 +1,48 @@
-<nav aria-label="breadcrumb">
-  <ol class="breadcrumb">
-    <li class="breadcrumb-item"><a routerLink="/identity-info">Home</a></li>
+<nav class="navbar navbar-expand-lg navbar-light bg-light p-3 mb-3 rounded" aria-label="breadcrumb">
+  <ol class="breadcrumb m-0">
+    <li class="breadcrumb-item"><a class="text-decoration-none" routerLink="/identity-info">Home</a></li>
     <li class="breadcrumb-item">Identity Profiles</li>
     <li class="breadcrumb-item active" aria-current="page">Identity Info</li>
   </ol>
 </nav>
 <div class="form-group row" *ngIf="loading">
-  <div class="col-sm-12 text-right">
-    <span class="spinner-border spinner-border-sm mr-1"></span>Loading...
+  <div class="col-sm-12 text-end">
+    <span class="spinner-border spinner-border-sm me-1"></span>Loading...
   </div>
 </div>
-<div class="form-group row" *ngIf="!loading">
-  <div class="col-sm-10 text-left">
-    <span class="font-weight-bold">Enter Identity's Account Name and click the 'Search' button. Click on the Manager's name (if exists) to get their details. Click on 'Download' to save the report after Search</span>
+<div class="form-group row mb-3" *ngIf="!loading">
+  <div class="col-sm-10 text-start">
+    <span class="fw-bold">Enter Identity's Account Name and click the 'Search' button. Click on the Manager's name (if exists) to get their details. Click on 'Download' to save the report after Search</span>
   </div>
-  <div class="col-sm-2 text-left">
+  <div class="col-sm-2 text-start">
     <button type="button" [disabled]="loading" (click)="ngOnInit()" class="btn btn-primary btn-sm">
       Reset
     </button>
   </div>
 </div>
-<div class="form-group row" *ngIf="!loading">
-  <div class="col-sm-6 text-left">
-    <input class="form-control py-2 border-left-0 border" type="text" [(ngModel)]="accountName"
+<div class="form-group row mb-3 align-items-center" *ngIf="!loading">
+  <div class="col-sm-6 text-start">
+    <input class="form-control py-2 border-start-0 border" type="text" [(ngModel)]="accountName"
           placeholder="Enter Identity Account Name">
   </div>
-  <div class="col-sm-2 text-right">
+  <div class="col-sm-2 text-end">
     <button type="button" (click)="submit()" class="btn btn-primary btn-sm">
       Search
     </button>
   </div>
-  <div class="col-sm-2 text-left">
+  <div class="col-sm-2 text-start">
     <button type="button" *ngIf="identityInfo" [disabled]="loading" (click)="refreshIdentity()" class="btn btn-primary btn-sm">
       Refresh Identity
     </button>
   </div>
-  <div class="col-sm-2 text-left">
+  <div class="col-sm-2 text-start">
     <button type="button" *ngIf="identityInfo" [disabled]="loading" (click)="saveInCsv()" class="btn btn-primary btn-sm">
       Download
     </button>
   </div>
 </div>
 <table class="table table-striped table-bordered" *ngIf="!loading && identityInfo">
-  <thead class="thead-light">
+  <thead class="table-secondary align-middle">
     <tr>
       <th scope="col" colspan="2">Identity Details</th>
     </tr>
@@ -78,7 +78,7 @@
     </tr>
     <tr>
       <td>Created in IDN</td>
-      <td>{{ identityInfo.created }}</td>
+      <td>{{ identityInfo.created | date:'yyyy-MM-dd hh:mm:ss aa' }}</td>
     </tr>
     <tr>
       <td>Is A Manager</td>
@@ -93,7 +93,7 @@
       <td>{{ identityInfo.orgPermission }}</td> 
     </tr>
   </tbody>
-  <thead class="thead-light">
+  <thead class="table-secondary align-middle">
     <tr>
       <th scope="col" colspan="2">Counts</th>
     </tr>
@@ -152,7 +152,7 @@
       <td>{{ identityInfo.tagNames }}</td>
     </tr>
   </tbody>
-  <thead class="thead-light">
+  <thead class="table-secondary align-middle">
     <tr>
       <th scope="col" colspan="2">Owns</th>
     </tr>

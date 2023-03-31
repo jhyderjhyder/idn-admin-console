@@ -1,38 +1,40 @@
-<nav aria-label="breadcrumb">
-  <ol class="breadcrumb">
-    <li class="breadcrumb-item"><a routerLink="/identity-info">Home</a></li>
+<nav class="navbar navbar-expand-lg navbar-light bg-light p-3 mb-3 rounded" aria-label="breadcrumb">
+  <ol class="breadcrumb m-0">
+    <li class="breadcrumb-item"><a class="text-decoration-none" routerLink="/identity-info">Home</a></li>
     <li class="breadcrumb-item">Sources</li>
     <li class="breadcrumb-item active" aria-current="page">Reset Source</li>
   </ol>
 </nav>
 <form name="form" #f="ngForm" novalidate contactRequired>
-  <div class="form-group row">
-    <div class="input-group col-md-10">
-      <span class="input-group-prepend">
-        <div class="input-group-text bg-transparent border-right-0"><i class="fa fa-search"></i></div>
-      </span>
-      <input class="form-control py-2 border-left-0 border" type="text" name="search" [(ngModel)]="searchText" autocomplete="off" 
+  <div class="form-group row align-items-center mb-3">
+    <div class="col-md-10">
+      <div class="input-group">
+        <span class="input-group-text bg-white border-end-0">
+          <i class="fa fa-search"></i>
+        </span>
+        <input class="form-control py-2 border-start-0 border" type="text" name="search" [(ngModel)]="searchText" autocomplete="off" 
         placeholder="Type Source Name, description, cloudExternalID or type to filter the result.">
+      </div>
     </div>
-    <div class="col-sm-2 text-right">
+    <div class="col-sm-2 text-end">
       <button type="button" [disabled]="loading" (click)="ngOnInit()" class="btn btn-primary btn-sm">
         Refresh
       </button>
     </div>
   </div>
 </form>
-<div class="form-group row" *ngIf="loading">
-  <div class="col-sm-12 text-right">
-    <span class="spinner-border spinner-border-sm mr-1"></span>Loading...
+<div class="form-group row mb-3" *ngIf="loading">
+  <div class="col-sm-12 text-end">
+    <span class="spinner-border spinner-border-sm me-1"></span>Loading...
   </div>
 </div>
-<div class="form-group row" *ngIf="!loading">
-  <div class="col-sm-12 text-left">
-    <span class="font-weight-bold"><b style='color:red;'>This is a destructive flow to your tenant. You will loose all data on the source you choose to reset. Please be aware of what you are doing...</b></span>
+<div class="form-group row  mb-3" *ngIf="!loading">
+  <div class="col-sm-12 text-start">
+    <span class="fw-bold"><b style='color:red;'>This is a destructive flow to your tenant. You will loose all data on the source you choose to reset. Please be aware of what you are doing...</b></span>
   </div>
 </div>
 <table class="table table-striped table-bordered">
-  <thead class="thead-light">
+  <thead class="table-secondary text-center align-middle">
     <tr>
       <th scope="col">Source Name</th>
       <th scope="col">Source Description</th>
@@ -43,7 +45,7 @@
       <th scope="col">Actions</th>
     </tr>
   </thead>
-  <tbody *ngIf="sources">
+  <tbody class="text-center align-middle" *ngIf="sources">
     <tr *ngFor="let s of sources | filter:searchText:['cloudExternalID', 'name', 'description', 'type']">
       <td>{{ s.name }}</td>
       <td>{{ s.description }}</td>
@@ -53,7 +55,7 @@
       <td>{{ s.entitlementsCount }}</td>
       <td>
         <div class="btn-group" role="group">
-          <button id="btnGroupDrop1" type="button" class="btn btn-primary btn-sm dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          <button id="btnGroupDrop1" type="button" class="btn btn-primary btn-sm dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
             Reset
           </button>
           <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
@@ -75,16 +77,16 @@
         <h5 id="dialog-child-name" class="modal-title pull-left font-weight-bold">
           Reset Source Accounts
         </h5>
-        <button type="button" class="close pull-right" aria-label="Close" (click)="hideResetSourceAccountsConfirmModal()">
+        <button type="button" class="btn close pull-right" aria-label="Close" (click)="hideResetSourceAccountsConfirmModal()">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
-          <div class="form-group row">
-            <div class="col-sm-12 text-left" *ngIf="sourceToReset">
-                <span class="font-weight-bold">Name:</span>&nbsp;{{ sourceToReset.name }}<br>
-                <span class="font-weight-bold">Type:</span>&nbsp;{{ sourceToReset.type }}<br>
-                <span class="font-weight-bold">Description:</span>&nbsp;{{ sourceToReset.description }}<br>
+          <div class="form-group row mb-2">
+            <div class="col-sm-12 text-start" *ngIf="sourceToReset">
+                <span class="fw-bold">Name:</span>&nbsp;{{ sourceToReset.name }}<br>
+                <span class="fw-bold">Type:</span>&nbsp;{{ sourceToReset.type }}<br>
+                <span class="fw-bold">Description:</span>&nbsp;{{ sourceToReset.description }}<br>
                 <div *ngIf="!validToSubmit && invalidMessage && invalidMessage.length > 0">
                   <br>
                   <span class="font-weight-bold text-danger">Please fix following error:</span><br>
@@ -95,19 +97,19 @@
                 </div>
             </div>
           </div>
-          <div class="form-group row">
-            <div class="col-sm-12 text-left">
+          <div class="form-group row mb-3">
+            <div class="col-sm-12 text-start">
               
             </div>
           </div>
-          <div class="form-group row">
-            <div class="col-sm-12 text-left">
+          <div class="form-group row mb-3">
+            <div class="col-sm-12 text-start">
               To reset the source, enter exact source name in below textbox for confirmation and click 'Reset Accounts' button
-              &nbsp;<input type="text" class="form-control col-sm-8" id="rule-name" [(ngModel)]="resetSourceNameText" placeholder="Source name" aria-describedby="basic-addon3" autocomplete="off">
+              &nbsp;<input type="text" class="form-control col-sm-8 mt-2" id="rule-name" [(ngModel)]="resetSourceNameText" placeholder="Source name" aria-describedby="basic-addon3" autocomplete="off">
             </div>
           </div>
           <div class="row mrgbtm small">
-            <div class="col-md-12 text-right">
+            <div class="col-md-12 text-end">
               <button type="button" (click)="hideResetSourceAccountsConfirmModal()" class="btn btn-danger btn-sm">Cancel</button>
               &nbsp;&nbsp;&nbsp;
               <span>
@@ -129,16 +131,16 @@
         <h5 id="dialog-child-name" class="modal-title pull-left font-weight-bold">
           Reset Source Entitlements
         </h5>
-        <button type="button" class="close pull-right" aria-label="Close" (click)="hideResetSourceEntitlementsConfirmModal()">
+        <button type="button" class="btn close pull-right" aria-label="Close" (click)="hideResetSourceEntitlementsConfirmModal()">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
-          <div class="form-group row">
-            <div class="col-sm-12 text-left" *ngIf="sourceToReset">
-                <span class="font-weight-bold">Name:</span>&nbsp;{{ sourceToReset.name }}<br>
-                <span class="font-weight-bold">Type:</span>&nbsp;{{ sourceToReset.type }}<br>
-                <span class="font-weight-bold">Description:</span>&nbsp;{{ sourceToReset.description }}<br>
+          <div class="form-group row mb-2">
+            <div class="col-sm-12 text-start" *ngIf="sourceToReset">
+                <span class="fw-bold">Name:</span>&nbsp;{{ sourceToReset.name }}<br>
+                <span class="fw-bold">Type:</span>&nbsp;{{ sourceToReset.type }}<br>
+                <span class="fw-bold">Description:</span>&nbsp;{{ sourceToReset.description }}<br>
                 <div *ngIf="!validToSubmit && invalidMessage && invalidMessage.length > 0">
                   <br>
                   <span class="font-weight-bold text-danger">Please fix following error:</span><br>
@@ -150,18 +152,18 @@
             </div>
           </div>
           <div class="form-group row">
-            <div class="col-sm-12 text-left">
+            <div class="col-sm-12 text-start">
               
             </div>
           </div>
-          <div class="form-group row">
-            <div class="col-sm-12 text-left">
+          <div class="form-group row mb-3">
+            <div class="col-sm-12 text-start">
               To reset the source, enter exact source name in below textbox for confirmation and click 'Reset Entitlements' button
-              &nbsp;<input type="text" class="form-control col-sm-8" id="rule-name" [(ngModel)]="resetSourceNameText" placeholder="Source name" aria-describedby="basic-addon3" autocomplete="off">
+              &nbsp;<input type="text" class="form-control col-sm-8 mt-2" id="rule-name" [(ngModel)]="resetSourceNameText" placeholder="Source name" aria-describedby="basic-addon3" autocomplete="off">
             </div>
           </div>
           <div class="row mrgbtm small">
-            <div class="col-md-12 text-right">
+            <div class="col-md-12 text-end">
               <button type="button" (click)="hideResetSourceEntitlementsConfirmModal()" class="btn btn-danger btn-sm">Cancel</button>
               &nbsp;&nbsp;&nbsp;
               <span>
@@ -183,16 +185,16 @@
         <h5 id="dialog-child-name" class="modal-title pull-left font-weight-bold">
           Reset Source Accounts & Entitlements
         </h5>
-        <button type="button" class="close pull-right" aria-label="Close" (click)="hideResetSourceBothConfirmModal()">
+        <button type="button" class="btn close pull-right" aria-label="Close" (click)="hideResetSourceBothConfirmModal()">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
-          <div class="form-group row">
-            <div class="col-sm-12 text-left" *ngIf="sourceToReset">
-                <span class="font-weight-bold">Name:</span>&nbsp;{{ sourceToReset.name }}<br>
-                <span class="font-weight-bold">Type:</span>&nbsp;{{ sourceToReset.type }}<br>
-                <span class="font-weight-bold">Description:</span>&nbsp;{{ sourceToReset.description }}<br>
+          <div class="form-group row mb-2">
+            <div class="col-sm-12 text-start" *ngIf="sourceToReset">
+                <span class="fw-bold">Name:</span>&nbsp;{{ sourceToReset.name }}<br>
+                <span class="fw-bold">Type:</span>&nbsp;{{ sourceToReset.type }}<br>
+                <span class="fw-bold">Description:</span>&nbsp;{{ sourceToReset.description }}<br>
                 <div *ngIf="!validToSubmit && invalidMessage && invalidMessage.length > 0">
                   <br>
                   <span class="font-weight-bold text-danger">Please fix following error:</span><br>
@@ -204,18 +206,18 @@
             </div>
           </div>
           <div class="form-group row">
-            <div class="col-sm-12 text-left">
+            <div class="col-sm-12 text-start">
               
             </div>
           </div>
-          <div class="form-group row">
-            <div class="col-sm-12 text-left">
+          <div class="form-group row mb-3">
+            <div class="col-sm-12 text-start">
               To reset the source, enter exact source name in below textbox for confirmation and click 'Reset Both' button
-              &nbsp;<input type="text" class="form-control col-sm-8" id="rule-name" [(ngModel)]="resetSourceNameText" placeholder="Source name" aria-describedby="basic-addon3" autocomplete="off">
+              &nbsp;<input type="text" class="form-control col-sm-8 mt-2" id="rule-name" [(ngModel)]="resetSourceNameText" placeholder="Source name" aria-describedby="basic-addon3" autocomplete="off">
             </div>
           </div>
           <div class="row mrgbtm small">
-            <div class="col-md-12 text-right">
+            <div class="col-md-12 text-end">
               <button type="button" (click)="hideResetSourceBothConfirmModal()" class="btn btn-danger btn-sm">Cancel</button>
               &nbsp;&nbsp;&nbsp;
               <span>

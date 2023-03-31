@@ -11,9 +11,8 @@ import { AuthenticationService } from '../service/authentication-service.service
 @Component({
   selector: 'app-identity-transform-management',
   templateUrl: './identity-transform-management.component.html',
-  styleUrls: ['./identity-transform-management.component.css']
+  styleUrls: ['./identity-transform-management.component.css'],
 })
-
 export class IdentityTransformManagementComponent implements OnInit {
   transformToImport: Transform;
   transformToUpdate: Transform;
@@ -28,18 +27,23 @@ export class IdentityTransformManagementComponent implements OnInit {
   zip: JSZip = new JSZip();
 
   public modalRef: BsModalRef;
-  
-  @ViewChild('importTransformConfirmModal', { static: false }) importTransformConfirmModal: ModalDirective;
-  @ViewChild('updateTransformConfirmModal', { static: false }) updateTransformConfirmModal: ModalDirective;
-  @ViewChild('deleteTransformConfirmModal', { static: false }) deleteTransformConfirmModal: ModalDirective;
-  @ViewChild('importTransformFile', {static: false}) importTransformFile: ElementRef;
-  @ViewChild('updateTransformFile', {static: false}) updateTransformFile: ElementRef;
+
+  @ViewChild('importTransformConfirmModal', { static: false })
+  importTransformConfirmModal: ModalDirective;
+  @ViewChild('updateTransformConfirmModal', { static: false })
+  updateTransformConfirmModal: ModalDirective;
+  @ViewChild('deleteTransformConfirmModal', { static: false })
+  deleteTransformConfirmModal: ModalDirective;
+  @ViewChild('importTransformFile', { static: false })
+  importTransformFile: ElementRef;
+  @ViewChild('updateTransformFile', { static: false })
+  updateTransformFile: ElementRef;
 
   constructor(
-    private idnService: IDNService, 
+    private idnService: IDNService,
     private messageService: MessageService,
-    private authenticationService: AuthenticationService) {
-  }
+    private authenticationService: AuthenticationService
+  ) {}
 
   ngOnInit() {
     this.reset(true);
@@ -56,35 +60,33 @@ export class IdentityTransformManagementComponent implements OnInit {
     this.invalidMessage = [];
     if (clearMsg) {
       this.messageService.clearAll();
-    } 
+    }
   }
 
   getAllTransforms() {
     this.loading = true;
-    this.idnService.getAllTransforms()
-          .subscribe(
-            results => {
-            this.transforms = [];
-            for (let each of results) {
-              let transform = new Transform();
-              transform.id = each.id;
-              transform.name = each.name;
-              transform.type = each.type;
-              transform.internal = each.internal;
-              
-              this.transforms.push(transform);
-            }
-            this.loading = false;
-          });
+    this.idnService.getAllTransforms().subscribe(results => {
+      this.transforms = [];
+      for (const each of results) {
+        const transform = new Transform();
+        transform.id = each.id;
+        transform.name = each.name;
+        transform.type = each.type;
+        transform.internal = each.internal;
+
+        this.transforms.push(transform);
+      }
+      this.loading = false;
+    });
   }
 
   showImportTransformConfirmModal() {
     this.messageService.clearError();
     this.validToSubmit = true;
     this.invalidMessage = [];
-    
+
     if (this.transformToImport == null) {
-      this.invalidMessage.push("No transform is chosen!");
+      this.invalidMessage.push('No transform is chosen!');
       this.validToSubmit = false;
     }
 
@@ -100,7 +102,7 @@ export class IdentityTransformManagementComponent implements OnInit {
   }
 
   showUpdateTransformConfirmModal(selectedTransform: Transform) {
-    this.updateTransformFile.nativeElement.value = "";
+    this.updateTransformFile.nativeElement.value = '';
     this.invalidMessage = [];
     this.transformToUpdate = new Transform();
     this.transformToUpdate.id = selectedTransform.id;
@@ -136,230 +138,244 @@ export class IdentityTransformManagementComponent implements OnInit {
     this.invalidMessage = [];
     // validation
     if (this.deleteTransformNameText != this.transformToDelete.name) {
-      this.invalidMessage.push("Confirmed transform name does not match transform name!");
+      this.invalidMessage.push(
+        'Confirmed transform name does not match transform name!'
+      );
       this.validToSubmit = false;
       return;
-    }
-    else {
+    } else {
       this.validToSubmit = true;
     }
 
-    this.idnService.deleteTransform(this.transformToDelete.id)
-      .subscribe(
-        result => {
-          //this.closeModalDisplayMsg();
-          this.deleteTransformConfirmModal.hide();
-          this.messageService.add("Transform deleted successfully.");
-          this.transformToDelete = null;
-          this.reset(false);
-          this.getAllTransforms();
-        },
-        err => {
-          this.deleteTransformConfirmModal.hide();
-          this.transformToDelete = null;
-          this.messageService.handleIDNError(err);
-        }
-      );
+    this.idnService.deleteTransform(this.transformToDelete.id).subscribe(
+      () => {
+        //this.closeModalDisplayMsg();
+        this.deleteTransformConfirmModal.hide();
+        this.messageService.add('Transform deleted successfully.');
+        this.transformToDelete = null;
+        this.reset(false);
+        this.getAllTransforms();
+      },
+      err => {
+        this.deleteTransformConfirmModal.hide();
+        this.transformToDelete = null;
+        this.messageService.handleIDNError(err);
+      }
+    );
   }
 
   importTransform() {
     this.messageService.clearAll();
-    this.idnService.createTransform(this.transformToImport)
-      .subscribe(
-        result => {
-          this.importTransformConfirmModal.hide();
-          this.messageService.add("Transform imported successfully.");
-          this.transformToImport = null;
-          this.reset(false);
-          this.getAllTransforms();
-        },
-        err => {
-          this.importTransformConfirmModal.hide();
-          this.transformToImport = null;
-          this.messageService.handleIDNError(err);
-        }
-      );
+    this.idnService.createTransform(this.transformToImport).subscribe(
+      () => {
+        this.importTransformConfirmModal.hide();
+        this.messageService.add('Transform imported successfully.');
+        this.transformToImport = null;
+        this.reset(false);
+        this.getAllTransforms();
+      },
+      err => {
+        this.importTransformConfirmModal.hide();
+        this.transformToImport = null;
+        this.messageService.handleIDNError(err);
+      }
+    );
   }
 
   updateTransform() {
     this.messageService.clearAll();
-    this.idnService.updateTransform(this.transformToUpdate)
-      .subscribe(
-        result => {
-          this.updateTransformConfirmModal.hide();
-          this.messageService.add("Transform updated successfully.");
-          this.transformToUpdate = null;
-        },
-        err => {
-          this.updateTransformConfirmModal.hide();
-          this.transformToUpdate = null;
-          this.messageService.handleIDNError(err);
-        }
-      );
+    this.idnService.updateTransform(this.transformToUpdate).subscribe(
+      () => {
+        this.updateTransformConfirmModal.hide();
+        this.messageService.add('Transform updated successfully.');
+        this.transformToUpdate = null;
+      },
+      err => {
+        this.updateTransformConfirmModal.hide();
+        this.transformToUpdate = null;
+        this.messageService.handleIDNError(err);
+      }
+    );
   }
 
   clearFileForImportTransform() {
     this.transformToImport = null;
     this.messageService.clearError();
-    this.importTransformFile.nativeElement.value = "";
+    this.importTransformFile.nativeElement.value = '';
   }
 
   clearFileForUpdateTransform() {
     this.invalidMessage = [];
-    this.updateTransformFile.nativeElement.value = "";
+    this.updateTransformFile.nativeElement.value = '';
     this.validToSubmit = false;
   }
 
   isJsonString(str) {
     try {
-        JSON.parse(str);
+      JSON.parse(str);
     } catch (e) {
-        return e;
+      return e;
     }
-    return "valid";
-}
+    return 'valid';
+  }
 
   processFileForImportTransform(evt) {
     this.messageService.clearError();
-    var files = evt.target.files; // FileList object
-    var file = files[0];
-    var reader = new FileReader();
+    const files = evt.target.files; // FileList object
+    const file = files[0];
+    const reader = new FileReader();
     reader.readAsText(file);
     reader.onload = (event: any) => {
-      var transformJSON = event.target.result; // Content of Tranform JSON file
+      const transformJSON = event.target.result; // Content of Tranform JSON file
       let valid: boolean = true;
-      if (this.isJsonString(transformJSON) != "valid") {
+      if (this.isJsonString(transformJSON) != 'valid') {
         valid = false;
-        this.messageService.setError("Invalid Transform JSON file: Invalid JSON Format. Please check file");
+        this.messageService.setError(
+          'Invalid Transform JSON file: Invalid JSON Format. Please check file'
+        );
       } else {
-          this.transformToImport = JSON.parse(transformJSON);
-          //verify transform name exists
-          if (!this.transformToImport.name) {
-            valid = false;
-            this.messageService.setError("Invalid Transform JSON file: transform name is not specified.");
-          }
-          //verify transform attribute body exists
-          if (!this.transformToImport.attributes) {
-            valid = false;
-            this.messageService.setError("Invalid Transform JSON file: transform attributes body is not specified.");
-          }
-          //verify transform type
-          if (!this.transformToImport.type) {
-            valid = false;
-            this.messageService.setError("Invalid Transform JSON file: transform type is not specified.");
-          }
+        this.transformToImport = JSON.parse(transformJSON);
+        //verify transform name exists
+        if (!this.transformToImport.name) {
+          valid = false;
+          this.messageService.setError(
+            'Invalid Transform JSON file: transform name is not specified.'
+          );
+        }
+        //verify transform attribute body exists
+        if (!this.transformToImport.attributes) {
+          valid = false;
+          this.messageService.setError(
+            'Invalid Transform JSON file: transform attributes body is not specified.'
+          );
+        }
+        //verify transform type
+        if (!this.transformToImport.type) {
+          valid = false;
+          this.messageService.setError(
+            'Invalid Transform JSON file: transform type is not specified.'
+          );
+        }
       }
       if (!valid) {
         this.transformToImport = null;
       }
-    }
+    };
   }
 
   processFileForUpdatTransform(evt) {
     this.messageService.clearError();
-    var files = evt.target.files; // FileList object
-    var file = files[0];
-    var reader = new FileReader();
+    const files = evt.target.files; // FileList object
+    const file = files[0];
+    const reader = new FileReader();
     reader.readAsText(file);
     reader.onload = (event: any) => {
-      var transformJSON = event.target.result; // Content of Tranform JSON file
-      //let parsedTransformJSON = JSON.parse(transformJSON);
+      const transformJSON = event.target.result; // Content of Tranform JSON file
+      //const parsedTransformJSON = JSON.parse(transformJSON);
       let parsedTransformJSON = null;
       let valid: boolean = true;
-      if (this.isJsonString(transformJSON) != "valid") {
+      if (this.isJsonString(transformJSON) != 'valid') {
         valid = false;
-        this.invalidMessage.push("Invalid Transform JSON file: Invalid JSON Format. Please check file");
+        this.invalidMessage.push(
+          'Invalid Transform JSON file: Invalid JSON Format. Please check file'
+        );
       } else {
-          parsedTransformJSON = JSON.parse(transformJSON);
-          //verify transform name
-          if (parsedTransformJSON.name) {
-            if (this.transformToUpdate.name != parsedTransformJSON.name) {
-              valid = false;
-              this.invalidMessage.push("Invalid Transform JSON file: transform name can not be changed.");
-            }
-          } else {
+        parsedTransformJSON = JSON.parse(transformJSON);
+        //verify transform name
+        if (parsedTransformJSON.name) {
+          if (this.transformToUpdate.name != parsedTransformJSON.name) {
             valid = false;
-            this.invalidMessage.push("Invalid Transform JSON file: transform name is not specified.");
+            this.invalidMessage.push(
+              'Invalid Transform JSON file: transform name can not be changed.'
+            );
           }
-          //verify transform type
-          if (parsedTransformJSON.type) {
-            if (this.transformToUpdate.type != parsedTransformJSON.type) {
-              valid = false;
-              this.invalidMessage.push("Invalid Transform JSON file: transform type can not be changed.");
-            }
-          } else {
-            valid = false;
-            this.invalidMessage.push("Invalid Transform JSON file: transform type is not specified.");
-          }
-          //verify transform attribute body exists
-          if (!parsedTransformJSON.attributes) {
-            valid = false;
-            this.invalidMessage.push("Invalid Transform JSON file: transform attributes body is not specified.");
-          }
-          //verify transform id
-          if (parsedTransformJSON.id) {
-            if (this.transformToUpdate.id != parsedTransformJSON.id) {
-              valid = false;
-              this.invalidMessage.push("Invalid Transform JSON file: transform id can not be changed.");
-            }
-          } 
-          //verify transform internal type
-          if (parsedTransformJSON.internal) {
-            if (this.transformToUpdate.internal != parsedTransformJSON.internal) {
-              valid = false;
-              this.invalidMessage.push("Invalid Transform JSON file: transform internal type can not be changed.");
-            }
-          } 
+        } else {
+          valid = false;
+          this.invalidMessage.push(
+            'Invalid Transform JSON file: transform name is not specified.'
+          );
         }
-        this.validToSubmit = valid;
-    }
+        //verify transform type
+        if (parsedTransformJSON.type) {
+          if (this.transformToUpdate.type != parsedTransformJSON.type) {
+            valid = false;
+            this.invalidMessage.push(
+              'Invalid Transform JSON file: transform type can not be changed.'
+            );
+          }
+        } else {
+          valid = false;
+          this.invalidMessage.push(
+            'Invalid Transform JSON file: transform type is not specified.'
+          );
+        }
+        //verify transform attribute body exists
+        if (!parsedTransformJSON.attributes) {
+          valid = false;
+          this.invalidMessage.push(
+            'Invalid Transform JSON file: transform attributes body is not specified.'
+          );
+        }
+        //verify transform id
+        if (parsedTransformJSON.id) {
+          if (this.transformToUpdate.id != parsedTransformJSON.id) {
+            valid = false;
+            this.invalidMessage.push(
+              'Invalid Transform JSON file: transform id can not be changed.'
+            );
+          }
+        }
+        //verify transform internal type
+        if (parsedTransformJSON.internal) {
+          if (this.transformToUpdate.internal != parsedTransformJSON.internal) {
+            valid = false;
+            this.invalidMessage.push(
+              'Invalid Transform JSON file: transform internal type can not be changed.'
+            );
+          }
+        }
+      }
+      this.validToSubmit = valid;
+    };
   }
 
   downloadTransform(transformId: string) {
-    this.idnService.getTransformById(transformId)
-      .subscribe(
-        result => {
-          let transform = new Transform();
-          transform.name = result.name;
-          transform.type = result.type;
-          result = JSON.stringify(result, null, 4);
-          
+    this.idnService.getTransformById(transformId).subscribe(
+      result => {
+        const transform = new Transform();
+        transform.name = result.name;
+        transform.type = result.type;
+        result = JSON.stringify(result, null, 4);
 
-          var blob = new Blob([result], {type: "application/json"});
-          let fileName = "Transform - " + transform.type + " - " + transform.name + ".json";
-          saveAs(blob, fileName);
-
-        },
-        err => this.messageService.handleIDNError(err)
-      );
+        const blob = new Blob([result], { type: 'application/json' });
+        const fileName =
+          'Transform - ' + transform.type + ' - ' + transform.name + '.json';
+        saveAs(blob, fileName);
+      },
+      err => this.messageService.handleIDNError(err)
+    );
   }
 
   exportAllTransforms() {
-    
-    this.idnService.getAllTransforms()
-          .subscribe(
-            results => {
-            this.transforms = [];
-            for (let each of results) {
-              let transform = new Transform();
-              let jsonData = JSON.stringify(each, null, 4);
-              transform.name = each.name;
-              transform.type = each.type;
-              let fileName = "Transform - " + transform.type + " - " + transform.name + ".json";
-              this.zip.file(`${fileName}`, jsonData);
-              
-            }
-            const currentUser = this.authenticationService.currentUserValue;
-            let zipFileName = `${currentUser.tenant}-transforms.zip`;
+    this.idnService.getAllTransforms().subscribe(results => {
+      this.transforms = [];
+      for (const each of results) {
+        const transform = new Transform();
+        const jsonData = JSON.stringify(each, null, 4);
+        transform.name = each.name;
+        transform.type = each.type;
+        const fileName =
+          'Transform - ' + transform.type + ' - ' + transform.name + '.json';
+        this.zip.file(`${fileName}`, jsonData);
+      }
+      const currentUser = this.authenticationService.currentUserValue;
+      const zipFileName = `${currentUser.tenant}-transforms.zip`;
 
-           this.zip.generateAsync({type:"blob"}).then(function(content) {
-              saveAs(content, zipFileName);
-          });
+      this.zip.generateAsync({ type: 'blob' }).then(function (content) {
+        saveAs(content, zipFileName);
+      });
 
-          this.ngOnInit();
-
-          });    
+      this.ngOnInit();
+    });
   }
-
-
 }

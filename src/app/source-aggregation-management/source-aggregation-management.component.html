@@ -1,32 +1,34 @@
-<nav aria-label="breadcrumb">
-  <ol class="breadcrumb">
-    <li class="breadcrumb-item"><a routerLink="/identity-info">Home</a></li>
+<nav class="navbar navbar-expand-lg navbar-light bg-light p-3 mb-3 rounded" aria-label="breadcrumb">
+  <ol class="breadcrumb m-0">
+    <li class="breadcrumb-item"><a class="text-decoration-none" routerLink="/identity-info">Home</a></li>
     <li class="breadcrumb-item">Sources</li>
     <li class="breadcrumb-item active" aria-current="page">Manage Aggregation Schedules</li>
   </ol>
 </nav>
 <form name="form" #f="ngForm" novalidate contactRequired>
-  <div class="form-group row">
-    <div class="input-group col-md-10">
-      <span class="input-group-prepend">
-        <div class="input-group-text bg-transparent border-right-0"><i class="fa fa-search"></i></div>
-      </span>
-      <input class="form-control py-2 border-left-0 border" type="text" name="search" [(ngModel)]="searchText" autocomplete="off" 
-        placeholder="Type Source Name, description, cloudExternalID or type to filter the result.">
+  <div class="form-group row align-items-center mb-3">
+    <div class="col-md-10">
+      <div class="input-group">
+        <span class="input-group-text bg-white border-end-0">
+          <i class="fa fa-search"></i>
+        </span>
+        <input class="form-control py-2 border-start-0 border" type="text" name="search" [(ngModel)]="searchText" autocomplete="off" 
+        placeholder="Type Source Name, description, cloudExternalID or type to filter the result.">      
+      </div>
     </div>
-    <div class="col-sm-2 text-right">
+    <div class="col-sm-2 text-end">
       <button type="button" [disabled]="loading || !accntAggScheduleLoaded || !entAggScheduleLoaded" (click)="ngOnInit()" class="btn btn-primary btn-sm">
         Refresh
       </button>
     </div>
   </div>
 </form>
-<div class="form-group row" *ngIf="loading || !accntAggScheduleLoaded || !entAggScheduleLoaded">
-  <div class="col-sm-12 text-right">
-    <span class="spinner-border spinner-border-sm mr-1"></span>Loading...
+<div class="form-group row mb-3" *ngIf="loading || !accntAggScheduleLoaded || !entAggScheduleLoaded">
+  <div class="col-sm-12 text-end">
+    <span class="spinner-border spinner-border-sm me-1"></span>Loading...
   </div>
 </div>
-<div class="form-group row" *ngIf="!loading && accntAggScheduleLoaded && entAggScheduleLoaded">
+<div class="form-group row mb-3" *ngIf="!loading && accntAggScheduleLoaded && entAggScheduleLoaded">
   <div class="col-sm-5">
     <ng-select [(ngModel)]="bulkAction" appearance="outline" placeholder="Select Bulk Aggregation Schedule Action" 
       (change)="changeOnBulkAction($event)">
@@ -36,46 +38,46 @@
         <ng-option value="EnableEntAggSchedule">Bulk Enable Entitlement Aggregation Schedule</ng-option>
     </ng-select>
   </div>
-  <div class="col-sm-7 text-right" *ngIf="sources && bulkAction == null">
+  <div class="col-sm-7 text-end" *ngIf="sources">
     <button type="button" (click)="saveInCsv()" class="btn btn-primary btn-sm">
       Download
     </button>
   </div>
 </div>
-<div class="form-group row" *ngIf="bulkAction == 'DisableAggSchedule' || bulkAction == 'DisableEntAggSchedule'">
-  <div class="col-sm-8 text-left">
-    <span class="font-weight-bold">To disable aggregation schedule, select the items and click the 'Submit to Disable' button. <b style='color:red;'>Make sure to take backup</b> as the aggregation schedule will be lost on disable. To do so press the refresh button and click on "Download"</span>
+<div class="form-group row" *ngIf="bulkAction === 'DisableAggSchedule' || bulkAction === 'DisableEntAggSchedule'">
+  <div class="col-sm-8 text-start">
+    <span class="fw-bold">To disable aggregation schedule, select the items and click the 'Submit to Disable' button. <b style='color:red;'>Make sure to take backup</b> as the aggregation schedule will be lost on disable. To do so click on "Download"</span>
   </div>
-  <div class="col-sm-2 text-right">
+  <div class="col-sm-2 text-end">
     <button type="button" (click)="showSubmitConfirmModal()" class="btn btn-primary btn-sm">
       Submit to Disable
     </button>
   </div>
 </div>
-<div class="form-group row" *ngIf="bulkAction == 'EnableAggSchedule' || bulkAction == 'EnableEntAggSchedule'">
-  <div class="col-sm-12 text-left">
-    <span class="font-weight-bold">To enable aggregation schedule, select the items, enter Cron Expression and then click the 'Submit to Enable' button. </span>
-    <span class="font-weight-bold">To apply Cron Expression in bulk, select the items, enter Cron Expression and then click the 'Apply to Selected' button,
+<div class="form-group row" *ngIf="bulkAction === 'EnableAggSchedule' || bulkAction === 'EnableEntAggSchedule'">
+  <div class="col-sm-12 text-start">
+    <span class="fw-bold">To enable aggregation schedule, select the items, enter Cron Expression and then click the 'Submit to Enable' button. </span>
+    <span class="fw-bold">To apply Cron Expression in bulk, select the items, enter Cron Expression and then click the 'Apply to Selected' button,
       or upload the saved csv file by clicking 'Choose file' button.
     </span>
   </div>
 </div>
-<div class="form-group row" *ngIf="bulkAction == 'EnableAggSchedule' || bulkAction == 'EnableEntAggSchedule'">
-  <div class="col-sm-3 text-left">
-    <input class="form-control py-2 border-left-0 border" type="text" [(ngModel)]="cronExpAll"
+<div class="form-group row" *ngIf="bulkAction === 'EnableAggSchedule' || bulkAction === 'EnableEntAggSchedule'">
+  <div class="col-sm-3 text-start">
+    <input class="form-control py-2 border-start-0 border" type="text" [(ngModel)]="cronExpAll"
           placeholder="Enter Cron Job Expression">
   </div>
-  <div class="col-sm-2 text-right">
+  <div class="col-sm-2 text-end">
     <button type="button" (click)="applyCronExpToAll()" class="btn btn-primary btn-sm">
       Apply to Selected
     </button>
   </div>
-  <div class="col-sm-5 text-left">
+  <div class="col-sm-5 text-start">
     <input #fileInput type="file" accept=".csv" (change)="handleFileSelect($event)" class="btn btn-primary btn-sm">
     &nbsp;&nbsp;
     <button (click)="clearFileSelect()" class="btn btn-primary btn-sm">Clear file</button>
   </div>
-  <div class="col-sm-2 text-right">
+  <div class="col-sm-2 text-end">
     <button type="button" (click)="showSubmitConfirmModal()" class="btn btn-primary btn-sm">
       Submit to Enable
     </button>
@@ -83,7 +85,7 @@
 </div>
 
 <table class="table table-striped table-bordered">
-  <thead class="thead-light">
+  <thead class="table-secondary text-center align-middle">
     <tr>
       <th scope="col" *ngIf="bulkAction">
           Select All
@@ -100,7 +102,7 @@
       <th scope="col">Entitlement Aggregation Schedule cronExp</th>
     </tr>
   </thead>
-  <tbody *ngIf="sourcesToShow">
+  <tbody class="text-center align-middle" *ngIf="sourcesToShow">
     <tr *ngFor="let s of sourcesToShow | filter:searchText:['cloudExternalID', 'name', 'description', 'type']">
       <td *ngIf="bulkAction">
         <input type="checkbox" [(ngModel)]="s.selected" (click)="changeOnSelect($event)">
@@ -113,7 +115,7 @@
         <span *ngIf="s.accountAggregationSchedule">
           Yes
         </span>
-        <span *ngIf="s.accountAggregationSchedule == null">
+        <span *ngIf="s.accountAggregationSchedule === null">
           No
         </span>
       </td>
@@ -121,8 +123,8 @@
         <span *ngIf="s.accountAggregationSchedule">
           {{ s.accountAggregationSchedule.cronExp }}
         </span>
-        <span *ngIf="bulkAction == 'EnableAggSchedule'">
-          <input class="form-control py-2 border-left-0 border" type="text" [(ngModel)]="s.accountAggCronExp"
+        <span *ngIf="bulkAction === 'EnableAggSchedule'">
+          <input class="form-control py-2 border-start-0 border" type="text" [(ngModel)]="s.accountAggCronExp"
               placeholder="Enter Cron Job Expression">
         </span>
       </td>
@@ -130,7 +132,7 @@
         <span *ngIf="s.entAggregationSchedule">
           Yes
         </span>
-        <span *ngIf="s.entAggregationSchedule == null">
+        <span *ngIf="s.entAggregationSchedule === null">
           No
         </span>
       </td>
@@ -138,8 +140,8 @@
         <span *ngIf="s.entAggregationSchedule">
           {{ s.entAggregationSchedule.cronExp }}
         </span>
-        <span *ngIf="bulkAction == 'EnableEntAggSchedule'">
-          <input class="form-control py-2 border-left-0 border" type="text" [(ngModel)]="s.entAggCronExp"
+        <span *ngIf="bulkAction === 'EnableEntAggSchedule'">
+          <input class="form-control py-2 border-start-0 border" type="text" [(ngModel)]="s.entAggCronExp"
               placeholder="Enter Cron Job Expression">
         </span>
       </td>
@@ -153,21 +155,21 @@
     <div class="modal-content">
       <div class="modal-header">
         <h6 id="dialog-child-name" class="modal-title pull-left">
-          <span *ngIf="bulkAction == 'DisableAggSchedule' && atLeastOneSelected">
+          <span *ngIf="bulkAction === 'DisableAggSchedule' && atLeastOneSelected">
             Are you sure to disable Account Aggregation Schedule of the selected sources?
           </span>
-          <span *ngIf="bulkAction == 'EnableAggSchedule' && atLeastOneSelected && cronExpValid">
+          <span *ngIf="bulkAction === 'EnableAggSchedule' && atLeastOneSelected && cronExpValid">
             Are you sure to enable Account Aggregation Schedule of the selected sources?
           </span>
-          <span *ngIf="bulkAction == 'DisableEntAggSchedule' && atLeastOneSelected">
+          <span *ngIf="bulkAction === 'DisableEntAggSchedule' && atLeastOneSelected">
             Are you sure to disable Entitlement Aggregation Schedule of the selected sources?
           </span>
-          <span *ngIf="bulkAction == 'EnableEntAggSchedule' && atLeastOneSelected && cronExpValid">
+          <span *ngIf="bulkAction === 'EnableEntAggSchedule' && atLeastOneSelected && cronExpValid">
             Are you sure to enable Entitlement Aggregation Schedule of the selected sources?
           </span>
           
           <span *ngIf="!cronExpValid || !atLeastOneSelected">
-            <span class="font-weight-bold">Please fix the following error (errors) before submitting the changes: </span><br>
+            <span class="fw-bold">Please fix the following error (errors) before submitting the changes: </span><br>
             <span *ngIf="!atLeastOneSelected">
               Select at least one item to submit.
             </span>
@@ -177,7 +179,7 @@
             </span>
           </span>
         </h6>
-        <button type="button" class="close pull-right" aria-label="Close" (click)="hideSubmitConfirmModal()">
+        <button type="button" class="btn close pull-right" aria-label="Close" (click)="hideSubmitConfirmModal()">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
@@ -187,22 +189,22 @@
             <div class="col-md-12 text-center">
               <button type="button" (click)="hideSubmitConfirmModal()" class="btn btn-danger btn-sm">Cancel</button>
               &nbsp;&nbsp;&nbsp;
-              <span *ngIf="bulkAction == 'DisableAggSchedule' && atLeastOneSelected">
+              <span *ngIf="bulkAction === 'DisableAggSchedule' && atLeastOneSelected">
                 <button type="button" class="btn btn-success btn-sm" (click)="updateAccountAggSchedules(false)">
                   Disable
                 </button>
               </span>
-              <span *ngIf="bulkAction == 'EnableAggSchedule' && atLeastOneSelected && cronExpValid">
+              <span *ngIf="bulkAction === 'EnableAggSchedule' && atLeastOneSelected && cronExpValid">
                 <button type="button" class="btn btn-success btn-sm" (click)="updateAccountAggSchedules(true)">
                   Enable
                 </button>
               </span>
-              <span *ngIf="bulkAction == 'DisableEntAggSchedule' && atLeastOneSelected">
+              <span *ngIf="bulkAction === 'DisableEntAggSchedule' && atLeastOneSelected">
                 <button type="button" class="btn btn-success btn-sm" (click)="updateEntAggSchedules(false)">
                   Disable
                 </button>
               </span>
-              <span *ngIf="bulkAction == 'EnableEntAggSchedule' && atLeastOneSelected && cronExpValid">
+              <span *ngIf="bulkAction === 'EnableEntAggSchedule' && atLeastOneSelected && cronExpValid">
                 <button type="button" class="btn btn-success btn-sm" (click)="updateEntAggSchedules(true)">
                   Enable
                 </button>

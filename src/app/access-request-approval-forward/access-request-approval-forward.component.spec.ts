@@ -1,5 +1,10 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
-
+import { HttpClientModule } from '@angular/common/http';
+import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { FormsModule } from '@angular/forms';
+import { ModalModule } from 'ngx-bootstrap/modal';
+import { IDNService } from '../service/idn.service';
+import { MockIDNService } from '../service/idn.service.mock.spec';
 import { AccessRequestApprovalForwardComponent } from './access-request-approval-forward.component';
 
 describe('AccessRequestApprovalForwardComponent', () => {
@@ -8,9 +13,18 @@ describe('AccessRequestApprovalForwardComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [ AccessRequestApprovalForwardComponent ]
-    })
-    .compileComponents();
+      declarations: [AccessRequestApprovalForwardComponent],
+      providers: [
+        IDNService,
+        { provide: IDNService, useClass: MockIDNService },
+      ],
+      imports: [
+        HttpClientModule,
+        HttpClientTestingModule,
+        FormsModule,
+        ModalModule,
+      ],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

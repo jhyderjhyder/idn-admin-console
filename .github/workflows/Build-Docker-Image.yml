@@ -1,0 +1,48 @@
+name: Build-Docker-Image
+
+on:
+  release:
+    types: [published]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  Build-Docker-Image:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          persist-credentials: false
+
+      - name: Use HTTPS authentication
+        uses: GuillaumeFalourd/SSH-to-HTTPS@v1
+
+      - name: Extract Build Version and set it to VER env var
+        run: |
+          echo "VER=$(jq -r '.version' package.json)" >> $GITHUB_ENV
+
+      - name: Build Test Package
+        if: github.event_name != 'release'
+        uses: docker/build-push-action@v4
+        with:
+          push: false
+          tags: |
+            khandelwalpiyush/idn-admin-console:latest
+            khandelwalpiyush/idn-admin-console:${{ env.VER }}
+
+      - name: Login to Docker Hub
+        if: github.event_name == 'release' && github.event.action == 'published'
+        uses: docker/login-action@v2
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+      - name: Build and Deploy to Docker Hub
+        if: github.event_name == 'release' && github.event.action == 'published'
+        uses: docker/build-push-action@v4
+        with:
+          push: true
+          tags: |
+            khandelwalpiyush/idn-admin-console:latest
+            khandelwalpiyush/idn-admin-console:${{ env.VER }}

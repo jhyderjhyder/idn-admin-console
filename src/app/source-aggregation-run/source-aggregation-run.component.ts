@@ -1,17 +1,17 @@
-import { Component, OnInit, ViewChild} from '@angular/core';
-import {interval} from "rxjs/internal/observable/interval";
-import {startWith, switchMap, takeWhile} from "rxjs/operators";
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { interval } from 'rxjs/internal/observable/interval';
+import { startWith, switchMap, takeWhile } from 'rxjs/operators';
 import { BsModalRef } from 'ngx-bootstrap/modal';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { Source } from '../model/source';
-import { AggregationTask } from "../model/aggregation-task";
+import { AggregationTask } from '../model/aggregation-task';
 import { IDNService } from '../service/idn.service';
 import { MessageService } from '../service/message.service';
 
 @Component({
   selector: 'app-source-aggregation-run',
   templateUrl: './source-aggregation-run.component.html',
-  styleUrls: ['./source-aggregation-run.component.css']
+  styleUrls: ['./source-aggregation-run.component.css'],
 })
 export class AggregateSourceComponent implements OnInit {
   sources: Source[];
@@ -27,13 +27,14 @@ export class AggregateSourceComponent implements OnInit {
   submitted = false;
 
   public modalRef: BsModalRef;
-  
-  @ViewChild('submitConfirmModal', { static: false }) submitConfirmModal: ModalDirective;
+
+  @ViewChild('submitConfirmModal', { static: false })
+  submitConfirmModal: ModalDirective;
 
   constructor(
-    private idnService: IDNService, 
-    private messageService: MessageService) {
-  }
+    private idnService: IDNService,
+    private messageService: MessageService
+  ) {}
 
   ngOnInit() {
     this.reset(true);
@@ -49,32 +50,33 @@ export class AggregateSourceComponent implements OnInit {
     if (clearMsg) {
       this.messageService.clearAll();
       this.errorMessage = null;
-    } 
+    }
   }
 
   search() {
     this.loading = true;
-    this.idnService.getAllSources()
-          .subscribe(allSources => {
-            this.sources = [];
-            for (let each of allSources) {
-              let source = new Source();
-              source.id = each.id;
-              source.cloudExternalID = each.connectorAttributes.cloudExternalId;
-              source.name = each.name;
-              source.description = each.description;
-              source.type = each.type;
-              let aggTaskPollingStatus = this.idnService.getAggTaskPolling(source.cloudExternalID);
-              if (aggTaskPollingStatus && aggTaskPollingStatus.completed) {
-                source.aggTask = new AggregationTask();
-                source.aggTask.id = aggTaskPollingStatus.taskId;
-                this.pollAggTaskStatus(source);
-              }
-          
-              this.sources.push(source);
-            }
-            this.loading = false;
-          });
+    this.idnService.getAllSources().subscribe(allSources => {
+      this.sources = [];
+      for (const each of allSources) {
+        const source = new Source();
+        source.id = each.id;
+        source.cloudExternalID = each.connectorAttributes.cloudExternalId;
+        source.name = each.name;
+        source.description = each.description;
+        source.type = each.type;
+        const aggTaskPollingStatus = this.idnService.getAggTaskPolling(
+          source.cloudExternalID
+        );
+        if (aggTaskPollingStatus && aggTaskPollingStatus.completed) {
+          source.aggTask = new AggregationTask();
+          source.aggTask.id = aggTaskPollingStatus.taskId;
+          this.pollAggTaskStatus(source);
+        }
+
+        this.sources.push(source);
+      }
+      this.loading = false;
+    });
   }
 
   changeOnSelectAll() {
@@ -99,13 +101,18 @@ export class AggregateSourceComponent implements OnInit {
   showSubmitConfirmModal() {
     this.messageService.clearError();
     this.validToSubmit = true;
-    let selectedSources = [];
+    const selectedSources = [];
     this.invalidMessage = [];
-    for (let each of this.sources) {
+    for (const each of this.sources) {
       if (each.selected) {
         if (each.type == 'DelimitedFile' || each.type == 'Non-Employee') {
-          if (each.aggregateSourceFormData == null || each.aggregateSourceFormData.get("file") == null) {
-            this.invalidMessage.push(`CSV file of Source (name: ${each.name}) needs to be uploaded.`);
+          if (
+            each.aggregateSourceFormData == null ||
+            each.aggregateSourceFormData.get('file') == null
+          ) {
+            this.invalidMessage.push(
+              `CSV file of Source (name: ${each.name}) needs to be uploaded.`
+            );
             this.validToSubmit = false;
           }
         }
@@ -113,7 +120,7 @@ export class AggregateSourceComponent implements OnInit {
       }
     }
     if (selectedSources.length == 0) {
-      this.invalidMessage.push("Select at least one item to submit.");
+      this.invalidMessage.push('Select at least one item to submit.');
       this.validToSubmit = false;
     }
     this.submitConfirmModal.show();
@@ -127,48 +134,59 @@ export class AggregateSourceComponent implements OnInit {
     if (this.errorMessage != null) {
       this.messageService.setError(this.errorMessage);
     } else {
-      this.messageService.add("Source Aggregation request was submitted successfully.");
+      this.messageService.add(
+        'Source Aggregation request was submitted successfully.'
+      );
     }
     this.submitConfirmModal.hide();
   }
 
   async aggregateSource() {
-    let arr = this.sources.filter(each => each.selected);
+    const arr = this.sources.filter(each => each.selected);
     let processedCount = 0;
     let index = 0;
-    for (let each of arr) {
+    for (const each of arr) {
       if (each.aggregateSourceFormData == null) {
         each.aggregateSourceFormData = new FormData();
       }
       if (each.aggSourceDisableOptimization) {
-        each.aggregateSourceFormData.append("disableOptimization", "true");
+        each.aggregateSourceFormData.append('disableOptimization', 'true');
       } else {
-        each.aggregateSourceFormData.append("disableOptimization", "false");
+        each.aggregateSourceFormData.append('disableOptimization', 'false');
       }
 
-      if (index > 0 && (index % 10) == 0) {
-        // After processing every batch (10 sources), wait for 2 seconds before calling another API to avoid 429 
+      if (index > 0 && index % 10 == 0) {
+        // After processing every batch (10 sources), wait for 2 seconds before calling another API to avoid 429
         // Too Many Requests Error
         await this.sleep(2000);
       }
       index++;
 
-      this.idnService.aggregateSourceOwner(each.cloudExternalID, each.aggregateSourceFormData)
-          .subscribe(searchResult => {
+      this.idnService
+        .aggregateSourceOwner(
+          each.cloudExternalID,
+          each.aggregateSourceFormData
+        )
+        .subscribe(
+          searchResult => {
             processedCount++;
             each.aggTask = new AggregationTask();
             each.aggTask.id = searchResult.task.id;
-            this.idnService.startAggTaskPolling(each.cloudExternalID, each.aggTask.id);
+            this.idnService.startAggTaskPolling(
+              each.cloudExternalID,
+              each.aggTask.id
+            );
 
             if (processedCount == arr.length) {
               this.closeModalDisplayMsg();
               this.checkAggTaskStatus(arr);
-            //  this.reset(false);
-            //  this.search();
+              //  this.reset(false);
+              //  this.search();
             }
           },
-          err => {
-            this.errorMessage = "Error to send request to aggregate the source.";
+          () => {
+            this.errorMessage =
+              'Error to send request to aggregate the source.';
             processedCount++;
             if (processedCount == arr.length) {
               this.closeModalDisplayMsg();
@@ -195,7 +213,7 @@ export class AggregateSourceComponent implements OnInit {
 
         this.cleanup();
       } else {
-        this.messageService.setError("Only CSV files are allowed.");
+        this.messageService.setError('Only CSV files are allowed.');
       }
       this.uploadFilePath = file.name;
     }
@@ -208,7 +226,7 @@ export class AggregateSourceComponent implements OnInit {
   }
 
   validateFile(name: String) {
-    var ext = name.substring(name.lastIndexOf('.') + 1);
+    const ext = name.substring(name.lastIndexOf('.') + 1);
     return ext.toLowerCase() === 'csv';
   }
 
@@ -221,20 +239,26 @@ export class AggregateSourceComponent implements OnInit {
       source.aggTask.startTime = response.start;
       source.aggTask.totalAccounts = response.totalAccounts;
       source.aggTask.processedAccounts = response.processedAccounts;
-      if (response.processedAccounts && response.totalAccounts && response.totalAccounts > 0) {
-        source.aggTask.processedPct = Math.round(100 * response.processedAccounts / response.totalAccounts);
+      if (
+        response.processedAccounts &&
+        response.totalAccounts &&
+        response.totalAccounts > 0
+      ) {
+        source.aggTask.processedPct = Math.round(
+          (100 * response.processedAccounts) / response.totalAccounts
+        );
         if (source.aggTask.processedPct == 0) {
           source.aggTask.processedPct = 1;
         }
       } else {
-        if (response.status == 'COMPLETED') {
+        if (response.status == 'COMPconstED') {
           source.aggTask.processedPct = 100;
         } else {
           source.aggTask.processedPct = 1;
         }
       }
     }
-    if (response && response.status != 'COMPLETED') {
+    if (response && response.status != 'COMPconstED') {
       return true;
     } else {
       this.idnService.finishAggTaskPolling(source.cloudExternalID);
@@ -243,24 +267,25 @@ export class AggregateSourceComponent implements OnInit {
   }
 
   checkAggTaskStatus(sources: Source[]) {
-    let index : number = 0;
-    let waitMillSeconds = 3000; 
-    for (let source of sources) {
+    let index: number = 0;
+    const waitMillSeconds = 3000;
+    for (const source of sources) {
       setTimeout(() => {
         this.pollAggTaskStatus(source);
-      }, (waitMillSeconds + 1000 * index) );
+      }, waitMillSeconds + 1000 * index);
       index++;
     }
   }
 
   pollAggTaskStatus(source: Source) {
     interval(5000)
-    .pipe(
+      .pipe(
         startWith(0),
-        switchMap(() => this.idnService.getAccountAggregationStatus(source.aggTask.id)),
-        takeWhile( (response) => this.populateAggTaskStatus(response, source))
-    )
-    .subscribe();
+        switchMap(() =>
+          this.idnService.getAccountAggregationStatus(source.aggTask.id)
+        ),
+        takeWhile(response => this.populateAggTaskStatus(response, source))
+      )
+      .subscribe();
   }
-
 }

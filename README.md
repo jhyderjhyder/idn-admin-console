@@ -4,6 +4,30 @@
 
 This tool is build to help the community to manage SailPoint IdentityNow (IDN).
 
+## Badges
+[![Project License](https://img.shields.io/github/license/piyush-khandelwal-sp/idn-admin-console?label=License&logo=github)](https://github.com/piyush-khandelwal-sp/idn-admin-console/blob/main/License)
+
+### GitHub
+
+[![Latest Version](https://img.shields.io/github/package-json/v/piyush-khandelwal-sp/idn-admin-console?label=Version&logo=github)](https://github.com/piyush-khandelwal-sp/idn-admin-console) [![Latest Release](https://img.shields.io/github/v/release/piyush-khandelwal-sp/idn-admin-console?label=Release&logo=github)](https://github.com/piyush-khandelwal-sp/idn-admin-console/releases) [![Github Total Downloads](https://img.shields.io/github/downloads/piyush-khandelwal-sp/idn-admin-console/total.svg?label=Downloads&logo=github)](https://github.com/piyush-khandelwal-sp/idn-admin-console/releases) [![Github Repo Size](https://img.shields.io/github/repo-size/piyush-khandelwal-sp/idn-admin-console?label=Repo%20Size&logo=github)]() 
+
+[![Github Issues Open](https://img.shields.io/github/issues-raw/piyush-khandelwal-sp/idn-admin-console?label=Open%20Issues&logo=github)](https://github.com/piyush-khandelwal-sp/idn-admin-console/issues) [![Github Issues Closed](https://img.shields.io/github/issues-closed-raw/piyush-khandelwal-sp/idn-admin-console?label=Closed%20Issues&logo=github)](https://github.com/piyush-khandelwal-sp/idn-admin-console/issues?q=is%3Aclosed) [![Github PR Open](https://img.shields.io/github/issues-pr-raw/piyush-khandelwal-sp/idn-admin-console?label=Open%20PR&logo=github)](https://github.com/piyush-khandelwal-sp/idn-admin-console/pulls?q=is%3Apr+is%3Aopen+) [![Github PR Closed](https://img.shields.io/github/issues-pr-closed-raw/piyush-khandelwal-sp/idn-admin-console?label=Closed%20PR&logo=github)](https://github.com/piyush-khandelwal-sp/idn-admin-console/pulls?q=is%3Apr+is%3Aclosed+) [![Last Commit](https://img.shields.io/github/last-commit/piyush-khandelwal-sp/idn-admin-console?label=Last%20Commit&logo=github)](https://github.com/piyush-khandelwal-sp/idn-admin-console/commits/main)
+
+#### Builds
+##### Pull
+[![Build-Docker-Image](https://img.shields.io/github/actions/workflow/status/piyush-khandelwal-sp/idn-admin-console/Build-Docker-Image.yml?event=pull_request&label=Build-Docker-Image&logo=github)](https://img.shields.io/github/actions/workflow/status/piyush-khandelwal-sp/idn-admin-console/Build-Docker-Image.yml) [![Build-Mac-x64](https://img.shields.io/github/actions/workflow/status/piyush-khandelwal-sp/idn-admin-console/Build-Mac-x64.yml?event=pull_request&label=Build-Mac-x64&logo=github)](https://img.shields.io/github/actions/workflow/status/piyush-khandelwal-sp/idn-admin-console/Build-Mac-x64.yml) [![Build-Linux-x64](https://img.shields.io/github/actions/workflow/status/piyush-khandelwal-sp/idn-admin-console/Build-Linux-x64.yml?event=pull_request&label=Build-Linux-x64&logo=github)](https://img.shields.io/github/actions/workflow/status/piyush-khandelwal-sp/idn-admin-console/Build-Linux-x64.yml) [![Build-Windows-x64](https://img.shields.io/github/actions/workflow/status/piyush-khandelwal-sp/idn-admin-console/Build-Windows-x64.yml?event=pull_request&label=Build-Windows-x64&logo=github)](https://img.shields.io/github/actions/workflow/status/piyush-khandelwal-sp/idn-admin-console/Build-Windows-x64.yml)
+
+##### Release
+[![Build-Docker-Image](https://img.shields.io/github/actions/workflow/status/piyush-khandelwal-sp/idn-admin-console/Build-Docker-Image.yml?event=release&label=Build-Docker-Image&logo=github)](https://img.shields.io/github/actions/workflow/status/piyush-khandelwal-sp/idn-admin-console/Build-Docker-Image.yml) [![Build-Mac-x64](https://img.shields.io/github/actions/workflow/status/piyush-khandelwal-sp/idn-admin-console/Build-Mac-x64.yml?event=release&label=Build-Mac-x64&logo=github)](https://img.shields.io/github/actions/workflow/status/piyush-khandelwal-sp/idn-admin-console/Build-Mac-x64.yml) [![Build-Linux-x64](https://img.shields.io/github/actions/workflow/status/piyush-khandelwal-sp/idn-admin-console/Build-Linux-x64.yml?event=release&label=Build-Linux-x64&logo=github)](https://img.shields.io/github/actions/workflow/status/piyush-khandelwal-sp/idn-admin-console/Build-Linux-x64.yml) [![Build-Windows-x64](https://img.shields.io/github/actions/workflow/status/piyush-khandelwal-sp/idn-admin-console/Build-Windows-x64.yml?event=release&label=Build-Windows-x64&logo=github)](https://img.shields.io/github/actions/workflow/status/piyush-khandelwal-sp/idn-admin-console/Build-Windows-x64.yml)
+
+### Docker
+
+[![Latest Version](https://img.shields.io/docker/v/khandelwalpiyush/idn-admin-console/latest?label=Version&logo=docker)](http://hub.docker.com/r/khandelwalpiyush/idn-admin-console) [![Docker Pulls](https://img.shields.io/docker/pulls/khandelwalpiyush/idn-admin-console?label=Pulls&logo=docker)](http://hub.docker.com/r/khandelwalpiyush/idn-admin-console) [![Size](https://img.shields.io/docker/image-size/khandelwalpiyush/idn-admin-console?sort=date&label=Size&logo=docker)](http://hub.docker.com/r/khandelwalpiyush/idn-admin-console)
+
+### Security
+
+![Known Vulnerabilities](https://img.shields.io/snyk/vulnerabilities/github/piyush-khandelwal-sp/idn-admin-console?label=Vulnerabilities&logo=snyk)
+
 ## Release
 
 You can download the latest Windows/Mac/Linux build from [Release](https://github.com/piyush-khandelwal-sp/idn-admin-console/releases) page
@@ -66,7 +90,7 @@ We are looking for (list is not exhaustive)
     * Work Items Pending Forward (Forward Pending Work Items / Download Report)
 * Misc
     * Check and Set Org Time
-    * Manage PAT (See Permission / Delete Token)
+    * Manage PAT (See Permission / Last Usage / Delete Token)
     * Org Statistics (Pretty cool to see)
 
 ## Screenshots
@@ -86,11 +110,12 @@ The application can be run as a standalone web application, inside docker contai
         * npm install -g @angular/cli
     * Run command in root directory:
         * npm install
+* Build Package
+    * npm run build
 * Run in local
     * ng serve --open
-    * Type URL in browser: http://localhost:4200
-* Build Package
-    * npm run build-prod
+    * Will open URL in browser: http://localhost:4200
+
 
 ### Run as electron app ###
 * Prerequisites
@@ -98,19 +123,19 @@ The application can be run as a standalone web application, inside docker contai
     * npm install electron-packager -g
     * brew install --cask wine-stable
 * Run in local
-    * npm run build-prod
+    * npm run build
 * Build electron package for Mac OS
-    * npm run build-prod
+    * npm run build
     * electron-packager . --platform=darwin --overwrite
 * Build electron package for Windows
-    * npm run build-prod
+    * npm run build
     * electron-packager . --platform=win32 --overwrite
 
 ### Run as container app ###
 * Prerequisites
     * Install docker
 * Run in local
-    * npm run build-prod
+    * npm run build
     * docker build -t idn-admin-console-image .
     * docker run --name idn-admin-console-container -d -p 8080:80 idn-admin-console-image
     * Type URL in browser:  http://localhost:8080
