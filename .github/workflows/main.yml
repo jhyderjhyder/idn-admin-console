@@ -6,7 +6,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Echo
-        run: | 
+        run: |
           echo Value ${{ vars.DOCKERHUB_REPO }}
           echo ${{ vars.DOCKERHUB_REPO }}:latest
           echo $GITHUB_ENV
