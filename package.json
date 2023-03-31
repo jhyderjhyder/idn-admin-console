@@ -1,6 +1,6 @@
 {
   "name": "idn-admin-console",
-  "version": "1.21.0",
+  "version": "2.0.0",
   "main": "main.js",
   "scripts": {
     "ng": "ng",
