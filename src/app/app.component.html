@@ -112,24 +112,17 @@
         </li>
       </ul>
       <div class="col-sm-2 text-end me-3">
-        <div class="row align-items-center">
-        <small class="col-md-4 col-sm-4 text-center">
-            <span class="text-white">
-              Tenant: {{currentUser.tenant}}
-            </span>
-        </small>
-        <small class="col-md-4 col-sm-4 text-center">
-          <span class=" text-white">
-             Version: {{ version }}
-          </span>
-      </small>
         <a class="col-sm-4 btn btn-link text-white" (click)="logout()"><i class="fa fa-sign-out" aria-hidden="true">Logout</i></a>
-      </div>
       </div>
     </div>
   </nav>
 </div>
-<div class="container col-10" style="margin-top:30px">
+<div class="container col-10" *ngIf="currentUser">
+    <div class="col-sm-12 text-end">
+      Tenant: {{currentUser.tenant}}
+    </div>
+</div>
+<div class="container col-10">
   <div class="row">
     <div class="col-sm-12">
       <app-messages></app-messages>
@@ -142,7 +135,7 @@
 <div class="container col-10">
   <nav class="navbar navbar-custom navbar-expand-lg">
     <div class="col-sm-12 text-center text-white">
-      <small></small>
+      <small>IDN Admin Console v{{ version }}</small>
     </div>
   </nav>
   <br>
