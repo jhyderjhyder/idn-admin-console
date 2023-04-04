@@ -14,3 +14,7 @@
 .DS_Store
 Thumbs.db
 package-lock.json
+
+# Modify your template to have your variables that should not be pushed
+run.bat
+run.sh
