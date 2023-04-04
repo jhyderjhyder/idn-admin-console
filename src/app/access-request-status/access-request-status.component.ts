@@ -4,6 +4,7 @@ import { IDNService } from '../service/idn.service';
 import { AuthenticationService } from '../service/authentication-service.service';
 import { MessageService } from '../service/message.service';
 import { AccessRequestStatus } from '../model/access-request-status';
+import { SimpleQueryCondition } from '../model/simple-query-condition';
 
 @Component({
   selector: 'app-access-request-status',
@@ -18,6 +19,10 @@ export class AccessRequestStatusComponent implements OnInit {
   totalPending: number;
   totalApproved: number;
   totalRejected: number;
+  //Input plan text filter
+  regarding: string;
+  //Formated filter example &requested-for=2c9180857f2d882f017f38a5a877620b
+  filters: string;
 
   constructor(
     private idnService: IDNService,
@@ -29,6 +34,32 @@ export class AccessRequestStatusComponent implements OnInit {
     this.reset();
     this.getAllAccessRequestStatus();
   }
+  /*
+  This section was added because I wanted
+  to filter pending but was not able to do via the api
+  the next best thing was to filter by the person
+  the other search is a browser search this will update
+  the api that calls IdentityNow
+  */
+  ngPending(){
+    //Was able to leverage code from the current identityLookup
+    const query = new SimpleQueryCondition();
+      query.attribute = 'name';
+      query.value = this.regarding;
+  
+      this.idnService.searchAccounts(query).subscribe(searchResult => {
+        if (searchResult && searchResult.length == 1) {
+          this.filters = "&requested-for=" + searchResult[0].id;
+          this.getAllAccessRequestStatus();
+        }else{
+          //TODO what errors should we show?
+          console.log("Object not found");
+        }
+      });
+  
+  
+    
+}
 
   reset() {
     this.accessRequestStatuses = null;
@@ -45,13 +76,13 @@ export class AccessRequestStatusComponent implements OnInit {
     this.totalApproved = 0;
     this.totalRejected = 0;
 
-    this.idnService.getAccessRequestApprovalsSummary().subscribe(results => {
+    this.idnService.getAccessRequestApprovalsSummary(this.filters).subscribe(results => {
       this.totalPending = results.pending;
       this.totalApproved = results.approved;
       this.totalRejected = results.rejected;
     });
 
-    this.idnService.getAccessRequestStatus().subscribe(results => {
+    this.idnService.getAccessRequestStatus(this.filters).subscribe(results => {
       this.accessRequestStatuses = [];
       for (const each of results) {
         const accessRequestStatus = new AccessRequestStatus();

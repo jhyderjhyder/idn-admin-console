@@ -98,7 +98,7 @@ export class OrgStatsComponent implements OnInit {
         result.headers.get('X-Total-Count');
     });
 
-    this.idnService.getAccessRequestApprovalsSummary().subscribe(result => {
+    this.idnService.getAccessRequestApprovalsSummary(null).subscribe(result => {
       this.orgData.approvalSummaryTotalPending = result.pending;
       this.orgData.approvalSummaryTotalApproved = result.approved;
       this.orgData.approvalSummaryTotalRejected = result.rejected;
