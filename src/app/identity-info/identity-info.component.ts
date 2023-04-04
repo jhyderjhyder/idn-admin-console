@@ -6,11 +6,15 @@ import { IdentityAttribute } from '../model/identity-attribute';
 import { AuthenticationService } from '../service/authentication-service.service';
 import { AngularCsv } from 'angular-csv-ext/dist/Angular-csv';
 
+
 @Component({
   selector: 'app-identity-info',
   templateUrl: './identity-info.component.html',
   styleUrls: ['./identity-info.component.css'],
 })
+
+
+
 export class IdentityInfoComponent implements OnInit {
   loading: boolean;
   allOwnersFetched: boolean;
@@ -21,6 +25,11 @@ export class IdentityInfoComponent implements OnInit {
   //new
   accountName: string;
   identityInfo: IdentityAttribute;
+  filterTypes: Array<string>;
+  selectedFilterTypes: string;
+  identityList: Array<IdentityAttribute>;
+
+
 
   constructor(
     private idnService: IDNService,
@@ -28,9 +37,25 @@ export class IdentityInfoComponent implements OnInit {
     private messageService: MessageService
   ) {}
 
+  
   ngOnInit() {
+    this.selectedFilterTypes= "name";
+    this.filterTypes = Array<string>();
+    this.initFilterTypes();
     this.reset(true);
+   
   }
+
+  initFilterTypes(){
+    this.filterTypes.push("name");
+    this.filterTypes.push("email");
+    this.filterTypes.push("phone");
+    this.filterTypes.push("lastName");
+    this.filterTypes.push("firstName");
+  }
+
+
+ 
 
   reset(clearMsg: boolean) {
     this.loading = false;
@@ -42,6 +67,13 @@ export class IdentityInfoComponent implements OnInit {
       this.messageService.clearAll();
       this.errorMessage = null;
     }
+    this.identityList=null;
+  }
+
+  showDetailsFromList(item) {
+    let value = new Array<IdentityAttribute>;
+    value.push(this.identityList[item]);
+    this.getIdentityInfo(value);
   }
 
   submit() {
@@ -52,13 +84,21 @@ export class IdentityInfoComponent implements OnInit {
 
     if (this.accountName && this.accountName.trim() != '') {
       const query = new SimpleQueryCondition();
-      query.attribute = 'name';
+      query.attribute = this.selectedFilterTypes;
       query.value = this.accountName;
 
       this.idnService.searchAccounts(query).subscribe(searchResult => {
+        //Lets not load the data if we have more than one result
+        if (searchResult && searchResult.length > 1){
+          this.messageService.setError(`Not Distinct.`);
+          this.identityList = searchResult;
+        }
+
         if (searchResult && searchResult.length == 1) {
           this.getIdentityInfo(searchResult);
-        } else {
+        } 
+
+        if((searchResult && searchResult.length ==0)) {
           this.validToSubmit = false;
           this.messageService.setError(`Identity Account Name is Invalid.`);
         }
