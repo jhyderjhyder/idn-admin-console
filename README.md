@@ -40,6 +40,15 @@ Alternatively if you have an internal domain other than identitynow.com please f
 
 **NOTE:** For Vanity URL's please [find your](https://developer.sailpoint.com/idn/api/getting-started#find-your-tenant-name) `{tenant}` as per the article and use that. **DO NOT** fill in your vanity URL domain in the Domain Name section.
 
+**Dev:** When using on your own computer you can use variables to auto login.  This can save you a lot of 
+time as there is no way you can remember your tokens.  Using your local variables it should make sure that you 
+dont ever push to production an auto login feature.
+set NG_APP_ENV=true
+set NG_APP_URL=NameOfDomain
+set NG_APP_CLIENT_SECRET=secret
+set NG_APP_CLIENT_ID=af5783client
+ng serve --open
+
 ## Contribute
 
 We are looking for (list is not exhaustive)
