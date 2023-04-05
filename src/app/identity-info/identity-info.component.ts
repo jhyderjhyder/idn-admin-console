@@ -28,6 +28,11 @@ export class IdentityInfoComponent implements OnInit {
   filterTypes: Array<string>;
   selectedFilterTypes: string;
   identityList: Array<IdentityAttribute>;
+  //Pages
+  xTotalCount: number;
+  offset:number;
+  limit:number;
+  hasMorePages:boolean;
 
 
 
@@ -39,6 +44,9 @@ export class IdentityInfoComponent implements OnInit {
 
   
   ngOnInit() {
+    this.hasMorePages=true;
+    this.offset=0;
+    this.limit=10;
     this.selectedFilterTypes= "name";
     this.filterTypes = Array<string>();
     this.initFilterTypes();
@@ -99,6 +107,14 @@ export class IdentityInfoComponent implements OnInit {
     this.getIdentityInfo(value);
   }
 
+  getNextPage(){
+    this.offset++;
+    this.submit();
+    if (this.xTotalCount/this.limit>this.offset){
+      this.hasMorePages=false;
+    }
+  }
+
   submit() {
     this.messageService.clearError();
     this.validToSubmit = true;
@@ -110,10 +126,16 @@ export class IdentityInfoComponent implements OnInit {
       query.attribute = this.selectedFilterTypes;
       query.value = this.accountName;
 
-      this.idnService.searchAccounts(query).subscribe(searchResult => {
+      this.idnService.searchAccountsPaged(query,this.limit, this.offset).subscribe(response => {
+        let searchResult = response.body;
+        let headers = response.headers;
+        this.xTotalCount = headers.get("X-Total-Count");
+        console.table(searchResult);
         //Lets not load the data if we have more than one result
+        
         if (searchResult && searchResult.length > 1){
           this.messageService.setError(`Not Distinct.`);
+          //xTotalCount
           this.identityList = searchResult;
         }
 

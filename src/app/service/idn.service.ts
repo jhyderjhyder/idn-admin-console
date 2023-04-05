@@ -407,6 +407,23 @@ export class IDNService {
       .pipe(catchError(this.handleError(`searchAccounts`)));
   }
 
+  searchAccountsPaged(query: SimpleQueryCondition, limit: number, offset: number): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/search/?count=true&limit=` 
+    + limit + '&offset=' + offset;
+
+    const payload = {
+      query: {
+        query: `${query.attribute}:\"${query.value}\"`,
+      },
+    };
+
+
+    return this.http
+      .post(url, payload, {observe:'response'})
+      .pipe(catchError(this.handleError(`searchAccounts`)));
+  }
+
   updateSourceOwner(source: Source): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
     const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/sources/${source.id}`;
