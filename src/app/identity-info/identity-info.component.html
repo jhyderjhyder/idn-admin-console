@@ -23,11 +23,15 @@
       <td>{{ i+1}} </td>
       <td>{{ item.name }}</td>
       <td>{{ item.email }}</td>
-      <td>{{ item.displayName }}</td>
+      <td>{{ item.displayName }}
+        
+      </td>
       <td>
-        <button type="button" (click)='showDetailsFromList(i)' class="btn">
+        <div>
+        <button type="button" (click)='showDetailsFromList(i)' class="btn btn-primary btn-sm">
           Show Details
         </button>
+      </div>
       </td>
     </tr>
   </table>

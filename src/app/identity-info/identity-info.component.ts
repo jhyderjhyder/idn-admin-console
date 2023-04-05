@@ -52,6 +52,16 @@ export class IdentityInfoComponent implements OnInit {
     this.filterTypes.push("phone");
     this.filterTypes.push("lastName");
     this.filterTypes.push("firstName");
+    let attributues = process.env.NG_APP_IDENTITY_SEARCH
+    if (attributues){
+      const split = attributues.split(",");
+      var i = 0;
+      while (split.length > i){
+        this.filterTypes.push("attributes." + split[i]);
+        i++;
+      }
+      
+    }
   }
 
 
@@ -73,6 +83,8 @@ export class IdentityInfoComponent implements OnInit {
   showDetailsFromList(item) {
     let value = new Array<IdentityAttribute>;
     value.push(this.identityList[item]);
+    this.identityList=null;
+    this.messageService.clearAll();
     this.getIdentityInfo(value);
   }
 
