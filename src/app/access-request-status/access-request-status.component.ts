@@ -15,12 +15,11 @@ export class AccessRequestStatusComponent implements OnInit {
   accessRequestStatuses: AccessRequestStatus[];
   searchText: string;
   loading: boolean;
-  errorMessage: string;
   totalPending: number;
   totalApproved: number;
   totalRejected: number;
   //Input plan text filter
-  regarding: string;
+  requestedFor: string;
   //Formated filter example &requested-for=2c9180857f2d882f017f38a5a877620b
   filters: string;
 
@@ -34,38 +33,34 @@ export class AccessRequestStatusComponent implements OnInit {
     this.reset();
     this.getAllAccessRequestStatus();
   }
-  /*
-  This section was added because I wanted
-  to filter pending but was not able to do via the api
-  the next best thing was to filter by the person
-  the other search is a browser search this will update
-  the api that calls IdentityNow
-  */
-  ngPending(){
-    //Was able to leverage code from the current identityLookup
-    const query = new SimpleQueryCondition();
+
+  getRequestedForUser() {
+    if (this.requestedFor && this.requestedFor.trim() != '') {
+      const query = new SimpleQueryCondition();
       query.attribute = 'name';
-      query.value = this.regarding;
-  
+      query.value = this.requestedFor;
+
       this.idnService.searchAccounts(query).subscribe(searchResult => {
         if (searchResult && searchResult.length == 1) {
-          this.filters = "&requested-for=" + searchResult[0].id;
+          this.filters = '&requested-for=' + searchResult[0].id;
+          this.messageService.clearAll();
           this.getAllAccessRequestStatus();
-        }else{
-          //TODO what errors should we show?
-          console.log("Object not found");
+        } else {
+          this.messageService.setError(`Identity Account Name is Invalid`);
         }
       });
-  
-  
-    
-}
+    } else {
+      this.messageService.setError('Identity value cannot be null');
+      return;
+    }
+  }
 
   reset() {
     this.accessRequestStatuses = null;
     this.searchText = null;
-    this.errorMessage = null;
     this.loading = false;
+    this.requestedFor = null;
+    this.filters = null;
     this.messageService.clearAll();
   }
 
@@ -76,7 +71,7 @@ export class AccessRequestStatusComponent implements OnInit {
     this.totalApproved = 0;
     this.totalRejected = 0;
 
-    this.idnService.getAccessRequestApprovalsSummary(this.filters).subscribe(results => {
+    this.idnService.getAccessRequestApprovalsSummary().subscribe(results => {
       this.totalPending = results.pending;
       this.totalApproved = results.approved;
       this.totalRejected = results.rejected;

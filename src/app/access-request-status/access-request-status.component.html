@@ -24,7 +24,7 @@
 <div *ngIf="accessRequestStatuses && !loading" class="row" style="background-color: #EBEBEB">
   <div class="col-sm-8 text-start">
     <span class="fw-bold">This report shows access request status for tenant (latest 250 records). Use the search above
-      to filter through them or the download button to export as CSV.
+      to filter through them or the download button to export as CSV. You can also search 'Requested For' list on by searching by Account Name and clicking on 'Search'
     </span>
   </div>
   <div class="col-sm-1 text-end">
@@ -49,9 +49,10 @@
 <form name="form" #f="ngForm" novalidate contactRequired>
 <div class="border border-primary">
   <div class="form-group align-items-center mb-3 ">
+    <br>
     <div class="row">
       <div class="col-md-3">Current Page Record Search</div>
-      <div class=" col-md-5">
+      <div class=" col-md-7">
         <div class="input-group ">
           <span class="input-group-text bg-white border-end-0">
             <i class="fa fa-search"></i>
@@ -61,18 +62,18 @@
             placeholder="Access Name, Access Type, Request Type, Request State, Requester Name or Requested For Name to filter the result.">
         </div>
       </div>
-      
     </div>
+    <br>
     <!--Custom searches Currently only for Person -->
     <div class="row">
-      <div class="col-md-3">Limit Page by Person</div>
-      <div class=" col-md-5">
-        <input class="form-control py-2 border-start-0 border" type="text" name="regarding"  [(ngModel)]="regarding" autocomplete="off"
-          placeholder="Person Regarding Login Name">
+      <div class="col-md-3">Requested For List Only</div>
+      <div class=" col-md-7">
+        <input class="form-control py-2 border-start-0 border" type="text" name="requestedFor"  [(ngModel)]="requestedFor" autocomplete="off"
+          placeholder="Search via Account Name">
       </div>
       <div class="col-md-2">
-        <button type="button" [disabled]="loading" (click)="ngPending()" class="btn btn-success btn-sm">
-          Filter Regarding Person
+        <button type="button" [disabled]="loading" (click)="getRequestedForUser()" class="btn btn-primary btn-sm">
+          Search
         </button>
       </div>
     </div>
