@@ -53,6 +53,10 @@ set NG_APP_CLIENT_SECRET=secret
 
 set NG_APP_CLIENT_ID=af5783client
 
+echo "Attributes to show as searchable in the Identity Search dropdown"
+
+set NG_APP_IDENTITY_SEARCH=costCenterCode,uid
+
 ng serve --open
 
 ## Contribute

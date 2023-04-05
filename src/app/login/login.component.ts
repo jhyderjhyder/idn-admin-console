@@ -42,15 +42,14 @@ export class LoginComponent implements OnInit {
 
     // get return url from route parameters or default to '/'
     this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
-       /*
-    In docker you might want to auto login and restrict this app
-    with Azure Auth and have all process run as standard user
-    NG_APP_ENV = true;
-    NG_APP_URL = TenantName
-    NG_APP_CLIENT_ID = clientID
-    */
+      /*
+        In docker you might want to auto login and restrict this app
+        with Azure Auth and have all process run as standard user
+        NG_APP_ENV = true;
+        NG_APP_URL = TenantName
+        NG_APP_CLIENT_ID = clientID
+      */
    if (process.env.NG_APP_ENV == "true"){
-    console.table(process.env);
     if (this.loginForm.controls.tenant.getRawValue() == ("")){
       this.loginForm.controls.tenant.setValue(process.env.NG_APP_URL);
     }

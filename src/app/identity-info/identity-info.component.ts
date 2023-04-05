@@ -52,6 +52,12 @@ export class IdentityInfoComponent implements OnInit {
     this.filterTypes.push("phone");
     this.filterTypes.push("lastName");
     this.filterTypes.push("firstName");
+    /*
+    This is optional but you can pass a set of attributes
+    you want to search on like departement.  This will
+    be a simple method that you can test any search
+    options you need.  
+    */
     let attributues = process.env.NG_APP_IDENTITY_SEARCH
     if (attributues){
       const split = attributues.split(",");
@@ -80,6 +86,11 @@ export class IdentityInfoComponent implements OnInit {
     this.identityList=null;
   }
 
+  /*
+  If we get more than one user from the API
+  when you click the show details button
+  it will show just that users details
+  */
   showDetailsFromList(item) {
     let value = new Array<IdentityAttribute>;
     value.push(this.identityList[item]);
@@ -227,6 +238,7 @@ export class IdentityInfoComponent implements OnInit {
 
   getManagerInfo() {
     this.accountName = this.identityInfo.managerAccountName;
+    this.selectedFilterTypes="name";
     this.submit();
   }
 
