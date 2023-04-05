@@ -958,9 +958,15 @@ export class IDNService {
     return this.http.patch(url, payload, myHttpOptions);
   }
 
-  getAccessRequestStatus(): Observable<any> {
+  getAccessRequestStatus(filters): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/access-request-status?sorters=-created`;
+    let filteredURL = '';
+    if (filters != null) {
+      filteredURL = filteredURL + filters;
+    }
+    const url =
+      `https://${currentUser.tenant}.api.${currentUser.domain}/v3/access-request-status?sorters=-created` +
+      filteredURL;
 
     return this.http.get(url, this.httpOptions);
   }
