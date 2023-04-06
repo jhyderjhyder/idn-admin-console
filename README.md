@@ -14,8 +14,8 @@ This tool is build to help the community to manage SailPoint IdentityNow (IDN).
 [![Github Issues Open](https://img.shields.io/github/issues-raw/piyush-khandelwal-sp/idn-admin-console?label=Open%20Issues&logo=github)](https://github.com/piyush-khandelwal-sp/idn-admin-console/issues) [![Github Issues Closed](https://img.shields.io/github/issues-closed-raw/piyush-khandelwal-sp/idn-admin-console?label=Closed%20Issues&logo=github)](https://github.com/piyush-khandelwal-sp/idn-admin-console/issues?q=is%3Aclosed) [![Github PR Open](https://img.shields.io/github/issues-pr-raw/piyush-khandelwal-sp/idn-admin-console?label=Open%20PR&logo=github)](https://github.com/piyush-khandelwal-sp/idn-admin-console/pulls?q=is%3Apr+is%3Aopen+) [![Github PR Closed](https://img.shields.io/github/issues-pr-closed-raw/piyush-khandelwal-sp/idn-admin-console?label=Closed%20PR&logo=github)](https://github.com/piyush-khandelwal-sp/idn-admin-console/pulls?q=is%3Apr+is%3Aclosed+) [![Last Commit](https://img.shields.io/github/last-commit/piyush-khandelwal-sp/idn-admin-console?label=Last%20Commit&logo=github)](https://github.com/piyush-khandelwal-sp/idn-admin-console/commits/main)
 
 #### Builds
-##### Pull
-[![Build-Docker-Image](https://img.shields.io/github/actions/workflow/status/piyush-khandelwal-sp/idn-admin-console/Build-Docker-Image.yml?event=pull_request&label=Build-Docker-Image&logo=github)](https://img.shields.io/github/actions/workflow/status/piyush-khandelwal-sp/idn-admin-console/Build-Docker-Image.yml) [![Build-Mac-x64](https://img.shields.io/github/actions/workflow/status/piyush-khandelwal-sp/idn-admin-console/Build-Mac-x64.yml?event=pull_request&label=Build-Mac-x64&logo=github)](https://img.shields.io/github/actions/workflow/status/piyush-khandelwal-sp/idn-admin-console/Build-Mac-x64.yml) [![Build-Linux-x64](https://img.shields.io/github/actions/workflow/status/piyush-khandelwal-sp/idn-admin-console/Build-Linux-x64.yml?event=pull_request&label=Build-Linux-x64&logo=github)](https://img.shields.io/github/actions/workflow/status/piyush-khandelwal-sp/idn-admin-console/Build-Linux-x64.yml) [![Build-Windows-x64](https://img.shields.io/github/actions/workflow/status/piyush-khandelwal-sp/idn-admin-console/Build-Windows-x64.yml?event=pull_request&label=Build-Windows-x64&logo=github)](https://img.shields.io/github/actions/workflow/status/piyush-khandelwal-sp/idn-admin-console/Build-Windows-x64.yml)
+##### Workflow
+[![Build-Docker-Image](https://img.shields.io/github/actions/workflow/status/piyush-khandelwal-sp/idn-admin-console/Build-Docker-Image.yml?label=Build-Docker-Image&logo=github)](https://img.shields.io/github/actions/workflow/status/piyush-khandelwal-sp/idn-admin-console/Build-Docker-Image.yml) [![Build-Mac-x64](https://img.shields.io/github/actions/workflow/status/piyush-khandelwal-sp/idn-admin-console/Build-Mac-x64.yml?label=Build-Mac-x64&logo=github)](https://img.shields.io/github/actions/workflow/status/piyush-khandelwal-sp/idn-admin-console/Build-Mac-x64.yml) [![Build-Linux-x64](https://img.shields.io/github/actions/workflow/status/piyush-khandelwal-sp/idn-admin-console/Build-Linux-x64.yml?label=Build-Linux-x64&logo=github)](https://img.shields.io/github/actions/workflow/status/piyush-khandelwal-sp/idn-admin-console/Build-Linux-x64.yml) [![Build-Windows-x64](https://img.shields.io/github/actions/workflow/status/piyush-khandelwal-sp/idn-admin-console/Build-Windows-x64.yml?label=Build-Windows-x64&logo=github)](https://img.shields.io/github/actions/workflow/status/piyush-khandelwal-sp/idn-admin-console/Build-Windows-x64.yml)
 
 ##### Release
 [![Build-Docker-Image](https://img.shields.io/github/actions/workflow/status/piyush-khandelwal-sp/idn-admin-console/Build-Docker-Image.yml?event=release&label=Build-Docker-Image&logo=github)](https://img.shields.io/github/actions/workflow/status/piyush-khandelwal-sp/idn-admin-console/Build-Docker-Image.yml) [![Build-Mac-x64](https://img.shields.io/github/actions/workflow/status/piyush-khandelwal-sp/idn-admin-console/Build-Mac-x64.yml?event=release&label=Build-Mac-x64&logo=github)](https://img.shields.io/github/actions/workflow/status/piyush-khandelwal-sp/idn-admin-console/Build-Mac-x64.yml) [![Build-Linux-x64](https://img.shields.io/github/actions/workflow/status/piyush-khandelwal-sp/idn-admin-console/Build-Linux-x64.yml?event=release&label=Build-Linux-x64&logo=github)](https://img.shields.io/github/actions/workflow/status/piyush-khandelwal-sp/idn-admin-console/Build-Linux-x64.yml) [![Build-Windows-x64](https://img.shields.io/github/actions/workflow/status/piyush-khandelwal-sp/idn-admin-console/Build-Windows-x64.yml?event=release&label=Build-Windows-x64&logo=github)](https://img.shields.io/github/actions/workflow/status/piyush-khandelwal-sp/idn-admin-console/Build-Windows-x64.yml)
@@ -42,22 +42,19 @@ Alternatively if you have an internal domain other than identitynow.com please f
 
 **Dev:** When using on your own computer you can use variables to auto login.  This can save you a lot of 
 time as there is no way you can remember your tokens.  Using your local variables it should make sure that you 
-dont ever push to production an auto login feature.
+dont ever push to production an auto login feature. You can create a `run.bat` or `run.sh` and put the following variables
 
-
+```
 set NG_APP_ENV=true
 
-set NG_APP_URL=NameOfDomain
-
-set NG_APP_CLIENT_SECRET=secret
+set NG_APP_URL=tenantName
 
 set NG_APP_CLIENT_ID=af5783client
 
-echo "Attributes to show as searchable in the Identity Search dropdown"
-
-set NG_APP_IDENTITY_SEARCH=costCenterCode,uid
+set NG_APP_CLIENT_SECRET=secret
 
 ng serve --open
+```
 
 ## Contribute
 

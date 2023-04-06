@@ -47,13 +47,13 @@ export class LoginComponent implements OnInit {
     In docker you might want to auto login and restrict this app
     with Azure Auth and have all process run as standard user
     NG_APP_ENV = true;
-    NG_APP_URL = TenantName
+    NG_APP_TENANT_NAME = TenantName
     NG_APP_CLIENT_ID = clientID
     */
     if (process.env.NG_APP_ENV == 'true') {
       console.table(process.env);
       if (this.loginForm.controls.tenant.getRawValue() == '') {
-        this.loginForm.controls.tenant.setValue(process.env.NG_APP_URL);
+        this.loginForm.controls.tenant.setValue(process.env.NG_APP_TENANT_NAME);
       }
       if (this.loginForm.controls.clientId.getRawValue() == '') {
         this.loginForm.controls.clientId.setValue(process.env.NG_APP_CLIENT_ID);
