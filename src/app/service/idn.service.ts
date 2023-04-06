@@ -408,10 +408,17 @@ export class IDNService {
       .pipe(catchError(this.handleError(`searchAccounts`)));
   }
 
-  searchAccountsPaged(query: SimpleQueryCondition, limit: number, offset: number): Observable<any> {
+  searchAccountsPaged(
+    query: SimpleQueryCondition,
+    limit: number,
+    offset: number
+  ): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/search/?count=true&limit=` 
-    + limit + '&offset=' + offset;
+    const url =
+      `https://${currentUser.tenant}.api.${currentUser.domain}/v3/search/?count=true&limit=` +
+      limit +
+      '&offset=' +
+      offset;
 
     const payload = {
       query: {
@@ -419,9 +426,8 @@ export class IDNService {
       },
     };
 
-
     return this.http
-      .post(url, payload, {observe:'response'})
+      .post(url, payload, { observe: 'response' })
       .pipe(catchError(this.handleError(`searchAccounts`)));
   }
 

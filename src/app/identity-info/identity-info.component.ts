@@ -26,9 +26,9 @@ export class IdentityInfoComponent implements OnInit {
   identityList: Array<IdentityAttribute>;
   //Pages
   xTotalCount: number;
-  offset:number;
-  limit:number;
-  hasMorePages:boolean;
+  offset: number;
+  limit: number;
+  hasMorePages: boolean;
 
   constructor(
     private idnService: IDNService,
@@ -37,7 +37,6 @@ export class IdentityInfoComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-
     this.selectedFilterTypes = 'name';
     this.filterTypes = Array<string>();
     this.initFilterTypes();
@@ -74,16 +73,16 @@ export class IdentityInfoComponent implements OnInit {
   showDetailsFromList(item) {
     const value = new Array<IdentityAttribute>();
     value.push(this.identityList[item]);
-    this.identityList=null;
+    this.identityList = null;
     this.messageService.clearAll();
     this.getIdentityInfo(value);
   }
 
-  getNextPage(){
+  getNextPage() {
     this.offset++;
     this.submit();
-    if (this.xTotalCount/this.limit>this.offset){
-      this.hasMorePages=false;
+    if (this.xTotalCount / this.limit > this.offset) {
+      this.hasMorePages = false;
     }
   }
 
@@ -104,28 +103,30 @@ export class IdentityInfoComponent implements OnInit {
 
       query.value = this.accountName;
 
-      this.idnService.searchAccountsPaged(query,this.limit, this.offset).subscribe(response => {
-        let searchResult = response.body;
-        let headers = response.headers;
-        this.xTotalCount = headers.get("X-Total-Count");
-        console.table(searchResult);
-        //Lets not load the data if we have more than one result
-        if (searchResult && searchResult.length > 1) {
-          this.messageService.setError(
-            `Multiple records found. Click 'Show Details' to select the record.`
-          );
-          this.identityList = searchResult;
-        }
+      this.idnService
+        .searchAccountsPaged(query, this.limit, this.offset)
+        .subscribe(response => {
+          let searchResult = response.body;
+          let headers = response.headers;
+          this.xTotalCount = headers.get('X-Total-Count');
+          console.table(searchResult);
+          //Lets not load the data if we have more than one result
+          if (searchResult && searchResult.length > 1) {
+            this.messageService.setError(
+              `Multiple records found. Click 'Show Details' to select the record.`
+            );
+            this.identityList = searchResult;
+          }
 
-        if (searchResult && searchResult.length == 1) {
-          this.getIdentityInfo(searchResult);
-        }
+          if (searchResult && searchResult.length == 1) {
+            this.getIdentityInfo(searchResult);
+          }
 
-        if (searchResult && searchResult.length == 0) {
-          this.validToSubmit = false;
-          this.messageService.setError(`Record not found.`);
-        }
-      });
+          if (searchResult && searchResult.length == 0) {
+            this.validToSubmit = false;
+            this.messageService.setError(`Record not found.`);
+          }
+        });
     } else {
       this.messageService.setError('Search value is needed.');
     }
