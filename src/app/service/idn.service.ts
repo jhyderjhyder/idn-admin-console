@@ -18,6 +18,7 @@ import { PAT } from '../model/pat';
 import { IdentityProfile } from '../model/identity-profile';
 import { IdentityAttribute } from '../model/identity-attribute';
 import { Transform } from '../model/transform';
+import { PageResults} from '../model/page-results';
 
 @Injectable({
   providedIn: 'root',
@@ -408,17 +409,10 @@ export class IDNService {
       .pipe(catchError(this.handleError(`searchAccounts`)));
   }
 
-  searchAccountsPaged(
-    query: SimpleQueryCondition,
-    limit: number,
-    offset: number
-  ): Observable<any> {
+  searchAccountsPaged(query: SimpleQueryCondition,page: PageResults): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url =
-      `https://${currentUser.tenant}.api.${currentUser.domain}/v3/search/?count=true&limit=` +
-      limit +
-      '&offset=' +
-      offset;
+    const url =`https://${currentUser.tenant}.api.${currentUser.domain}/v3/search/?count=true&limit=` +
+      page.limit + '&offset=' + page.offset;
 
     const payload = {
       query: {

@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { IDNService } from '../service/idn.service';
 import { MessageService } from '../service/message.service';
 import { SimpleQueryCondition } from '../model/simple-query-condition';
+import { PageResults} from '../model/page-results';
 import { IdentityAttribute } from '../model/identity-attribute';
 import { AuthenticationService } from '../service/authentication-service.service';
 import { AngularCsv } from 'angular-csv-ext/dist/Angular-csv';
@@ -25,6 +26,9 @@ export class IdentityInfoComponent implements OnInit {
   selectedFilterTypes: string;
   identityList: Array<IdentityAttribute>;
 
+    //Pages
+    page: PageResults;
+
   constructor(
     private idnService: IDNService,
     private authenticationService: AuthenticationService,
@@ -32,6 +36,7 @@ export class IdentityInfoComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.page = new PageResults();
     this.selectedFilterTypes = 'name';
     this.filterTypes = Array<string>();
     this.initFilterTypes();
@@ -45,6 +50,28 @@ export class IdentityInfoComponent implements OnInit {
     this.filterTypes.push('identificationNumber');
     this.filterTypes.push('email');
     this.filterTypes.push('phone');
+    /*
+    This is optional but you can pass a set of attributes
+    you want to search on like departement.  This will
+    be a simple method that you can test any search
+    options you need.  
+    */
+    let attributues = process.env.NG_APP_IDENTITY_SEARCH
+    if (attributues){
+      const split = attributues.split(",");
+      var i = 0;
+      while (split.length > i){
+        this.filterTypes.push(split[i]);
+        i++;
+      }
+      
+    }
+
+  }
+
+  getNextPage(){
+    this.page.nextPage;
+    this.submit();
   }
 
   reset(clearMsg: boolean) {
@@ -90,7 +117,10 @@ export class IdentityInfoComponent implements OnInit {
 
       query.value = this.accountName;
 
-      this.idnService.searchAccounts(query).subscribe(searchResult => {
+      this.idnService.searchAccountsPaged(query,this.page).subscribe(response => {
+        let searchResult = response.body;
+        let headers = response.headers;
+        this.page.xTotalCount = headers.get("X-Total-Count");
         //Lets not load the data if we have more than one result
         if (searchResult && searchResult.length > 1) {
           this.messageService.setError(
