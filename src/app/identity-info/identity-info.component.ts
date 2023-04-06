@@ -106,8 +106,8 @@ export class IdentityInfoComponent implements OnInit {
       this.idnService
         .searchAccountsPaged(query, this.limit, this.offset)
         .subscribe(response => {
-          let searchResult = response.body;
-          let headers = response.headers;
+          const searchResult = response.body;
+          const headers = response.headers;
           this.xTotalCount = headers.get('X-Total-Count');
           console.table(searchResult);
           //Lets not load the data if we have more than one result
