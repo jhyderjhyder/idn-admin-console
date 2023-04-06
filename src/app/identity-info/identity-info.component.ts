@@ -24,11 +24,6 @@ export class IdentityInfoComponent implements OnInit {
   filterTypes: Array<string>;
   selectedFilterTypes: string;
   identityList: Array<IdentityAttribute>;
-  //Pages
-  xTotalCount: number;
-  offset: number;
-  limit: number;
-  hasMorePages: boolean;
 
   constructor(
     private idnService: IDNService,
@@ -78,14 +73,6 @@ export class IdentityInfoComponent implements OnInit {
     this.getIdentityInfo(value);
   }
 
-  getNextPage() {
-    this.offset++;
-    this.submit();
-    if (this.xTotalCount / this.limit > this.offset) {
-      this.hasMorePages = false;
-    }
-  }
-
   submit() {
     this.messageService.clearError();
     this.validToSubmit = true;
@@ -103,30 +90,24 @@ export class IdentityInfoComponent implements OnInit {
 
       query.value = this.accountName;
 
-      this.idnService
-        .searchAccountsPaged(query, this.limit, this.offset)
-        .subscribe(response => {
-          const searchResult = response.body;
-          const headers = response.headers;
-          this.xTotalCount = headers.get('X-Total-Count');
-          console.table(searchResult);
-          //Lets not load the data if we have more than one result
-          if (searchResult && searchResult.length > 1) {
-            this.messageService.setError(
-              `Multiple records found. Click 'Show Details' to select the record.`
-            );
-            this.identityList = searchResult;
-          }
+      this.idnService.searchAccounts(query).subscribe(searchResult => {
+        //Lets not load the data if we have more than one result
+        if (searchResult && searchResult.length > 1) {
+          this.messageService.setError(
+            `Multiple records found. Click 'Show Details' to select the record.`
+          );
+          this.identityList = searchResult;
+        }
 
-          if (searchResult && searchResult.length == 1) {
-            this.getIdentityInfo(searchResult);
-          }
+        if (searchResult && searchResult.length == 1) {
+          this.getIdentityInfo(searchResult);
+        }
 
-          if (searchResult && searchResult.length == 0) {
-            this.validToSubmit = false;
-            this.messageService.setError(`Record not found.`);
-          }
-        });
+        if (searchResult && searchResult.length == 0) {
+          this.validToSubmit = false;
+          this.messageService.setError(`Record not found.`);
+        }
+      });
     } else {
       this.messageService.setError('Search value is needed.');
     }
