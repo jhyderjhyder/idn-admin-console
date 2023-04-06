@@ -400,6 +400,7 @@ export class IDNService {
       query: {
         query: `${query.attribute}:\"${query.value}\"`,
       },
+      indices: ['identities'],
     };
 
     return this.http

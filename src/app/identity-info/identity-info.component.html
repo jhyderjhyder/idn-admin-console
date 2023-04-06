@@ -34,7 +34,7 @@
 </div>
 <div class="form-group row mb-3" *ngIf="!loading">
   <div class="col-sm-10 text-start">
-    <span class="fw-bold">Enter Identity's Account Name and click the 'Search' button. Click on the Manager's name (if
+    <span class="fw-bold">Enter Identity's Account Name and click the 'Search' button. Or select another option to search based on firstname, lastname, identitficationNumber , email or phone. Click on the Manager's name (if
       exists) to get their details. Click on 'Download' to save the report after Search</span>
   </div>
   <div class="col-sm-2 text-start">
@@ -56,7 +56,7 @@
 <div class="form-group row mb-3 align-items-center" *ngIf="!loading">
   <div class="col-sm-4 text-start">
     <input id="accountName" class="form-control py-2 border-start-0 border" type="text" [(ngModel)]="accountName"
-      placeholder="Enter Identity Account Name">
+      placeholder="Enter Value">
   </div>
 
   <div *ngIf="!loading" class="col-sm-1 text-end">

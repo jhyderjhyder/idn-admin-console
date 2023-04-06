@@ -6,15 +6,11 @@ import { IdentityAttribute } from '../model/identity-attribute';
 import { AuthenticationService } from '../service/authentication-service.service';
 import { AngularCsv } from 'angular-csv-ext/dist/Angular-csv';
 
-
 @Component({
   selector: 'app-identity-info',
   templateUrl: './identity-info.component.html',
   styleUrls: ['./identity-info.component.css'],
 })
-
-
-
 export class IdentityInfoComponent implements OnInit {
   loading: boolean;
   allOwnersFetched: boolean;
@@ -29,33 +25,27 @@ export class IdentityInfoComponent implements OnInit {
   selectedFilterTypes: string;
   identityList: Array<IdentityAttribute>;
 
-
-
   constructor(
     private idnService: IDNService,
     private authenticationService: AuthenticationService,
     private messageService: MessageService
   ) {}
 
-  
   ngOnInit() {
-    this.selectedFilterTypes= "name";
+    this.selectedFilterTypes = 'name';
     this.filterTypes = Array<string>();
     this.initFilterTypes();
     this.reset(true);
-   
   }
 
-  initFilterTypes(){
-    this.filterTypes.push("name");
-    this.filterTypes.push("email");
-    this.filterTypes.push("phone");
-    this.filterTypes.push("lastName");
-    this.filterTypes.push("firstName");
+  initFilterTypes() {
+    this.filterTypes.push('name');
+    this.filterTypes.push('firstname');
+    this.filterTypes.push('lastname');
+    this.filterTypes.push('identificationNumber');
+    this.filterTypes.push('email');
+    this.filterTypes.push('phone');
   }
-
-
- 
 
   reset(clearMsg: boolean) {
     this.loading = false;
@@ -67,11 +57,11 @@ export class IdentityInfoComponent implements OnInit {
       this.messageService.clearAll();
       this.errorMessage = null;
     }
-    this.identityList=null;
+    this.identityList = null;
   }
 
   showDetailsFromList(item) {
-    let value = new Array<IdentityAttribute>;
+    const value = new Array<IdentityAttribute>();
     value.push(this.identityList[item]);
     this.getIdentityInfo(value);
   }
@@ -81,30 +71,38 @@ export class IdentityInfoComponent implements OnInit {
     this.validToSubmit = true;
     this.invalidMessage = [];
     this.loading = true;
+    this.identityList = null;
 
     if (this.accountName && this.accountName.trim() != '') {
       const query = new SimpleQueryCondition();
-      query.attribute = this.selectedFilterTypes;
+      if (this.selectedFilterTypes !== 'name') {
+        query.attribute = 'attributes.' + this.selectedFilterTypes;
+      } else {
+        query.attribute = this.selectedFilterTypes;
+      }
+
       query.value = this.accountName;
 
       this.idnService.searchAccounts(query).subscribe(searchResult => {
         //Lets not load the data if we have more than one result
-        if (searchResult && searchResult.length > 1){
-          this.messageService.setError(`Not Distinct.`);
+        if (searchResult && searchResult.length > 1) {
+          this.messageService.setError(
+            `Multiple records found. Click 'Show Details' to select the record.`
+          );
           this.identityList = searchResult;
         }
 
         if (searchResult && searchResult.length == 1) {
           this.getIdentityInfo(searchResult);
-        } 
+        }
 
-        if((searchResult && searchResult.length ==0)) {
+        if (searchResult && searchResult.length == 0) {
           this.validToSubmit = false;
-          this.messageService.setError(`Identity Account Name is Invalid.`);
+          this.messageService.setError(`Record not found.`);
         }
       });
     } else {
-      this.messageService.setError('Identity Account Name is needed.');
+      this.messageService.setError('Search value is needed.');
     }
 
     this.loading = false;
@@ -114,6 +112,7 @@ export class IdentityInfoComponent implements OnInit {
     this.identityInfo = new IdentityAttribute();
 
     this.identityInfo.id = identity[0].id;
+    this.identityInfo.name = identity[0].name;
     this.identityInfo.displayName = identity[0].displayName;
     this.identityInfo.email = identity[0].email;
     this.identityInfo.created = identity[0].created;
@@ -208,19 +207,22 @@ export class IdentityInfoComponent implements OnInit {
       }
     }
 
-    this.idnService.getUserByAlias(this.accountName).subscribe(userDetail => {
-      this.identityInfo.orgPermission = userDetail.role.join('; ');
-    });
+    this.idnService
+      .getUserByAlias(this.identityInfo.name)
+      .subscribe(userDetail => {
+        this.identityInfo.orgPermission = userDetail.role.join('; ');
+      });
   }
 
   getManagerInfo() {
     this.accountName = this.identityInfo.managerAccountName;
+    this.selectedFilterTypes = 'name';
     this.submit();
   }
 
   refreshIdentity() {
-    if (this.accountName && this.accountName.trim() != '') {
-      this.idnService.refreshSingleIdentity(this.accountName).subscribe(
+    if (this.identityInfo.name && this.identityInfo.name.trim() != '') {
+      this.idnService.refreshSingleIdentity(this.identityInfo.name).subscribe(
         () => {
           this.messageService.add(`Triggered Identity Refresh`);
         },
@@ -243,7 +245,7 @@ export class IdentityInfoComponent implements OnInit {
     };
 
     const currentUser = this.authenticationService.currentUserValue;
-    const fileName = `${currentUser.tenant}-${this.accountName}-identity-info`;
+    const fileName = `${currentUser.tenant}-${this.identityInfo.name}-identity-info`;
 
     // const arr = [];
     const arr = [
