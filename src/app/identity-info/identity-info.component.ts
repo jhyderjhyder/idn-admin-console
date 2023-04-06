@@ -24,6 +24,11 @@ export class IdentityInfoComponent implements OnInit {
   filterTypes: Array<string>;
   selectedFilterTypes: string;
   identityList: Array<IdentityAttribute>;
+  //Pages
+  xTotalCount: number;
+  offset:number;
+  limit:number;
+  hasMorePages:boolean;
 
   constructor(
     private idnService: IDNService,
@@ -32,6 +37,7 @@ export class IdentityInfoComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+
     this.selectedFilterTypes = 'name';
     this.filterTypes = Array<string>();
     this.initFilterTypes();
@@ -60,10 +66,25 @@ export class IdentityInfoComponent implements OnInit {
     this.identityList = null;
   }
 
+  /*
+  If we get more than one user from the API
+  when you click the show details button
+  it will show just that users details
+  */
   showDetailsFromList(item) {
     const value = new Array<IdentityAttribute>();
     value.push(this.identityList[item]);
+    this.identityList=null;
+    this.messageService.clearAll();
     this.getIdentityInfo(value);
+  }
+
+  getNextPage(){
+    this.offset++;
+    this.submit();
+    if (this.xTotalCount/this.limit>this.offset){
+      this.hasMorePages=false;
+    }
   }
 
   submit() {
@@ -83,7 +104,11 @@ export class IdentityInfoComponent implements OnInit {
 
       query.value = this.accountName;
 
-      this.idnService.searchAccounts(query).subscribe(searchResult => {
+      this.idnService.searchAccountsPaged(query,this.limit, this.offset).subscribe(response => {
+        let searchResult = response.body;
+        let headers = response.headers;
+        this.xTotalCount = headers.get("X-Total-Count");
+        console.table(searchResult);
         //Lets not load the data if we have more than one result
         if (searchResult && searchResult.length > 1) {
           this.messageService.setError(

@@ -42,6 +42,7 @@ export class LoginComponent implements OnInit {
 
     // get return url from route parameters or default to '/'
     this.returnUrl = this.route.snapshot.queryParams['returnUrl'] || '/';
+
     /*
     In docker you might want to auto login and restrict this app
     with Azure Auth and have all process run as standard user
