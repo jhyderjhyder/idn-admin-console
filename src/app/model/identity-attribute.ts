@@ -15,6 +15,7 @@ export class IdentityAttribute {
   identityProfile: string;
   accountCount: number;
   accountSourceNames: string;
+  accountArray: Array<{}>;
   appCount: number;
   appNames: string;
   accessCount: number;

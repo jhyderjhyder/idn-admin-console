@@ -2,8 +2,9 @@ import { Component, OnInit } from '@angular/core';
 import { IDNService } from '../service/idn.service';
 import { MessageService } from '../service/message.service';
 import { SimpleQueryCondition } from '../model/simple-query-condition';
-import { PageResults} from '../model/page-results';
-import { EntitlementSimple} from '../model/entitlement-simple';
+import { PageResults } from '../model/page-results';
+import { EntitlementSimple } from '../model/entitlement-simple';
+import { Account } from '../model/account';
 import { IdentityAttribute } from '../model/identity-attribute';
 import { AuthenticationService } from '../service/authentication-service.service';
 import { AngularCsv } from 'angular-csv-ext/dist/Angular-csv';
@@ -180,6 +181,28 @@ export class IdentityInfoComponent implements OnInit {
       this.identityInfo.accountSourceNames = identity[0].accounts
         .map(each => each.source.name)
         .join('; ');
+    }
+
+    //Account Details
+    if (identity[0].accountCount) {
+      this.identityInfo.accountCount = identity[0].accountCount;
+      this.identityInfo.accountSourceNames = identity[0].accounts
+
+      let accounts = identity[0].accounts;
+      this.identityInfo.accountArray = new Array();
+      for(let i=0; i<accounts.length; i++){
+        let data = {} as Account;
+          data.accountId = accounts[i].accountId;
+          data.accountName = accounts[i].name;
+          data.accountDisabled = accounts[i].disabled;
+          data.sourceName = accounts[i].source.name;
+          data.sourceId = accounts[i].source.id;
+
+        this.identityInfo.accountArray.push(data);
+      }
+
+
+        
     }
 
     if (identity[0].appCount) {
