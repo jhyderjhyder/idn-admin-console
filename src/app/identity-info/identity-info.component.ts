@@ -5,6 +5,7 @@ import { SimpleQueryCondition } from '../model/simple-query-condition';
 import { PageResults } from '../model/page-results';
 import { EntitlementSimple } from '../model/entitlement-simple';
 import { Account } from '../model/account';
+import { AccessRequestStatus } from '../model/access-request-status';
 import { IdentityAttribute } from '../model/identity-attribute';
 import { AuthenticationService } from '../service/authentication-service.service';
 import { AngularCsv } from 'angular-csv-ext/dist/Angular-csv';
@@ -28,8 +29,10 @@ export class IdentityInfoComponent implements OnInit {
   selectedFilterTypes: string;
   identityList: Array<IdentityAttribute>;
 
-    //Pages
-    page: PageResults;
+  //Pages
+  page: PageResults;
+
+  accessRequestStatuses: AccessRequestStatus[];
 
   constructor(
     private idnService: IDNService,
@@ -159,6 +162,7 @@ export class IdentityInfoComponent implements OnInit {
     this.identityInfo = new IdentityAttribute();
 
     this.identityInfo.id = identity[0].id;
+
     this.identityInfo.name = identity[0].name;
     this.identityInfo.displayName = identity[0].displayName;
     this.identityInfo.email = identity[0].email;
@@ -316,6 +320,39 @@ export class IdentityInfoComponent implements OnInit {
       .subscribe(userDetail => {
         this.identityInfo.orgPermission = userDetail.role.join('; ');
       });
+    
+      //Get recent access requests
+    this.getAllAccessRequestStatus();
+  }
+
+  getAllAccessRequestStatus() {
+
+    let filters = '&requested-for=' + this.identityInfo.id;
+    this.idnService.getAccessRequestStatus(filters).subscribe(results => {
+      this.accessRequestStatuses = [];
+      for (const each of results) {
+        const accessRequestStatus = new AccessRequestStatus();
+        accessRequestStatus.accessName = each.name;
+        accessRequestStatus.accessType = each.type;
+        accessRequestStatus.requestType = each.requestType;
+        accessRequestStatus.state = each.state;
+        accessRequestStatus.created = each.created;
+        accessRequestStatus.requester = each.requester.name;
+        accessRequestStatus.requestedFor = each.requestedFor.name;
+
+        if (each.requesterComment && each.requesterComment.comment) {
+          accessRequestStatus.requesterComment = each.requesterComment.comment;
+        }
+
+        if (each.sodViolationContext && each.sodViolationContext.state) {
+          accessRequestStatus.sodViolationState =
+            each.sodViolationContext.state;
+        }
+
+        this.accessRequestStatuses.push(accessRequestStatus);
+      }
+      this.loading = false;
+    });
   }
 
   getManagerInfo() {
