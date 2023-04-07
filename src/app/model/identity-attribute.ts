@@ -38,6 +38,10 @@ export class IdentityAttribute {
   ownRolesNames: string;
   ownGovernanceGroups: number;
   ownGovernanceGroupsNames: string;
+  ownsAccessProfilesArray: Array<{}>;
+  ownsSourcesArray: Array<{}>;
+  ownsRolesArray: Array<{}>;
+  ownsGovernanceGroupsArray: Array<{}>;
   tagsCount: number;
   tagNames: string;
   cloudLifecycleState: string;

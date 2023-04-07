@@ -314,7 +314,10 @@ export class IdentityInfoComponent implements OnInit {
           identity[0].owns.governanceGroups.map(each => each.name).join('; ');
       }
     }
-
+this.identityInfo.ownsAccessProfilesArray = identity[0].owns.accessProfiles;
+this.identityInfo.ownsRolesArray = identity[0].owns.roles;
+this.identityInfo.ownsSourcesArray = identity[0].owns.sources;
+this.identityInfo.ownsGovernanceGroupsArray = identity[0].owns.governanceGroups;
     this.idnService
       .getUserByAlias(this.identityInfo.name)
       .subscribe(userDetail => {
