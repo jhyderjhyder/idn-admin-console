@@ -228,6 +228,7 @@ export class IdentityInfoComponent implements OnInit {
         .filter(each => each.type === 'ROLE')
         .map(each => each.displayName)
         .join('; ');
+        this.identityInfo.roleArray = identity[0].access.filter(each => each.type === 'ROLE')
     }
 
     if (identity[0].accessProfileCount) {
@@ -236,7 +237,11 @@ export class IdentityInfoComponent implements OnInit {
         .filter(each => each.type === 'ACCESS_PROFILE')
         .map(each => each.displayName)
         .join('; ');
+
+        this.identityInfo.accessProfileArray = identity[0].access
+        .filter(each => each.type === 'ACCESS_PROFILE')
     }
+
 
     if (identity[0].entitlementCount) {
       this.identityInfo.entitlementCount = identity[0].entitlementCount;

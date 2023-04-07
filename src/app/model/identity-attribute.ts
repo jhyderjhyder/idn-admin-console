@@ -24,8 +24,10 @@ export class IdentityAttribute {
   entitlementArray: Array<{}>;
   roleCount: number;
   roleNames: string;
+  roleArray: Array<{}>;
   accessProfileCount: number;
   accessProfileNames: string;
+  accessProfileArray: Array<{}>;
   ownSources: number;
   ownSourcesNames: string;
   ownAccessProfiles: number;
@@ -44,4 +46,5 @@ export class IdentityAttribute {
   orgPermission: string[];
   cloudStatus: string;
   attributes: Array<{}>;
+
 }
