@@ -50,6 +50,7 @@ export class IdentityInfoComponent implements OnInit {
     this.filterTypes.push('identificationNumber');
     this.filterTypes.push('email');
     this.filterTypes.push('phone');
+    this.filterTypes.push('manager');
     /*
     This is optional but you can pass a set of attributes
     you want to search on like departement.  This will
@@ -109,10 +110,17 @@ export class IdentityInfoComponent implements OnInit {
 
     if (this.accountName && this.accountName.trim() != '') {
       const query = new SimpleQueryCondition();
-      if (this.selectedFilterTypes !== 'name') {
-        query.attribute = 'attributes.' + this.selectedFilterTypes;
-      } else {
+      let attributes = true;
+      if (this.selectedFilterTypes == 'name') {
         query.attribute = this.selectedFilterTypes;
+        attributes = false;
+      } 
+      if (this.selectedFilterTypes == 'manager') {
+        query.attribute = this.selectedFilterTypes + ".name";
+        attributes = false;
+      } 
+      if (attributes==true){
+        query.attribute = 'attributes.' + this.selectedFilterTypes;
       }
 
       query.value = this.accountName;
