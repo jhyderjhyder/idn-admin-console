@@ -3,6 +3,7 @@ import { IDNService } from '../service/idn.service';
 import { MessageService } from '../service/message.service';
 import { SimpleQueryCondition } from '../model/simple-query-condition';
 import { PageResults} from '../model/page-results';
+import { EntitlementSimple} from '../model/entitlement-simple';
 import { IdentityAttribute } from '../model/identity-attribute';
 import { AuthenticationService } from '../service/authentication-service.service';
 import { AngularCsv } from 'angular-csv-ext/dist/Angular-csv';
@@ -212,6 +213,28 @@ export class IdentityInfoComponent implements OnInit {
         .filter(each => each.type === 'ENTITLEMENT')
         .map(each => each.displayName)
         .join('; ');
+    }
+
+    /*
+    Section for the entitlement details page.  Not sure
+    if this is best or if I should do it in the html but kind of
+    nice to have simple object
+    */
+    if (identity[0].entitlementCount) {
+      this.identityInfo.entitlementCount = identity[0].entitlementCount;
+      let ents = identity[0].access.filter(each => each.type === 'ENTITLEMENT');
+      this.identityInfo.entitlementArray = new Array();
+      for(let i=0; i<ents.length; i++){
+        let data = {} as EntitlementSimple;
+          data.displayName = ents[i].displayName;
+          data.description = ents[i].description;
+          data.attribute = ents[i].attribute;
+          data.sourceName = ents[i].source.name;
+
+        this.identityInfo.entitlementArray.push(data);
+      }
+
+        
     }
 
     if (identity[0].tagsCount) {

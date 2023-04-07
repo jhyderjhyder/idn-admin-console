@@ -20,6 +20,7 @@ export class IdentityAttribute {
   accessCount: number;
   entitlementCount: number;
   entitlementNames: string;
+  entitlementArray: Array<{}>;
   roleCount: number;
   roleNames: string;
   accessProfileCount: number;
