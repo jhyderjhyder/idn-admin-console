@@ -416,7 +416,7 @@ export class IDNService {
 
     const payload = {
       query: {
-        query: `${query.attribute}:\"${query.value}\"`,
+        query: `${query.attribute}:${query.value}`,
       },
     };
 
