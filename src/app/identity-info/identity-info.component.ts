@@ -186,7 +186,6 @@ export class IdentityInfoComponent implements OnInit {
     //Account Details
     if (identity[0].accountCount) {
       this.identityInfo.accountCount = identity[0].accountCount;
-      this.identityInfo.accountSourceNames = identity[0].accounts
 
       let accounts = identity[0].accounts;
       this.identityInfo.accountArray = new Array();
@@ -200,10 +199,19 @@ export class IdentityInfoComponent implements OnInit {
 
         this.identityInfo.accountArray.push(data);
       }
-
-
         
     }
+    //All Identity Attributes into simple name value array
+    if (identity[0].attributes){
+      console.table(identity[0].attributes)
+      this.identityInfo.attributes = new Array();
+      const atts = Object.entries(identity[0].attributes);
+      for(let i=0; i<atts.length; i++){
+        const[name, value] = atts[i];
+        this.identityInfo.attributes.push({name: name , value: value});
+      }
+    }
+    
 
     if (identity[0].appCount) {
       this.identityInfo.appCount = identity[0].appCount;

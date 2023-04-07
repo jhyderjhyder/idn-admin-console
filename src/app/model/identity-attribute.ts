@@ -43,4 +43,5 @@ export class IdentityAttribute {
   managerAccountName: string;
   orgPermission: string[];
   cloudStatus: string;
+  attributes: Array<{}>;
 }
