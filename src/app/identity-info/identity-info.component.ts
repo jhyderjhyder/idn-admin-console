@@ -62,10 +62,10 @@ export class IdentityInfoComponent implements OnInit {
     be a simple method that you can test any search
     options you need.  
     */
-    let attributues = process.env.NG_APP_IDENTITY_SEARCH;
+    const attributues = process.env.NG_APP_IDENTITY_SEARCH;
     if (attributues) {
       const split = attributues.split(',');
-      var i = 0;
+      let i = 0;
       while (split.length > i) {
         this.filterTypes.push(split[i]);
         i++;
@@ -131,8 +131,8 @@ export class IdentityInfoComponent implements OnInit {
       this.idnService
         .searchAccountsPaged(query, this.page)
         .subscribe(response => {
-          let searchResult = response.body;
-          let headers = response.headers;
+          const searchResult = response.body;
+          const headers = response.headers;
           this.page.xTotalCount = headers.get('X-Total-Count');
           //Lets not load the data if we have more than one result
           if (searchResult && searchResult.length > 1) {
@@ -191,10 +191,10 @@ export class IdentityInfoComponent implements OnInit {
     if (identity[0].accountCount) {
       this.identityInfo.accountCount = identity[0].accountCount;
 
-      let accounts = identity[0].accounts;
+      const accounts = identity[0].accounts;
       this.identityInfo.accountArray = new Array();
       for (let i = 0; i < accounts.length; i++) {
-        let data = {} as Account;
+        const data = {} as Account;
         data.accountId = accounts[i].accountId;
         data.accountName = accounts[i].name;
         data.accountDisabled = accounts[i].disabled;
@@ -262,10 +262,12 @@ export class IdentityInfoComponent implements OnInit {
     */
     if (identity[0].entitlementCount) {
       this.identityInfo.entitlementCount = identity[0].entitlementCount;
-      let ents = identity[0].access.filter(each => each.type === 'ENTITLEMENT');
+      const ents = identity[0].access.filter(
+        each => each.type === 'ENTITLEMENT'
+      );
       this.identityInfo.entitlementArray = new Array();
       for (let i = 0; i < ents.length; i++) {
-        let data = {} as EntitlementSimple;
+        const data = {} as EntitlementSimple;
         data.displayName = ents[i].displayName;
         data.description = ents[i].description;
         data.attribute = ents[i].attribute;
@@ -328,7 +330,7 @@ export class IdentityInfoComponent implements OnInit {
   }
 
   getAllAccessRequestStatus() {
-    let filters = '&requested-for=' + this.identityInfo.id;
+    const filters = '&requested-for=' + this.identityInfo.id;
     this.idnService.getAccessRequestStatus(filters).subscribe(results => {
       this.accessRequestStatuses = [];
       for (const each of results) {
