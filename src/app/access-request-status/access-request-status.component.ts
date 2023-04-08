@@ -4,6 +4,7 @@ import { IDNService } from '../service/idn.service';
 import { AuthenticationService } from '../service/authentication-service.service';
 import { MessageService } from '../service/message.service';
 import { AccessRequestStatus } from '../model/access-request-status';
+import { SimpleQueryCondition } from '../model/simple-query-condition';
 
 @Component({
   selector: 'app-access-request-status',
@@ -14,10 +15,13 @@ export class AccessRequestStatusComponent implements OnInit {
   accessRequestStatuses: AccessRequestStatus[];
   searchText: string;
   loading: boolean;
-  errorMessage: string;
   totalPending: number;
   totalApproved: number;
   totalRejected: number;
+  //Input plan text filter
+  requestedFor: string;
+  //Formated filter example &requested-for=2c9180857f2d882f017f38a5a877620b
+  filters: string;
 
   constructor(
     private idnService: IDNService,
@@ -30,11 +34,33 @@ export class AccessRequestStatusComponent implements OnInit {
     this.getAllAccessRequestStatus();
   }
 
+  getRequestedForUser() {
+    if (this.requestedFor && this.requestedFor.trim() != '') {
+      const query = new SimpleQueryCondition();
+      query.attribute = 'name';
+      query.value = this.requestedFor;
+
+      this.idnService.searchAccounts(query).subscribe(searchResult => {
+        if (searchResult && searchResult.length == 1) {
+          this.filters = '&requested-for=' + searchResult[0].id;
+          this.messageService.clearAll();
+          this.getAllAccessRequestStatus();
+        } else {
+          this.messageService.setError(`Identity Account Name is Invalid`);
+        }
+      });
+    } else {
+      this.messageService.setError('Identity value cannot be null');
+      return;
+    }
+  }
+
   reset() {
     this.accessRequestStatuses = null;
     this.searchText = null;
-    this.errorMessage = null;
     this.loading = false;
+    this.requestedFor = null;
+    this.filters = null;
     this.messageService.clearAll();
   }
 
@@ -51,7 +77,7 @@ export class AccessRequestStatusComponent implements OnInit {
       this.totalRejected = results.rejected;
     });
 
-    this.idnService.getAccessRequestStatus().subscribe(results => {
+    this.idnService.getAccessRequestStatus(this.filters).subscribe(results => {
       this.accessRequestStatuses = [];
       for (const each of results) {
         const accessRequestStatus = new AccessRequestStatus();
