@@ -288,12 +288,15 @@ export class IdentityInfoComponent implements OnInit {
         this.identityInfo.ownSourcesNames = identity[0].owns.sources
           .map(each => each.name)
           .join('; ');
+        this.identityInfo.ownsSourcesArray = identity[0].owns.sources;
       }
       if (identity[0].owns.accessProfiles) {
         this.identityInfo.ownAccessProfiles =
           identity[0].owns.accessProfiles.length;
         this.identityInfo.ownAccessProfilesNames =
           identity[0].owns.accessProfiles.map(each => each.name).join('; ');
+        this.identityInfo.ownsAccessProfilesArray =
+          identity[0].owns.accessProfiles;
       }
       if (identity[0].owns.apps) {
         this.identityInfo.ownApps = identity[0].owns.apps.length;
@@ -306,19 +309,17 @@ export class IdentityInfoComponent implements OnInit {
         this.identityInfo.ownRolesNames = identity[0].owns.roles
           .map(each => each.name)
           .join('; ');
+        this.identityInfo.ownsRolesArray = identity[0].owns.roles;
       }
       if (identity[0].owns.governanceGroups) {
         this.identityInfo.ownGovernanceGroups =
           identity[0].owns.governanceGroups.length;
         this.identityInfo.ownGovernanceGroupsNames =
           identity[0].owns.governanceGroups.map(each => each.name).join('; ');
+        this.identityInfo.ownsGovernanceGroupsArray =
+          identity[0].owns.governanceGroups;
       }
     }
-    this.identityInfo.ownsAccessProfilesArray = identity[0].owns.accessProfiles;
-    this.identityInfo.ownsRolesArray = identity[0].owns.roles;
-    this.identityInfo.ownsSourcesArray = identity[0].owns.sources;
-    this.identityInfo.ownsGovernanceGroupsArray =
-      identity[0].owns.governanceGroups;
     this.idnService
       .getUserByAlias(this.identityInfo.name)
       .subscribe(userDetail => {
