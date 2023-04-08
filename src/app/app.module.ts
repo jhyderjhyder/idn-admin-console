@@ -27,6 +27,7 @@ import { IdentityAttributeIndexComponent } from './identity-attribute-index/iden
 import { IdentityInfoComponent } from './identity-info/identity-info.component';
 import { IdentityTransformManagementComponent } from './identity-transform-management/identity-transform-management.component';
 import { IdentityProfileManagementComponent } from './identity-profile-management/identity-profile-management.component';
+import { IdentityAdminManagementComponent } from './identity-admin-management/identity-admin-management.component';
 import { ImportRuleComponent } from './rule-connector-management/rule-connector-management.component';
 import { IdentityLCSComponent } from './identity-lcs-management/identity-lcs-management.component';
 import { MultipleAccountsComponent } from './multiple-accounts-report/multiple-accounts-report.component';
@@ -71,6 +72,7 @@ import { AppRoutingModule } from './app-routing.module';
     RoleManagementComponent,
     AccessProfileManagementComponent,
     IdentityProfileManagementComponent,
+    IdentityAdminManagementComponent,
     IdentityAttributeIndexComponent,
     IdentityTransformManagementComponent,
     IdentityLCSComponent,

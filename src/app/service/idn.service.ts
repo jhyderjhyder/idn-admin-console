@@ -689,6 +689,13 @@ export class IDNService {
     return this.http.get(url, this.httpOptions);
   }
 
+  getUserPAT(id: string): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/personal-access-tokens?owner-id=${id}`;
+
+    return this.http.get(url, this.httpOptions);
+  }
+
   deletePAT(pat: PAT): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
     const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/personal-access-tokens/${pat.id}`;
@@ -1075,6 +1082,47 @@ export class IDNService {
     };
 
     return this.http.post(url, payload, this.httpOptions);
+  }
+
+  getIDNAdmins(): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/search`;
+
+    const payload = {
+      queryType: 'SAILPOINT',
+      indices: ['identities'],
+      query: {
+        query: '@access(source.name.exact:IdentityNow)',
+      },
+      sort: ['displayName'],
+      queryResultFilter: {
+        includes: [
+          'id',
+          'name',
+          'displayName',
+          'protected',
+          'status',
+          'created',
+          'modified',
+        ],
+      },
+    };
+
+    return this.http.post(url, payload, { observe: 'response' });
+  }
+
+  getV2IdentityID(alias: string): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v2/identities/${alias}`;
+
+    return this.http.get(url, this.httpOptions);
+  }
+
+  revokeAdminPermission(cloudId: string, permission: string): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/cc/api/user/updatePermissions?ids=${cloudId}&isAdmin=0&adminType=${permission}`;
+
+    return this.http.post(url, null);
   }
 
   private logError(error: string) {

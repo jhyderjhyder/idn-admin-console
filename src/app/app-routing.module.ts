@@ -26,6 +26,7 @@ import { IdentityAttributeIndexComponent } from './identity-attribute-index/iden
 import { IdentityTransformManagementComponent } from './identity-transform-management/identity-transform-management.component';
 import { IdentityLCSComponent } from './identity-lcs-management/identity-lcs-management.component';
 import { IdentityInfoComponent } from './identity-info/identity-info.component';
+import { IdentityAdminManagementComponent } from './identity-admin-management/identity-admin-management.component';
 import { ReleaseHistoryComponent } from './release-history/release-history.component';
 import { CreditsComponent } from './credits/credits.component';
 import { OrgTimeComponent } from './misc-org-time-update/misc-org-time-update.component';
@@ -149,6 +150,11 @@ const routes: Routes = [
   {
     path: 'identity-info',
     component: IdentityInfoComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'identity-admin-management',
+    component: IdentityAdminManagementComponent,
     canActivate: [AuthGuard],
   },
   {
