@@ -62,20 +62,18 @@ export class IdentityInfoComponent implements OnInit {
     be a simple method that you can test any search
     options you need.  
     */
-    let attributues = process.env.NG_APP_IDENTITY_SEARCH
-    if (attributues){
-      const split = attributues.split(",");
+    let attributues = process.env.NG_APP_IDENTITY_SEARCH;
+    if (attributues) {
+      const split = attributues.split(',');
       var i = 0;
-      while (split.length > i){
+      while (split.length > i) {
         this.filterTypes.push(split[i]);
         i++;
       }
-      
     }
-
   }
 
-  getNextPage(){
+  getNextPage() {
     this.page.nextPage;
     this.submit();
   }
@@ -119,38 +117,40 @@ export class IdentityInfoComponent implements OnInit {
       if (this.selectedFilterTypes == 'name') {
         query.attribute = this.selectedFilterTypes;
         attributes = false;
-      } 
+      }
       if (this.selectedFilterTypes == 'manager') {
-        query.attribute = this.selectedFilterTypes + ".name";
+        query.attribute = this.selectedFilterTypes + '.name';
         attributes = false;
-      } 
-      if (attributes==true){
+      }
+      if (attributes == true) {
         query.attribute = 'attributes.' + this.selectedFilterTypes;
       }
 
       query.value = this.accountName;
 
-      this.idnService.searchAccountsPaged(query,this.page).subscribe(response => {
-        let searchResult = response.body;
-        let headers = response.headers;
-        this.page.xTotalCount = headers.get("X-Total-Count");
-        //Lets not load the data if we have more than one result
-        if (searchResult && searchResult.length > 1) {
-          this.messageService.setError(
-            `Multiple records found. Click 'Show Details' to select the record.`
-          );
-          this.identityList = searchResult;
-        }
+      this.idnService
+        .searchAccountsPaged(query, this.page)
+        .subscribe(response => {
+          let searchResult = response.body;
+          let headers = response.headers;
+          this.page.xTotalCount = headers.get('X-Total-Count');
+          //Lets not load the data if we have more than one result
+          if (searchResult && searchResult.length > 1) {
+            this.messageService.setError(
+              `Multiple records found. Click 'Show Details' to select the record.`
+            );
+            this.identityList = searchResult;
+          }
 
-        if (searchResult && searchResult.length == 1) {
-          this.getIdentityInfo(searchResult);
-        }
+          if (searchResult && searchResult.length == 1) {
+            this.getIdentityInfo(searchResult);
+          }
 
-        if (searchResult && searchResult.length == 0) {
-          this.validToSubmit = false;
-          this.messageService.setError(`Record not found.`);
-        }
-      });
+          if (searchResult && searchResult.length == 0) {
+            this.validToSubmit = false;
+            this.messageService.setError(`Record not found.`);
+          }
+        });
     } else {
       this.messageService.setError('Search value is needed.');
     }
@@ -193,29 +193,27 @@ export class IdentityInfoComponent implements OnInit {
 
       let accounts = identity[0].accounts;
       this.identityInfo.accountArray = new Array();
-      for(let i=0; i<accounts.length; i++){
+      for (let i = 0; i < accounts.length; i++) {
         let data = {} as Account;
-          data.accountId = accounts[i].accountId;
-          data.accountName = accounts[i].name;
-          data.accountDisabled = accounts[i].disabled;
-          data.sourceName = accounts[i].source.name;
-          data.sourceId = accounts[i].source.id;
+        data.accountId = accounts[i].accountId;
+        data.accountName = accounts[i].name;
+        data.accountDisabled = accounts[i].disabled;
+        data.sourceName = accounts[i].source.name;
+        data.sourceId = accounts[i].source.id;
 
         this.identityInfo.accountArray.push(data);
       }
-        
     }
     //All Identity Attributes into simple name value array
-    if (identity[0].attributes){
-      console.table(identity[0].attributes)
+    if (identity[0].attributes) {
+      console.table(identity[0].attributes);
       this.identityInfo.attributes = new Array();
       const atts = Object.entries(identity[0].attributes);
-      for(let i=0; i<atts.length; i++){
-        const[name, value] = atts[i];
-        this.identityInfo.attributes.push({name: name , value: value});
+      for (let i = 0; i < atts.length; i++) {
+        const [name, value] = atts[i];
+        this.identityInfo.attributes.push({ name: name, value: value });
       }
     }
-    
 
     if (identity[0].appCount) {
       this.identityInfo.appCount = identity[0].appCount;
@@ -232,7 +230,9 @@ export class IdentityInfoComponent implements OnInit {
         .filter(each => each.type === 'ROLE')
         .map(each => each.displayName)
         .join('; ');
-        this.identityInfo.roleArray = identity[0].access.filter(each => each.type === 'ROLE')
+      this.identityInfo.roleArray = identity[0].access.filter(
+        each => each.type === 'ROLE'
+      );
     }
 
     if (identity[0].accessProfileCount) {
@@ -242,10 +242,10 @@ export class IdentityInfoComponent implements OnInit {
         .map(each => each.displayName)
         .join('; ');
 
-        this.identityInfo.accessProfileArray = identity[0].access
-        .filter(each => each.type === 'ACCESS_PROFILE')
+      this.identityInfo.accessProfileArray = identity[0].access.filter(
+        each => each.type === 'ACCESS_PROFILE'
+      );
     }
-
 
     if (identity[0].entitlementCount) {
       this.identityInfo.entitlementCount = identity[0].entitlementCount;
@@ -264,17 +264,15 @@ export class IdentityInfoComponent implements OnInit {
       this.identityInfo.entitlementCount = identity[0].entitlementCount;
       let ents = identity[0].access.filter(each => each.type === 'ENTITLEMENT');
       this.identityInfo.entitlementArray = new Array();
-      for(let i=0; i<ents.length; i++){
+      for (let i = 0; i < ents.length; i++) {
         let data = {} as EntitlementSimple;
-          data.displayName = ents[i].displayName;
-          data.description = ents[i].description;
-          data.attribute = ents[i].attribute;
-          data.sourceName = ents[i].source.name;
+        data.displayName = ents[i].displayName;
+        data.description = ents[i].description;
+        data.attribute = ents[i].attribute;
+        data.sourceName = ents[i].source.name;
 
         this.identityInfo.entitlementArray.push(data);
       }
-
-        
     }
 
     if (identity[0].tagsCount) {
@@ -314,22 +312,22 @@ export class IdentityInfoComponent implements OnInit {
           identity[0].owns.governanceGroups.map(each => each.name).join('; ');
       }
     }
-this.identityInfo.ownsAccessProfilesArray = identity[0].owns.accessProfiles;
-this.identityInfo.ownsRolesArray = identity[0].owns.roles;
-this.identityInfo.ownsSourcesArray = identity[0].owns.sources;
-this.identityInfo.ownsGovernanceGroupsArray = identity[0].owns.governanceGroups;
+    this.identityInfo.ownsAccessProfilesArray = identity[0].owns.accessProfiles;
+    this.identityInfo.ownsRolesArray = identity[0].owns.roles;
+    this.identityInfo.ownsSourcesArray = identity[0].owns.sources;
+    this.identityInfo.ownsGovernanceGroupsArray =
+      identity[0].owns.governanceGroups;
     this.idnService
       .getUserByAlias(this.identityInfo.name)
       .subscribe(userDetail => {
         this.identityInfo.orgPermission = userDetail.role.join('; ');
       });
-    
-      //Get recent access requests
+
+    //Get recent access requests
     this.getAllAccessRequestStatus();
   }
 
   getAllAccessRequestStatus() {
-
     let filters = '&requested-for=' + this.identityInfo.id;
     this.idnService.getAccessRequestStatus(filters).subscribe(results => {
       this.accessRequestStatuses = [];
