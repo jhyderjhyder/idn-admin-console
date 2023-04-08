@@ -11,6 +11,8 @@ export class IdentityAttribute {
   email: string;
   id: string;
   created: string;
+  modified: string;
+  protected: boolean;
   isManager: string;
   identityProfile: string;
   accountCount: number;
@@ -50,5 +52,6 @@ export class IdentityAttribute {
   orgPermission: string[];
   cloudStatus: string;
   attributes: Array<{}>;
-
+  hasPATToken: boolean;
+  cloudId: string;
 }

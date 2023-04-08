@@ -70,7 +70,7 @@ We are looking for (list is not exhaustive)
 
 ## Features
 
-* Identity Profiles
+* Identity
     * Identity Info (Get Identity Details / Get Manager Details / Refresh Single Identity / Download Report)
     * Manage Identity Profile (Move Priority / Refresh Individual Profile / Export All)
     * Manage Identity Attribute Index (Index / Unindex Attributes)
@@ -103,6 +103,7 @@ We are looking for (list is not exhaustive)
 * Misc
     * Check and Set Org Time
     * Manage PAT (See Permission / Last Usage / Delete Token)
+    * Manage Admins (List all admins / revoke all permissions / see if they have PAT token)
     * Org Statistics (Pretty cool to see)
 
 ## Screenshots
