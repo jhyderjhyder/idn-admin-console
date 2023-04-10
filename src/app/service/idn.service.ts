@@ -1033,8 +1033,9 @@ export class IDNService {
       filteredURL = filteredURL + filters;
     }
 
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/work-items?sorters=-created` +
-    filteredURL;
+    const url =
+      `https://${currentUser.tenant}.api.${currentUser.domain}/v3/work-items?sorters=-created` +
+      filteredURL;
 
     return this.http.get(url, this.httpOptions);
   }
