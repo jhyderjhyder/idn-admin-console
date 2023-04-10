@@ -1026,6 +1026,19 @@ export class IDNService {
     return this.http.post(url, payload);
   }
 
+  getWorkItemsStatus(filters): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    let filteredURL = '';
+    if (filters != null) {
+      filteredURL = filteredURL + filters;
+    }
+
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/work-items?sorters=-created` +
+    filteredURL;
+
+    return this.http.get(url, this.httpOptions);
+  }
+
   getWorkItemsPending(): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
     const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/work-items?sorters=-created`;

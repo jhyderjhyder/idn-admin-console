@@ -9,6 +9,7 @@ import { AccessRequestStatus } from '../model/access-request-status';
 import { IdentityAttribute } from '../model/identity-attribute';
 import { AuthenticationService } from '../service/authentication-service.service';
 import { AngularCsv } from 'angular-csv-ext/dist/Angular-csv';
+import { WorkItem } from '../model/work-item';
 
 @Component({
   selector: 'app-identity-info',
@@ -33,6 +34,7 @@ export class IdentityInfoComponent implements OnInit {
   page: PageResults;
 
   accessRequestStatuses: AccessRequestStatus[];
+  workItemsStatuses: WorkItem[];
 
   constructor(
     private idnService: IDNService,
@@ -328,6 +330,7 @@ export class IdentityInfoComponent implements OnInit {
 
     //Get recent access requests
     this.getAllAccessRequestStatus();
+    this.getAllWorkItemsStatus();
   }
 
   getAllAccessRequestStatus() {
@@ -354,6 +357,68 @@ export class IdentityInfoComponent implements OnInit {
         }
 
         this.accessRequestStatuses.push(accessRequestStatus);
+      }
+      this.loading = false;
+    });
+  }
+
+  getAllWorkItemsStatus() {
+    const filters = '&ownerId=' + this.identityInfo.id;
+    this.idnService.getWorkItemsStatus(filters).subscribe(results => {
+      this.workItemsStatuses = [];
+      for (const each of results) {
+        const workItemsStatus = new WorkItem();
+        workItemsStatus.id = each.id;
+        workItemsStatus.created = each.created;
+        workItemsStatus.description = each.description;
+        workItemsStatus.state = each.state;
+        workItemsStatus.type = each.type;
+
+        if (each.remediationItems && each.remediationItems.length) {
+          workItemsStatus.remediationItems = each.remediationItems.length;
+        } else {
+          workItemsStatus.remediationItems = '0';
+        }
+
+        if (each.approvalItems && each.approvalItems.length) {
+          workItemsStatus.approvalItems = each.approvalItems.length;
+        } else {
+          workItemsStatus.approvalItems = '0';
+        }
+
+        const query = new SimpleQueryCondition();
+        query.attribute = 'name';
+
+        if (each.ownerName) {
+          query.value = each.ownerName;
+
+          this.idnService.searchAccounts(query).subscribe(searchResult => {
+            if (searchResult.length > 0) {
+              workItemsStatus.ownerDisplayName = searchResult[0].displayName;
+            } else {
+              workItemsStatus.ownerDisplayName = 'NULL';
+            }
+          });
+        } else {
+          workItemsStatus.ownerDisplayName = 'NULL';
+        }
+
+        if (each.requesterDisplayName) {
+          query.value = each.requesterDisplayName;
+
+          this.idnService.searchAccounts(query).subscribe(searchResult => {
+            if (searchResult.length > 0) {
+              workItemsStatus.requesterDisplayName =
+                searchResult[0].displayName;
+            } else {
+              workItemsStatus.requesterDisplayName = 'NULL';
+            }
+          });
+        } else {
+          workItemsStatus.requesterDisplayName = 'NULL';
+        }
+
+        this.workItemsStatuses.push(workItemsStatus);
       }
       this.loading = false;
     });
