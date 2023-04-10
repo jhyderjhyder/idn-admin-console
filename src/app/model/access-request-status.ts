@@ -10,4 +10,6 @@ export class AccessRequestStatus {
   created: string;
   requestType: string;
   sodViolationState: string;
+  approvalDetails: Array<{}>;
+  accessRequestPhases: Array<{}>;
 }

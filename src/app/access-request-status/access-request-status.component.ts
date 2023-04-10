@@ -24,6 +24,7 @@ export class AccessRequestStatusComponent implements OnInit {
   //Formated filter example &requested-for=2c9180857f2d882f017f38a5a877620b
   filters: string;
   page: PageResults;
+  lineNumber;
 
   constructor(
     private idnService: IDNService,
@@ -34,6 +35,9 @@ export class AccessRequestStatusComponent implements OnInit {
   ngOnInit() {
     this.reset();
     this.getAllAccessRequestStatus();
+  }
+  pickData(input){
+    this.lineNumber=input;
   }
 
     /**
@@ -79,7 +83,7 @@ getOnePage(input){
 
   reset() {
     this.page = new PageResults();
-    this.page.limit=50;
+    this.page.limit=3;
     this.accessRequestStatuses = null;
     this.searchText = null;
     this.loading = false;
@@ -117,6 +121,8 @@ getOnePage(input){
         accessRequestStatus.created = each.created;
         accessRequestStatus.requester = each.requester.name;
         accessRequestStatus.requestedFor = each.requestedFor.name;
+        accessRequestStatus.approvalDetails = each.approvalDetails;
+        accessRequestStatus.accessRequestPhases = each.accessRequestPhases;
 
         if (each.requesterComment && each.requesterComment.comment) {
           accessRequestStatus.requesterComment = each.requesterComment.comment;
