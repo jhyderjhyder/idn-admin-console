@@ -1003,6 +1003,27 @@ export class IDNService {
     return this.http.get(url, this.httpOptions);
   }
 
+  /**
+   * Not sure where the unpaged version might be called so to make
+   * sure I dont break anything cloned the method
+   * @param filters 
+   * @param page 
+   * @returns 
+   */
+  getAccessRequestStatusPaged(filters, page: PageResults): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    let filteredURL = '';
+    if (filters != null) {
+      filteredURL = filteredURL + '&requested-for=' + filters;
+    }
+
+    const url =
+      `https://${currentUser.tenant}.api.${currentUser.domain}/v3/access-request-status?sorters=-created` +
+      filteredURL + '&limit=' + page.limit + "&offset=" + page.offset + "&count=true"; 
+
+    return this.http.get(url, { observe: 'response' });
+  }
+
   getAccessRequestApprovalsPending(): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
     const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/access-request-approvals/pending?sorters=-created`;

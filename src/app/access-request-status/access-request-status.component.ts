@@ -64,7 +64,7 @@ getOnePage(input){
 
       this.idnService.searchAccounts(query).subscribe(searchResult => {
         if (searchResult && searchResult.length == 1) {
-          this.filters = '&requested-for=' + searchResult[0].id;
+          this.filters = '' + searchResult[0].id;
           this.messageService.clearAll();
           this.getAllAccessRequestStatus();
         } else {
@@ -78,6 +78,8 @@ getOnePage(input){
   }
 
   reset() {
+    this.page = new PageResults();
+    this.page.limit=50;
     this.accessRequestStatuses = null;
     this.searchText = null;
     this.loading = false;
@@ -99,7 +101,12 @@ getOnePage(input){
       this.totalRejected = results.rejected;
     });
 
-    this.idnService.getAccessRequestStatus(this.filters).subscribe(results => {
+    this.idnService.getAccessRequestStatusPaged(this.filters, this.page).subscribe(response => {
+
+      const results = response.body;
+      const headers = response.headers;
+      this.page.xTotalCount = headers.get('X-Total-Count');
+
       this.accessRequestStatuses = [];
       for (const each of results) {
         const accessRequestStatus = new AccessRequestStatus();

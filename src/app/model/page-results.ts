@@ -3,6 +3,7 @@ export class PageResults {
   private _currentPage: number = 0;
   public offset: number = 0;
   public limit: number = 5;
+  public max = false;
 
   //private hasMorePages:boolean;
 
@@ -22,6 +23,11 @@ export class PageResults {
     while (this.totalPages>=i){
       array.push(i);
       i++;
+      //TODO only show 10 pages
+      if (i==10){
+        i = this.totalPages;
+        this.max=true;
+      }
     }
    
     return array;

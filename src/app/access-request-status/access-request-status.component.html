@@ -20,6 +20,32 @@
     <span class="fw-bold">Total Rejected: {{ totalRejected }} </span>
   </div>
 </div>
+
+
+<div class="row" *ngIf="accessRequestStatuses && !loading">
+  <div class="col-sm-2 text-start">
+    Total Records Found:
+    {{page.xTotalCount}}
+  </div>
+  <div class="col-sm-2 text-start">
+    Page:
+    {{page.currentPage}} of {{page.totalPages}}
+  </div>
+  <nav aria-label="Page navigation">
+    <ul class="pagination">
+      <li class="page-item"><a class="page-link" href="javascript:void(0);" (click)="getPrevPage()">Previous</a></li>
+        <li class="page-item" *ngFor="let item of page.paggination(); let i =index">
+          <a class="page-link" href="javascript:void(0);" (click)="getOnePage(i)">{{i+1}}</a>
+      </li>
+      <li *ngIf="page.max==true" class="page-item">...</li>
+      <li class="page-item"><a class="page-link" href="javascript:void(0);" (click)="getNextPage()">Next</a></li>
+
+    </ul>
+  </nav>
+  
+  </div>
+<!--Page Information-->
+
 <!--Row of information-->
 <div *ngIf="accessRequestStatuses && !loading" class="row" style="background-color: #EBEBEB">
   <div class="col-sm-8 text-start">
