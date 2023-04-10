@@ -83,7 +83,7 @@ getOnePage(input){
 
   reset() {
     this.page = new PageResults();
-    this.page.limit=3;
+    this.page.limit=25;
     this.accessRequestStatuses = null;
     this.searchText = null;
     this.loading = false;
