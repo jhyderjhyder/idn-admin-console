@@ -75,9 +75,25 @@ export class IdentityInfoComponent implements OnInit {
     }
   }
 
+  /**
+   * Copy these three functions to any
+   * page you want to have paggination
+   */
+//Get the next page
   getNextPage() {
     this.page.nextPage;
     this.submit();
+  }
+//Get the previous page
+  getPrevPage() {
+    this.page.prevPage;
+    this.submit();
+  }
+  //Pick the page Number you want
+  getOnePage(input){
+    this.page.getPageByNumber(input);
+    this.submit();
+
   }
 
   reset(clearMsg: boolean) {
@@ -99,6 +115,7 @@ export class IdentityInfoComponent implements OnInit {
   it will show just that users details
   */
   showDetailsFromList(item) {
+    this.page = new PageResults();
     const value = new Array<IdentityAttribute>();
     value.push(this.identityList[item]);
     this.identityList = null;
@@ -137,14 +154,14 @@ export class IdentityInfoComponent implements OnInit {
           const headers = response.headers;
           this.page.xTotalCount = headers.get('X-Total-Count');
           //Lets not load the data if we have more than one result
-          if (searchResult && searchResult.length > 1) {
+          if (searchResult && searchResult.length > 1 || this.page.offset!=0) {
             this.messageService.setError(
               `Multiple records found. Click 'Show Details' to select the record.`
             );
             this.identityList = searchResult;
           }
 
-          if (searchResult && searchResult.length == 1) {
+          if (searchResult && searchResult.length == 1 && this.page.offset==0) {
             this.getIdentityInfo(searchResult);
           }
 
@@ -208,7 +225,6 @@ export class IdentityInfoComponent implements OnInit {
     }
     //All Identity Attributes into simple name value array
     if (identity[0].attributes) {
-      console.table(identity[0].attributes);
       this.identityInfo.attributes = new Array();
       const atts = Object.entries(identity[0].attributes);
       for (let i = 0; i < atts.length; i++) {

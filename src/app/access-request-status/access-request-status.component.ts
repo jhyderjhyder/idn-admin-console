@@ -5,6 +5,7 @@ import { AuthenticationService } from '../service/authentication-service.service
 import { MessageService } from '../service/message.service';
 import { AccessRequestStatus } from '../model/access-request-status';
 import { SimpleQueryCondition } from '../model/simple-query-condition';
+import { PageResults } from '../model/page-results';
 
 @Component({
   selector: 'app-access-request-status',
@@ -22,6 +23,7 @@ export class AccessRequestStatusComponent implements OnInit {
   requestedFor: string;
   //Formated filter example &requested-for=2c9180857f2d882f017f38a5a877620b
   filters: string;
+  page: PageResults;
 
   constructor(
     private idnService: IDNService,
@@ -33,6 +35,26 @@ export class AccessRequestStatusComponent implements OnInit {
     this.reset();
     this.getAllAccessRequestStatus();
   }
+
+    /**
+   * Copy these three functions to any
+   * page you want to have paggination
+   */
+//Get the next page
+getNextPage() {
+  this.page.nextPage;
+  this.getAllAccessRequestStatus();
+}
+//Get the previous page
+getPrevPage() {
+  this.page.prevPage;
+  this.getAllAccessRequestStatus();
+}
+//Pick the page Number you want
+getOnePage(input){
+  this.page.getPageByNumber(input);
+  this.getAllAccessRequestStatus();
+}
 
   getRequestedForUser() {
     if (this.requestedFor && this.requestedFor.trim() != '') {
