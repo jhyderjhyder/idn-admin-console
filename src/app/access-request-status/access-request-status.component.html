@@ -167,43 +167,38 @@
 
       <!-- Modal Header -->
       <div class="modal-header">
-        <h4 class="modal-title">Approval Details</h4>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        <h5 id="dialog-child-name" class="modal-title pull-left font-weight-bold">Approval Details</h5>
       </div>
 
       <!-- Modal body -->
       <div class="modal-body">
-        <div class="text-center align-middle" *ngIf="accessRequestStatuses && !loading">
-          <h1>Phases</h1>
+        <div class="text-start" *ngIf="accessRequestStatuses && !loading">
+          <h6>Phases</h6>
           <hr>
-          <div
-            *ngFor="let i =index; let a of accessRequestStatuses | filter:searchText:['accessName', 'accessType', 'requestType', 'state', 'requester', 'requestedFor']">
-            <div *ngFor="let item of a.accessRequestPhases; let x =index">
-              <ul *ngIf="i==lineNumber">
-                <li><b>{{item.name}}:</b>    {{item.state}}</li>
-              </ul>
+          <div *ngFor="let i = index; let a of accessRequestStatuses">
+            <div *ngFor="let item of a.accessRequestPhases; let x = index">
+              <div *ngIf="i == lineNumber">
+                <b>{{item.name}}:</b> {{item.state}}
+              </div>
             </div>
           </div>
-
-          <h1>Approval Status</h1>
           <hr>
-          <div
-          *ngFor="let i =index; let a of accessRequestStatuses | filter:searchText:['accessName', 'accessType', 'requestType', 'state', 'requester', 'requestedFor']">
-          <div *ngFor="let item of a.approvalDetails; let x =index">
-            <p *ngIf="i==lineNumber"><b>Approval:</b> {{item.scheme}}</p>
-            <p *ngIf="i==lineNumber"><b>State:</b> {{item.status}}</p>
-            <p *ngIf="i==lineNumber"><b>originalOwner:</b> {{item.originalOwner.name}}</p>
-            <p *ngIf="i==lineNumber && item.currentOwner!=null"><b>currentOwner:</b> {{item.currentOwner.name}}</p>
+          <h6 class="text-start">Approval Status</h6>
+          <hr>
+          <div *ngFor="let i = index; let a of accessRequestStatuses">
+            <div *ngFor="let item of a.approvalDetails; let x = index">
+              <p *ngIf="i == lineNumber"><b>Approval:</b> {{item.scheme}}</p>
+              <p *ngIf="i == lineNumber"><b>State:</b> {{item.status}}</p>
+              <p *ngIf="i == lineNumber"><b>originalOwner:</b> {{item.originalOwner.name}}</p>
+              <p *ngIf="i == lineNumber && item.currentOwner!=null"><b>currentOwner:</b> {{item.currentOwner.name}}</p>
+            </div>
           </div>
         </div>
-
-        </div>
-
       </div>
 
       <!-- Modal footer -->
       <div class="modal-footer">
-        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-success btn-sm" data-bs-dismiss="modal">Close</button>
       </div>
 
     </div>
