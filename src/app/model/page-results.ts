@@ -7,16 +7,15 @@ export class PageResults {
 
   //private hasMorePages:boolean;
   public get showPreviousButton() {
-    if (this._currentPage>0) {
+    if (this._currentPage > 0) {
       return true;
     }
     return false;
   }
 
-
   public get hasMorePages() {
     //Somehow the number is sometimes string 1+ 1 = 11
-    var cPage = (this._currentPage +1)
+    let cPage = (this._currentPage + 1)
     //console.log(this.totalPages + "<=" + cPage);
     if (this.totalPages <= cPage) {
       return false;
@@ -29,13 +28,17 @@ export class PageResults {
 
   public paggination() {
     const array: number[] = Array();
-    let i = 1;
-    while (this.totalPages >= i) {
+    let i = this.currentPage;
+    let count = 1;
+   
+    while (this.totalPages >= i && count < 10) {
+      console.log(this.totalPages + ":" + i);
       array.push(i);
       i++;
+      count++;
       //TODO only show 10 pages
       if (i == 10) {
-        i = this.totalPages;
+        //i = this.totalPages;
         this.max = true;
       }
     }

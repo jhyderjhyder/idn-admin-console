@@ -92,7 +92,7 @@ export class IdentityInfoComponent implements OnInit {
   }
   //Pick the page Number you want
   getOnePage(input) {
-    this.page.getPageByNumber(input);
+    this.page.getPageByNumber(input-1);
     this.submit();
   }
 
