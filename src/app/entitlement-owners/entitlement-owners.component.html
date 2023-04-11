@@ -1,0 +1,51 @@
+<nav class="navbar navbar-expand-lg navbar-light bg-light p-3 mb-3 rounded" aria-label="breadcrumb">
+  <ol class="breadcrumb m-0">
+    <li class="breadcrumb-item"><a class="text-decoration-none" routerLink="/identity-info">Home</a></li>
+    <li class="breadcrumb-item">Entitlement Ownership</li>
+    <li class="breadcrumb-item active" aria-current="page">Update Entitlement Ownership</li>
+  </ol>
+</nav>
+<div>
+
+  <div class="form-group row mb-3 align-items-center" *ngIf="!loading">
+    <div class="col-sm-6 text-start">
+      <input class="form-control py-2 border-start-0 border" type="text" [(ngModel)]="entValue"
+            placeholder="Entitlement Value">
+    </div>
+  </div>
+  <div class="col-sm-2 text-end">
+    <button type="button" (click)="submit()" class="btn btn-primary btn-sm">
+      Search
+    </button>
+  </div>
+<!--Content-->
+<div>
+  <table class="table table-striped table-bordered">
+    <thead class="table-secondary text-center align-middle">
+      <tr>
+        <th scope="col" class="col-2">Source</th>
+        <th scope="col" class="col-2">Attribute</th>
+        <th scope="col" class="col-2">Value</th>
+        <th scope="col" class="col-2">Name</th>
+        <th scope="col" class="col-2">Description</th>
+        <th scope="col" class="col-2">Current Owner</th>
+        <th scope="col" class="col-2">Created</th>
+        <th scope="col" class="col-1">requestable</th>
+      </tr>
+    </thead>
+    <tbody class="text-center align-middle" *ngIf="entitlementsList && !loading">
+      <tr *ngFor="let e of entitlementsList">
+        <td class="col-2">{{ e.sourceName }}</td>
+        <td class="col-2">{{ e.attribute }}</td>
+        <td class="col-2">{{ e.value }}</td>
+        <td class="col-2">{{ e.name }}</td>
+        <td class="col-2">{{ e.description }}</td>
+        <td class="col-2">{{ e.ownerName }}</td>
+        <td class="col-2">{{ e.created }}</td>
+        <td class="col-2">{{ e.requestable }}</td>
+      </tr>
+    </tbody>
+  </table>
+  <br>
+</div>
+</div>

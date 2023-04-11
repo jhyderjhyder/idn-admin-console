@@ -8,6 +8,7 @@ import { AccessRequestStatusComponent } from './access-request-status/access-req
 import { AccessRequestApprovalForwardComponent } from './access-request-approval-forward/access-request-approval-forward.component';
 import { WorkItemsStatusComponent } from './work-items-status/work-items-status.component';
 import { WorkItemsForwardComponent } from './work-items-forward/work-items-forward.component';
+import { EntitlmentOwnersComponent } from './entitlement-owners/entitlement-owners.component';
 import { AggregationManagementComponent } from './source-aggregation-management/source-aggregation-management.component';
 import { ChangeSourceOwnerComponent } from './source-owner-update/source-owner-update.component';
 import { AggregateSourceComponent } from './source-aggregation-run/source-aggregation-run.component';
@@ -59,6 +60,11 @@ const routes: Routes = [
   {
     path: 'work-items-forward',
     component: WorkItemsForwardComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'entitlement-owners',
+    component: EntitlmentOwnersComponent,
     canActivate: [AuthGuard],
   },
   {

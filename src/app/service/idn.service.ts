@@ -1082,6 +1082,21 @@ export class IDNService {
 
     return this.http.post(url, payload, this.httpOptions);
   }
+/**
+ * Starting the entitlement page
+ * @param filters 
+ * @returns 
+ */
+  getAllEntitlements(filters: string): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    let params = "";
+    if (filters!=null){
+      params = '?filters=value sw "' + filters + '"';
+    }
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/entitlements` + params;
+
+    return this.http.get(url, this.httpOptions);
+  }
 
   private logError(error: string) {
     this.messageService.addError(`${error}`);
