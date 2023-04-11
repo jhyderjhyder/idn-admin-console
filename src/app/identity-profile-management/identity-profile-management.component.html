@@ -81,8 +81,8 @@
               placeholder="Enter Priority Value">
         </span>
       </td>
-      <td>{{ p.hasIdentityException }}</td>
-      <td>{{ p.identityRefreshRequired }}</td>
+      <td [ngStyle]="{'color':p.hasIdentityException ? 'red' : 'black' }">{{ p.hasIdentityException }}</td>
+      <td [ngStyle]="{'color':p.identityRefreshRequired ? 'red' : 'black' }">{{ p.identityRefreshRequired }}</td>
       <td>
         <div class="m-0">
           <button type="button" [disabled]="loading" (click)="showRefreshSubmitConfirmModal(p.id)" class="btn btn-primary btn-sm">
