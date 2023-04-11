@@ -56,7 +56,7 @@ export class AccessRequestStatusComponent implements OnInit {
   }
   //Pick the page Number you want
   getOnePage(input) {
-    this.page.getPageByNumber(input-1);
+    this.page.getPageByNumber(input - 1);
     this.getAllAccessRequestStatus();
   }
 

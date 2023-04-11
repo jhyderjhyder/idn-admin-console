@@ -15,7 +15,7 @@ export class PageResults {
 
   public get hasMorePages() {
     //Somehow the number is sometimes string 1+ 1 = 11
-    let cPage = (this._currentPage + 1)
+    const cPage = this._currentPage + 1;
     //console.log(this.totalPages + "<=" + cPage);
     if (this.totalPages <= cPage) {
       return false;
@@ -30,9 +30,8 @@ export class PageResults {
     const array: number[] = Array();
     let i = this.currentPage;
     let count = 1;
-   
+
     while (this.totalPages >= i && count < 10) {
-      console.log(this.totalPages + ":" + i);
       array.push(i);
       i++;
       count++;
