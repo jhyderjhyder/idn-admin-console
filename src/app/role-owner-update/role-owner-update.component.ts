@@ -27,6 +27,7 @@ export class ChangeRoleOwnerComponent implements OnInit {
   errorMessage: string;
   invalidMessage: string[];
   validToSubmit: boolean;
+  roleCount: number;
 
   public modalRef: BsModalRef;
 
@@ -57,6 +58,7 @@ export class ChangeRoleOwnerComponent implements OnInit {
     this.loading = false;
     this.allOwnersFetched = false;
     this.invalidMessage = [];
+    this.roleCount = null;
     if (clearMsg) {
       this.messageService.clearAll();
       this.errorMessage = null;
@@ -66,11 +68,21 @@ export class ChangeRoleOwnerComponent implements OnInit {
   getAllRoles() {
     this.allOwnersFetched = false;
     this.loading = true;
-    this.idnService.getAllRoles().subscribe(allRoles => {
+    this.roleCount = 0;
+
+    this.idnService.getAllRoles().subscribe(async allRoles => {
       this.roles = [];
-      const roleCount = allRoles.length;
+      this.roleCount = allRoles.length;
       let fetchedOwnerCount = 0;
+      let index = 0;
       for (const each of allRoles) {
+        if (index > 0 && index % 10 == 0) {
+          // After processing every batch (10 roles), wait for 2 seconds before calling another API to avoid 429
+          // Too Many Requests Error
+          await this.sleep(2000);
+        }
+        index++;
+
         const role = new Role();
         role.id = each.id;
         role.name = each.name;
@@ -107,7 +119,7 @@ export class ChangeRoleOwnerComponent implements OnInit {
             role.currentOwnerDisplayName = searchResult[0].displayName;
           }
           fetchedOwnerCount++;
-          if (fetchedOwnerCount == roleCount) {
+          if (fetchedOwnerCount == this.roleCount) {
             this.allOwnersFetched = true;
           }
         });

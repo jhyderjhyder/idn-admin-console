@@ -28,6 +28,7 @@ export class RoleManagementComponent implements OnInit {
   searchText: string;
   loading: boolean;
   invalidMessage: string[];
+  roleCount: number;
 
   allOwnersFetched: boolean;
   roles: Role[];
@@ -68,6 +69,7 @@ export class RoleManagementComponent implements OnInit {
     this.searchText = null;
     this.loading = false;
     this.invalidMessage = [];
+    this.roleCount = null;
 
     this.allOwnersFetched = false;
     this.roles = null;
@@ -83,12 +85,21 @@ export class RoleManagementComponent implements OnInit {
   getAllRoles() {
     this.allOwnersFetched = false;
     this.loading = true;
-    this.idnService.getAllRoles().subscribe(allRoles => {
+    this.roleCount = 0;
+    this.idnService.getAllRoles().subscribe(async allRoles => {
       this.roles = [];
       this.rolesToShow = [];
-      const roleCount = allRoles.length;
+      this.roleCount = allRoles.length;
       let fetchedOwnerCount = 0;
+      let index = 0;
       for (const each of allRoles) {
+        if (index > 0 && index % 10 == 0) {
+          // After processing every batch (10 roles), wait for 2 seconds before calling another API to avoid 429
+          // Too Many Requests Error
+          await this.sleep(2000);
+        }
+        index++;
+
         const role = new Role();
         role.id = each.id;
         role.name = each.name;
@@ -150,7 +161,7 @@ export class RoleManagementComponent implements OnInit {
             role.currentOwnerDisplayName = searchResult[0].displayName;
           }
           fetchedOwnerCount++;
-          if (fetchedOwnerCount == roleCount) {
+          if (fetchedOwnerCount == this.roleCount) {
             this.allOwnersFetched = true;
           }
         });
@@ -245,10 +256,18 @@ export class RoleManagementComponent implements OnInit {
     this.submitConfirmModal.hide();
   }
 
-  updateRoles(path: string, enabled: boolean) {
+  async updateRoles(path: string, enabled: boolean) {
     const arr = this.getSelectedRoles();
     let processedCount = 0;
+    let index = 0;
     for (const each of arr) {
+      if (index > 0 && index % 10 == 0) {
+        // After processing every batch (10 roles), wait for 2 seconds before calling another API to avoid 429
+        // Too Many Requests Error
+        await this.sleep(2000);
+      }
+      index++;
+
       this.idnService.updateRole(each, path, enabled).subscribe(
         () => {
           processedCount++;
@@ -324,13 +343,23 @@ export class RoleManagementComponent implements OnInit {
 
     const arr = this.getSelectedRoles();
     let processedCount = 0;
+    let index = 0;
     for (const each of arr) {
+      if (index > 0 && index % 10 == 0) {
+        // After processing every batch (10 roles), wait for 2 seconds before calling another API to avoid 429
+        // Too Many Requests Error
+        await this.sleep(2000);
+      }
+      index++;
+
       this.idnService.deleteRole(each).subscribe(
         async () => {
           processedCount++;
           if (processedCount == arr.length) {
             this.deleteRoleConfirmModal.hide();
-            this.messageService.add('Roles deleted successfully.');
+            this.messageService.add(
+              'Roles deleted successfully. Please watch IDN -> Dashboard -> Monitor for status as it takes time to delete.'
+            );
             this.hideSubmitConfirmModal();
             this.reset(false);
             await this.sleep(2000);
