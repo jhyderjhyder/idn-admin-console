@@ -33,6 +33,7 @@ import { IdentityLCSComponent } from './identity-lcs-management/identity-lcs-man
 import { MultipleAccountsComponent } from './multiple-accounts-report/multiple-accounts-report.component';
 import { WorkItemsStatusComponent } from './work-items-status/work-items-status.component';
 import { WorkItemsForwardComponent } from './work-items-forward/work-items-forward.component';
+import { EntitlmentOwnersComponent } from './entitlement-owners/entitlement-owners.component';
 import { ResetSourceComponent } from './source-reset/source-reset.component';
 import { ChangeSourceOwnerComponent } from './source-owner-update/source-owner-update.component';
 import { SourceCreateProfileComponent } from './source-create-profile/source-create-profile.component';
@@ -58,6 +59,7 @@ import { AppRoutingModule } from './app-routing.module';
     AccessRequestApprovalForwardComponent,
     WorkItemsStatusComponent,
     WorkItemsForwardComponent,
+    EntitlmentOwnersComponent,
     AggregationManagementComponent,
     ChangeSourceOwnerComponent,
     AggregateSourceComponent,
