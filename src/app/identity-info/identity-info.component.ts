@@ -35,7 +35,7 @@ export class IdentityInfoComponent implements OnInit {
 
   accessRequestStatuses: AccessRequestStatus[];
   workItemsStatuses: WorkItem[];
-  entitlements:Array<{}>;
+  entitlements: Array<{}>;
 
   constructor(
     private idnService: IDNService,
@@ -80,18 +80,18 @@ export class IdentityInfoComponent implements OnInit {
    * Copy these three functions to any
    * page you want to have paggination
    */
-//Get the next page
+  //Get the next page
   getNextPage() {
     this.page.nextPage;
     this.submit();
   }
-//Get the previous page
+  //Get the previous page
   getPrevPage() {
     this.page.prevPage;
     this.submit();
   }
   //Pick the page Number you want
-  getOnePage(input){
+  getOnePage(input) {
     this.page.getPageByNumber(input);
     this.submit();
   }
@@ -154,14 +154,21 @@ export class IdentityInfoComponent implements OnInit {
           const headers = response.headers;
           this.page.xTotalCount = headers.get('X-Total-Count');
           //Lets not load the data if we have more than one result
-          if (searchResult && searchResult.length > 1 || this.page.offset!=0) {
+          if (
+            (searchResult && searchResult.length > 1) ||
+            this.page.offset != 0
+          ) {
             this.messageService.setError(
               `Multiple records found. Click 'Show Details' to select the record.`
             );
             this.identityList = searchResult;
           }
 
-          if (searchResult && searchResult.length == 1 && this.page.offset==0) {
+          if (
+            searchResult &&
+            searchResult.length == 1 &&
+            this.page.offset == 0
+          ) {
             this.getIdentityInfo(searchResult);
           }
 
@@ -350,15 +357,14 @@ export class IdentityInfoComponent implements OnInit {
     this.getOwnedEntitlements();
   }
 
-  getOwnedEntitlements(){
-    this.idnService.getEntilementsPaged(null, this.page).subscribe(response =>{  
+  getOwnedEntitlements() {
+    this.idnService.getEntilementsPaged(null, this.page).subscribe(response => {
       const searchResult = response.body;
       //const headers = response.headers;
       //Might need named object in the future
       this.entitlements = searchResult;
-    })
+    });
   }
-
 
   getAllAccessRequestStatus() {
     const filters = '&requested-for=' + this.identityInfo.id;

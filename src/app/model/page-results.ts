@@ -17,43 +17,40 @@ export class PageResults {
     return Math.ceil(this.xTotalCount / this.limit);
   }
 
-  public paggination(){
-    const array:number[] = Array(1);
-    var i = 2;
-    while (this.totalPages>=i){
+  public paggination() {
+    const array: number[] = Array(1);
+    let i = 2;
+    while (this.totalPages >= i) {
       array.push(i);
       i++;
       //TODO only show 10 pages
-      if (i==10){
+      if (i == 10) {
         i = this.totalPages;
-        this.max=true;
+        this.max = true;
       }
     }
-   
+
     return array;
   }
 
-  public getPageByNumber(input){
-    this._currentPage= input;
+  public getPageByNumber(input) {
+    this._currentPage = input;
     this.offset = input * this.limit;
   }
 
   public get nextPage() {
-    if (this._currentPage<=this.totalPages)
-    this._currentPage++;
+    if (this._currentPage <= this.totalPages) this._currentPage++;
     this.offset = this.offset + this.limit;
     return this.offset;
   }
   public get prevPage() {
-    if (this.currentPage>0){
-    this._currentPage--;
-    this.offset = this._currentPage * this.limit;
+    if (this.currentPage > 0) {
+      this._currentPage--;
+      this.offset = this._currentPage * this.limit;
     }
     return this.offset;
   }
   public get currentPage() {
     return this._currentPage + 1;
   }
-  
-
 }

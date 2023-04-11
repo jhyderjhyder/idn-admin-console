@@ -36,29 +36,29 @@ export class AccessRequestStatusComponent implements OnInit {
     this.reset();
     this.getAllAccessRequestStatus();
   }
-  pickData(input){
-    this.lineNumber=input;
+  pickData(input) {
+    this.lineNumber = input;
   }
 
-    /**
+  /**
    * Copy these three functions to any
    * page you want to have paggination
    */
-//Get the next page
-getNextPage() {
-  this.page.nextPage;
-  this.getAllAccessRequestStatus();
-}
-//Get the previous page
-getPrevPage() {
-  this.page.prevPage;
-  this.getAllAccessRequestStatus();
-}
-//Pick the page Number you want
-getOnePage(input){
-  this.page.getPageByNumber(input);
-  this.getAllAccessRequestStatus();
-}
+  //Get the next page
+  getNextPage() {
+    this.page.nextPage;
+    this.getAllAccessRequestStatus();
+  }
+  //Get the previous page
+  getPrevPage() {
+    this.page.prevPage;
+    this.getAllAccessRequestStatus();
+  }
+  //Pick the page Number you want
+  getOnePage(input) {
+    this.page.getPageByNumber(input);
+    this.getAllAccessRequestStatus();
+  }
 
   getRequestedForUser() {
     if (this.requestedFor && this.requestedFor.trim() != '') {
@@ -83,7 +83,7 @@ getOnePage(input){
 
   reset() {
     this.page = new PageResults();
-    this.page.limit=25;
+    this.page.limit = 25;
     this.accessRequestStatuses = null;
     this.searchText = null;
     this.loading = false;
@@ -105,38 +105,40 @@ getOnePage(input){
       this.totalRejected = results.rejected;
     });
 
-    this.idnService.getAccessRequestStatusPaged(this.filters, this.page).subscribe(response => {
+    this.idnService
+      .getAccessRequestStatusPaged(this.filters, this.page)
+      .subscribe(response => {
+        const results = response.body;
+        const headers = response.headers;
+        this.page.xTotalCount = headers.get('X-Total-Count');
 
-      const results = response.body;
-      const headers = response.headers;
-      this.page.xTotalCount = headers.get('X-Total-Count');
+        this.accessRequestStatuses = [];
+        for (const each of results) {
+          const accessRequestStatus = new AccessRequestStatus();
+          accessRequestStatus.accessName = each.name;
+          accessRequestStatus.accessType = each.type;
+          accessRequestStatus.requestType = each.requestType;
+          accessRequestStatus.state = each.state;
+          accessRequestStatus.created = each.created;
+          accessRequestStatus.requester = each.requester.name;
+          accessRequestStatus.requestedFor = each.requestedFor.name;
+          accessRequestStatus.approvalDetails = each.approvalDetails;
+          accessRequestStatus.accessRequestPhases = each.accessRequestPhases;
 
-      this.accessRequestStatuses = [];
-      for (const each of results) {
-        const accessRequestStatus = new AccessRequestStatus();
-        accessRequestStatus.accessName = each.name;
-        accessRequestStatus.accessType = each.type;
-        accessRequestStatus.requestType = each.requestType;
-        accessRequestStatus.state = each.state;
-        accessRequestStatus.created = each.created;
-        accessRequestStatus.requester = each.requester.name;
-        accessRequestStatus.requestedFor = each.requestedFor.name;
-        accessRequestStatus.approvalDetails = each.approvalDetails;
-        accessRequestStatus.accessRequestPhases = each.accessRequestPhases;
+          if (each.requesterComment && each.requesterComment.comment) {
+            accessRequestStatus.requesterComment =
+              each.requesterComment.comment;
+          }
 
-        if (each.requesterComment && each.requesterComment.comment) {
-          accessRequestStatus.requesterComment = each.requesterComment.comment;
+          if (each.sodViolationContext && each.sodViolationContext.state) {
+            accessRequestStatus.sodViolationState =
+              each.sodViolationContext.state;
+          }
+
+          this.accessRequestStatuses.push(accessRequestStatus);
         }
-
-        if (each.sodViolationContext && each.sodViolationContext.state) {
-          accessRequestStatus.sodViolationState =
-            each.sodViolationContext.state;
-        }
-
-        this.accessRequestStatuses.push(accessRequestStatus);
-      }
-      this.loading = false;
-    });
+        this.loading = false;
+      });
   }
 
   saveInCsv() {

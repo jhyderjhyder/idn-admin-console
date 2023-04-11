@@ -1006,9 +1006,9 @@ export class IDNService {
   /**
    * Not sure where the unpaged version might be called so to make
    * sure I dont break anything cloned the method
-   * @param filters 
-   * @param page 
-   * @returns 
+   * @param filters
+   * @param page
+   * @returns
    */
   getAccessRequestStatusPaged(filters, page: PageResults): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
@@ -1019,19 +1019,29 @@ export class IDNService {
 
     const url =
       `https://${currentUser.tenant}.api.${currentUser.domain}/v3/access-request-status?sorters=-created` +
-      filteredURL + '&limit=' + page.limit + "&offset=" + page.offset + "&count=true"; 
+      filteredURL +
+      '&limit=' +
+      page.limit +
+      '&offset=' +
+      page.offset +
+      '&count=true';
 
     return this.http.get(url, { observe: 'response' });
   }
 
   getEntilementsPaged(filters, page: PageResults): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let filteredURL = '';
+    const filteredURL = '';
     console.log(filters);
 
     const url =
       `https://${currentUser.tenant}.api.${currentUser.domain}/beta/entitlements?` +
-      filteredURL + '&limit=' + page.limit + "&offset=" + page.offset + "&count=true"; 
+      filteredURL +
+      '&limit=' +
+      page.limit +
+      '&offset=' +
+      page.offset +
+      '&count=true';
 
     return this.http.get(url, { observe: 'response' });
   }
