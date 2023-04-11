@@ -443,7 +443,25 @@
       </h2>
       <div id="collapseSix" class="accordion-collapse collapse" aria-labelledby="headingSix" data-bs-parent="#accordionExample">
         <div class="accordion-body">
-          TODO looks like Entitlement are not yet in the api
+          <table class="table table-striped table-bordered" *ngIf="!loading && identityInfo && entitlements">
+            <thead class="table-secondary align-middle">
+              <tr>
+                <th scope="col" colspan="1">id</th>
+                <th scope="col" colspan="1">Application</th>
+                <th scope="col" colspan="1">Name</th>
+                <th scope="col" colspan="1">Requestable</th>
+                
+              </tr>
+            </thead>
+            <tbody>
+              <tr *ngFor="let item of entitlements; let i =index" >
+                <td>#{{item.id}}</td>
+                <td>{{item.source.name}}</td>
+                <td>{{item.name}}</td>
+                <td>{{item.requestable}}</td>
+              </tr>
+            </tbody>
+          </table>
         </div>
       </div>
   </div>

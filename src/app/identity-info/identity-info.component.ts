@@ -35,6 +35,7 @@ export class IdentityInfoComponent implements OnInit {
 
   accessRequestStatuses: AccessRequestStatus[];
   workItemsStatuses: WorkItem[];
+  entitlements:Array<{}>;
 
   constructor(
     private idnService: IDNService,
@@ -346,7 +347,18 @@ export class IdentityInfoComponent implements OnInit {
     //Get recent access requests
     this.getAllAccessRequestStatus();
     this.getAllWorkItemsStatus();
+    this.getOwnedEntitlements();
   }
+
+  getOwnedEntitlements(){
+    this.idnService.getEntilementsPaged(null, this.page).subscribe(response =>{  
+      const searchResult = response.body;
+      //const headers = response.headers;
+      //Might need named object in the future
+      this.entitlements = searchResult;
+    })
+  }
+
 
   getAllAccessRequestStatus() {
     const filters = '&requested-for=' + this.identityInfo.id;
