@@ -34,7 +34,13 @@
       }
     ],
     "standard/no-callback-literal": "off",
-    "node/no-deprecated-api": "off"
+    "node/no-deprecated-api": "off",
+    "prettier/prettier": [
+      "error",
+      {
+        "endOfLine": "auto"
+      }
+    ]
   },
   "parserOptions": {
     "ecmaVersion": 6,
