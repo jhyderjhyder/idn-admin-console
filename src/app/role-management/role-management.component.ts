@@ -358,7 +358,7 @@ export class RoleManagementComponent implements OnInit {
           if (processedCount == arr.length) {
             this.deleteRoleConfirmModal.hide();
             this.messageService.add(
-              'Roles deleted successfully. Please watch IDN -> Dashboard -> Monitor for status as it takes time to delete.'
+              'Roles delete kicked off successfully. Please watch IDN -> Dashboard -> Monitor for status as it takes time to delete.'
             );
             this.hideSubmitConfirmModal();
             this.reset(false);
