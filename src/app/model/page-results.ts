@@ -6,20 +6,30 @@ export class PageResults {
   public max = false;
 
   //private hasMorePages:boolean;
-
-  public get hasMorePages() {
-    if (this.xTotalCount > this.offset * this._currentPage) {
+  public get showPreviousButton() {
+    if (this._currentPage>0) {
       return true;
     }
     return false;
+  }
+
+
+  public get hasMorePages() {
+    //Somehow the number is sometimes string 1+ 1 = 11
+    var cPage = (this._currentPage +1)
+    //console.log(this.totalPages + "<=" + cPage);
+    if (this.totalPages <= cPage) {
+      return false;
+    }
+    return true;
   }
   public get totalPages() {
     return Math.ceil(this.xTotalCount / this.limit);
   }
 
   public paggination() {
-    const array: number[] = Array(1);
-    let i = 2;
+    const array: number[] = Array();
+    let i = 1;
     while (this.totalPages >= i) {
       array.push(i);
       i++;
