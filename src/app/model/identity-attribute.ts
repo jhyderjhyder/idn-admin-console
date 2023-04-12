@@ -11,19 +11,25 @@ export class IdentityAttribute {
   email: string;
   id: string;
   created: string;
+  modified: string;
+  protected: boolean;
   isManager: string;
   identityProfile: string;
   accountCount: number;
   accountSourceNames: string;
+  accountArray: Array<{}>;
   appCount: number;
   appNames: string;
   accessCount: number;
   entitlementCount: number;
   entitlementNames: string;
+  entitlementArray: Array<{}>;
   roleCount: number;
   roleNames: string;
+  roleArray: Array<{}>;
   accessProfileCount: number;
   accessProfileNames: string;
+  accessProfileArray: Array<{}>;
   ownSources: number;
   ownSourcesNames: string;
   ownAccessProfiles: number;
@@ -34,6 +40,10 @@ export class IdentityAttribute {
   ownRolesNames: string;
   ownGovernanceGroups: number;
   ownGovernanceGroupsNames: string;
+  ownsAccessProfilesArray: Array<{}>;
+  ownsSourcesArray: Array<{}>;
+  ownsRolesArray: Array<{}>;
+  ownsGovernanceGroupsArray: Array<{}>;
   tagsCount: number;
   tagNames: string;
   cloudLifecycleState: string;
@@ -41,4 +51,7 @@ export class IdentityAttribute {
   managerAccountName: string;
   orgPermission: string[];
   cloudStatus: string;
+  attributes: Array<{}>;
+  hasPATToken: boolean;
+  cloudId: string;
 }
