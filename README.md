@@ -47,7 +47,7 @@ dont ever push to production an auto login feature. You can create a `run.bat` o
 ```
 set NG_APP_ENV=true
 
-set NG_APP_URL=tenantName
+set NG_APP_TENANT_NAME=tenantName
 
 set NG_APP_CLIENT_ID=af5783client
 
@@ -98,7 +98,7 @@ We are looking for (list is not exhaustive)
     * Access Request Status (List / Download Report)
     * Access Request Approval Forward (Forward Pending Requests / Download Report)
 * Work Items
-    * Work Items Status (List / Download Report)
+    * Work Items Status (List / Search via Requested For / Download Report)
     * Work Items Pending Forward (Forward Pending Work Items / Download Report)
 * Misc
     * Check and Set Org Time
@@ -129,6 +129,9 @@ The application can be run as a standalone web application, inside docker contai
     * ng serve --open
     * Will open URL in browser: http://localhost:4200
 
+#### Local Variables
+
+You can define `NG_APP_IDENTITY_SEARCH` variable if you want additional attributes to search for getting Identity Info
 
 ### Run as electron app ###
 * Prerequisites
