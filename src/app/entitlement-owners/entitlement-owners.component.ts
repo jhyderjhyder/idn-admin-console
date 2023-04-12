@@ -5,8 +5,7 @@ import { AuthenticationService } from '../service/authentication-service.service
 import { MessageService } from '../service/message.service';
 import { IdentityAttribute } from '../model/identity-attribute';
 import { Entitlement } from '../model/entitlement';
-
-
+import { PageResults } from '../model/page-results';
 
 
 @Component({
@@ -23,6 +22,7 @@ export class EntitlmentOwnersComponent implements OnInit {
   identityInfo: IdentityAttribute;
   entitlementsList: Array<{}>;
   entValue: string;
+  page: PageResults;
 
   public modalRef: BsModalRef;
 
@@ -36,12 +36,17 @@ export class EntitlmentOwnersComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.setupPage();
     this.reset(true);
     this.getAllEntitlements();
   }
 
+  setupPage(){
+    this.page = new PageResults();
+    this.page.limit=25;
+  }
+
   reset(clearMsg: boolean) {
-  
     this.errorMessage = null;
     this.loading = false;
     this.validToSubmit = null;
@@ -54,16 +59,39 @@ export class EntitlmentOwnersComponent implements OnInit {
   }
 
   submit(){
+    this.setupPage();
+    this.getAllEntitlements();
+  }
+
+    /**
+   * Copy these three functions to any
+   * page you want to have paggination
+   */
+  //Get the next page
+  getNextPage() {
+    this.page.nextPage;
+    this.getAllEntitlements();
+  }
+  //Get the previous page
+  getPrevPage() {
+    this.page.prevPage;
+    this.getAllEntitlements();
+  }
+  //Pick the page Number you want
+  getOnePage(input) {
+    this.page.getPageByNumber(input - 1);
     this.getAllEntitlements();
   }
 
   getAllEntitlements() {
     this.loading = true;
-    this.idnService.getAllEntitlements(this.entValue).subscribe(results => {
-      
+    this.idnService.getAllEntitlementsPaged(this.entValue, this.page).subscribe(response => {
+      const searchResult = response.body;
+          const headers = response.headers;
+          this.page.xTotalCount = headers.get('X-Total-Count');
       this.entitlementsList = [];
       //console.table(results);
-      for (const each of results) {
+      for (const each of searchResult) {
         const ent = new Entitlement();
         ent.attribute = each.attribute;
         ent.value = each.value;

@@ -1176,15 +1176,20 @@ export class IDNService {
  * @param filters 
  * @returns 
  */
-  getAllEntitlements(filters: string): Observable<any> {
+  getAllEntitlementsPaged(filters: string, page: PageResults): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let params = "";
+    let params = "?count=true";
     if (filters!=null){
-      params = '?filters=value sw "' + filters + '"';
+      params = '?filters=value sw "' + filters + '"' + '&count=true';
     }
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/entitlements` + params;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/entitlements` + params +
+    '&limit=' +
+    page.limit +
+    '&offset=' +
+    page.offset +
+    '&count=true';
 
-    return this.http.get(url, this.httpOptions);
+    return this.http.get(url, { observe: 'response' });
   }
 
   getIDNAdmins(): Observable<any> {
