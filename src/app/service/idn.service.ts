@@ -18,6 +18,7 @@ import { PAT } from '../model/pat';
 import { IdentityProfile } from '../model/identity-profile';
 import { IdentityAttribute } from '../model/identity-attribute';
 import { Transform } from '../model/transform';
+import { PageResults } from '../model/page-results';
 
 @Injectable({
   providedIn: 'root',
@@ -400,10 +401,34 @@ export class IDNService {
       query: {
         query: `${query.attribute}:\"${query.value}\"`,
       },
+      indices: ['identities'],
     };
 
     return this.http
       .post(url, payload, this.httpOptions)
+      .pipe(catchError(this.handleError(`searchAccounts`)));
+  }
+
+  searchAccountsPaged(
+    query: SimpleQueryCondition,
+    page: PageResults
+  ): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    const url =
+      `https://${currentUser.tenant}.api.${currentUser.domain}/v3/search/?count=true&limit=` +
+      page.limit +
+      '&offset=' +
+      page.offset;
+
+    const payload = {
+      query: {
+        query: `${query.attribute}:${query.value}`,
+      },
+      indices: ['identities'],
+    };
+
+    return this.http
+      .post(url, payload, { observe: 'response' })
       .pipe(catchError(this.handleError(`searchAccounts`)));
   }
 
@@ -978,6 +1003,49 @@ export class IDNService {
     return this.http.get(url, this.httpOptions);
   }
 
+  /**
+   * Not sure where the unpaged version might be called so to make
+   * sure I dont break anything cloned the method
+   * @param filters
+   * @param page
+   * @returns
+   */
+  getAccessRequestStatusPaged(filters, page: PageResults): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    let filteredURL = '';
+    if (filters != null) {
+      filteredURL = filteredURL + '&requested-for=' + filters;
+    }
+
+    const url =
+      `https://${currentUser.tenant}.api.${currentUser.domain}/v3/access-request-status?sorters=-created` +
+      filteredURL +
+      '&limit=' +
+      page.limit +
+      '&offset=' +
+      page.offset +
+      '&count=true';
+
+    return this.http.get(url, { observe: 'response' });
+  }
+
+  getEntilementsPaged(filters, page: PageResults): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    const filteredURL = '';
+    console.log(filters);
+
+    const url =
+      `https://${currentUser.tenant}.api.${currentUser.domain}/beta/entitlements?` +
+      filteredURL +
+      '&limit=' +
+      page.limit +
+      '&offset=' +
+      page.offset +
+      '&count=true';
+
+    return this.http.get(url, { observe: 'response' });
+  }
+
   getAccessRequestApprovalsPending(): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
     const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/access-request-approvals/pending?sorters=-created`;
@@ -999,6 +1067,20 @@ export class IDNService {
     };
 
     return this.http.post(url, payload);
+  }
+
+  getWorkItemsStatus(filters): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    let filteredURL = '';
+    if (filters != null) {
+      filteredURL = filteredURL + filters;
+    }
+
+    const url =
+      `https://${currentUser.tenant}.api.${currentUser.domain}/v3/work-items?sorters=-created` +
+      filteredURL;
+
+    return this.http.get(url, this.httpOptions);
   }
 
   getWorkItemsPending(): Observable<any> {

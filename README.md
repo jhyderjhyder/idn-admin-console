@@ -40,6 +40,22 @@ Alternatively if you have an internal domain other than identitynow.com please f
 
 **NOTE:** For Vanity URL's please [find your](https://developer.sailpoint.com/idn/api/getting-started#find-your-tenant-name) `{tenant}` as per the article and use that. **DO NOT** fill in your vanity URL domain in the Domain Name section.
 
+**Dev:** When using on your own computer you can use variables to auto login.  This can save you a lot of 
+time as there is no way you can remember your tokens.  Using your local variables it should make sure that you 
+dont ever push to production an auto login feature. You can create a `run.bat` or `run.sh` and put the following variables
+
+```
+set NG_APP_ENV=true
+
+set NG_APP_TENANT_NAME=tenantName
+
+set NG_APP_CLIENT_ID=af5783client
+
+set NG_APP_CLIENT_SECRET=secret
+
+ng serve --open
+```
+
 ## Contribute
 
 We are looking for (list is not exhaustive)
@@ -82,7 +98,7 @@ We are looking for (list is not exhaustive)
     * Access Request Status (List / Download Report)
     * Access Request Approval Forward (Forward Pending Requests / Download Report)
 * Work Items
-    * Work Items Status (List / Download Report)
+    * Work Items Status (List / Search via Requested For / Download Report)
     * Work Items Pending Forward (Forward Pending Work Items / Download Report)
 * Misc
     * Check and Set Org Time
@@ -113,6 +129,9 @@ The application can be run as a standalone web application, inside docker contai
     * ng serve --open
     * Will open URL in browser: http://localhost:4200
 
+#### Local Variables
+
+You can define `NG_APP_IDENTITY_SEARCH` variable if you want additional attributes to search for getting Identity Info
 
 ### Run as electron app ###
 * Prerequisites
