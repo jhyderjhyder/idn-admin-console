@@ -7,14 +7,13 @@ import { IdentityAttribute } from '../model/identity-attribute';
 import { Entitlement } from '../model/entitlement';
 import { PageResults } from '../model/page-results';
 
-
 @Component({
   selector: 'app-entitlement-owners',
   templateUrl: './entitlement-owners.component.html',
   styleUrls: ['./entitlement-owners.component.css'],
 })
-export class EntitlmentOwnersComponent implements OnInit {
 
+export class EntitlmentOwnersComponent implements OnInit {
   loading: boolean;
   errorMessage: string;
   validToSubmit: boolean;
@@ -41,9 +40,9 @@ export class EntitlmentOwnersComponent implements OnInit {
     this.getAllEntitlements();
   }
 
-  setupPage(){
+  setupPage() {
     this.page = new PageResults();
-    this.page.limit=25;
+    this.page.limit = 25;
   }
 
   reset(clearMsg: boolean) {
@@ -55,18 +54,15 @@ export class EntitlmentOwnersComponent implements OnInit {
     if (clearMsg) {
       this.messageService.clearAll();
     }
-    this.entValue= null;
+    this.entValue = null;
   }
 
-  submit(){
+  submit() {
     this.setupPage();
     this.getAllEntitlements();
   }
 
-    /**
-   * Copy these three functions to any
-   * page you want to have paggination
-   */
+
   //Get the next page
   getNextPage() {
     this.page.nextPage;
@@ -86,35 +82,32 @@ export class EntitlmentOwnersComponent implements OnInit {
   getAllEntitlements() {
     this.loading = true;
     this.idnService.getAllEntitlementsPaged(this.entValue, this.page).subscribe(response => {
-      const searchResult = response.body;
-          const headers = response.headers;
-          this.page.xTotalCount = headers.get('X-Total-Count');
-      this.entitlementsList = [];
-      //console.table(results);
-      for (const each of searchResult) {
-        const ent = new Entitlement();
-        ent.attribute = each.attribute;
-        ent.value = each.value;
-        ent.created = each.created;
-        ent.name = each.name;
-        ent.sourceName = each.source.name;
-        ent.description = each.description;
-        ent.requestable = each.requestable;
-        if (each.owner!=null){
-          ent.ownerName = each.owner.name;
-          ent.ownerId = each.owner.id;
+        const searchResult = response.body;
+        const headers = response.headers;
+        this.page.xTotalCount = headers.get('X-Total-Count');
+        this.entitlementsList = [];
+        for (const each of searchResult) {
+          const ent = new Entitlement();
+          ent.attribute = each.attribute;
+          ent.value = each.value;
+          ent.created = each.created;
+          ent.name = each.name;
+          ent.sourceName = each.source.name;
+          ent.description = each.description;
+          ent.requestable = each.requestable;
+          if (each.owner != null) {
+            ent.ownerName = each.owner.name;
+            ent.ownerId = each.owner.id;
+          }
+          this.entitlementsList.push(ent);
         }
-        this.entitlementsList.push(ent);
-
-      }
-      this.loading = false;
-    });
+        this.loading = false;
+      });
   }
 
   saveInCsv() {
-  const currentUser = this.authenticationService.currentUserValue;
-  console.log("todo csv" + currentUser);
+    const currentUser = this.authenticationService.currentUserValue;
+    console.log('todo csv' + currentUser);
   }
 
- 
 }
