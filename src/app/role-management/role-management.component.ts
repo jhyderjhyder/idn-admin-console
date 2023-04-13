@@ -477,26 +477,7 @@ export class RoleManagementComponent implements OnInit {
   }
 
   exportAllRoles() {
-    //   this.idnService.getAllRoles().subscribe(results => {
-    //     this.roles = [];
-    //     for (const each of results) {
-    //       const role = new Role();
-    //       const jsonData = JSON.stringify(each, null, 4);
-    //       role.name = each.name;
-    //       const fileName = 'Role - ' + role.name + '.json';
-    //       this.zip.file(`${fileName}`, jsonData);
-    //     }
-    //     const currentUser = this.authenticationService.currentUserValue;
-    //     const zipFileName = `${currentUser.tenant}-roles.zip`;
-
-    //     this.zip.generateAsync({ type: 'blob' }).then(function (content) {
-    //       saveAs(content, zipFileName);
-    //     });
-
-    //     this.ngOnInit();
-    //   });
-    // }
-
+    // Get the already fetched this.allRoleData to export since its in a single page
     for (const each of this.allRoleData) {
       const role = new Role();
       const jsonData = JSON.stringify(each, null, 4);
