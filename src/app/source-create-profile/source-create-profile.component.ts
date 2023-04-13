@@ -27,7 +27,6 @@ export class SourceCreateProfileComponent implements OnInit {
   selectedSourceName: string;
   zip: JSZip = new JSZip();
 
-
   invalidMessage: string[];
 
   public modalRef: BsModalRef;
