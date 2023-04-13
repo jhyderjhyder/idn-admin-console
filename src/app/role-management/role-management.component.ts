@@ -7,18 +7,18 @@ import { IDNService } from '../service/idn.service';
 import { MessageService } from '../service/message.service';
 import { AuthenticationService } from '../service/authentication-service.service';
 import { Role } from '../model/role';
-import { SimpleQueryCondition } from '../model/simple-query-condition';
-import { SourceOwner } from '../model/source-owner';
 import * as JSZip from 'jszip';
 import { saveAs } from 'file-saver';
-import { PageResults } from '../model/page-results';
+import { Observable, mapTo, take, timer } from 'rxjs';
+import { SimpleQueryCondition } from '../model/simple-query-condition';
+import { SourceOwner } from '../model/source-owner';
 
 const RoleDescriptionMaxLength = 50;
-
 @Component({
   selector: 'app-role-management',
   templateUrl: './role-management.component.html',
   styleUrls: ['./role-management.component.css'],
+  template: '<p>{{ allRoleData | json }}</p>',
 })
 export class RoleManagementComponent implements OnInit {
   sources: Source[];
@@ -30,7 +30,10 @@ export class RoleManagementComponent implements OnInit {
   loading: boolean;
   invalidMessage: string[];
   roleCount: number;
-  page: PageResults;
+  defaultLimit = 50;
+  retryDelay = 1000;
+  maxRetries = 3;
+  allRoleData: any;
 
   allOwnersFetched: boolean;
   roles: Role[];
@@ -64,8 +67,6 @@ export class RoleManagementComponent implements OnInit {
   }
 
   reset(clearMsg: boolean) {
-    this.page = new PageResults();
-    this.page.limit = 50;
     this.sources = null;
     this.bulkAction = null;
     this.selectAll = null;
@@ -86,40 +87,20 @@ export class RoleManagementComponent implements OnInit {
     }
   }
 
-  /**
-   * Copy these three functions to any
-   * page you want to have paggination
-   */
-  //Get the next page
-  getNextPage() {
-    this.page.nextPage;
-    this.getAllRoles();
-  }
-  //Get the previous page
-  getPrevPage() {
-    this.page.prevPage;
-    this.getAllRoles();
-  }
-  //Pick the page Number you want
-  getOnePage(input) {
-    this.page.getPageByNumber(input - 1);
-    this.getAllRoles();
-  }
-
-  getAllRoles() {
+  async getAllRoles() {
     this.allOwnersFetched = false;
     this.loading = true;
     this.roleCount = 0;
-    this.idnService.getAllRolesPaged(this.page).subscribe(async allRoles => {
-      this.roles = [];
-      this.rolesToShow = [];
-      this.roleCount = allRoles.body.length;
-      let fetchedOwnerCount = 0;
-      const results = allRoles.body;
-      const headers = allRoles.headers;
-      this.page.xTotalCount = headers.get('X-Total-Count');
+    this.roles = [];
+    this.rolesToShow = [];
+    let fetchedOwnerCount = 0;
+
+    try {
+      const data = await this.getAllRolesData();
+      this.roleCount = data.length;
+      this.allRoleData = data;
       let index = 0;
-      for (const each of results) {
+      for (const each of data) {
         if (index > 0 && index % 10 == 0) {
           // After processing every batch (10 roles), wait for 2 seconds before calling another API to avoid 429
           // Too Many Requests Error
@@ -193,11 +174,54 @@ export class RoleManagementComponent implements OnInit {
           }
         });
 
+        // // wait for 0.1 seconds (i.e. 10 calls per second)
+        // await this.sleep(100);
+
+        // // after 10 calls, wait for 2 seconds
+        // if (
+        //   (data.indexOf(each) + 1) % 10 === 0 &&
+        //   data.indexOf(each) !== data.length - 1
+        // ) {
+        //   await this.sleep(2000);
+        // }
+
         this.roles.push(role);
         this.rolesToShow.push(role);
       }
-      this.loading = false;
-    });
+    } catch (error) {
+      console.error(error);
+    }
+
+    this.loading = false;
+  }
+
+  public async getAllRolesData(): Promise<any> {
+    const count = await this.idnService
+      .getTotalRolesCount()
+      .pipe(take(1))
+      .toPromise();
+    const allData: Role[] = [];
+
+    for (let offset = 0; allData.length < count; offset += this.defaultLimit) {
+      const dataPage = await this.idnService
+        .getAllRoles2(offset)
+        .pipe(take(1))
+        .toPromise();
+
+      if (dataPage) {
+        allData.push(...dataPage);
+      } else {
+        console.warn('Rate limited. Retrying in 5 seconds...');
+        await this.delay(this.retryDelay).toPromise();
+        offset -= this.defaultLimit;
+      }
+    }
+
+    return allData;
+  }
+
+  private delay(ms: number): Observable<void> {
+    return timer(ms).pipe(mapTo(undefined));
   }
 
   resetRolesToShow() {
@@ -453,23 +477,40 @@ export class RoleManagementComponent implements OnInit {
   }
 
   exportAllRoles() {
-    this.idnService.getAllRoles().subscribe(results => {
-      this.roles = [];
-      for (const each of results) {
-        const role = new Role();
-        const jsonData = JSON.stringify(each, null, 4);
-        role.name = each.name;
-        const fileName = 'Role - ' + role.name + '.json';
-        this.zip.file(`${fileName}`, jsonData);
-      }
-      const currentUser = this.authenticationService.currentUserValue;
-      const zipFileName = `${currentUser.tenant}-roles.zip`;
+    //   this.idnService.getAllRoles().subscribe(results => {
+    //     this.roles = [];
+    //     for (const each of results) {
+    //       const role = new Role();
+    //       const jsonData = JSON.stringify(each, null, 4);
+    //       role.name = each.name;
+    //       const fileName = 'Role - ' + role.name + '.json';
+    //       this.zip.file(`${fileName}`, jsonData);
+    //     }
+    //     const currentUser = this.authenticationService.currentUserValue;
+    //     const zipFileName = `${currentUser.tenant}-roles.zip`;
 
-      this.zip.generateAsync({ type: 'blob' }).then(function (content) {
-        saveAs(content, zipFileName);
-      });
+    //     this.zip.generateAsync({ type: 'blob' }).then(function (content) {
+    //       saveAs(content, zipFileName);
+    //     });
 
-      this.ngOnInit();
+    //     this.ngOnInit();
+    //   });
+    // }
+
+    for (const each of this.allRoleData) {
+      const role = new Role();
+      const jsonData = JSON.stringify(each, null, 4);
+      role.name = each.name;
+      const fileName = 'Role - ' + role.name + '.json';
+      this.zip.file(`${fileName}`, jsonData);
+    }
+    const currentUser = this.authenticationService.currentUserValue;
+    const zipFileName = `${currentUser.tenant}-roles.zip`;
+
+    this.zip.generateAsync({ type: 'blob' }).then(function (content) {
+      saveAs(content, zipFileName);
     });
+
+    this.ngOnInit();
   }
 }

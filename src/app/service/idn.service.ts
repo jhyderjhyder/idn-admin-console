@@ -4,8 +4,8 @@ import {
   HttpHeaders,
   HttpUrlEncodingCodec,
 } from '@angular/common/http';
-import { catchError } from 'rxjs/operators';
-import { Observable, of } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
+import { Observable, of, throwError } from 'rxjs';
 import { MessageService } from './message.service';
 import { Source } from '../model/source';
 import { Rule } from '../model/rule';
@@ -183,25 +183,32 @@ export class IDNService {
       .pipe(catchError(this.handleError(`getAllRoles`)));
   }
 
-  /**
-   * Not sure where the unpaged version might be called so to make
-   * sure I dont break anything cloned the method
-   * @param filters
-   * @param page
-   * @returns
-   */
-  getAllRolesPaged(page: PageResults): Observable<any> {
+  getTotalRolesCount(): Observable<number> {
     const currentUser = this.authenticationService.currentUserValue;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/roles?limit=1&count=true`;
 
-    const url =
-      `https://${currentUser.tenant}.api.${currentUser.domain}/v3/roles?` +
-      '&limit=' +
-      page.limit +
-      '&offset=' +
-      page.offset +
-      '&count=true';
+    return this.http.get(url, { observe: 'response' }).pipe(
+      map(response => response.headers.get('X-Total-Count')),
+      map(totalCount => parseInt(totalCount, 10)),
+      catchError(error => throwError(error))
+    );
+  }
 
-    return this.http.get(url, { observe: 'response' });
+  getAllRoles2(offset: number): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/roles?offset=${offset}&limit=50`;
+
+    return this.http.get(url, this.httpOptions).pipe(
+      catchError(error => {
+        if (error.status === 429) {
+          console.warn('Rate limited. Retrying in 5 seconds...');
+          return of(null);
+        } else {
+          console.error(error);
+          return throwError(error);
+        }
+      })
+    );
   }
 
   getRoleIdentityCount(role: Role): Observable<any> {
