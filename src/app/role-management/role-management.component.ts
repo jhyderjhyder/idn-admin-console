@@ -518,7 +518,5 @@ export class RoleManagementComponent implements OnInit {
     this.zip.generateAsync({ type: 'blob' }).then(function (content) {
       saveAs(content, zipFileName);
     });
-
-    this.ngOnInit();
   }
 }
