@@ -201,7 +201,7 @@ export class IDNService {
     return this.http.get(url, this.httpOptions).pipe(
       catchError(error => {
         if (error.status === 429) {
-          console.warn('Rate limited. Retrying in 5 seconds...');
+          console.warn('Rate limited. Retrying in 2 seconds...');
           return of(null);
         } else {
           console.error(error);

@@ -11,14 +11,22 @@ import { SimpleQueryCondition } from '../model/simple-query-condition';
 import { SourceOwner } from '../model/source-owner';
 import * as JSZip from 'jszip';
 import { saveAs } from 'file-saver';
-import { Observable, mapTo, take, timer } from 'rxjs';
+import {
+  Observable,
+  defer,
+  delayWhen,
+  mapTo,
+  retryWhen,
+  take,
+  throwError,
+  timer,
+} from 'rxjs';
 
 const RoleDescriptionMaxLength = 50;
 @Component({
   selector: 'app-role-management',
   templateUrl: './role-management.component.html',
   styleUrls: ['./role-management.component.css'],
-  template: '<p>{{ allRoleData | json }}</p>',
 })
 export class RoleManagementComponent implements OnInit {
   sources: Source[];
@@ -30,9 +38,9 @@ export class RoleManagementComponent implements OnInit {
   loading: boolean;
   invalidMessage: string[];
   roleCount: number;
-  defaultLimit = 50;
-  retryDelay = 1000;
-  maxRetries = 3;
+  defaultLimit = 50; //default limit for Roles API is 50
+  retryDelay = 2000; //retry delay for 2 seconds
+  maxRetries = 5; // Number of times to retry
   allRoleData: any;
 
   allOwnersFetched: boolean;
@@ -201,18 +209,37 @@ export class RoleManagementComponent implements OnInit {
       .pipe(take(1))
       .toPromise();
     const allData: Role[] = [];
+    let retryCount = 0;
 
     for (let offset = 0; allData.length < count; offset += this.defaultLimit) {
       const dataPage = await this.idnService
         .getAllRoles2(offset)
-        .pipe(take(1))
+        .pipe(
+          take(1),
+          retryWhen(errors =>
+            errors.pipe(
+              delayWhen(() =>
+                defer(() => {
+                  if (retryCount >= this.maxRetries) {
+                    return throwError('Max retries reached');
+                  } else {
+                    retryCount++;
+                    console.warn(
+                      `Rate limited. Retrying in ${this.retryDelay} seconds...`
+                    );
+                    return this.delay(this.retryDelay);
+                  }
+                })
+              )
+            )
+          )
+        )
         .toPromise();
 
       if (dataPage) {
         allData.push(...dataPage);
       } else {
-        console.warn('Rate limited. Retrying in 5 seconds...');
-        await this.delay(this.retryDelay).toPromise();
+        console.warn('No data received. Retrying...');
         offset -= this.defaultLimit;
       }
     }
