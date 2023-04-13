@@ -20,6 +20,7 @@ export class CloudRuleComponent implements OnInit {
   invalidMessage: string[];
   searchText: string;
   loading: boolean;
+  exporting: boolean;
   jobId: string;
   jobStatus: string;
   zip: JSZip = new JSZip();
@@ -43,6 +44,7 @@ export class CloudRuleComponent implements OnInit {
     this.jobId = null;
     this.jobStatus = null;
     this.loading = false;
+    this.exporting = false;
     this.invalidMessage = [];
     if (clearMsg) {
       this.messageService.clearAll();
@@ -281,6 +283,7 @@ export class CloudRuleComponent implements OnInit {
   }
 
   exportAllRules($event) {
+    this.exporting = true;
     if ($event && $event != '') {
       this.buttonClicked = $event.target.name;
     }
@@ -299,5 +302,6 @@ export class CloudRuleComponent implements OnInit {
     this.zip.generateAsync({ type: 'blob' }).then(function (content) {
       saveAs(content, zipFileName);
     });
+    this.exporting = false;
   }
 }

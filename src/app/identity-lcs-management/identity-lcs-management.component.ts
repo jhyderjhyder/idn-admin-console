@@ -17,6 +17,7 @@ export class IdentityLCSComponent implements OnInit {
   identityProfiles: IdentityProfile[];
   loading: boolean;
   validToSubmit: boolean;
+  exporting: boolean;
 
   lcsAttributes: IdentityProfile[];
   selectedIdentityProfileId: string;
@@ -44,6 +45,7 @@ export class IdentityLCSComponent implements OnInit {
 
   reset(clearMsg: boolean) {
     this.loading = false;
+    this.exporting = false;
     this.invalidMessage = [];
     this.validToSubmit = false;
 
@@ -154,6 +156,7 @@ export class IdentityLCSComponent implements OnInit {
   }
 
   exportAllIdentityProfilesLCS() {
+    this.exporting = true;
     this.idnService.getAllIdentityProfiles().subscribe(
       results => {
         this.identityProfiles = [];

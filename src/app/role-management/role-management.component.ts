@@ -27,6 +27,7 @@ export class RoleManagementComponent implements OnInit {
   errorInvokeApi: boolean;
   searchText: string;
   loading: boolean;
+  exporting: boolean;
   invalidMessage: string[];
   roleCount: number;
 
@@ -68,6 +69,7 @@ export class RoleManagementComponent implements OnInit {
     this.atLeastOneSelected = null;
     this.searchText = null;
     this.loading = false;
+    this.exporting = false;
     this.invalidMessage = [];
     this.roleCount = null;
 
@@ -426,6 +428,7 @@ export class RoleManagementComponent implements OnInit {
   }
 
   exportAllRoles() {
+    this.exporting = true;
     this.idnService.getAllRoles().subscribe(results => {
       this.roles = [];
       for (const each of results) {
