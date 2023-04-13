@@ -45,8 +45,8 @@
     </button>
   </div>
   <div class="col-sm-5 text-end">
-    <button type="button" [disabled]="loading" (click)="exportAllTransforms()" class="btn btn-primary btn-sm">
-      Export All
+    <button type="button" [disabled]="loading || exporting" (click)="exportAllTransforms()" class="btn btn-primary btn-sm">
+      {{ exporting ? 'Wait...' : 'Export All' }}
     </button>
   </div>
 </div>

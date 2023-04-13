@@ -29,6 +29,7 @@ export class AccessProfileManagementComponent implements OnInit {
   loading: boolean;
   invalidMessage: string[];
   accessProfileCount: number;
+  exporting: boolean;
 
   allOwnersFetched: boolean;
   accessProfiles: AccessProfile[];
@@ -66,6 +67,7 @@ export class AccessProfileManagementComponent implements OnInit {
     this.atLeastOneSelected = null;
     this.searchText = null;
     this.loading = false;
+    this.exporting = false;
     this.invalidMessage = [];
     this.accessProfileCount = null;
 
@@ -383,6 +385,7 @@ export class AccessProfileManagementComponent implements OnInit {
   }
 
   exportAllAccessProfiles() {
+    this.exporting = true;
     this.idnService.getAllAccessProfiles().subscribe(results => {
       this.accessProfiles = [];
       for (const each of results) {

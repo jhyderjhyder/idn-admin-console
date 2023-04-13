@@ -18,6 +18,7 @@ const RoleDescriptionMaxLength = 50;
 export class IdentityProfileManagementComponent implements OnInit {
   identityProfiles: IdentityProfile[];
   loading: boolean;
+  exporting: boolean;
   searchText: string;
   selectAll: boolean;
   newPriorityAll: string;
@@ -52,6 +53,7 @@ export class IdentityProfileManagementComponent implements OnInit {
     this.newPriorityAll = null;
     this.searchText = null;
     this.loading = false;
+    this.exporting = false;
     this.invalidMessage = [];
     if (clearMsg) {
       this.messageService.clearAll();
@@ -255,6 +257,7 @@ export class IdentityProfileManagementComponent implements OnInit {
   }
 
   exportAllIdentityProfiles() {
+    this.exporting = true;
     this.idnService.getAllIdentityProfiles().subscribe(results => {
       this.identityProfiles = [];
       for (const each of results) {
