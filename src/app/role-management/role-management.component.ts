@@ -36,6 +36,7 @@ export class RoleManagementComponent implements OnInit {
   errorInvokeApi: boolean;
   searchText: string;
   loading: boolean;
+  exporting: boolean;
   invalidMessage: string[];
   roleCount: number;
   defaultLimit = 50; //default limit for Roles API is 50
@@ -81,6 +82,7 @@ export class RoleManagementComponent implements OnInit {
     this.atLeastOneSelected = null;
     this.searchText = null;
     this.loading = false;
+    this.exporting = false;
     this.invalidMessage = [];
     this.roleCount = null;
 
@@ -504,6 +506,7 @@ export class RoleManagementComponent implements OnInit {
   }
 
   exportAllRoles() {
+    this.exporting = true;
     // Get the already fetched this.allRoleData to export since its in a single page
     for (const each of this.allRoleData) {
       const role = new Role();
@@ -518,5 +521,6 @@ export class RoleManagementComponent implements OnInit {
     this.zip.generateAsync({ type: 'blob' }).then(function (content) {
       saveAs(content, zipFileName);
     });
+    this.exporting = false;
   }
 }

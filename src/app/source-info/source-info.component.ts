@@ -16,6 +16,7 @@ export class SourceInfoComponent implements OnInit {
   sources: Source[];
   searchText: string;
   loading: boolean;
+  exporting: boolean;
 
   zip: JSZip = new JSZip();
 
@@ -37,6 +38,7 @@ export class SourceInfoComponent implements OnInit {
   reset(clearMsg: boolean) {
     this.sources = null;
     this.loading = false;
+    this.exporting = false;
     this.invalidMessage = [];
     if (clearMsg) {
       this.messageService.clearAll();
@@ -78,6 +80,7 @@ export class SourceInfoComponent implements OnInit {
   }
 
   exportAllSources() {
+    this.exporting = true;
     this.idnService.getAllSources().subscribe(results => {
       this.sources = [];
       for (const each of results) {

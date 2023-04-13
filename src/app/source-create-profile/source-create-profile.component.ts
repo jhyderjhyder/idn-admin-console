@@ -6,6 +6,7 @@ import { IDNService } from '../service/idn.service';
 import { MessageService } from '../service/message.service';
 import * as JSZip from 'jszip';
 import { saveAs } from 'file-saver';
+import { AuthenticationService } from '../service/authentication-service.service';
 
 @Component({
   selector: 'app-source-create-profile',
@@ -16,6 +17,7 @@ export class SourceCreateProfileComponent implements OnInit {
   sources: Source[];
   loading: boolean;
   validToSubmit: boolean;
+  exporting: boolean;
 
   createProfileAttributes: string[];
   selectedCreateProfileAttribute: string;
@@ -38,7 +40,8 @@ export class SourceCreateProfileComponent implements OnInit {
 
   constructor(
     private idnService: IDNService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private authenticationService: AuthenticationService
   ) {}
 
   ngOnInit() {
@@ -54,6 +57,7 @@ export class SourceCreateProfileComponent implements OnInit {
     this.newCreateProfileAttribute = null;
     this.selectedSourceID = null;
     this.createProfileExists = null;
+    this.exporting = false;
 
     if (clearMsg) {
       this.messageService.clearAll();
@@ -165,31 +169,58 @@ export class SourceCreateProfileComponent implements OnInit {
       );
   }
 
-  // exportAllCreateProfiles() {
+  exportAllSourcesCreateProfiles() {
+    this.exporting = true;
+    this.idnService.getAllSources().subscribe(
+      results => {
+        this.sources = [];
+        const promises = [];
 
-  //   for (let each of this.sources) {
-  //     this.idnService.getSourceCreateProfile(each.id)
-  //     .subscribe(
-  //       result => {
-  //         result = JSON.stringify(result, null, 4);
+        for (let i = 0; i < results.length; i++) {
+          const each = results[i];
+          const source = new Source();
+          source.name = each.name;
+          source.id = each.id;
 
-  //         var blob = new Blob([result], {type: "application/json"});
-  //         let fileName = "Source - CREATE - " + each.name + ".json";
-  //         this.zip.file(`${fileName}`, blob);
+          const promise = this.idnService
+            .getSourceCreateProfile(source.id)
+            .toPromise()
+            .then(
+              result => {
+                result = JSON.stringify(result, null, 4);
+                const fileName = 'Source - CREATE - ' + source.name + '.json';
+                this.zip.file(`${fileName}`, result);
+              },
+              err => {
+                if (err.status === 404) {
+                  console.log(
+                    `No create profile found for Source ${source.name}`
+                  );
+                } else {
+                  this.messageService.handleIDNError(err);
+                }
+              }
+            );
+          promises.push(promise);
 
-  //       });
+          // add 2 second delay after every 10 calls to avoid 429 retry error
+          if ((i + 1) % 10 === 0) {
+            promises.push(new Promise(resolve => setTimeout(resolve, 2000)));
+          }
+        }
 
-  //   }
-
-  //   const currentUser = this.authenticationService.currentUserValue;
-  //   let zipFileName = `${currentUser.tenant}-source-create-profile.zip`;
-
-  //   this.zip.generateAsync({type:"blob"}).then(function(content) {
-  //     saveAs(content, zipFileName);
-
-  // });
-
-  // }
+        Promise.all(promises).then(() => {
+          const currentUser = this.authenticationService.currentUserValue;
+          const zipFileName = `${currentUser.tenant}-sources-create-profile.zip`;
+          this.zip.generateAsync({ type: 'blob' }).then(content => {
+            saveAs(content, zipFileName);
+          });
+          this.ngOnInit();
+        });
+      },
+      err => this.messageService.handleIDNError(err)
+    );
+  }
 
   downloadCreateProfile() {
     const source = new Source();

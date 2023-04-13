@@ -45,8 +45,8 @@
     </button>
   </div>
   <div class="col-sm-2 text-end">
-    <button type="button" [disabled]="loading" (click)="exportAllRules($event)" class="btn btn-primary btn-sm" name="exportAllRules">
-      Export All
+    <button type="button" [disabled]="loading || exporting" (click)="exportAllRules($event)" class="btn btn-primary btn-sm" name="exportAllRules">
+      {{ exporting ? 'Wait...' : 'Export All' }}
     </button>
   </div>
 </div>

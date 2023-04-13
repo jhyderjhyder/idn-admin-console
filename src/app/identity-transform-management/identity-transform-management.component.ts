@@ -22,6 +22,7 @@ export class IdentityTransformManagementComponent implements OnInit {
   invalidMessage: string[];
   searchText: string;
   loading: boolean;
+  exporting: boolean;
 
   transforms: Transform[];
   zip: JSZip = new JSZip();
@@ -57,6 +58,7 @@ export class IdentityTransformManagementComponent implements OnInit {
     this.deleteTransformNameText = null;
     this.searchText = null;
     this.loading = false;
+    this.exporting = false;
     this.invalidMessage = [];
     if (clearMsg) {
       this.messageService.clearAll();
@@ -357,6 +359,7 @@ export class IdentityTransformManagementComponent implements OnInit {
   }
 
   exportAllTransforms() {
+    this.exporting = true;
     this.idnService.getAllTransforms().subscribe(results => {
       this.transforms = [];
       for (const each of results) {

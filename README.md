@@ -75,7 +75,7 @@ We are looking for (list is not exhaustive)
     * Manage Identity Profile (Move Priority / Refresh Individual Profile / Export All)
     * Manage Identity Attribute Index (Index / Unindex Attributes)
     * Manage Transforms (Add / Update / Delete / Download / Export All)
-    * Manage LCS (Delete / Download)
+    * Manage LCS (Delete / Download / Export All)
 * Find Multiple Accounts in Source and Download Report
 * Access Profiles
     * Manage Access Profiles (Enable / Disable / Delete / Export All)
@@ -88,7 +88,7 @@ We are looking for (list is not exhaustive)
     * Manage Aggregation Schedules (Enable / Disable / Backup and Restore Accounts & Entitlement)
     * Manage Source Owners
     * Run Aggregations (Unoptimized / File Upload)
-    * Manage Create Profile (Add / Delete Attribute / Download)
+    * Manage Create Profile (Add / Delete Attribute / Download / Export All)
     * Reset Source (Accounts / Entitlements / Both)
     * Source Info (Internal Name / ID / Count / Export All)
 * Rules
@@ -111,6 +111,17 @@ We are looking for (list is not exhaustive)
 ![Find Multiple Accounts](resources/readme/find-multiple-accounts.png)
 
 ![Manage Connector Rules](resources/readme/manage-connector-rules.png)
+
+## Development
+Any code modificaiton should run via Lint and Format process. GitHub Actions will check this on all PR and merge requests but you can fix it locally by running the following command
+
+### Lint
+
+`npm run lint`
+
+### Code Format
+
+`npm run format` 
 
 ## Manual Build
 
