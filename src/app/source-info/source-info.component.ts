@@ -38,7 +38,7 @@ export class SourceInfoComponent implements OnInit {
   reset(clearMsg: boolean) {
     this.sources = null;
     this.loading = false;
-    this.exporting = true;
+    this.exporting = false;
     this.invalidMessage = [];
     if (clearMsg) {
       this.messageService.clearAll();
