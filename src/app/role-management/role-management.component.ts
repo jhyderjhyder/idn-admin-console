@@ -11,6 +11,7 @@ import { SimpleQueryCondition } from '../model/simple-query-condition';
 import { SourceOwner } from '../model/source-owner';
 import * as JSZip from 'jszip';
 import { saveAs } from 'file-saver';
+import { PageResults } from '../model/page-results';
 
 const RoleDescriptionMaxLength = 50;
 
@@ -29,6 +30,7 @@ export class RoleManagementComponent implements OnInit {
   loading: boolean;
   invalidMessage: string[];
   roleCount: number;
+  page: PageResults;
 
   allOwnersFetched: boolean;
   roles: Role[];
@@ -62,6 +64,8 @@ export class RoleManagementComponent implements OnInit {
   }
 
   reset(clearMsg: boolean) {
+    this.page = new PageResults();
+    this.page.limit = 50;
     this.sources = null;
     this.bulkAction = null;
     this.selectAll = null;
@@ -82,17 +86,41 @@ export class RoleManagementComponent implements OnInit {
     }
   }
 
+  /**
+   * Copy these three functions to any
+   * page you want to have paggination
+   */
+  //Get the next page
+  getNextPage() {
+    this.page.nextPage;
+    this.getAllRoles();
+  }
+  //Get the previous page
+  getPrevPage() {
+    this.page.prevPage;
+    this.getAllRoles();
+  }
+  //Pick the page Number you want
+  getOnePage(input) {
+    this.page.getPageByNumber(input - 1);
+    this.getAllRoles();
+  }
+
   getAllRoles() {
     this.allOwnersFetched = false;
     this.loading = true;
     this.roleCount = 0;
-    this.idnService.getAllRoles().subscribe(async allRoles => {
+    this.idnService.getAllRolesPaged(this.page).subscribe(async allRoles => {
       this.roles = [];
       this.rolesToShow = [];
-      this.roleCount = allRoles.length;
+      this.roleCount = allRoles.body.length;
+      console.log(this.roleCount);
       let fetchedOwnerCount = 0;
+      const results = allRoles.body;
+      const headers = allRoles.headers;
+      this.page.xTotalCount = headers.get('X-Total-Count');
       let index = 0;
-      for (const each of allRoles) {
+      for (const each of results) {
         if (index > 0 && index % 10 == 0) {
           // After processing every batch (10 roles), wait for 2 seconds before calling another API to avoid 429
           // Too Many Requests Error

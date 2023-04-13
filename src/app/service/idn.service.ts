@@ -183,6 +183,27 @@ export class IDNService {
       .pipe(catchError(this.handleError(`getAllRoles`)));
   }
 
+  /**
+   * Not sure where the unpaged version might be called so to make
+   * sure I dont break anything cloned the method
+   * @param filters
+   * @param page
+   * @returns
+   */
+  getAllRolesPaged(page: PageResults): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+
+    const url =
+      `https://${currentUser.tenant}.api.${currentUser.domain}/v3/roles?` +
+      '&limit=' +
+      page.limit +
+      '&offset=' +
+      page.offset +
+      '&count=true';
+
+    return this.http.get(url, { observe: 'response' });
+  }
+
   getRoleIdentityCount(role: Role): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
     const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/roles/${role.id}/assigned-identities?limit=1&count=true`;

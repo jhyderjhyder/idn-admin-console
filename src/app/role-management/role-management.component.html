@@ -5,6 +5,27 @@
     <li class="breadcrumb-item active" aria-current="page">Manage Roles</li>
   </ol>
 </nav>
+<!--Start pagination Information Just change hte ngIf -->
+<div class="row" *ngIf="!loading">
+  <div class="col-sm-2 text-start">
+    Total Records Found:
+    {{page.xTotalCount}}
+  </div>
+  <div class="col-sm-2 text-start">
+    Page:
+    {{page.currentPage}} of {{page.totalPages}}
+  </div>
+  <nav aria-label="Page navigation">
+    <ul class="pagination">
+      <li *ngIf="page.showPreviousButton" class="page-item"><a class="page-link" href="javascript:void(0);" (click)="getPrevPage()">Previous</a></li>
+        <li class="page-item" *ngFor="let item of page.paggination(); let i =index">
+          <a class="page-link" href="javascript:void(0);" (click)="getOnePage(item)">{{item}}</a>
+      </li>
+      <li *ngIf="page.hasMorePages" class="page-item"><a class="page-link" href="javascript:void(0);" (click)="getNextPage()">Next</a></li>
+    </ul>
+  </nav>
+</div>
+<!--End of Pagination Info-->
 <form name="form" #f="ngForm" novalidate contactRequired>
   <div class="form-group row align-items-center mb-3">
     <div class="col-sm-9">
