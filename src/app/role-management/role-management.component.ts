@@ -7,11 +7,11 @@ import { IDNService } from '../service/idn.service';
 import { MessageService } from '../service/message.service';
 import { AuthenticationService } from '../service/authentication-service.service';
 import { Role } from '../model/role';
+import { SimpleQueryCondition } from '../model/simple-query-condition';
+import { SourceOwner } from '../model/source-owner';
 import * as JSZip from 'jszip';
 import { saveAs } from 'file-saver';
 import { Observable, mapTo, take, timer } from 'rxjs';
-import { SimpleQueryCondition } from '../model/simple-query-condition';
-import { SourceOwner } from '../model/source-owner';
 
 const RoleDescriptionMaxLength = 50;
 @Component({
