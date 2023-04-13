@@ -114,7 +114,6 @@ export class RoleManagementComponent implements OnInit {
       this.roles = [];
       this.rolesToShow = [];
       this.roleCount = allRoles.body.length;
-      console.log(this.roleCount);
       let fetchedOwnerCount = 0;
       const results = allRoles.body;
       const headers = allRoles.headers;
