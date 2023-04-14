@@ -1121,6 +1121,35 @@ export class IDNService {
     return this.http.post(url, payload);
   }
 
+  changeEntitlementOwner(
+    entitlementId: string,
+    newOwnerId: string,
+  ): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/entitlements/${entitlementId}`;
+
+    const payload = {
+      op: "add",
+      path: "/owner",
+      value : {
+        type : 'IDENTITY',
+        id : newOwnerId
+      }  
+    };
+
+    //Not sure if this is because its bata but Entitlements must be list for one
+    const list = new Array();
+    list.push(payload);
+
+    const myHttpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json-patch+json',
+      }),
+    };
+
+    return this.http.patch(url, list, myHttpOptions);
+  }
+
   getAccessRequestApprovalsSummary(): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
     const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/access-request-approvals/approval-summary`;

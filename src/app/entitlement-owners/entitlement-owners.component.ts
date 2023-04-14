@@ -6,6 +6,7 @@ import { MessageService } from '../service/message.service';
 import { IdentityAttribute } from '../model/identity-attribute';
 import { Entitlement } from '../model/entitlement';
 import { PageResults } from '../model/page-results';
+import { SimpleQueryCondition } from '../model/simple-query-condition';
 
 @Component({
   selector: 'app-entitlement-owners',
@@ -22,6 +23,8 @@ export class EntitlmentOwnersComponent implements OnInit {
   entitlementsList: Array<{}>;
   entValue: string;
   page: PageResults;
+  newOwner: string;
+  e: Entitlement;
 
   public modalRef: BsModalRef;
 
@@ -79,6 +82,64 @@ export class EntitlmentOwnersComponent implements OnInit {
     this.getAllEntitlements();
   }
 
+  checkEntitlementOwner() {
+    this.messageService.clearAll();
+    this.invalidMessage = [];
+    // validation
+
+
+    if (this.newOwner && this.newOwner.trim() != '') {
+      const query = new SimpleQueryCondition();
+      query.attribute = 'name';
+      query.value = this.newOwner;
+
+      this.idnService.searchAccounts(query).subscribe(searchResult => {
+        if (searchResult && searchResult.length == 1) {
+          //this.invalidMessage.push(`Identity Account Name is Good.`);
+          this.updateOwner(searchResult);
+        } else {
+          this.validToSubmit = false;
+          this.invalidMessage.push(`Identity Account Name is Invalid.`);
+        }
+      });
+    } else {
+      this.invalidMessage.push('Identity Account Name cannot be null.');
+    }
+  }
+
+
+
+  updateOwner(identity) {
+    this.identityInfo = new IdentityAttribute();
+
+    this.identityInfo.id = identity[0].id;
+
+    this.idnService
+      .changeEntitlementOwner(
+        this.e.id,
+        this.identityInfo.id
+      )
+      .subscribe(
+        () => {
+          
+          this.messageService.add('Ownership Updated');
+          //this.e = null;
+          this.reset(true);
+         
+        },
+        err => {
+          console.log("error:" + err)
+          //this.e = null;
+          this.messageService.handleIDNError(err);
+        }
+      );
+  }
+
+
+  showOwnerUpdateModel(input){
+    this.e = input;
+  }
+
   getAllEntitlements() {
     this.loading = true;
     this.idnService.getAllEntitlementsPaged(this.entValue, this.page).subscribe(response => {
@@ -88,6 +149,7 @@ export class EntitlmentOwnersComponent implements OnInit {
         this.entitlementsList = [];
         for (const each of searchResult) {
           const ent = new Entitlement();
+          ent.id = each.id;
           ent.attribute = each.attribute;
           ent.value = each.value;
           ent.created = each.created;

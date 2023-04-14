@@ -63,6 +63,7 @@
         <th scope="col" class="col-2">Current Owner</th>
         <th scope="col" class="col-2">Created</th>
         <th scope="col" class="col-1">requestable</th>
+        <th scope="col" class="col-1">Action</th>
       </tr>
     </thead>
     <tbody class="text-center align-middle" *ngIf="entitlementsList && !loading">
@@ -76,9 +77,70 @@
         <td class="col-2">{{ e.ownerName }}</td>
         <td class="col-2">{{ e.created }}</td>
         <td class="col-2">{{ e.requestable }}</td>
+        <td>
+          <div class="col-sm-2 text-end">
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-id="{{i}}"
+            data-bs-target="#changeOwner" (click)="showOwnerUpdateModel(e)">
+            update
+          </button>
+          </div>
+        </td>
       </tr>
     </tbody>
   </table>
   <br>
 </div>
+</div>
+
+<!--Popup Window cloned from Forward-->
+<div  id="changeOwner" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="dialog-child-name">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 id="dialog-child-name" class="modal-title pull-left font-weight-bold">
+          Change Entitlement Owner
+        </h5>
+        <button type="button" class="btn close pull-right" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+          <div class="form-group row">
+            <div class="col-sm-12 text-start" *ngIf="e">
+              <span class="fw-bold">ID:</span>&nbsp;{{ e.id }}<br>
+              <span class="fw-bold">Description:</span>&nbsp;{{ e.description }}<br>
+              <span class="fw-bold">Application:</span>&nbsp;{{ e.sourceName }}<br>
+              <span class="fw-bold">Owner:</span>&nbsp;{{ e.ownerName }}<br>
+                <div *ngIf="!validToSubmit && invalidMessage && invalidMessage.length > 0">
+                  <br>
+                  <span class="font-weight-bold text-danger">Please fix following error:</span><br>
+                  <span *ngFor="let err of invalidMessage">
+                    {{ err }}
+                    <br>
+                  </span>
+                </div>
+            </div>
+          </div>
+          <div class="form-group row mb-3">
+            <div class="col-sm-12 text-start">
+              Pick a new Owner must be the name
+              <br><br>
+              <b>New Owner:</b> <input type="text" class="form-control col-sm-6" id="owner-name" [(ngModel)]="newOwner" placeholder="Enter Identity Account Name" aria-describedby="basic-addon3" autocomplete="off">
+              <br>
+            </div>
+          </div>
+          <div class="row mrgbtm small">
+            <div class="col-md-12 text-end">
+              <button type="button" class="btn btn-danger btn-sm" data-bs-dismiss="modal">Close</button>
+              &nbsp;&nbsp;&nbsp;
+              <span>
+                <button type="button" class="btn btn-success btn-sm" (click)="checkEntitlementOwner()">
+                  Update
+                </button>
+              </span>
+            </div>
+          </div>
+      </div>
+    </div>
+  </div>
 </div>
