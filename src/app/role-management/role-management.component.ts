@@ -48,6 +48,7 @@ export class RoleManagementComponent implements OnInit {
   retryDelay = 2000; //retry delay for 2 seconds
   maxRetries = 5; // Number of times to retry
   allRoleData: any;
+  loadedCount: number;
 
   allOwnersFetched: boolean;
   roles: Role[];
@@ -95,6 +96,7 @@ export class RoleManagementComponent implements OnInit {
     this.totalDisabled = null;
     this.totalRequestable = null;
     this.totalNonRequestable = null;
+    this.loadedCount = null;
 
     this.allOwnersFetched = false;
     this.roles = null;
@@ -215,6 +217,7 @@ export class RoleManagementComponent implements OnInit {
 
         this.roles.push(role);
         this.rolesToShow.push(role);
+        this.loadedCount = this.roles.length;
       }
     } catch (error) {
       console.error(error);

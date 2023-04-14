@@ -30,7 +30,7 @@
 </form>
 <div class="form-group row mb-4 mt-2" *ngIf="loading">
   <div class="col-sm-12 text-end">
-    <span class="spinner-border spinner-border-sm me-1"></span>Loading...
+    <span class="spinner-border spinner-border-sm me-1"></span>Loaded: {{loadedCount}} / {{roleCount}} ({{((loadedCount/roleCount) * 100).toFixed(2)}}%)
   </div>
 </div>
 <div class="form-group row align-items-center mb-4" *ngIf="!loading && allOwnersFetched">
