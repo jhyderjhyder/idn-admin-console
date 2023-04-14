@@ -124,6 +124,8 @@ export class RoleManagementComponent implements OnInit {
       this.totalRequestable = data.filter(each => each.requestable).length;
       this.totalNonRequestable = data.filter(each => !each.requestable).length;
 
+      //Sort it alphabetically
+      data.sort((a, b) => a.name.localeCompare(b.name));
       this.allRoleData = data;
       let index = 0;
       for (const each of data) {
