@@ -36,9 +36,14 @@ export class RoleManagementComponent implements OnInit {
   errorInvokeApi: boolean;
   searchText: string;
   loading: boolean;
+  executing: boolean;
   exporting: boolean;
   invalidMessage: string[];
   roleCount: number;
+  totalEnabled: number;
+  totalDisabled: number;
+  totalRequestable: number;
+  totalNonRequestable: number;
   defaultLimit = 50; //default limit for Roles API is 50
   retryDelay = 2000; //retry delay for 2 seconds
   maxRetries = 5; // Number of times to retry
@@ -82,9 +87,14 @@ export class RoleManagementComponent implements OnInit {
     this.atLeastOneSelected = null;
     this.searchText = null;
     this.loading = false;
+    this.executing = false;
     this.exporting = false;
     this.invalidMessage = [];
     this.roleCount = null;
+    this.totalEnabled = null;
+    this.totalDisabled = null;
+    this.totalRequestable = null;
+    this.totalNonRequestable = null;
 
     this.allOwnersFetched = false;
     this.roles = null;
@@ -101,6 +111,7 @@ export class RoleManagementComponent implements OnInit {
     this.allOwnersFetched = false;
     this.loading = true;
     this.roleCount = 0;
+    this.totalEnabled = 0;
     this.roles = [];
     this.rolesToShow = [];
     let fetchedOwnerCount = 0;
@@ -108,13 +119,18 @@ export class RoleManagementComponent implements OnInit {
     try {
       const data = await this.getAllRolesData();
       this.roleCount = data.length;
+      this.totalEnabled = data.filter(each => each.enabled).length;
+      this.totalDisabled = data.filter(each => !each.enabled).length;
+      this.totalRequestable = data.filter(each => each.requestable).length;
+      this.totalNonRequestable = data.filter(each => !each.requestable).length;
+
       this.allRoleData = data;
       let index = 0;
       for (const each of data) {
         if (index > 0 && index % 10 == 0) {
-          // After processing every batch (10 roles), wait for 2 seconds before calling another API to avoid 429
+          // After processing every batch (10 roles), wait for 3 seconds before calling another API to avoid 429
           // Too Many Requests Error
-          await this.sleep(2000);
+          await this.sleep(3000);
         }
         index++;
 
@@ -337,6 +353,7 @@ export class RoleManagementComponent implements OnInit {
   }
 
   async updateRoles(path: string, enabled: boolean) {
+    this.executing = true;
     const arr = this.getSelectedRoles();
     let processedCount = 0;
     let index = 0;
@@ -411,6 +428,7 @@ export class RoleManagementComponent implements OnInit {
   }
 
   async deleteRoles() {
+    this.executing = true;
     this.messageService.clearAll();
     this.invalidMessage = [];
     if (this.deleteRoleConfirmText !== 'YES TO DELETE') {
