@@ -203,9 +203,9 @@ export class SourceCreateProfileComponent implements OnInit {
             );
           promises.push(promise);
 
-          // add 2 second delay after every 10 calls to avoid 429 retry error
+          // add 3 second delay after every 10 calls to avoid 429 retry error
           if ((i + 1) % 10 === 0) {
-            promises.push(new Promise(resolve => setTimeout(resolve, 2000)));
+            promises.push(new Promise(resolve => setTimeout(resolve, 3000)));
           }
         }
 

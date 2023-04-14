@@ -43,7 +43,7 @@ export class AccessProfileManagementComponent implements OnInit {
   totalEnabled: number;
   totalDisabled: number;
   defaultLimit = 50; //default limit for Access Profiles API is 50
-  retryDelay = 2000; //retry delay for 2 seconds
+  retryDelay = 3000; //retry delay for 3 seconds
   maxRetries = 5; // Number of times to retry
   allAPData: any;
   loadedCount: number;
@@ -326,9 +326,9 @@ export class AccessProfileManagementComponent implements OnInit {
     let index = 0;
     for (const each of arr) {
       if (index > 0 && index % 10 == 0) {
-        // After processing every batch (10 AP), wait for 2 seconds before calling another API to avoid 429
+        // After processing every batch (10 AP), wait for 3 seconds before calling another API to avoid 429
         // Too Many Requests Error
-        await this.sleep(2000);
+        await this.sleep(3000);
       }
       index++;
 
@@ -407,9 +407,9 @@ export class AccessProfileManagementComponent implements OnInit {
     let index = 0;
     for (const each of arr) {
       if (index > 0 && index % 10 == 0) {
-        // After processing every batch (10 AP), wait for 2 seconds before calling another API to avoid 429
+        // After processing every batch (10 AP), wait for 3 seconds before calling another API to avoid 429
         // Too Many Requests Error
-        await this.sleep(2000);
+        await this.sleep(3000);
       }
       index++;
 
@@ -423,7 +423,7 @@ export class AccessProfileManagementComponent implements OnInit {
             );
             this.hideSubmitConfirmModal();
             this.reset(false);
-            await this.sleep(2000);
+            await this.sleep(3000);
             this.getAllAccessProfiles();
           }
         },

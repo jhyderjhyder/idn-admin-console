@@ -39,7 +39,7 @@ export class ChangeRoleOwnerComponent implements OnInit {
   validToSubmit: boolean;
   roleCount: number;
   defaultLimit = 50; //default limit for Roles API is 50
-  retryDelay = 2000; //retry delay for 2 seconds
+  retryDelay = 3000; //retry delay for 3 seconds
   maxRetries = 5; // Number of times to retry
   allRoleData: any;
   loadedCount: number;

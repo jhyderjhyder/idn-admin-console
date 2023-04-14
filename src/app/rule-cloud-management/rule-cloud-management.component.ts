@@ -77,7 +77,7 @@ export class CloudRuleComponent implements OnInit {
         } else if (this.jobStatus === 'COMPLETE') {
           this.getSPConfigExports(this.jobId);
         } else {
-          await this.sleep(2000);
+          await this.sleep(3000);
           this.checkExportJobStatus(this.jobId);
         }
         this.loading = true;
