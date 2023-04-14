@@ -215,9 +215,9 @@ export class IdentityProfileManagementComponent implements OnInit {
     let index = 0;
     for (const each of arr) {
       if (index > 0 && index % 10 == 0) {
-        // After processing every batch (10 sources), wait for 2 seconds before calling another API to avoid 429
+        // After processing every batch (10 sources), wait for 3 seconds before calling another API to avoid 429
         // Too Many Requests Error
-        await this.sleep(2000);
+        await this.sleep(3000);
       }
       index++;
 

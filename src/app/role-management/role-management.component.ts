@@ -45,7 +45,7 @@ export class RoleManagementComponent implements OnInit {
   totalRequestable: number;
   totalNonRequestable: number;
   defaultLimit = 50; //default limit for Roles API is 50
-  retryDelay = 2000; //retry delay for 2 seconds
+  retryDelay = 3000; //retry delay for 3 seconds
   maxRetries = 5; // Number of times to retry
   allRoleData: any;
   loadedCount: number;
@@ -204,17 +204,6 @@ export class RoleManagementComponent implements OnInit {
           }
         });
 
-        // // wait for 0.1 seconds (i.e. 10 calls per second)
-        // await this.sleep(100);
-
-        // // after 10 calls, wait for 2 seconds
-        // if (
-        //   (data.indexOf(each) + 1) % 10 === 0 &&
-        //   data.indexOf(each) !== data.length - 1
-        // ) {
-        //   await this.sleep(2000);
-        // }
-
         this.roles.push(role);
         this.rolesToShow.push(role);
         this.loadedCount = this.roles.length;
@@ -364,9 +353,9 @@ export class RoleManagementComponent implements OnInit {
     let index = 0;
     for (const each of arr) {
       if (index > 0 && index % 10 == 0) {
-        // After processing every batch (10 roles), wait for 2 seconds before calling another API to avoid 429
+        // After processing every batch (10 roles), wait for 3 seconds before calling another API to avoid 429
         // Too Many Requests Error
-        await this.sleep(2000);
+        await this.sleep(3000);
       }
       index++;
 
@@ -449,9 +438,9 @@ export class RoleManagementComponent implements OnInit {
     let index = 0;
     for (const each of arr) {
       if (index > 0 && index % 10 == 0) {
-        // After processing every batch (10 roles), wait for 2 seconds before calling another API to avoid 429
+        // After processing every batch (10 roles), wait for 3 seconds before calling another API to avoid 429
         // Too Many Requests Error
-        await this.sleep(2000);
+        await this.sleep(3000);
       }
       index++;
 
@@ -465,7 +454,7 @@ export class RoleManagementComponent implements OnInit {
             );
             this.hideSubmitConfirmModal();
             this.reset(false);
-            await this.sleep(2000);
+            await this.sleep(3000);
             this.getAllRoles();
           }
         },

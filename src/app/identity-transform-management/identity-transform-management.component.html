@@ -50,6 +50,12 @@
     </button>
   </div>
 </div>
+<div class="form-group row" *ngIf="!loading">
+  <div class="col-sm-10 text-start">
+    <span class="fw-bold">Total: {{ totalCount }} </span>
+  </div>
+</div>
+<br>
 <div class="form-group row mb-3" *ngIf="!loading">
   <div class="col-sm-12 text-start">
     <span class="fw-bold">Click 'Select' button in Actions column and select 'Download', 'Update', or 'Delete' to download, update, or delete a transform</span>

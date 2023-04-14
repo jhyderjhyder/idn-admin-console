@@ -8,7 +8,7 @@ export class OrgData {
   accountCount: string;
   identityProfileCount: string;
   sourceCount: string;
-  accessProfileCount: string;
+  accessProfileCount: number;
   roleCount: number;
   entitlementCount: string;
   totalCampaignCount: string;
