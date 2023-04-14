@@ -236,7 +236,7 @@ export class RoleManagementComponent implements OnInit {
 
     for (let offset = 0; allData.length < count; offset += this.defaultLimit) {
       const dataPage = await this.idnService
-        .getAllRoles2(offset)
+        .getAllRoles(offset)
         .pipe(
           take(1),
           retryWhen(errors =>

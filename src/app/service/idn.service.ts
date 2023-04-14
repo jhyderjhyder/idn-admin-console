@@ -174,15 +174,6 @@ export class IDNService {
       .pipe(catchError(this.handleError(`refreshAllRoles`)));
   }
 
-  getAllRoles(): Observable<any> {
-    const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/roles`;
-
-    return this.http
-      .get(url, this.httpOptions)
-      .pipe(catchError(this.handleError(`getAllRoles`)));
-  }
-
   getTotalRolesCount(): Observable<number> {
     const currentUser = this.authenticationService.currentUserValue;
     const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/roles?limit=1&count=true`;
@@ -194,7 +185,7 @@ export class IDNService {
     );
   }
 
-  getAllRoles2(offset: number): Observable<any> {
+  getAllRoles(offset: number): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
     const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/roles?offset=${offset}&limit=50`;
 
@@ -639,13 +630,6 @@ export class IDNService {
   getAccessProfileCount(): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
     const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/access-profiles?limit=1&count=true`;
-
-    return this.http.get(url, { observe: 'response' });
-  }
-
-  getRoleCount(): Observable<any> {
-    const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/roles?limit=1&count=true`;
 
     return this.http.get(url, { observe: 'response' });
   }
