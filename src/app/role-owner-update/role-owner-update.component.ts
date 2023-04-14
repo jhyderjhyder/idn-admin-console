@@ -228,7 +228,7 @@ export class ChangeRoleOwnerComponent implements OnInit {
     };
 
     const currentUser = this.authenticationService.currentUserValue;
-    const fileName = `${currentUser.tenant}-roles`;
+    const fileName = `${currentUser.tenant}-roles-owners`;
     const arr = [];
     for (const each of this.roles) {
       const record = Object.assign(each);

@@ -288,13 +288,21 @@ export class IDNService {
     return this.http.delete(url, myHttpOptions);
   }
 
-  getAllAccessProfiles(): Observable<any> {
+  getAllAccessProfiles(offset: number): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/access-profiles`;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/access-profiles?offset=${offset}&limit=50`;
 
-    return this.http
-      .get(url, this.httpOptions)
-      .pipe(catchError(this.handleError(`getAllAccessProfiles`)));
+    return this.http.get(url, this.httpOptions).pipe(
+      catchError(error => {
+        if (error.status === 429) {
+          console.warn('Rate limited. Retrying in 2 seconds...');
+          return of(null);
+        } else {
+          console.error(error);
+          return throwError(error);
+        }
+      })
+    );
   }
 
   updateAccessProfileOwner(accessProfile: AccessProfile): Observable<any> {
@@ -627,11 +635,15 @@ export class IDNService {
     return this.http.get(url, { observe: 'response' });
   }
 
-  getAccessProfileCount(): Observable<any> {
+  getTotalAccessProfilesCount(): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
     const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/access-profiles?limit=1&count=true`;
 
-    return this.http.get(url, { observe: 'response' });
+    return this.http.get(url, { observe: 'response' }).pipe(
+      map(response => response.headers.get('X-Total-Count')),
+      map(totalCount => parseInt(totalCount, 10)),
+      catchError(error => throwError(error))
+    );
   }
 
   getEntitlementCount(): Observable<any> {
