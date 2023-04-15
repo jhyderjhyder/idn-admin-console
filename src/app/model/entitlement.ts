@@ -1,3 +1,5 @@
+import { SourceOwner } from './source-owner';
+
 export class Entitlement {
   id: string;
   attribute: string;
@@ -10,4 +12,9 @@ export class Entitlement {
   ownerName: string;
   ownerId: string;
   created: string;
+  selected: boolean;
+  owner: SourceOwner;
+  newOwner: SourceOwner;
+  currentOwnerAccountName: string;
+  currentOwnerDisplayName: string;
 }

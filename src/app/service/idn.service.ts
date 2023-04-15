@@ -1147,18 +1147,56 @@ export class IDNService {
 
   changeEntitlementOwner(
     entitlementId: string,
+    op: string,
     newOwnerId: string
   ): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
     const url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/entitlements/${entitlementId}`;
 
+    let payload = null;
+
+    if (op === 'remove') {
+      payload = {
+        op: `${op}`,
+        path: '/owner',
+      };
+    } else {
+      payload = {
+        op: `${op}`,
+        path: '/owner',
+        value: {
+          type: 'IDENTITY',
+          id: newOwnerId,
+        },
+      };
+    }
+
+    //Not sure if this is because its bata but Entitlements must be list for one
+    const list = new Array();
+    list.push(payload);
+
+    const myHttpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json-patch+json',
+      }),
+    };
+
+    return this.http.patch(url, list, myHttpOptions);
+  }
+
+  changeEntitlementFlags(
+    entitlementId: string,
+    op: string,
+    path: string,
+    value: boolean
+  ): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/entitlements/${entitlementId}`;
+
     const payload = {
-      op: 'add',
-      path: '/owner',
-      value: {
-        type: 'IDENTITY',
-        id: newOwnerId,
-      },
+      op: `${op}`,
+      path: `${path}`,
+      value: `${value}`,
     };
 
     //Not sure if this is because its bata but Entitlements must be list for one
