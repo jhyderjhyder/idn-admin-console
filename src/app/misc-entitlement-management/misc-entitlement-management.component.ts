@@ -9,10 +9,10 @@ import { SourceOwner } from '../model/source-owner';
 
 @Component({
   selector: 'app-manage-entitlements',
-  templateUrl: './misc-manage-entitlements.component.html',
-  styleUrls: ['./misc-manage-entitlements.component.css'],
+  templateUrl: './misc-entitlement-management.component.html',
+  styleUrls: ['./misc-entitlement-management.component.css'],
 })
-export class ManageEntitlementsComponent implements OnInit {
+export class EntitlementManagementComponent implements OnInit {
   entitlementsList: Entitlement[];
   entitlementsListToShow: Entitlement[];
   page: PageResults;

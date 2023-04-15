@@ -8,7 +8,7 @@ import { AccessRequestStatusComponent } from './access-request-status/access-req
 import { AccessRequestApprovalForwardComponent } from './access-request-approval-forward/access-request-approval-forward.component';
 import { WorkItemsStatusComponent } from './work-items-status/work-items-status.component';
 import { WorkItemsForwardComponent } from './work-items-forward/work-items-forward.component';
-import { ManageEntitlementsComponent } from './misc-manage-entitlements/misc-manage-entitlements.component';
+import { EntitlementManagementComponent } from './misc-entitlement-management/misc-entitlement-management.component';
 import { AggregationManagementComponent } from './source-aggregation-management/source-aggregation-management.component';
 import { ChangeSourceOwnerComponent } from './source-owner-update/source-owner-update.component';
 import { AggregateSourceComponent } from './source-aggregation-run/source-aggregation-run.component';
@@ -65,7 +65,7 @@ const routes: Routes = [
   },
   {
     path: 'manage-entitlements',
-    component: ManageEntitlementsComponent,
+    component: EntitlementManagementComponent,
     canActivate: [AuthGuard],
   },
   {
