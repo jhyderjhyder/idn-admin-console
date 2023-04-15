@@ -1,6 +1,6 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
-import { EntitlmentOwnersComponent } from './misc-manage-entitlements.component';
+import { ManageEntitlementsComponent } from './misc-manage-entitlements.component';
 import { HttpClientModule } from '@angular/common/http';
 import { HttpClientTestingModule } from '@angular/common/http/testing';
 import { FormsModule } from '@angular/forms';
@@ -9,12 +9,12 @@ import { IDNService } from '../service/idn.service';
 import { MockIDNService } from '../service/idn.service.mock.spec';
 
 describe('EntitlementOwnersComponent', () => {
-  let component: EntitlmentOwnersComponent;
-  let fixture: ComponentFixture<EntitlmentOwnersComponent>;
+  let component: ManageEntitlementsComponent;
+  let fixture: ComponentFixture<ManageEntitlementsComponent>;
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [EntitlmentOwnersComponent],
+      declarations: [ManageEntitlementsComponent],
       providers: [
         IDNService,
         { provide: IDNService, useClass: MockIDNService },
@@ -29,7 +29,7 @@ describe('EntitlementOwnersComponent', () => {
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(EntitlmentOwnersComponent);
+    fixture = TestBed.createComponent(ManageEntitlementsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

@@ -8,11 +8,11 @@ import { SimpleQueryCondition } from '../model/simple-query-condition';
 import { SourceOwner } from '../model/source-owner';
 
 @Component({
-  selector: 'app-entitlement-owners',
+  selector: 'app-manage-entitlements',
   templateUrl: './misc-manage-entitlements.component.html',
   styleUrls: ['./misc-manage-entitlements.component.css'],
 })
-export class EntitlmentOwnersComponent implements OnInit {
+export class ManageEntitlementsComponent implements OnInit {
   entitlementsList: Entitlement[];
   entitlementsListToShow: Entitlement[];
   page: PageResults;
