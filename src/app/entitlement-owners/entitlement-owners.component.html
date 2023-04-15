@@ -62,7 +62,7 @@
         <th scope="col" class="col-2">Description</th>
         <th scope="col" class="col-2">Current Owner</th>
         <th scope="col" class="col-2">Created</th>
-        <th scope="col" class="col-1">requestable</th>
+        <th scope="col" class="col-1">Requestable</th>
         <th scope="col" class="col-1">Action</th>
       </tr>
     </thead>
@@ -108,8 +108,9 @@
           <div class="form-group row">
             <div class="col-sm-12 text-start" *ngIf="e">
               <span class="fw-bold">ID:</span>&nbsp;{{ e.id }}<br>
-              <span class="fw-bold">Description:</span>&nbsp;{{ e.description }}<br>
+              <span class="fw-bold">Name:</span>&nbsp;{{ e.name }}<br>
               <span class="fw-bold">Application:</span>&nbsp;{{ e.sourceName }}<br>
+              <span class="fw-bold">Description:</span>&nbsp;{{ e.description }}<br>
               <span class="fw-bold">Owner:</span>&nbsp;{{ e.ownerName }}<br>
                 <div *ngIf="!validToSubmit && invalidMessage && invalidMessage.length > 0">
                   <br>
@@ -123,7 +124,8 @@
           </div>
           <div class="form-group row mb-3">
             <div class="col-sm-12 text-start">
-              Pick a new Owner must be the name
+              <hr>
+              
               <br><br>
               <b>New Owner:</b> <input type="text" class="form-control col-sm-6" id="owner-name" [(ngModel)]="newOwner" placeholder="Enter Identity Account Name" aria-describedby="basic-addon3" autocomplete="off">
               <br>

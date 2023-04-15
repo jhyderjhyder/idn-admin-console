@@ -1,5 +1,4 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { BsModalRef, ModalDirective } from 'ngx-bootstrap/modal';
+import { Component, OnInit } from '@angular/core';
 import { IDNService } from '../service/idn.service';
 import { AuthenticationService } from '../service/authentication-service.service';
 import { MessageService } from '../service/message.service';
@@ -26,10 +25,8 @@ export class EntitlmentOwnersComponent implements OnInit {
   newOwner: string;
   e: Entitlement;
 
-  public modalRef: BsModalRef;
 
-  @ViewChild('forwardWorkItemConfirmModal', { static: false })
-  forwardWorkItemConfirmModal: ModalDirective;
+
 
   constructor(
     private idnService: IDNService,
@@ -48,6 +45,11 @@ export class EntitlmentOwnersComponent implements OnInit {
     this.page.limit = 25;
   }
 
+  /*
+  Button on the page to clear everything
+  and start over
+  */
+
   reset(clearMsg: boolean) {
     this.errorMessage = null;
     this.loading = false;
@@ -60,11 +62,17 @@ export class EntitlmentOwnersComponent implements OnInit {
     this.entValue = null;
   }
 
+  /**
+   * Button on the page to seach for new records
+   */
   submit() {
     this.setupPage();
     this.getAllEntitlements();
   }
 
+/*
+* Paganation logic
+*/
 
   //Get the next page
   getNextPage() {
@@ -82,11 +90,13 @@ export class EntitlmentOwnersComponent implements OnInit {
     this.getAllEntitlements();
   }
 
+  /*
+  Lets make sure the user is found cloned from
+  Workitem forward
+  */
   checkEntitlementOwner() {
     this.messageService.clearAll();
     this.invalidMessage = [];
-    // validation
-
 
     if (this.newOwner && this.newOwner.trim() != '') {
       const query = new SimpleQueryCondition();
@@ -111,26 +121,24 @@ export class EntitlmentOwnersComponent implements OnInit {
 
   updateOwner(identity) {
     this.identityInfo = new IdentityAttribute();
-
     this.identityInfo.id = identity[0].id;
-
     this.idnService
       .changeEntitlementOwner(
         this.e.id,
         this.identityInfo.id
       )
-      .subscribe(
-        () => {
+      .subscribe(each => {
           
-          this.messageService.add('Ownership Updated');
-          //this.e = null;
-          this.reset(true);
+          this.messageService.add('Ownership Updated for Entitlement:' + each.name);
+          if (each.owner != null) {
+            this.e.ownerName = each.owner.name;
+            this.e.ownerId = each.owner.id;
+          }
+          //this.reset(true);
          
         },
         err => {
-          console.log("error:" + err)
-          //this.e = null;
-          this.messageService.handleIDNError(err);
+          this.messageService.add("error:" + err)
         }
       );
   }
