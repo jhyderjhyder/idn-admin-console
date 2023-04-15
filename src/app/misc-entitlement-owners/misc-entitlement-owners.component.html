@@ -1,8 +1,8 @@
 <nav class="navbar navbar-expand-lg navbar-light bg-light p-3 mb-3 rounded" aria-label="breadcrumb">
   <ol class="breadcrumb m-0">
     <li class="breadcrumb-item"><a class="text-decoration-none" routerLink="/identity-info">Home</a></li>
-    <li class="breadcrumb-item">Entitlement Ownership</li>
-    <li class="breadcrumb-item active" aria-current="page">Update Entitlement Ownership</li>
+    <li class="breadcrumb-item">Misc</li>
+    <li class="breadcrumb-item active" aria-current="page">Manage Entitlement Owners</li>
   </ol>
 </nav>
 <div>
@@ -32,7 +32,7 @@
 <div class="row">
   <div class="form-group col-sm-6" *ngIf="!loading">
       <input class="form-control py-2 border-start-0 border" type="text" [(ngModel)]="entValue"
-            placeholder="Entitlement Value">
+            placeholder="Search via Entitlement Name (Starts With)">
   </div>
   <div class="col-sm-1 text-end">
     <button type="button" (click)="submit()" class="btn btn-primary btn-sm">
@@ -40,8 +40,8 @@
     </button>
   </div>
   <div class="col-sm-1 text-end">
-    <button type="button" (click)="reset(true)" class="btn btn-primary btn-sm">
-      Reset
+    <button type="button" (click)="ngOnInit()" class="btn btn-primary btn-sm">
+      Refresh
     </button>
   </div>
 </div>
@@ -75,7 +75,7 @@
         <td class="col-2">{{ e.name }}</td>
         <td class="col-2">{{ e.description }}</td>
         <td class="col-2">{{ e.ownerName }}</td>
-        <td class="col-2">{{ e.created }}</td>
+        <td class="col-2">{{ e.created | date:'yyyy-MM-dd hh:mm:ss aa' }}</td>
         <td class="col-2">{{ e.requestable }}</td>
         <td>
           <div class="col-sm-2 text-end">

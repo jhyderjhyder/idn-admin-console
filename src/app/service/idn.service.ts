@@ -1229,7 +1229,7 @@ export class IDNService {
     const currentUser = this.authenticationService.currentUserValue;
     let params = '?count=true';
     if (filters != null) {
-      params = '?filters=value sw "' + filters + '"' + '&count=true';
+      params = '?filters=name sw "' + filters + '"' + '&count=true';
     }
     const url =
       `https://${currentUser.tenant}.api.${currentUser.domain}/beta/entitlements` +

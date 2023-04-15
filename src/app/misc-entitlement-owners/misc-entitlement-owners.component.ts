@@ -9,8 +9,8 @@ import { SimpleQueryCondition } from '../model/simple-query-condition';
 
 @Component({
   selector: 'app-entitlement-owners',
-  templateUrl: './entitlement-owners.component.html',
-  styleUrls: ['./entitlement-owners.component.css'],
+  templateUrl: './misc-entitlement-owners.component.html',
+  styleUrls: ['./misc-entitlement-owners.component.css'],
 })
 export class EntitlmentOwnersComponent implements OnInit {
   loading: boolean;
