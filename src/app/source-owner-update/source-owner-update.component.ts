@@ -25,6 +25,8 @@ export class ChangeSourceOwnerComponent implements OnInit {
   searchText: string;
   allOwnersFetched: boolean;
   loading: boolean;
+  loadedCount: number;
+  sourceCount: number;
 
   public modalRef: BsModalRef;
 
@@ -52,6 +54,8 @@ export class ChangeSourceOwnerComponent implements OnInit {
     this.searchText = null;
     this.loading = false;
     this.allOwnersFetched = false;
+    this.loadedCount = null;
+    this.sourceCount = null;
     this.invalidMessage = [];
     if (clearMsg) {
       this.messageService.clearAll();
@@ -62,11 +66,23 @@ export class ChangeSourceOwnerComponent implements OnInit {
   search() {
     this.allOwnersFetched = false;
     this.loading = true;
-    this.idnService.getAllSources().subscribe(allSources => {
+    this.idnService.getAllSources().subscribe(async allSources => {
       this.sources = [];
-      const sourceCount = allSources.length;
+      this.sourceCount = allSources.length;
       let fetchedOwnerCount = 0;
+
+      //Sort it alphabetically
+      allSources.sort((a, b) => a.name.localeCompare(b.name));
+
+      let index = 0;
       for (const each of allSources) {
+        if (index > 0 && index % 10 == 0) {
+          // After processing every batch (10 sources), wait for 3 seconds before calling another API to avoid 429
+          // Too Many Requests Error
+          await this.sleep(3000);
+        }
+        index++;
+
         const source = new Source();
         source.id = each.id;
         source.cloudExternalID = each.connectorAttributes.cloudExternalId;
@@ -88,12 +104,13 @@ export class ChangeSourceOwnerComponent implements OnInit {
             source.currentOwnerDisplayName = searchResult[0].displayName;
           }
           fetchedOwnerCount++;
-          if (fetchedOwnerCount == sourceCount) {
+          if (fetchedOwnerCount == this.sourceCount) {
             this.allOwnersFetched = true;
           }
         });
 
         this.sources.push(source);
+        this.loadedCount = this.sources.length;
       }
       this.loading = false;
     });
@@ -238,9 +255,9 @@ export class ChangeSourceOwnerComponent implements OnInit {
     let index = 0;
     for (const each of arr) {
       if (index > 0 && index % 10 == 0) {
-        // After processing every batch (10 sources), wait for 2 seconds before calling another API to avoid 429
+        // After processing every batch (10 sources), wait for 3 seconds before calling another API to avoid 429
         // Too Many Requests Error
-        await this.sleep(2000);
+        await this.sleep(3000);
       }
       index++;
 

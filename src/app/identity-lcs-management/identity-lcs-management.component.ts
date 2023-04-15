@@ -6,6 +6,7 @@ import { MessageService } from '../service/message.service';
 import * as JSZip from 'jszip';
 import { saveAs } from 'file-saver';
 import { IdentityProfile } from '../model/identity-profile';
+import { AuthenticationService } from '../service/authentication-service.service';
 
 @Component({
   selector: 'app-identity-lcs-management',
@@ -16,6 +17,7 @@ export class IdentityLCSComponent implements OnInit {
   identityProfiles: IdentityProfile[];
   loading: boolean;
   validToSubmit: boolean;
+  exporting: boolean;
 
   lcsAttributes: IdentityProfile[];
   selectedIdentityProfileId: string;
@@ -32,7 +34,8 @@ export class IdentityLCSComponent implements OnInit {
 
   constructor(
     private idnService: IDNService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private authenticationService: AuthenticationService
   ) {}
 
   ngOnInit() {
@@ -42,6 +45,7 @@ export class IdentityLCSComponent implements OnInit {
 
   reset(clearMsg: boolean) {
     this.loading = false;
+    this.exporting = false;
     this.invalidMessage = [];
     this.validToSubmit = false;
 
@@ -151,42 +155,52 @@ export class IdentityLCSComponent implements OnInit {
       );
   }
 
-  //  exportAllIdentityProfilesLCS() {
+  exportAllIdentityProfilesLCS() {
+    this.exporting = true;
+    this.idnService.getAllIdentityProfiles().subscribe(
+      results => {
+        this.identityProfiles = [];
+        const promises = [];
 
-  //   this.idnService.getAllIdentityProfiles()
-  //         .subscribe(
-  //           results => {
-  //           this.identityProfiles = [];
-  //           for (const each of results) {
-  //             const identityProfile = new IdentityProfile();
+        for (const each of results) {
+          const identityProfile = new IdentityProfile();
+          identityProfile.name = each.name;
+          identityProfile.id = each.id;
 
-  //             identityProfile.name = each.name;
-  //             identityProfile.id = each.id;
+          const promise = this.idnService
+            .getIdentityProfileLCS(identityProfile.id)
+            .toPromise()
+            .then(
+              result => {
+                result = JSON.stringify(result, null, 4);
+                const fileName = 'LCS - ' + identityProfile.name + '.json';
+                this.zip.file(`${fileName}`, result);
+              },
+              err => {
+                if (err.status === 404) {
+                  console.log(
+                    `No LCS profile found for Identity Profile ${identityProfile.name}`
+                  );
+                } else {
+                  this.messageService.handleIDNError(err);
+                }
+              }
+            );
+          promises.push(promise);
+        }
 
-  //             this.idnService.getIdentityProfileLCS(identityProfile.id)
-  //             .subscribe(
-  //               result => {
-  //                 result = JSON.stringify(result, null, 4);
-
-  //                 const fileName = "LCS - " + identityProfile.name + ".json";
-  //                 this.zip.file(`${fileName}`, result);
-
-  //               },
-  //               err => this.messageService.handleIDNError(err)
-  //             );
-
-  //           }
-  //           const currentUser = this.authenticationService.currentUserValue;
-  //           const zipFileName = `${currentUser.tenant}-identityprofiles-lcs.zip`;
-
-  //          this.zip.generateAsync({type:"blob"}).then(function(content) {
-  //             saveAs(content, zipFileName);
-  //         });
-
-  //         this.ngOnInit();
-
-  //         });
-  // }
+        Promise.all(promises).then(() => {
+          const currentUser = this.authenticationService.currentUserValue;
+          const zipFileName = `${currentUser.tenant}-identityprofiles-lcs.zip`;
+          this.zip.generateAsync({ type: 'blob' }).then(content => {
+            saveAs(content, zipFileName);
+          });
+          this.ngOnInit();
+        });
+      },
+      err => this.messageService.handleIDNError(err)
+    );
+  }
 
   showDeleteLCSSubmitConfirmModal(lcsId: string) {
     this.messageService.clearError();

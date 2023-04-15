@@ -9,6 +9,16 @@ import { AuthenticationService } from '../service/authentication-service.service
 import { SimpleQueryCondition } from '../model/simple-query-condition';
 import { SourceOwner } from '../model/source-owner';
 import { AccessProfile } from '../model/accessprofile';
+import {
+  take,
+  retryWhen,
+  delayWhen,
+  defer,
+  throwError,
+  Observable,
+  timer,
+  mapTo,
+} from 'rxjs';
 
 const AccessProfileDescriptionMaxLength = 50;
 
@@ -28,6 +38,11 @@ export class ChangeAccessProfileOwnerComponent implements OnInit {
   invalidMessage: string[];
   validToSubmit: boolean;
   accessProfileCount: number;
+  defaultLimit = 50; //default limit for Access Profiles API is 50
+  retryDelay = 3000; //retry delay for 3 seconds
+  maxRetries = 5; // Number of times to retry
+  allAPData: any;
+  loadedCount: number;
 
   public modalRef: BsModalRef;
 
@@ -57,74 +72,128 @@ export class ChangeAccessProfileOwnerComponent implements OnInit {
     this.allOwnersFetched = false;
     this.invalidMessage = [];
     this.accessProfileCount = null;
+    this.loadedCount = null;
     if (clearMsg) {
       this.messageService.clearAll();
       this.errorMessage = null;
     }
   }
 
-  getAllAccessProfiles() {
+  async getAllAccessProfiles() {
     this.allOwnersFetched = false;
     this.loading = true;
     this.accessProfileCount = 0;
-    this.idnService
-      .getAllAccessProfiles()
-      .subscribe(async allAccessProfiles => {
-        this.accessProfiles = [];
-        this.accessProfileCount = allAccessProfiles.length;
-        let fetchedOwnerCount = 0;
-        let index = 0;
-        for (const each of allAccessProfiles) {
-          if (index > 0 && index % 10 == 0) {
-            // After processing every batch (10 AP), wait for 2 seconds before calling another API to avoid 429
-            // Too Many Requests Error
-            await this.sleep(2000);
-          }
-          index++;
+    this.accessProfiles = [];
+    let fetchedOwnerCount = 0;
 
-          const accessProfile = new AccessProfile();
-          accessProfile.id = each.id;
-          accessProfile.name = each.name;
-          if (each.description) {
-            if (each.description.length > AccessProfileDescriptionMaxLength) {
-              accessProfile.description =
-                each.description.substring(
-                  0,
-                  AccessProfileDescriptionMaxLength
-                ) + '...';
-            } else {
-              accessProfile.description = each.description;
-            }
-          }
-          accessProfile.id = each.id;
-          accessProfile.enabled = each.enabled;
+    try {
+      const data = await this.getAllAccessProfilesData();
+      this.accessProfileCount = data.length;
 
-          accessProfile.entitlements = each.entitlements.length;
+      //Sort it alphabetically
+      data.sort((a, b) => a.name.localeCompare(b.name));
+      this.allAPData = data;
 
-          const query = new SimpleQueryCondition();
-          query.attribute = 'id';
-          query.value = each.owner.id;
-
-          this.idnService.searchAccounts(query).subscribe(searchResult => {
-            if (searchResult.length > 0) {
-              accessProfile.owner = new SourceOwner();
-              accessProfile.owner.accountId = searchResult[0].id;
-              accessProfile.owner.accountName = searchResult[0].name;
-              accessProfile.owner.displayName = searchResult[0].displayName;
-              accessProfile.currentOwnerAccountName = searchResult[0].name;
-              accessProfile.currentOwnerDisplayName =
-                searchResult[0].displayName;
-            }
-            fetchedOwnerCount++;
-            if (fetchedOwnerCount == this.accessProfileCount) {
-              this.allOwnersFetched = true;
-            }
-          });
-
-          this.accessProfiles.push(accessProfile);
+      let index = 0;
+      for (const each of data) {
+        if (index > 0 && index % 10 == 0) {
+          // After processing every batch (10 AP), wait for 3 seconds before calling another API to avoid 429
+          // Too Many Requests Error
+          await this.sleep(3000);
         }
-        this.loading = false;
-      });
+        index++;
+
+        const accessProfile = new AccessProfile();
+        accessProfile.id = each.id;
+        accessProfile.name = each.name;
+        if (each.description) {
+          if (each.description.length > AccessProfileDescriptionMaxLength) {
+            accessProfile.description =
+              each.description.substring(0, AccessProfileDescriptionMaxLength) +
+              '...';
+          } else {
+            accessProfile.description = each.description;
+          }
+        }
+        accessProfile.id = each.id;
+        accessProfile.enabled = each.enabled;
+
+        accessProfile.entitlements = each.entitlements.length;
+
+        const query = new SimpleQueryCondition();
+        query.attribute = 'id';
+        query.value = each.owner.id;
+
+        this.idnService.searchAccounts(query).subscribe(searchResult => {
+          if (searchResult.length > 0) {
+            accessProfile.owner = new SourceOwner();
+            accessProfile.owner.accountId = searchResult[0].id;
+            accessProfile.owner.accountName = searchResult[0].name;
+            accessProfile.owner.displayName = searchResult[0].displayName;
+            accessProfile.currentOwnerAccountName = searchResult[0].name;
+            accessProfile.currentOwnerDisplayName = searchResult[0].displayName;
+          }
+          fetchedOwnerCount++;
+          if (fetchedOwnerCount == this.accessProfileCount) {
+            this.allOwnersFetched = true;
+          }
+        });
+
+        this.accessProfiles.push(accessProfile);
+        this.loadedCount = this.accessProfiles.length;
+      }
+    } catch (error) {
+      console.error(error);
+    }
+    this.loading = false;
+  }
+
+  public async getAllAccessProfilesData(): Promise<any> {
+    const count = await this.idnService
+      .getTotalAccessProfilesCount()
+      .pipe(take(1))
+      .toPromise();
+    const allData: AccessProfile[] = [];
+    let retryCount = 0;
+
+    for (let offset = 0; allData.length < count; offset += this.defaultLimit) {
+      const dataPage = await this.idnService
+        .getAllAccessProfiles(offset)
+        .pipe(
+          take(1),
+          retryWhen(errors =>
+            errors.pipe(
+              delayWhen(() =>
+                defer(() => {
+                  if (retryCount >= this.maxRetries) {
+                    return throwError('Max retries reached');
+                  } else {
+                    retryCount++;
+                    console.warn(
+                      `Rate limited. Retrying in ${this.retryDelay} seconds...`
+                    );
+                    return this.delay(this.retryDelay);
+                  }
+                })
+              )
+            )
+          )
+        )
+        .toPromise();
+
+      if (dataPage) {
+        allData.push(...dataPage);
+      } else {
+        console.warn('No data received. Retrying...');
+        offset -= this.defaultLimit;
+      }
+    }
+
+    return allData;
+  }
+
+  private delay(ms: number): Observable<void> {
+    return timer(ms).pipe(mapTo(undefined));
   }
 
   saveInCsv() {
@@ -147,7 +216,7 @@ export class ChangeAccessProfileOwnerComponent implements OnInit {
     };
 
     const currentUser = this.authenticationService.currentUserValue;
-    const fileName = `${currentUser.tenant}-accessprofiles`;
+    const fileName = `${currentUser.tenant}-accessprofiles-owners`;
     const arr = [];
     for (const each of this.accessProfiles) {
       const record = Object.assign(each);
@@ -305,9 +374,9 @@ export class ChangeAccessProfileOwnerComponent implements OnInit {
     let index = 0;
     for (const each of arr) {
       if (index > 0 && index % 10 == 0) {
-        // After processing every batch (10 accessProfiles), wait for 2 seconds before calling another API to avoid 429
+        // After processing every batch (10 accessProfiles), wait for 3 seconds before calling another API to avoid 429
         // Too Many Requests Error
-        await this.sleep(2000);
+        await this.sleep(3000);
       }
       index++;
 

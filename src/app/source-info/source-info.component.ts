@@ -16,6 +16,10 @@ export class SourceInfoComponent implements OnInit {
   sources: Source[];
   searchText: string;
   loading: boolean;
+  exporting: boolean;
+  loadedCount: number;
+  sourceCount: number;
+  allSources: any;
 
   zip: JSZip = new JSZip();
 
@@ -37,6 +41,10 @@ export class SourceInfoComponent implements OnInit {
   reset(clearMsg: boolean) {
     this.sources = null;
     this.loading = false;
+    this.exporting = false;
+    this.loadedCount = null;
+    this.sourceCount = null;
+    this.allSources = null;
     this.invalidMessage = [];
     if (clearMsg) {
       this.messageService.clearAll();
@@ -45,9 +53,23 @@ export class SourceInfoComponent implements OnInit {
 
   search() {
     this.loading = true;
-    this.idnService.getAllSources().subscribe(allSources => {
+    this.idnService.getAllSources().subscribe(async allSources => {
       this.sources = [];
+      this.sourceCount = allSources.length;
+      this.allSources = allSources;
+
+      //Sort it alphabetically
+      allSources.sort((a, b) => a.name.localeCompare(b.name));
+
+      let index = 0;
       for (const each of allSources) {
+        if (index > 0 && index % 10 == 0) {
+          // After processing every batch (10 sources), wait for 3 seconds before calling another API to avoid 429
+          // Too Many Requests Error
+          await this.sleep(3000);
+        }
+        index++;
+
         const source = new Source();
         source.id = each.id;
         source.cloudExternalID = each.connectorAttributes.cloudExternalId;
@@ -72,29 +94,34 @@ export class SourceInfoComponent implements OnInit {
         );
 
         this.sources.push(source);
+        this.loadedCount = this.sources.length;
       }
       this.loading = false;
     });
   }
 
+  sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
   exportAllSources() {
-    this.idnService.getAllSources().subscribe(results => {
-      this.sources = [];
-      for (const each of results) {
-        const source = new Source();
-        const jsonData = JSON.stringify(each, null, 4);
-        source.name = each.name;
-        const fileName = 'Source - ' + source.name + '.json';
-        this.zip.file(`${fileName}`, jsonData);
-      }
+    this.exporting = true;
 
-      const currentUser = this.authenticationService.currentUserValue;
-      const zipFileName = `${currentUser.tenant}-sources.zip`;
+    // Get the already fetched this.allSources to export since its in a single page
+    for (const each of this.allSources) {
+      const source = new Source();
+      const jsonData = JSON.stringify(each, null, 4);
+      source.name = each.name;
+      const fileName = 'Source - ' + source.name + '.json';
+      this.zip.file(`${fileName}`, jsonData);
+    }
 
-      this.zip.generateAsync({ type: 'blob' }).then(function (content) {
-        saveAs(content, zipFileName);
-      });
-      this.ngOnInit();
+    const currentUser = this.authenticationService.currentUserValue;
+    const zipFileName = `${currentUser.tenant}-sources.zip`;
+
+    this.zip.generateAsync({ type: 'blob' }).then(function (content) {
+      saveAs(content, zipFileName);
     });
+    this.exporting = false;
   }
 }

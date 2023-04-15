@@ -11,9 +11,18 @@ import { SimpleQueryCondition } from '../model/simple-query-condition';
 import { SourceOwner } from '../model/source-owner';
 import * as JSZip from 'jszip';
 import { saveAs } from 'file-saver';
+import {
+  Observable,
+  defer,
+  delayWhen,
+  mapTo,
+  retryWhen,
+  take,
+  throwError,
+  timer,
+} from 'rxjs';
 
 const RoleDescriptionMaxLength = 50;
-
 @Component({
   selector: 'app-role-management',
   templateUrl: './role-management.component.html',
@@ -27,8 +36,19 @@ export class RoleManagementComponent implements OnInit {
   errorInvokeApi: boolean;
   searchText: string;
   loading: boolean;
+  executing: boolean;
+  exporting: boolean;
   invalidMessage: string[];
   roleCount: number;
+  totalEnabled: number;
+  totalDisabled: number;
+  totalRequestable: number;
+  totalNonRequestable: number;
+  defaultLimit = 50; //default limit for Roles API is 50
+  retryDelay = 3000; //retry delay for 3 seconds
+  maxRetries = 5; // Number of times to retry
+  allRoleData: any;
+  loadedCount: number;
 
   allOwnersFetched: boolean;
   roles: Role[];
@@ -68,8 +88,15 @@ export class RoleManagementComponent implements OnInit {
     this.atLeastOneSelected = null;
     this.searchText = null;
     this.loading = false;
+    this.executing = false;
+    this.exporting = false;
     this.invalidMessage = [];
     this.roleCount = null;
+    this.totalEnabled = null;
+    this.totalDisabled = null;
+    this.totalRequestable = null;
+    this.totalNonRequestable = null;
+    this.loadedCount = null;
 
     this.allOwnersFetched = false;
     this.roles = null;
@@ -82,21 +109,32 @@ export class RoleManagementComponent implements OnInit {
     }
   }
 
-  getAllRoles() {
+  async getAllRoles() {
     this.allOwnersFetched = false;
     this.loading = true;
     this.roleCount = 0;
-    this.idnService.getAllRoles().subscribe(async allRoles => {
-      this.roles = [];
-      this.rolesToShow = [];
-      this.roleCount = allRoles.length;
-      let fetchedOwnerCount = 0;
+    this.totalEnabled = 0;
+    this.roles = [];
+    this.rolesToShow = [];
+    let fetchedOwnerCount = 0;
+
+    try {
+      const data = await this.getAllRolesData();
+      this.roleCount = data.length;
+      this.totalEnabled = data.filter(each => each.enabled).length;
+      this.totalDisabled = data.filter(each => !each.enabled).length;
+      this.totalRequestable = data.filter(each => each.requestable).length;
+      this.totalNonRequestable = data.filter(each => !each.requestable).length;
+
+      //Sort it alphabetically
+      data.sort((a, b) => a.name.localeCompare(b.name));
+      this.allRoleData = data;
       let index = 0;
-      for (const each of allRoles) {
+      for (const each of data) {
         if (index > 0 && index % 10 == 0) {
-          // After processing every batch (10 roles), wait for 2 seconds before calling another API to avoid 429
+          // After processing every batch (10 roles), wait for 3 seconds before calling another API to avoid 429
           // Too Many Requests Error
-          await this.sleep(2000);
+          await this.sleep(3000);
         }
         index++;
 
@@ -168,9 +206,61 @@ export class RoleManagementComponent implements OnInit {
 
         this.roles.push(role);
         this.rolesToShow.push(role);
+        this.loadedCount = this.roles.length;
       }
-      this.loading = false;
-    });
+    } catch (error) {
+      console.error(error);
+    }
+
+    this.loading = false;
+  }
+
+  public async getAllRolesData(): Promise<any> {
+    const count = await this.idnService
+      .getTotalRolesCount()
+      .pipe(take(1))
+      .toPromise();
+    const allData: Role[] = [];
+    let retryCount = 0;
+
+    for (let offset = 0; allData.length < count; offset += this.defaultLimit) {
+      const dataPage = await this.idnService
+        .getAllRoles(offset)
+        .pipe(
+          take(1),
+          retryWhen(errors =>
+            errors.pipe(
+              delayWhen(() =>
+                defer(() => {
+                  if (retryCount >= this.maxRetries) {
+                    return throwError('Max retries reached');
+                  } else {
+                    retryCount++;
+                    console.warn(
+                      `Rate limited. Retrying in ${this.retryDelay} seconds...`
+                    );
+                    return this.delay(this.retryDelay);
+                  }
+                })
+              )
+            )
+          )
+        )
+        .toPromise();
+
+      if (dataPage) {
+        allData.push(...dataPage);
+      } else {
+        console.warn('No data received. Retrying...');
+        offset -= this.defaultLimit;
+      }
+    }
+
+    return allData;
+  }
+
+  private delay(ms: number): Observable<void> {
+    return timer(ms).pipe(mapTo(undefined));
   }
 
   resetRolesToShow() {
@@ -257,14 +347,15 @@ export class RoleManagementComponent implements OnInit {
   }
 
   async updateRoles(path: string, enabled: boolean) {
+    this.executing = true;
     const arr = this.getSelectedRoles();
     let processedCount = 0;
     let index = 0;
     for (const each of arr) {
       if (index > 0 && index % 10 == 0) {
-        // After processing every batch (10 roles), wait for 2 seconds before calling another API to avoid 429
+        // After processing every batch (10 roles), wait for 3 seconds before calling another API to avoid 429
         // Too Many Requests Error
-        await this.sleep(2000);
+        await this.sleep(3000);
       }
       index++;
 
@@ -331,6 +422,7 @@ export class RoleManagementComponent implements OnInit {
   }
 
   async deleteRoles() {
+    this.executing = true;
     this.messageService.clearAll();
     this.invalidMessage = [];
     if (this.deleteRoleConfirmText !== 'YES TO DELETE') {
@@ -346,9 +438,9 @@ export class RoleManagementComponent implements OnInit {
     let index = 0;
     for (const each of arr) {
       if (index > 0 && index % 10 == 0) {
-        // After processing every batch (10 roles), wait for 2 seconds before calling another API to avoid 429
+        // After processing every batch (10 roles), wait for 3 seconds before calling another API to avoid 429
         // Too Many Requests Error
-        await this.sleep(2000);
+        await this.sleep(3000);
       }
       index++;
 
@@ -362,7 +454,7 @@ export class RoleManagementComponent implements OnInit {
             );
             this.hideSubmitConfirmModal();
             this.reset(false);
-            await this.sleep(2000);
+            await this.sleep(3000);
             this.getAllRoles();
           }
         },
@@ -426,23 +518,21 @@ export class RoleManagementComponent implements OnInit {
   }
 
   exportAllRoles() {
-    this.idnService.getAllRoles().subscribe(results => {
-      this.roles = [];
-      for (const each of results) {
-        const role = new Role();
-        const jsonData = JSON.stringify(each, null, 4);
-        role.name = each.name;
-        const fileName = 'Role - ' + role.name + '.json';
-        this.zip.file(`${fileName}`, jsonData);
-      }
-      const currentUser = this.authenticationService.currentUserValue;
-      const zipFileName = `${currentUser.tenant}-roles.zip`;
+    this.exporting = true;
+    // Get the already fetched this.allRoleData to export since its in a single page
+    for (const each of this.allRoleData) {
+      const role = new Role();
+      const jsonData = JSON.stringify(each, null, 4);
+      role.name = each.name;
+      const fileName = 'Role - ' + role.name + '.json';
+      this.zip.file(`${fileName}`, jsonData);
+    }
+    const currentUser = this.authenticationService.currentUserValue;
+    const zipFileName = `${currentUser.tenant}-roles.zip`;
 
-      this.zip.generateAsync({ type: 'blob' }).then(function (content) {
-        saveAs(content, zipFileName);
-      });
-
-      this.ngOnInit();
+    this.zip.generateAsync({ type: 'blob' }).then(function (content) {
+      saveAs(content, zipFileName);
     });
+    this.exporting = false;
   }
 }

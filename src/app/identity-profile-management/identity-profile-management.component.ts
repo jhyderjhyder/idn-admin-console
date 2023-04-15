@@ -18,6 +18,7 @@ const RoleDescriptionMaxLength = 50;
 export class IdentityProfileManagementComponent implements OnInit {
   identityProfiles: IdentityProfile[];
   loading: boolean;
+  exporting: boolean;
   searchText: string;
   selectAll: boolean;
   newPriorityAll: string;
@@ -25,6 +26,7 @@ export class IdentityProfileManagementComponent implements OnInit {
   invalidMessage: string[];
   validToSubmit: boolean;
   profileToRefresh: string;
+  allIdentityProfiles: any;
 
   zip: JSZip = new JSZip();
 
@@ -52,6 +54,8 @@ export class IdentityProfileManagementComponent implements OnInit {
     this.newPriorityAll = null;
     this.searchText = null;
     this.loading = false;
+    this.exporting = false;
+    this.allIdentityProfiles = null;
     this.invalidMessage = [];
     if (clearMsg) {
       this.messageService.clearAll();
@@ -63,6 +67,7 @@ export class IdentityProfileManagementComponent implements OnInit {
     this.loading = true;
     this.idnService.getIdentityProfilesv1().subscribe(allIdentityProfiles => {
       this.identityProfiles = [];
+      this.allIdentityProfiles = allIdentityProfiles;
       for (const each of allIdentityProfiles) {
         const identityProfile = new IdentityProfile();
         identityProfile.id = each.id;
@@ -213,9 +218,9 @@ export class IdentityProfileManagementComponent implements OnInit {
     let index = 0;
     for (const each of arr) {
       if (index > 0 && index % 10 == 0) {
-        // After processing every batch (10 sources), wait for 2 seconds before calling another API to avoid 429
+        // After processing every batch (10 sources), wait for 3 seconds before calling another API to avoid 429
         // Too Many Requests Error
-        await this.sleep(2000);
+        await this.sleep(3000);
       }
       index++;
 
@@ -255,23 +260,23 @@ export class IdentityProfileManagementComponent implements OnInit {
   }
 
   exportAllIdentityProfiles() {
-    this.idnService.getAllIdentityProfiles().subscribe(results => {
-      this.identityProfiles = [];
-      for (const each of results) {
-        const identityProfile = new IdentityProfile();
-        const jsonData = JSON.stringify(each, null, 4);
-        identityProfile.name = each.name;
-        const fileName = 'IdentityProfile - ' + identityProfile.name + '.json';
-        this.zip.file(`${fileName}`, jsonData);
-      }
-      const currentUser = this.authenticationService.currentUserValue;
-      const zipFileName = `${currentUser.tenant}-identityprofiles.zip`;
+    this.exporting = true;
 
-      this.zip.generateAsync({ type: 'blob' }).then(function (content) {
-        saveAs(content, zipFileName);
-      });
+    // Get the already fetched this.allIdentityProfiles to export since its in a single page
+    for (const each of this.allIdentityProfiles) {
+      const identityProfile = new IdentityProfile();
+      const jsonData = JSON.stringify(each, null, 4);
+      identityProfile.name = each.name;
+      const fileName = 'IdentityProfile - ' + identityProfile.name + '.json';
+      this.zip.file(`${fileName}`, jsonData);
+    }
+    const currentUser = this.authenticationService.currentUserValue;
+    const zipFileName = `${currentUser.tenant}-identityprofiles.zip`;
 
-      this.ngOnInit();
+    this.zip.generateAsync({ type: 'blob' }).then(function (content) {
+      saveAs(content, zipFileName);
     });
+
+    this.exporting = false;
   }
 }
