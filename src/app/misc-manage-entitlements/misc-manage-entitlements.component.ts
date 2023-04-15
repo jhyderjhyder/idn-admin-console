@@ -9,8 +9,8 @@ import { SourceOwner } from '../model/source-owner';
 
 @Component({
   selector: 'app-entitlement-owners',
-  templateUrl: './misc-entitlement-owners.component.html',
-  styleUrls: ['./misc-entitlement-owners.component.css'],
+  templateUrl: './misc-manage-entitlements.component.html',
+  styleUrls: ['./misc-manage-entitlements.component.css'],
 })
 export class EntitlmentOwnersComponent implements OnInit {
   entitlementsList: Entitlement[];
