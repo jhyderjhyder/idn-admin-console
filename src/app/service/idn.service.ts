@@ -1123,18 +1123,18 @@ export class IDNService {
 
   changeEntitlementOwner(
     entitlementId: string,
-    newOwnerId: string,
+    newOwnerId: string
   ): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
     const url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/entitlements/${entitlementId}`;
 
     const payload = {
-      op: "add",
-      path: "/owner",
-      value : {
-        type : 'IDENTITY',
-        id : newOwnerId
-      }  
+      op: 'add',
+      path: '/owner',
+      value: {
+        type: 'IDENTITY',
+        id: newOwnerId,
+      },
     };
 
     //Not sure if this is because its bata but Entitlements must be list for one
@@ -1207,7 +1207,8 @@ export class IDNService {
     if (filters != null) {
       params = '?filters=value sw "' + filters + '"' + '&count=true';
     }
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/entitlements` + 
+    const url =
+      `https://${currentUser.tenant}.api.${currentUser.domain}/beta/entitlements` +
       params +
       '&limit=' +
       page.limit +

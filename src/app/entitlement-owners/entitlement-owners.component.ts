@@ -12,7 +12,6 @@ import { SimpleQueryCondition } from '../model/simple-query-condition';
   templateUrl: './entitlement-owners.component.html',
   styleUrls: ['./entitlement-owners.component.css'],
 })
-
 export class EntitlmentOwnersComponent implements OnInit {
   loading: boolean;
   errorMessage: string;
@@ -24,9 +23,6 @@ export class EntitlmentOwnersComponent implements OnInit {
   page: PageResults;
   newOwner: string;
   e: Entitlement;
-
-
-
 
   constructor(
     private idnService: IDNService,
@@ -70,9 +66,9 @@ export class EntitlmentOwnersComponent implements OnInit {
     this.getAllEntitlements();
   }
 
-/*
-* Paganation logic
-*/
+  /*
+   * Paganation logic
+   */
 
   //Get the next page
   getNextPage() {
@@ -117,40 +113,37 @@ export class EntitlmentOwnersComponent implements OnInit {
     }
   }
 
-
-
   updateOwner(identity) {
     this.identityInfo = new IdentityAttribute();
     this.identityInfo.id = identity[0].id;
     this.idnService
-      .changeEntitlementOwner(
-        this.e.id,
-        this.identityInfo.id
-      )
-      .subscribe(each => {
-          
-          this.messageService.add('Ownership Updated for Entitlement:' + each.name);
+      .changeEntitlementOwner(this.e.id, this.identityInfo.id)
+      .subscribe(
+        each => {
+          this.messageService.add(
+            'Ownership Updated for Entitlement:' + each.name
+          );
           if (each.owner != null) {
             this.e.ownerName = each.owner.name;
             this.e.ownerId = each.owner.id;
           }
           //this.reset(true);
-         
         },
         err => {
-          this.messageService.add("error:" + err)
+          this.messageService.add('error:' + err);
         }
       );
   }
 
-
-  showOwnerUpdateModel(input){
+  showOwnerUpdateModel(input) {
     this.e = input;
   }
 
   getAllEntitlements() {
     this.loading = true;
-    this.idnService.getAllEntitlementsPaged(this.entValue, this.page).subscribe(response => {
+    this.idnService
+      .getAllEntitlementsPaged(this.entValue, this.page)
+      .subscribe(response => {
         const searchResult = response.body;
         const headers = response.headers;
         this.page.xTotalCount = headers.get('X-Total-Count');
@@ -179,5 +172,4 @@ export class EntitlmentOwnersComponent implements OnInit {
     const currentUser = this.authenticationService.currentUserValue;
     console.log('todo csv' + currentUser);
   }
-
 }
