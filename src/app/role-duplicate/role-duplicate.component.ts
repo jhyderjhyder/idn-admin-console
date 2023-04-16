@@ -6,16 +6,6 @@ import { MessageService } from '../service/message.service';
 import { Role } from '../model/role';
 import { SimpleQueryCondition } from '../model/simple-query-condition';
 import { SourceOwner } from '../model/source-owner';
-import {
-  take,
-  retryWhen,
-  delayWhen,
-  defer,
-  throwError,
-  Observable,
-  mapTo,
-  timer,
-} from 'rxjs';
 
 const RoleDescriptionMaxLength = 50;
 
@@ -25,6 +15,9 @@ const RoleDescriptionMaxLength = 50;
   styleUrls: ['./role-duplicate.component.css'],
 })
 export class DuplicateRoleComponent implements OnInit {
+  private isNavigating = false;
+  private abortController = new AbortController();
+
   roleToDuplicate: Role;
   newRoleName: string;
   errorInvokeApi: boolean;
@@ -37,6 +30,7 @@ export class DuplicateRoleComponent implements OnInit {
   maxRetries = 5; // Number of times to retry
   allRoleData: any;
   loadedCount: number;
+  totalCriteraRolesCount: number;
 
   allOwnersFetched: boolean;
   roles: Role[];
@@ -59,6 +53,11 @@ export class DuplicateRoleComponent implements OnInit {
     this.getAllRoles();
   }
 
+  public ngOnDestroy() {
+    this.isNavigating = true;
+    this.abortController.abort();
+  }
+
   reset(clearMsg: boolean) {
     this.roleToDuplicate = null;
     this.newRoleName = null;
@@ -67,6 +66,7 @@ export class DuplicateRoleComponent implements OnInit {
     this.invalidMessage = [];
     this.roleCount = null;
     this.loadedCount = null;
+    this.totalCriteraRolesCount = null;
 
     this.allOwnersFetched = false;
     this.roles = null;
@@ -94,9 +94,9 @@ export class DuplicateRoleComponent implements OnInit {
       let index = 0;
       for (const each of data) {
         if (index > 0 && index % 10 == 0) {
-          // After processing every batch (10 roles), wait for 3 seconds before calling another API to avoid 429
+          // After processing every batch (10 roles), wait for 1 seconds before calling another API to avoid 429
           // Too Many Requests Error
-          await this.sleep(3000);
+          await this.sleep(1000);
         }
         index++;
 
@@ -143,11 +143,14 @@ export class DuplicateRoleComponent implements OnInit {
               }
             }
 
-            const query = new SimpleQueryCondition();
-            query.attribute = 'id';
-            query.value = each.owner.id;
+            if (!this.isNavigating) {
+              const query = new SimpleQueryCondition();
+              query.attribute = 'id';
+              query.value = each.owner.id;
 
-            this.idnService.searchAccounts(query).subscribe(searchResult => {
+              const searchResult = await this.idnService
+                .searchAccounts(query)
+                .toPromise();
               if (searchResult.length > 0) {
                 role.owner = new SourceOwner();
                 role.owner.accountId = searchResult[0].id;
@@ -160,12 +163,13 @@ export class DuplicateRoleComponent implements OnInit {
               if (fetchedOwnerCount == this.roleCount) {
                 this.allOwnersFetched = true;
               }
-            });
+            }
 
             this.roles.push(role);
             this.loadedCount = this.roles.length;
           }
         }
+        this.totalCriteraRolesCount = this.roles.length;
       }
     } catch (error) {
       console.error(error);
@@ -174,52 +178,31 @@ export class DuplicateRoleComponent implements OnInit {
   }
 
   public async getAllRolesData(): Promise<any> {
-    const count = await this.idnService
+    const countResponse = await this.idnService
       .getTotalRolesCount()
-      .pipe(take(1))
       .toPromise();
+    const count = countResponse;
     const allData: Role[] = [];
-    let retryCount = 0;
 
-    for (let offset = 0; allData.length < count; offset += this.defaultLimit) {
+    for (
+      let offset = 0;
+      allData.length < count && !this.isNavigating;
+      offset += this.defaultLimit
+    ) {
       const dataPage = await this.idnService
-        .getAllRoles(offset)
-        .pipe(
-          take(1),
-          retryWhen(errors =>
-            errors.pipe(
-              delayWhen(() =>
-                defer(() => {
-                  if (retryCount >= this.maxRetries) {
-                    return throwError('Max retries reached');
-                  } else {
-                    retryCount++;
-                    console.warn(
-                      `Rate limited. Retrying in ${this.retryDelay} seconds...`
-                    );
-                    return this.delay(this.retryDelay);
-                  }
-                })
-              )
-            )
-          )
-        )
+        .getAllRoles(offset, this.defaultLimit, {
+          signal: this.abortController.signal,
+        })
         .toPromise();
-
-      if (dataPage) {
-        allData.push(...dataPage);
-      } else {
-        console.warn('No data received. Retrying...');
-        offset -= this.defaultLimit;
-      }
+      allData.push(...dataPage);
     }
 
     return allData;
   }
 
-  private delay(ms: number): Observable<void> {
-    return timer(ms).pipe(mapTo(undefined));
-  }
+  // private delay(ms: number): Observable<void> {
+  //   return timer(ms).pipe(mapTo(undefined));
+  // }
 
   async sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));

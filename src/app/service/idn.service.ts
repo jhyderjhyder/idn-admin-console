@@ -185,21 +185,26 @@ export class IDNService {
     );
   }
 
-  getAllRoles(offset: number): Observable<any> {
+  getAllRoles(offset: number, limit: number, options?: any): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/roles?offset=${offset}&limit=50`;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/roles?offset=${offset}&limit=${limit}`;
 
-    return this.http.get(url, this.httpOptions).pipe(
-      catchError(error => {
-        if (error.status === 429) {
-          console.warn('Rate limited. Retrying in 2 seconds...');
-          return of(null);
-        } else {
-          console.error(error);
-          return throwError(error);
-        }
+    return this.http
+      .get(url, {
+        ...this.httpOptions,
+        ...options,
       })
-    );
+      .pipe(
+        catchError(error => {
+          if (error.status === 429) {
+            console.warn('Rate limited. Retrying in 2 seconds...');
+            return of(null);
+          } else {
+            console.error(error);
+            return throwError(error);
+          }
+        })
+      );
   }
 
   getRoleIdentityCount(role: Role): Observable<any> {
