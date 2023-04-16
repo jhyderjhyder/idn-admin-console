@@ -43,7 +43,7 @@ export class AppComponent {
     private messageService: MessageService,
     private authenticationService: AuthenticationService,
     private idle: Idle,
-    keepalive: Keepalive,
+    keepalive: Keepalive
     // private http: HttpClient
   ) {
     this.routeEvent(this.route);
