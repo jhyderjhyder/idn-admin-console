@@ -77,7 +77,7 @@
           {{ p.priority }}
         </span>
         <span *ngIf="p.selected">
-          <input class="text-center align-middle form-control py-2 border-start-0 border" type="text" [(ngModel)]="p.newPriority"
+          <input class="text-center align-middle form-control py-2 border-start-0 border" type="text" [(ngModel)]="p.newPriority" (keyup.enter)="showSubmitConfirmModal()"
               placeholder="Enter Priority Value">
         </span>
       </td>

@@ -214,7 +214,7 @@
           <div class="form-group row">
             <div class="col-sm-12 text-start">
               To delete the access profiles, enter "YES TO DELETE" in below textbox for confirmation and click 'Delete' button
-              &nbsp;<input type="text" class="form-control col-sm-8" id="rule-name" [(ngModel)]="deleteAccessProfileConfirmText" placeholder="Confirmation Text" aria-describedby="basic-addon3" autocomplete="off">
+              &nbsp;<input type="text" class="form-control col-sm-8" id="rule-name" [(ngModel)]="deleteAccessProfileConfirmText" (keyup.enter)="deleteAccessProfiles()" placeholder="Confirmation Text" aria-describedby="basic-addon3" autocomplete="off">
             </div>
           </div>
           <div class="row mrgbtm small">
