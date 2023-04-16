@@ -31,7 +31,7 @@
 
 <div class="row">
   <div class="form-group col-sm-6" *ngIf="!loading">
-      <input class="form-control py-2 border-start-0 border" type="text" name="search" [(ngModel)]="searchText" autocomplete="off" placeholder="Search via Entitlement Name (Starts With)">
+      <input class="form-control py-2 border-start-0 border" type="text" name="search" [(ngModel)]="searchText" autocomplete="off" (keyup.enter)="submit()" placeholder="Search via Entitlement Name (Starts With)">
   </div>
   <div class="col-sm-1 text-end">
     <button type="button" (click)="submit()" class="btn btn-primary btn-sm">
