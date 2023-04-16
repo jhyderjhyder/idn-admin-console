@@ -11,16 +11,6 @@ import { SourceOwner } from '../model/source-owner';
 import { AccessProfile } from '../model/accessprofile';
 import * as JSZip from 'jszip';
 import { saveAs } from 'file-saver';
-import {
-  take,
-  retryWhen,
-  delayWhen,
-  defer,
-  throwError,
-  Observable,
-  timer,
-  mapTo,
-} from 'rxjs';
 
 const AccessProfileDescriptionMaxLength = 50;
 
@@ -30,6 +20,9 @@ const AccessProfileDescriptionMaxLength = 50;
   styleUrls: ['./accessprofile-management.component.css'],
 })
 export class AccessProfileManagementComponent implements OnInit {
+  private isNavigating = false;
+  private abortController = new AbortController();
+
   sources: Source[];
   bulkAction: string;
   selectAll: boolean;
@@ -77,6 +70,14 @@ export class AccessProfileManagementComponent implements OnInit {
     this.getAllAccessProfiles();
   }
 
+  public ngOnDestroy() {
+    this.isNavigating = true;
+    this.abortController.abort();
+    this.allAPData = null;
+    this.accessProfiles = [];
+    this.accessProfilesToShow = [];
+  }
+
   reset(clearMsg: boolean) {
     this.sources = null;
     this.bulkAction = null;
@@ -90,10 +91,11 @@ export class AccessProfileManagementComponent implements OnInit {
     this.totalEnabled = null;
     this.totalDisabled = null;
     this.loadedCount = null;
+    this.allAPData = null;
 
     this.allOwnersFetched = false;
-    this.accessProfiles = null;
-    this.accessProfilesToShow = null;
+    this.accessProfiles = [];
+    this.accessProfilesToShow = [];
     this.errorMessage = null;
     this.deleteAccessProfileConfirmText = null;
     if (clearMsg) {
@@ -123,9 +125,9 @@ export class AccessProfileManagementComponent implements OnInit {
       let index = 0;
       for (const each of data) {
         if (index > 0 && index % 10 == 0) {
-          // After processing every batch (10 roles), wait for 3 seconds before calling another API to avoid 429
+          // After processing every batch (10 roles), wait for 1 seconds before calling another API to avoid 429
           // Too Many Requests Error
-          await this.sleep(3000);
+          await this.sleep(1000);
         }
         index++;
 
@@ -158,11 +160,14 @@ export class AccessProfileManagementComponent implements OnInit {
           accessProfile.entitlementList = entitlementList.join(';').toString();
         }
 
-        const query = new SimpleQueryCondition();
-        query.attribute = 'id';
-        query.value = each.owner.id;
+        if (!this.isNavigating) {
+          const query = new SimpleQueryCondition();
+          query.attribute = 'id';
+          query.value = each.owner.id;
 
-        this.idnService.searchAccounts(query).subscribe(searchResult => {
+          const searchResult = await this.idnService
+            .searchAccounts(query)
+            .toPromise();
           if (searchResult.length > 0) {
             accessProfile.owner = new SourceOwner();
             accessProfile.owner.accountId = searchResult[0].id;
@@ -175,7 +180,7 @@ export class AccessProfileManagementComponent implements OnInit {
           if (fetchedOwnerCount == this.accessProfileCount) {
             this.allOwnersFetched = true;
           }
-        });
+        }
 
         this.accessProfiles.push(accessProfile);
         this.accessProfilesToShow.push(accessProfile);
@@ -190,49 +195,23 @@ export class AccessProfileManagementComponent implements OnInit {
   public async getAllAccessProfilesData(): Promise<any> {
     const count = await this.idnService
       .getTotalAccessProfilesCount()
-      .pipe(take(1))
       .toPromise();
     const allData: AccessProfile[] = [];
-    let retryCount = 0;
 
-    for (let offset = 0; allData.length < count; offset += this.defaultLimit) {
+    for (
+      let offset = 0;
+      allData.length < count && !this.isNavigating;
+      offset += this.defaultLimit
+    ) {
       const dataPage = await this.idnService
-        .getAllAccessProfiles(offset)
-        .pipe(
-          take(1),
-          retryWhen(errors =>
-            errors.pipe(
-              delayWhen(() =>
-                defer(() => {
-                  if (retryCount >= this.maxRetries) {
-                    return throwError('Max retries reached');
-                  } else {
-                    retryCount++;
-                    console.warn(
-                      `Rate limited. Retrying in ${this.retryDelay} seconds...`
-                    );
-                    return this.delay(this.retryDelay);
-                  }
-                })
-              )
-            )
-          )
-        )
+        .getAllAccessProfiles(offset, this.defaultLimit, {
+          signal: this.abortController.signal,
+        })
         .toPromise();
-
-      if (dataPage) {
-        allData.push(...dataPage);
-      } else {
-        console.warn('No data received. Retrying...');
-        offset -= this.defaultLimit;
-      }
+      allData.push(...dataPage);
     }
 
     return allData;
-  }
-
-  private delay(ms: number): Observable<void> {
-    return timer(ms).pipe(mapTo(undefined));
   }
 
   resetaccessProfilesToShow() {
@@ -326,9 +305,9 @@ export class AccessProfileManagementComponent implements OnInit {
     let index = 0;
     for (const each of arr) {
       if (index > 0 && index % 10 == 0) {
-        // After processing every batch (10 AP), wait for 3 seconds before calling another API to avoid 429
+        // After processing every batch (10 AP), wait for 1 seconds before calling another API to avoid 429
         // Too Many Requests Error
-        await this.sleep(3000);
+        await this.sleep(1000);
       }
       index++;
 
@@ -407,9 +386,9 @@ export class AccessProfileManagementComponent implements OnInit {
     let index = 0;
     for (const each of arr) {
       if (index > 0 && index % 10 == 0) {
-        // After processing every batch (10 AP), wait for 3 seconds before calling another API to avoid 429
+        // After processing every batch (10 AP), wait for 1 seconds before calling another API to avoid 429
         // Too Many Requests Error
-        await this.sleep(3000);
+        await this.sleep(1000);
       }
       index++;
 

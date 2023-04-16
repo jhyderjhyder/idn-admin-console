@@ -93,9 +93,9 @@ export class AggregationManagementComponent implements OnInit {
       allSources.sort((a, b) => a.name.localeCompare(b.name));
       for (const each of allSources) {
         if (index > 0 && index % 10 == 0) {
-          // After processing every batch (10 sources), wait for 3 seconds before calling another API to avoid 429
+          // After processing every batch (10 sources), wait for 1 seconds before calling another API to avoid 429
           // Too Many Requests Error
-          await this.sleep(3000);
+          await this.sleep(1000);
         }
         index++;
 
