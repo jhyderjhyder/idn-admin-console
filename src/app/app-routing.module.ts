@@ -64,7 +64,7 @@ const routes: Routes = [
     canActivate: [AuthGuard],
   },
   {
-    path: 'manage-entitlements',
+    path: 'entitlement-management',
     component: EntitlementManagementComponent,
     canActivate: [AuthGuard],
   },

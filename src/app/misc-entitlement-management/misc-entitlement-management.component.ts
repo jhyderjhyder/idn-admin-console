@@ -8,7 +8,7 @@ import { SimpleQueryCondition } from '../model/simple-query-condition';
 import { SourceOwner } from '../model/source-owner';
 
 @Component({
-  selector: 'app-manage-entitlements',
+  selector: 'app-entitlement-management',
   templateUrl: './misc-entitlement-management.component.html',
   styleUrls: ['./misc-entitlement-management.component.css'],
 })
