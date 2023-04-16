@@ -69,7 +69,7 @@
 <br>
 <div class="form-group row" *ngIf="bulkAction === 'AddOwner'">
   <div class="col-sm-6 text-start">
-    <input class="form-control py-2 border-start-0 border" type="text" [(ngModel)]="newOwnerAll"
+    <input class="form-control py-2 border-start-0 border" type="text" [(ngModel)]="newOwnerAll" (keyup.enter)="applyNewOwnerToAllSelected()"
           placeholder="Enter Owner Account Name">
   </div>
   <div class="col-sm-2 text-end">
@@ -86,7 +86,7 @@
 <br>
 <div class="form-group row" *ngIf="bulkAction === 'UpdateOwner'">
   <div class="col-sm-6 text-start">
-    <input class="form-control py-2 border-start-0 border" type="text" [(ngModel)]="newOwnerAll"
+    <input class="form-control py-2 border-start-0 border" type="text" [(ngModel)]="newOwnerAll" (keyup.enter)="applyNewOwnerToAllSelected()"
           placeholder="Enter Owner Account Name">
   </div>
   <div class="col-sm-2 text-end">
