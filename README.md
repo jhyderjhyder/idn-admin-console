@@ -73,27 +73,27 @@ We are looking for (list is not exhaustive)
 * Identity
     * Identity Info (Get Identity Details / Get Manager Details / Refresh Single Identity / Download Report)
     * Manage Identity Profile (Move Priority / Refresh Individual Profile / Export All)
-    * Manage Identity Attribute Index (Index / Unindex Attributes)
+    * Manage Identity Attribute Index (Index Attributes / Unindex Attributes)
     * Manage Transforms (Add / Update / Delete / Download / Export All)
     * Manage LCS (Delete / Download / Export All)
 * Find Multiple Accounts in Source and Download Report
 * Access Profiles
     * Manage Access Profiles (Enable / Disable / Delete / Export All)
-    * Manage Access Profile Owners
+    * Manage Access Profile Owners (Update)
 * Roles
-    * Manage Roles (Enable / Disable / Mark - Umark as Requestable / Delete / Export All)
-    * Manage Role Owners
+    * Manage Roles (Enable / Disable / Mark as Requestable / Umark as Requestable / Delete / Export All)
+    * Manage Role Owners (Update)
     * Duplicate Role (Good for Testing / Troubleshooting Membership Criteria)
 * Sources
-    * Manage Aggregation Schedules (Enable / Disable / Backup and Restore Accounts & Entitlement)
-    * Manage Source Owners
+    * Manage Aggregation Schedules (Enable / Disable / Backup and Restore Accounts & Entitlement Schedules)
+    * Manage Source Owners (Update)
     * Run Aggregations (Unoptimized / File Upload)
-    * Manage Create Profile (Add / Delete Attribute / Download / Export All)
+    * Manage Create Profile (Add Attribute / Delete Attribute / Download / Export All)
     * Reset Source (Accounts / Entitlements / Both)
     * Source Info (Internal Name / ID / Count / Export All)
 * Rules
-    * Manage Cloud Rules (Download / Export All)
-    * Manage Connector Rules (Add / Update / Delete / Download / Export All)
+    * Manage Cloud Rules (Download / Export All / Created Date / Last Modifed Date)
+    * Manage Connector Rules (Add / Update / Delete / Download / Export All / Created Date / Last Modifed Date)
 * Requests
     * Access Request Status (List / Download Report)
     * Access Request Approval Forward (Forward Pending Requests / Download Report)
@@ -101,17 +101,29 @@ We are looking for (list is not exhaustive)
     * Work Items Status (List / Search via Requested For / Download Report)
     * Work Items Pending Forward (Forward Pending Work Items / Download Report)
 * Misc
-    * Manage Entitlements (Add - Update - Delete Owners / Mark - Unmark as Requestable / Mark - Unmark as Privileged)
-    * Manage Admins (List all admins / revoke all permissions / see if they have PAT token)
-    * Manage PAT (See Permission / Last Usage / Delete Token)
+    * Manage Entitlements (Add Owner / Update Owner / Delete Owner / Mark as Requestable / Unmark as Requestable / Mark as Privileged / Unmark as Privileged)
+    * Manage Admins (List all admins / revoke all permissions / Check if they have PAT token)
+    * Manage PAT (See Permission / Last Usage Date / Delete Token)
     * Check and Set Org Time
     * Org Statistics (Pretty cool to see)
 
 ## Screenshots
 
+![Identity Info](resources/readme/identity-info.png)
+
 ![Find Multiple Accounts](resources/readme/find-multiple-accounts.png)
 
+![Manage Access Profiles](resources/readme/manage-access-profiles.png)
+
+![Manage Roles](resources/readme/manage-roles.png)
+
+![Manage Entitlements](resources/readme/manage-entitlements.png)
+
 ![Manage Connector Rules](resources/readme/manage-connector-rules.png)
+
+![Check Access Request Status](resources/readme/check-access-request-status.png)
+
+![Check Work Items Status](resources/readme/check-work-items-status.png)
 
 ## Development
 Any code modificaiton should run via Lint and Format process. GitHub Actions will check this on all PR and merge requests but you can fix it locally by running the following command
