@@ -70,7 +70,7 @@
 </div>
 <div class="form-group row" *ngIf="bulkAction === 'EnableAggSchedule' || bulkAction === 'EnableEntAggSchedule'">
   <div class="col-sm-3 text-start">
-    <input class="form-control py-2 border-start-0 border" type="text" [(ngModel)]="cronExpAll"
+    <input class="form-control py-2 border-start-0 border" type="text" [(ngModel)]="cronExpAll" (keyup.enter)="applyCronExpToAll()"
           placeholder="Enter Cron Job Expression">
   </div>
   <div class="col-sm-2 text-end">
@@ -130,7 +130,7 @@
           {{ s.accountAggregationSchedule.cronExp }}
         </span>
         <span *ngIf="bulkAction === 'EnableAggSchedule'">
-          <input class="form-control py-2 border-start-0 border" type="text" [(ngModel)]="s.accountAggCronExp"
+          <input class="form-control py-2 border-start-0 border" type="text" [(ngModel)]="s.accountAggCronExp" (keyup.enter)="showSubmitConfirmModal()"
               placeholder="Enter Cron Job Expression">
         </span>
       </td>
@@ -147,7 +147,7 @@
           {{ s.entAggregationSchedule.cronExp }}
         </span>
         <span *ngIf="bulkAction === 'EnableEntAggSchedule'">
-          <input class="form-control py-2 border-start-0 border" type="text" [(ngModel)]="s.entAggCronExp"
+          <input class="form-control py-2 border-start-0 border" type="text" [(ngModel)]="s.entAggCronExp" (keyup.enter)="showSubmitConfirmModal()" 
               placeholder="Enter Cron Job Expression">
         </span>
       </td>

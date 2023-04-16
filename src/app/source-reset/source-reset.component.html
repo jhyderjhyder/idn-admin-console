@@ -111,7 +111,7 @@
           <div class="form-group row mb-3">
             <div class="col-sm-12 text-start">
               To reset the source, enter exact source name in below textbox for confirmation and click 'Reset Accounts' button
-              &nbsp;<input type="text" class="form-control col-sm-8 mt-2" id="rule-name" [(ngModel)]="resetSourceNameText" placeholder="Source name" aria-describedby="basic-addon3" autocomplete="off">
+              &nbsp;<input type="text" class="form-control col-sm-8 mt-2" id="rule-name" [(ngModel)]="resetSourceNameText" (keyup.enter)="resetSourceAccounts()" placeholder="Source name" aria-describedby="basic-addon3" autocomplete="off">
             </div>
           </div>
           <div class="row mrgbtm small">
@@ -165,7 +165,7 @@
           <div class="form-group row mb-3">
             <div class="col-sm-12 text-start">
               To reset the source, enter exact source name in below textbox for confirmation and click 'Reset Entitlements' button
-              &nbsp;<input type="text" class="form-control col-sm-8 mt-2" id="rule-name" [(ngModel)]="resetSourceNameText" placeholder="Source name" aria-describedby="basic-addon3" autocomplete="off">
+              &nbsp;<input type="text" class="form-control col-sm-8 mt-2" id="rule-name" [(ngModel)]="resetSourceNameText" (keyup.enter)="resetSourceEntitlements()" placeholder="Source name" aria-describedby="basic-addon3" autocomplete="off">
             </div>
           </div>
           <div class="row mrgbtm small">
@@ -219,7 +219,7 @@
           <div class="form-group row mb-3">
             <div class="col-sm-12 text-start">
               To reset the source, enter exact source name in below textbox for confirmation and click 'Reset Both' button
-              &nbsp;<input type="text" class="form-control col-sm-8 mt-2" id="rule-name" [(ngModel)]="resetSourceNameText" placeholder="Source name" aria-describedby="basic-addon3" autocomplete="off">
+              &nbsp;<input type="text" class="form-control col-sm-8 mt-2" id="rule-name" [(ngModel)]="resetSourceNameText" (keyup.enter)="resetSourceBoth()" placeholder="Source name" aria-describedby="basic-addon3" autocomplete="off">
             </div>
           </div>
           <div class="row mrgbtm small">
