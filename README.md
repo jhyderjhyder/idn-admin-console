@@ -81,7 +81,7 @@ We are looking for (list is not exhaustive)
     * Manage Access Profiles (Enable / Disable / Delete / Export All)
     * Manage Access Profile Owners
 * Roles
-    * Manage Roles (Enable / Disable / Mark-Umark as Requestable / Delete / Export All)
+    * Manage Roles (Enable / Disable / Mark - Umark as Requestable / Delete / Export All)
     * Manage Role Owners
     * Duplicate Role (Good for Testing / Troubleshooting Membership Criteria)
 * Sources
@@ -101,9 +101,10 @@ We are looking for (list is not exhaustive)
     * Work Items Status (List / Search via Requested For / Download Report)
     * Work Items Pending Forward (Forward Pending Work Items / Download Report)
 * Misc
-    * Check and Set Org Time
-    * Manage PAT (See Permission / Last Usage / Delete Token)
+    * Manage Entitlements (Add - Update - Delete Owners / Mark - Unmark as Requestable / Mark - Unmark as Privileged)
     * Manage Admins (List all admins / revoke all permissions / see if they have PAT token)
+    * Manage PAT (See Permission / Last Usage / Delete Token)
+    * Check and Set Org Time
     * Org Statistics (Pretty cool to see)
 
 ## Screenshots

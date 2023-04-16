@@ -1159,6 +1159,73 @@ export class IDNService {
     return this.http.post(url, payload);
   }
 
+  changeEntitlementOwner(
+    entitlementId: string,
+    op: string,
+    newOwnerId: string
+  ): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/entitlements/${entitlementId}`;
+
+    let payload = null;
+
+    if (op === 'remove') {
+      payload = {
+        op: `${op}`,
+        path: '/owner',
+      };
+    } else {
+      payload = {
+        op: `${op}`,
+        path: '/owner',
+        value: {
+          type: 'IDENTITY',
+          id: newOwnerId,
+        },
+      };
+    }
+
+    //Not sure if this is because its bata but Entitlements must be list for one
+    const list = new Array();
+    list.push(payload);
+
+    const myHttpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json-patch+json',
+      }),
+    };
+
+    return this.http.patch(url, list, myHttpOptions);
+  }
+
+  changeEntitlementFlags(
+    entitlementId: string,
+    op: string,
+    path: string,
+    value: boolean
+  ): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/entitlements/${entitlementId}`;
+
+    const payload = {
+      op: `${op}`,
+      path: `${path}`,
+      value: `${value}`,
+    };
+
+    //Not sure if this is because its bata but Entitlements must be list for one
+    const list = new Array();
+    list.push(payload);
+
+    const myHttpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json-patch+json',
+      }),
+    };
+
+    return this.http.patch(url, list, myHttpOptions);
+  }
+
   getAccessRequestApprovalsSummary(): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
     const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/access-request-approvals/approval-summary`;
@@ -1208,6 +1275,24 @@ export class IDNService {
     };
 
     return this.http.post(url, payload, this.httpOptions);
+  }
+
+  getAllEntitlementsPaged(filters: string, page: PageResults): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    let params = '?count=true';
+    if (filters != null) {
+      params = '?filters=name sw "' + filters + '"' + '&count=true';
+    }
+    const url =
+      `https://${currentUser.tenant}.api.${currentUser.domain}/beta/entitlements` +
+      params +
+      '&limit=' +
+      page.limit +
+      '&offset=' +
+      page.offset +
+      '&count=true';
+
+    return this.http.get(url, { observe: 'response' });
   }
 
   getIDNAdmins(): Observable<any> {
