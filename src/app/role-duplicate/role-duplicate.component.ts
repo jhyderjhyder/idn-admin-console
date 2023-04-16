@@ -28,7 +28,6 @@ export class DuplicateRoleComponent implements OnInit {
   defaultLimit = 50; //default limit for Roles API is 50
   retryDelay = 3000; //retry delay for 3 seconds
   maxRetries = 5; // Number of times to retry
-  allRoleData: any;
   loadedCount: number;
   totalCriteraRolesCount: number;
 
@@ -56,6 +55,7 @@ export class DuplicateRoleComponent implements OnInit {
   public ngOnDestroy() {
     this.isNavigating = true;
     this.abortController.abort();
+    this.roles = [];
   }
 
   reset(clearMsg: boolean) {
@@ -69,7 +69,7 @@ export class DuplicateRoleComponent implements OnInit {
     this.totalCriteraRolesCount = null;
 
     this.allOwnersFetched = false;
-    this.roles = null;
+    this.roles = [];
     this.errorMessage = null;
     this.deleteRoleConfirmText = null;
     if (clearMsg) {

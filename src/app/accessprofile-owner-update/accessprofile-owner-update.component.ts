@@ -59,10 +59,12 @@ export class ChangeAccessProfileOwnerComponent implements OnInit {
   public ngOnDestroy() {
     this.isNavigating = true;
     this.abortController.abort();
+    this.allAPData = null;
+    this.accessProfiles = [];
   }
 
   reset(clearMsg: boolean) {
-    this.accessProfiles = null;
+    this.accessProfiles = [];
     this.selectAll = false;
     this.newOwnerAll = null;
     this.searchText = null;
@@ -71,6 +73,7 @@ export class ChangeAccessProfileOwnerComponent implements OnInit {
     this.invalidMessage = [];
     this.accessProfileCount = null;
     this.loadedCount = null;
+    this.allAPData = null;
     if (clearMsg) {
       this.messageService.clearAll();
       this.errorMessage = null;

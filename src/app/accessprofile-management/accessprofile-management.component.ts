@@ -73,6 +73,9 @@ export class AccessProfileManagementComponent implements OnInit {
   public ngOnDestroy() {
     this.isNavigating = true;
     this.abortController.abort();
+    this.allAPData = null;
+    this.accessProfiles = [];
+    this.accessProfilesToShow = [];
   }
 
   reset(clearMsg: boolean) {
@@ -88,10 +91,11 @@ export class AccessProfileManagementComponent implements OnInit {
     this.totalEnabled = null;
     this.totalDisabled = null;
     this.loadedCount = null;
+    this.allAPData = null;
 
     this.allOwnersFetched = false;
-    this.accessProfiles = null;
-    this.accessProfilesToShow = null;
+    this.accessProfiles = [];
+    this.accessProfilesToShow = [];
     this.errorMessage = null;
     this.deleteAccessProfileConfirmText = null;
     if (clearMsg) {

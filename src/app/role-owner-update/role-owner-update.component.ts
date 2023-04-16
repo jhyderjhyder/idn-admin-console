@@ -34,7 +34,6 @@ export class ChangeRoleOwnerComponent implements OnInit {
   defaultLimit = 50; //default limit for Roles API is 50
   retryDelay = 3000; //retry delay for 3 seconds
   maxRetries = 5; // Number of times to retry
-  allRoleData: any;
   loadedCount: number;
 
   public modalRef: BsModalRef;
@@ -61,10 +60,11 @@ export class ChangeRoleOwnerComponent implements OnInit {
   public ngOnDestroy() {
     this.isNavigating = true;
     this.abortController.abort();
+    this.roles = [];
   }
 
   reset(clearMsg: boolean) {
-    this.roles = null;
+    this.roles = [];
     this.selectAll = false;
     this.newOwnerAll = null;
     this.searchText = null;

@@ -77,6 +77,9 @@ export class RoleManagementComponent implements OnInit {
   public ngOnDestroy() {
     this.isNavigating = true;
     this.abortController.abort();
+    this.allRoleData = null;
+    this.roles = [];
+    this.rolesToShow = [];
   }
 
   reset(clearMsg: boolean) {
@@ -95,10 +98,11 @@ export class RoleManagementComponent implements OnInit {
     this.totalRequestable = null;
     this.totalNonRequestable = null;
     this.loadedCount = null;
+    this.allRoleData = null;
 
     this.allOwnersFetched = false;
-    this.roles = null;
-    this.rolesToShow = null;
+    this.roles = [];
+    this.rolesToShow = [];
     this.errorMessage = null;
     this.deleteRoleConfirmText = null;
     if (clearMsg) {
