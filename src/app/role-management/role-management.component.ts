@@ -134,7 +134,7 @@ export class RoleManagementComponent implements OnInit {
       let index = 0;
       for (const each of data) {
         if (index > 0 && index % 10 == 0) {
-          // After processing every batch (10 roles), wait for 1 seconds before calling another API to avoid 429
+          // After processing every batch (10 roles), wait for 1 second before calling another API to avoid 429
           // Too Many Requests Error
           await this.sleep(1000);
         }
@@ -340,7 +340,7 @@ export class RoleManagementComponent implements OnInit {
     let index = 0;
     for (const each of arr) {
       if (index > 0 && index % 10 == 0) {
-        // After processing every batch (10 roles), wait for 1 seconds before calling another API to avoid 429
+        // After processing every batch (10 roles), wait for 1 second before calling another API to avoid 429
         // Too Many Requests Error
         await this.sleep(1000);
       }
@@ -425,7 +425,7 @@ export class RoleManagementComponent implements OnInit {
     let index = 0;
     for (const each of arr) {
       if (index > 0 && index % 10 == 0) {
-        // After processing every batch (10 roles), wait for 1 seconds before calling another API to avoid 429
+        // After processing every batch (10 roles), wait for 1 second before calling another API to avoid 429
         // Too Many Requests Error
         await this.sleep(1000);
       }
