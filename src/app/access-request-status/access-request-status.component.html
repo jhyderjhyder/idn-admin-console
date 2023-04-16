@@ -95,7 +95,7 @@
         <div class="col-md-3">Requested For List Only</div>
         <div class=" col-md-7">
           <input class="form-control py-2 border-start-0 border" type="text" name="requestedFor"
-            [(ngModel)]="requestedFor" autocomplete="off" placeholder="Search via Account Name">
+            [(ngModel)]="requestedFor" (keyup.enter)="getRequestedForUser()" autocomplete="off" placeholder="Search via Account Name">
         </div>
         <div class="col-md-2">
           <button type="button" [disabled]="loading" (click)="getRequestedForUser()" class="btn btn-primary btn-sm">

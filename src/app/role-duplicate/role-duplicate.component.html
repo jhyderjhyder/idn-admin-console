@@ -111,7 +111,7 @@
           <div class="form-group row mb-3">
             <div class="col-sm-12 text-start">
               To duplicate the role, enter new name in below textbox and click 'Duplicate Role' button
-              &nbsp;<input type="text" class="form-control col-sm-8 mt-2" id="role-name" [(ngModel)]="newRoleName" placeholder="Role name" aria-describedby="basic-addon3" autocomplete="off">
+              &nbsp;<input type="text" class="form-control col-sm-8 mt-2" id="role-name" [(ngModel)]="newRoleName" (keyup.enter)="duplicateRole()" placeholder="Role name" aria-describedby="basic-addon3" autocomplete="off">
             </div>
           </div>
           <div class="row mrgbtm small">

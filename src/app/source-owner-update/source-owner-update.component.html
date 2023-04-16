@@ -46,7 +46,7 @@
 </div>
 <div class="form-group row mb-3 align-items-center" *ngIf="!loading && allOwnersFetched">
   <div class="col-sm-3 text-start">
-    <input class="form-control py-2 border-start-0 border" type="text" [(ngModel)]="newOwnerAll"
+    <input class="form-control py-2 border-start-0 border" type="text" [(ngModel)]="newOwnerAll" (keyup.enter)="applyNewOwnerToAllSelected()"
           placeholder="Enter Owner Account Name">
   </div>
   <div class="col-sm-2 text-end">
@@ -101,7 +101,7 @@
           {{ s.owner.accountName }}
         </span>
         <span *ngIf="s.selected">
-          <input class="text-center align-middle form-control py-2 border-start-0 border" type="text" [(ngModel)]="s.newOwner.accountName"
+          <input class="text-center align-middle form-control py-2 border-start-0 border" type="text" [(ngModel)]="s.newOwner.accountName" (keyup.enter)="showSubmitConfirmModal()"
               placeholder="Enter Owner account name">
         </span>
       </td>

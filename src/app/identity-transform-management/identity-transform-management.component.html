@@ -227,7 +227,7 @@
           <div class="form-group row mb-3">
             <div class="col-sm-12 text-start">
               To delete the transform, enter exact transform name in below textbox for confirmation and click 'Delete' button
-              &nbsp;<input type="text" class="form-control col-sm-8 mt-2" id="transform-name" [(ngModel)]="deleteTransformNameText" placeholder="Transform name" aria-describedby="basic-addon3" autocomplete="off">
+              &nbsp;<input type="text" class="form-control col-sm-8 mt-2" id="transform-name" [(ngModel)]="deleteTransformNameText" (keyup.enter)="deleteTransform()" placeholder="Transform name" aria-describedby="basic-addon3" autocomplete="off">
             </div>
           </div>
           <div class="row mrgbtm small">
