@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { AngularCsv } from 'angular-csv-ext/dist/Angular-csv';
 import { Account } from '../model/account';
 import { IDNService } from '../service/idn.service';
@@ -13,19 +13,21 @@ import {
   mergeMap,
   retryWhen,
 } from 'rxjs/operators';
-import { from, forkJoin, throwError, of } from 'rxjs';
+import { from, forkJoin, throwError, of, Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-multiple-accounts-report',
   templateUrl: './multiple-accounts-report.component.html',
   styleUrls: ['./multiple-accounts-report.component.css'],
 })
-export class MultipleAccountsComponent implements OnInit {
+export class MultipleAccountsComponent implements OnInit, OnDestroy {
   accounts: Account[];
   errorMessage: string;
   searchText: string;
   loading: boolean;
   totalCount: number;
+
+  private apiSubscription: Subscription;
 
   constructor(
     private idnService: IDNService,
@@ -36,6 +38,13 @@ export class MultipleAccountsComponent implements OnInit {
   ngOnInit() {
     this.reset();
     this.search();
+  }
+
+  ngOnDestroy() {
+    // Unsubscribe from the API subscription when the component is destroyed
+    if (this.apiSubscription) {
+      this.apiSubscription.unsubscribe();
+    }
   }
 
   reset() {
@@ -52,7 +61,7 @@ export class MultipleAccountsComponent implements OnInit {
     this.accounts = [];
     this.totalCount = 0;
 
-    this.idnService
+    this.apiSubscription = this.idnService
       .searchMultipleAccounts()
       .pipe(
         map(searchResults =>
