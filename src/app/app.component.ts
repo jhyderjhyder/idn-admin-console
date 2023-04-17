@@ -13,7 +13,7 @@ import { MessageService } from './service/message.service';
 import { AuthenticationService } from './service/authentication-service.service';
 import { User } from './model/user';
 import { environment } from 'src/environments/environment';
-// import { HttpClient } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-root',
@@ -43,8 +43,8 @@ export class AppComponent {
     private messageService: MessageService,
     private authenticationService: AuthenticationService,
     private idle: Idle,
-    keepalive: Keepalive
-    // private http: HttpClient
+    keepalive: Keepalive,
+    private http: HttpClient
   ) {
     this.routeEvent(this.route);
     this.authenticationService.currentUser.subscribe(user => {
@@ -53,15 +53,15 @@ export class AppComponent {
     });
 
     // fetch the latest version from the GitHub repository
-    // this.http
-    //   .get(
-    //     'https://api.github.com/repos/piyush-khandelwal-sp/idn-admin-console/releases/latest'
-    //   )
-    //   .subscribe((data: any) => {
-    //     this.latestVersion = data.tag_name;
-    //     this.currentVersion = 'v' + this.version;
-    //     this.newVersionAvailable = this.latestVersion !== this.currentVersion;
-    //   });
+    this.http
+      .get(
+        'https://api.github.com/repos/piyush-khandelwal-sp/idn-admin-console/releases/latest'
+      )
+      .subscribe((data: any) => {
+        this.latestVersion = data.tag_name;
+        this.currentVersion = 'v' + this.version;
+        this.newVersionAvailable = this.latestVersion !== this.currentVersion;
+      });
 
     // sets an idle timeout of 10 minutes. After this setTimeout kicks in to logout the user
     idle.setIdle(600);
