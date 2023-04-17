@@ -18,6 +18,9 @@ const RoleDescriptionMaxLength = 50;
   styleUrls: ['./role-owner-update.component.css'],
 })
 export class ChangeRoleOwnerComponent implements OnInit {
+  private isNavigating = false;
+  private abortController = new AbortController();
+
   roles: Role[];
   loading: boolean;
   allOwnersFetched: boolean;
@@ -28,6 +31,10 @@ export class ChangeRoleOwnerComponent implements OnInit {
   invalidMessage: string[];
   validToSubmit: boolean;
   roleCount: number;
+  defaultLimit = 50; //default limit for Roles API is 50
+  retryDelay = 3000; //retry delay for 3 seconds
+  maxRetries = 5; // Number of times to retry
+  loadedCount: number;
 
   public modalRef: BsModalRef;
 
@@ -50,8 +57,14 @@ export class ChangeRoleOwnerComponent implements OnInit {
     this.getAllRoles();
   }
 
+  public ngOnDestroy() {
+    this.isNavigating = true;
+    this.abortController.abort();
+    this.roles = [];
+  }
+
   reset(clearMsg: boolean) {
-    this.roles = null;
+    this.roles = [];
     this.selectAll = false;
     this.newOwnerAll = null;
     this.searchText = null;
@@ -59,27 +72,33 @@ export class ChangeRoleOwnerComponent implements OnInit {
     this.allOwnersFetched = false;
     this.invalidMessage = [];
     this.roleCount = null;
+    this.loadedCount = null;
     if (clearMsg) {
       this.messageService.clearAll();
       this.errorMessage = null;
     }
   }
 
-  getAllRoles() {
+  async getAllRoles() {
     this.allOwnersFetched = false;
     this.loading = true;
     this.roleCount = 0;
+    this.roles = [];
+    let fetchedOwnerCount = 0;
 
-    this.idnService.getAllRoles().subscribe(async allRoles => {
-      this.roles = [];
-      this.roleCount = allRoles.length;
-      let fetchedOwnerCount = 0;
+    try {
+      const data = await this.getAllRolesData();
+      this.roleCount = data.length;
+
+      //Sort it alphabetically
+      data.sort((a, b) => a.name.localeCompare(b.name));
+
       let index = 0;
-      for (const each of allRoles) {
+      for (const each of data) {
         if (index > 0 && index % 10 == 0) {
-          // After processing every batch (10 roles), wait for 2 seconds before calling another API to avoid 429
+          // After processing every batch (10 roles), wait for 1 second before calling another API to avoid 429
           // Too Many Requests Error
-          await this.sleep(2000);
+          await this.sleep(1000);
         }
         index++;
 
@@ -105,11 +124,14 @@ export class ChangeRoleOwnerComponent implements OnInit {
 
         role.accessProfiles = each.accessProfiles.length;
 
-        const query = new SimpleQueryCondition();
-        query.attribute = 'id';
-        query.value = each.owner.id;
+        if (!this.isNavigating) {
+          const query = new SimpleQueryCondition();
+          query.attribute = 'id';
+          query.value = each.owner.id;
 
-        this.idnService.searchAccounts(query).subscribe(searchResult => {
+          const searchResult = await this.idnService
+            .searchAccounts(query)
+            .toPromise();
           if (searchResult.length > 0) {
             role.owner = new SourceOwner();
             role.owner.accountId = searchResult[0].id;
@@ -122,12 +144,46 @@ export class ChangeRoleOwnerComponent implements OnInit {
           if (fetchedOwnerCount == this.roleCount) {
             this.allOwnersFetched = true;
           }
-        });
+        }
 
         this.roles.push(role);
+        this.loadedCount = this.roles.length;
       }
-      this.loading = false;
-    });
+    } catch (error) {
+      console.error(error);
+    }
+    this.loading = false;
+  }
+
+  public async getAllRolesData(): Promise<any> {
+    const countResponse = await this.idnService
+      .getTotalRolesCount()
+      .toPromise();
+    const count = countResponse;
+    const allData: Role[] = [];
+
+    for (
+      let offset = 0;
+      allData.length < count && !this.isNavigating;
+      offset += this.defaultLimit
+    ) {
+      const dataPage = await this.idnService
+        .getAllRoles(offset, this.defaultLimit, {
+          signal: this.abortController.signal,
+        })
+        .toPromise();
+      allData.push(...dataPage);
+    }
+
+    return allData;
+  }
+
+  // private delay(ms: number): Observable<void> {
+  //   return timer(ms).pipe(mapTo(undefined));
+  // }
+
+  async sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
   }
 
   saveInCsv() {
@@ -152,7 +208,7 @@ export class ChangeRoleOwnerComponent implements OnInit {
     };
 
     const currentUser = this.authenticationService.currentUserValue;
-    const fileName = `${currentUser.tenant}-roles`;
+    const fileName = `${currentUser.tenant}-roles-owners`;
     const arr = [];
     for (const each of this.roles) {
       const record = Object.assign(each);
@@ -310,9 +366,9 @@ export class ChangeRoleOwnerComponent implements OnInit {
     let index = 0;
     for (const each of arr) {
       if (index > 0 && index % 10 == 0) {
-        // After processing every batch (10 roles), wait for 2 seconds before calling another API to avoid 429
+        // After processing every batch (10 roles), wait for 1 second before calling another API to avoid 429
         // Too Many Requests Error
-        await this.sleep(2000);
+        await this.sleep(1000);
       }
       index++;
 
@@ -336,10 +392,6 @@ export class ChangeRoleOwnerComponent implements OnInit {
         }
       );
     }
-  }
-
-  sleep(ms) {
-    return new Promise(resolve => setTimeout(resolve, ms));
   }
 
   handleFileSelect(evt) {

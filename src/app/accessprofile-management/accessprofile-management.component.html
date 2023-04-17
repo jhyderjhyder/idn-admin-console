@@ -25,7 +25,7 @@
 </form>
 <div class="form-group row mb-3" *ngIf="loading">
   <div class="col-sm-12 text-end">
-    <span class="spinner-border spinner-border-sm me-1"></span>Loading...
+    <span class="spinner-border spinner-border-sm me-1"></span>Loaded: {{loadedCount}} / {{accessProfileCount}} ({{((loadedCount/accessProfileCount) * 100).toFixed(2)}}%)
   </div>
 </div>
 <div class="form-group row align-items-center mb-3" *ngIf="!loading && allOwnersFetched">
@@ -43,9 +43,20 @@
     </button>
   </div>
   <div class="col-sm-2 text-end">
-    <button type="button" [disabled]="loading" (click)="exportAllAccessProfiles()" class="btn btn-primary btn-sm">
-      Export All
+    <button type="button" [disabled]="loading || exporting" (click)="exportAllAccessProfiles()" class="btn btn-primary btn-sm">
+      {{ exporting ? 'Wait...' : 'Export All' }}
     </button>
+  </div>
+</div>
+<div class="form-group row align-items-center mb-4" *ngIf="!loading && allOwnersFetched">
+  <div class="col-sm-2 text-start">
+    <span class="fw-bold">Total: {{ accessProfileCount }} </span>
+  </div>
+  <div class="col-sm-2 text-start">
+    <span class="fw-bold">Enabled: {{ totalEnabled }} </span>
+  </div>
+  <div class="col-sm-2 text-start">
+    <span class="fw-bold">Disabled: {{ totalDisabled }} </span>
   </div>
 </div>
 <div class="form-group row" *ngIf="bulkAction === 'EnableAccessProfiles'">
@@ -76,11 +87,6 @@
     <button type="button" (click)="showSubmitConfirmModal()" class="btn btn-primary btn-sm">
       Submit to Delete Access Profiles
     </button>
-  </div>
-</div>
-<div class="form-group row" *ngIf="allOwnersFetched && !loading">
-  <div class="col-sm-10 text-start">
-    <span class="fw-bold">Total Count: {{ accessProfileCount }} </span>
   </div>
 </div>
 <table class="table table-striped table-bordered">
@@ -208,7 +214,7 @@
           <div class="form-group row">
             <div class="col-sm-12 text-start">
               To delete the access profiles, enter "YES TO DELETE" in below textbox for confirmation and click 'Delete' button
-              &nbsp;<input type="text" class="form-control col-sm-8" id="rule-name" [(ngModel)]="deleteAccessProfileConfirmText" placeholder="Confirmation Text" aria-describedby="basic-addon3" autocomplete="off">
+              &nbsp;<input type="text" class="form-control col-sm-8" id="rule-name" [(ngModel)]="deleteAccessProfileConfirmText" (keyup.enter)="deleteAccessProfiles()" placeholder="Confirmation Text" aria-describedby="basic-addon3" autocomplete="off">
             </div>
           </div>
           <div class="row mrgbtm small">

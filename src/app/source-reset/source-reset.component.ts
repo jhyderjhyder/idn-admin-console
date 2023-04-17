@@ -15,6 +15,8 @@ export class ResetSourceComponent implements OnInit {
   errorInvokeApi: boolean;
   searchText: string;
   loading: boolean;
+  loadedCount: number;
+  sourceCount: number;
 
   sourceToReset: Source;
   validToSubmit: boolean;
@@ -50,6 +52,8 @@ export class ResetSourceComponent implements OnInit {
     this.validToSubmit = null;
     this.resetSourceNameText = null;
     this.skipType = null;
+    this.loadedCount = null;
+    this.sourceCount = null;
     this.invalidMessage = [];
     if (clearMsg) {
       this.messageService.clearAll();
@@ -59,9 +63,23 @@ export class ResetSourceComponent implements OnInit {
 
   search() {
     this.loading = true;
-    this.idnService.getAllSources().subscribe(allSources => {
+    this.idnService.getAllSources().subscribe(async allSources => {
       this.sources = [];
+
+      this.sourceCount = allSources.length;
+
+      //Sort it alphabetically
+      allSources.sort((a, b) => a.name.localeCompare(b.name));
+
+      let index = 0;
       for (const each of allSources) {
+        if (index > 0 && index % 10 == 0) {
+          // After processing every batch (10 sources), wait for 1 second before calling another API to avoid 429
+          // Too Many Requests Error
+          await this.sleep(1000);
+        }
+        index++;
+
         const source = new Source();
         source.id = each.id;
         source.cloudExternalID = each.connectorAttributes.cloudExternalId;
@@ -80,9 +98,14 @@ export class ResetSourceComponent implements OnInit {
         );
 
         this.sources.push(source);
+        this.loadedCount = this.sources.length;
       }
       this.loading = false;
     });
+  }
+
+  sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
   }
 
   resetSourceAccounts() {

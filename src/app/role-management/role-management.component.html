@@ -30,7 +30,7 @@
 </form>
 <div class="form-group row mb-4 mt-2" *ngIf="loading">
   <div class="col-sm-12 text-end">
-    <span class="spinner-border spinner-border-sm me-1"></span>Loading...
+    <span class="spinner-border spinner-border-sm me-1"></span>Loaded: {{loadedCount}} / {{roleCount}} ({{((loadedCount/roleCount) * 100).toFixed(2)}}%)
   </div>
 </div>
 <div class="form-group row align-items-center mb-4" *ngIf="!loading && allOwnersFetched">
@@ -50,15 +50,27 @@
     </button>
   </div>
   <div class="col-sm-2 text-end">
-    <button type="button" [disabled]="loading" (click)="exportAllRoles()" class="btn btn-primary btn-sm">
-      Export All
+    <button type="button" [disabled]="loading || exporting" (click)="exportAllRoles()" class="btn btn-primary btn-sm">
+      {{ exporting ? 'Wait...' : 'Export All' }}
     </button>
   </div>
 </div>
-<div class="form-group row" *ngIf="allOwnersFetched && !loading">
-  <div class="col-sm-10 text-start">
-    <span class="fw-bold">Total Count: {{ roleCount }} </span>
-  </div>
+<div class="form-group row align-items-center mb-4" *ngIf="!loading && allOwnersFetched">
+    <div class="col-sm-2 text-start">
+      <span class="fw-bold">Total: {{ roleCount }} </span>
+    </div>
+    <div class="col-sm-2 text-start">
+      <span class="fw-bold">Enabled: {{ totalEnabled }} </span>
+    </div>
+    <div class="col-sm-2 text-start">
+      <span class="fw-bold">Disabled: {{ totalDisabled }} </span>
+    </div>
+    <div class="col-sm-2 text-start">
+      <span class="fw-bold">Requestable: {{ totalRequestable }} </span>
+    </div>
+    <div class="col-sm-2 text-start">
+      <span class="fw-bold">Non Requestable: {{ totalNonRequestable }} </span>
+    </div>
 </div>
 <div class="form-group row" *ngIf="bulkAction === 'EnableRoles'">
   <div class="col-sm-8 text-start">
@@ -196,26 +208,26 @@
         <form name="form" novalidate>
           <div class="row mrgbtm small">
             <div class="col-md-12 text-center">
-              <button type="button" (click)="hideSubmitConfirmModal()" class="btn btn-danger btn-sm">Cancel</button>
+              <button type="button" (click)="hideSubmitConfirmModal()" [disabled]="executing" class="btn btn-danger btn-sm">Cancel</button>
               &nbsp;&nbsp;&nbsp;
               <span *ngIf="bulkAction === 'EnableRoles' && atLeastOneSelected">
-                <button type="button" class="btn btn-success btn-sm" (click)="updateRoles('enabled',true)">
-                  Enable
+                <button type="button" class="btn btn-success btn-sm" [disabled]="executing" (click)="updateRoles('enabled',true)">
+                  {{ executing ? 'Wait...' : 'Enable' }}
                 </button>
               </span>
               <span *ngIf="bulkAction === 'DisableRoles' && atLeastOneSelected">
-                <button type="button" class="btn btn-success btn-sm" (click)="updateRoles('enabled',false)">
-                  Disable
+                <button type="button" class="btn btn-success btn-sm" [disabled]="executing" (click)="updateRoles('enabled',false)">
+                  {{ executing ? 'Wait...' : 'Disable' }}
                 </button>
               </span>
               <span *ngIf="bulkAction === 'MakeRolesRequestable' && atLeastOneSelected">
-                <button type="button" class="btn btn-success btn-sm" (click)="updateRoles('requestable',true)">
-                  Enable
+                <button type="button" class="btn btn-success btn-sm" [disabled]="executing" (click)="updateRoles('requestable',true)">
+                  {{ executing ? 'Wait...' : 'Enable' }}
                 </button>
               </span>
               <span *ngIf="bulkAction === 'MakeRolesNonRequestable' && atLeastOneSelected">
-                <button type="button" class="btn btn-success btn-sm" (click)="updateRoles('requestable',false)">
-                  Disable
+                <button type="button" class="btn btn-success btn-sm" [disabled]="executing" (click)="updateRoles('requestable',false)">
+                  {{ executing ? 'Wait...' : 'Disable' }}
                 </button>
               </span>
               <span *ngIf="bulkAction === 'DeleteRoles' && atLeastOneSelected">
@@ -288,16 +300,16 @@
           <div class="form-group row">
             <div class="col-sm-12 text-start">
               To delete the roles, enter "YES TO DELETE" in below textbox for confirmation and click 'Delete' button
-              &nbsp;<input type="text" class="form-control col-sm-8" id="rule-name" [(ngModel)]="deleteRoleConfirmText" placeholder="Confirmation Text" aria-describedby="basic-addon3" autocomplete="off">
+              &nbsp;<input type="text" class="form-control col-sm-8" id="rule-name" [(ngModel)]="deleteRoleConfirmText" (keyup.enter)="deleteRoles()" placeholder="Confirmation Text" aria-describedby="basic-addon3" autocomplete="off">
             </div>
           </div>
           <div class="row mrgbtm small">
             <div class="col-md-12 text-end">
-              <button type="button" (click)="hideDeleteRoleConfirmModal()" class="btn btn-danger btn-sm">Cancel</button>
+              <button type="button" (click)="hideDeleteRoleConfirmModal()" [disabled]="executing" class="btn btn-danger btn-sm">Cancel</button>
               &nbsp;&nbsp;&nbsp;
               <span>
-                <button type="button" class="btn btn-success btn-sm" (click)="deleteRoles()">
-                  Delete
+                <button type="button" class="btn btn-success btn-sm" [disabled]="executing" (click)="deleteRoles()">
+                  {{ executing ? 'Wait...' : 'Delete' }}
                 </button>
               </span>
             </div>

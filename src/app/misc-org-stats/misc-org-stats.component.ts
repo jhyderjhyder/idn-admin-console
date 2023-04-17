@@ -65,12 +65,12 @@ export class OrgStatsComponent implements OnInit {
       this.orgData.sourceCount = result.headers.get('X-Total-Count');
     });
 
-    this.idnService.getAccessProfileCount().subscribe(result => {
-      this.orgData.accessProfileCount = result.headers.get('X-Total-Count');
+    this.idnService.getTotalAccessProfilesCount().subscribe(result => {
+      this.orgData.accessProfileCount = result;
     });
 
-    this.idnService.getRoleCount().subscribe(result => {
-      this.orgData.roleCount = result.headers.get('X-Total-Count');
+    this.idnService.getTotalRolesCount().subscribe(result => {
+      this.orgData.roleCount = result;
     });
 
     this.idnService.getEntitlementCount().subscribe(result => {

@@ -4,8 +4,8 @@ import {
   HttpHeaders,
   HttpUrlEncodingCodec,
 } from '@angular/common/http';
-import { catchError } from 'rxjs/operators';
-import { Observable, of } from 'rxjs';
+import { catchError, map } from 'rxjs/operators';
+import { Observable, of, throwError } from 'rxjs';
 import { MessageService } from './message.service';
 import { Source } from '../model/source';
 import { Rule } from '../model/rule';
@@ -174,13 +174,37 @@ export class IDNService {
       .pipe(catchError(this.handleError(`refreshAllRoles`)));
   }
 
-  getAllRoles(): Observable<any> {
+  getTotalRolesCount(): Observable<number> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/roles`;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/roles?limit=1&count=true`;
+
+    return this.http.get(url, { observe: 'response' }).pipe(
+      map(response => response.headers.get('X-Total-Count')),
+      map(totalCount => parseInt(totalCount, 10)),
+      catchError(error => throwError(error))
+    );
+  }
+
+  getAllRoles(offset: number, limit: number, options?: any): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/roles?offset=${offset}&limit=${limit}`;
 
     return this.http
-      .get(url, this.httpOptions)
-      .pipe(catchError(this.handleError(`getAllRoles`)));
+      .get(url, {
+        ...this.httpOptions,
+        ...options,
+      })
+      .pipe(
+        catchError(error => {
+          if (error.status === 429) {
+            console.warn('Rate limited. Retrying in 2 seconds...');
+            return of(null);
+          } else {
+            console.error(error);
+            return throwError(error);
+          }
+        })
+      );
   }
 
   getRoleIdentityCount(role: Role): Observable<any> {
@@ -269,13 +293,30 @@ export class IDNService {
     return this.http.delete(url, myHttpOptions);
   }
 
-  getAllAccessProfiles(): Observable<any> {
+  getAllAccessProfiles(
+    offset: number,
+    limit: number,
+    options?: any
+  ): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/access-profiles`;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/access-profiles?offset=${offset}&limit=${limit}`;
 
     return this.http
-      .get(url, this.httpOptions)
-      .pipe(catchError(this.handleError(`getAllAccessProfiles`)));
+      .get(url, {
+        ...this.httpOptions,
+        ...options,
+      })
+      .pipe(
+        catchError(error => {
+          if (error.status === 429) {
+            console.warn('Rate limited. Retrying in 2 seconds...');
+            return of(null);
+          } else {
+            console.error(error);
+            return throwError(error);
+          }
+        })
+      );
   }
 
   updateAccessProfileOwner(accessProfile: AccessProfile): Observable<any> {
@@ -608,18 +649,15 @@ export class IDNService {
     return this.http.get(url, { observe: 'response' });
   }
 
-  getAccessProfileCount(): Observable<any> {
+  getTotalAccessProfilesCount(): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
     const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/access-profiles?limit=1&count=true`;
 
-    return this.http.get(url, { observe: 'response' });
-  }
-
-  getRoleCount(): Observable<any> {
-    const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/roles?limit=1&count=true`;
-
-    return this.http.get(url, { observe: 'response' });
+    return this.http.get(url, { observe: 'response' }).pipe(
+      map(response => response.headers.get('X-Total-Count')),
+      map(totalCount => parseInt(totalCount, 10)),
+      catchError(error => throwError(error))
+    );
   }
 
   getEntitlementCount(): Observable<any> {
@@ -1121,6 +1159,73 @@ export class IDNService {
     return this.http.post(url, payload);
   }
 
+  changeEntitlementOwner(
+    entitlementId: string,
+    op: string,
+    newOwnerId: string
+  ): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/entitlements/${entitlementId}`;
+
+    let payload = null;
+
+    if (op === 'remove') {
+      payload = {
+        op: `${op}`,
+        path: '/owner',
+      };
+    } else {
+      payload = {
+        op: `${op}`,
+        path: '/owner',
+        value: {
+          type: 'IDENTITY',
+          id: newOwnerId,
+        },
+      };
+    }
+
+    //Not sure if this is because its bata but Entitlements must be list for one
+    const list = new Array();
+    list.push(payload);
+
+    const myHttpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json-patch+json',
+      }),
+    };
+
+    return this.http.patch(url, list, myHttpOptions);
+  }
+
+  changeEntitlementFlags(
+    entitlementId: string,
+    op: string,
+    path: string,
+    value: boolean
+  ): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/entitlements/${entitlementId}`;
+
+    const payload = {
+      op: `${op}`,
+      path: `${path}`,
+      value: `${value}`,
+    };
+
+    //Not sure if this is because its bata but Entitlements must be list for one
+    const list = new Array();
+    list.push(payload);
+
+    const myHttpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json-patch+json',
+      }),
+    };
+
+    return this.http.patch(url, list, myHttpOptions);
+  }
+
   getAccessRequestApprovalsSummary(): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
     const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/access-request-approvals/approval-summary`;
@@ -1170,6 +1275,24 @@ export class IDNService {
     };
 
     return this.http.post(url, payload, this.httpOptions);
+  }
+
+  getAllEntitlementsPaged(filters: string, page: PageResults): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    let params = '?count=true';
+    if (filters != null) {
+      params = '?filters=name sw "' + filters + '"' + '&count=true';
+    }
+    const url =
+      `https://${currentUser.tenant}.api.${currentUser.domain}/beta/entitlements` +
+      params +
+      '&limit=' +
+      page.limit +
+      '&offset=' +
+      page.offset +
+      '&count=true';
+
+    return this.http.get(url, { observe: 'response' });
   }
 
   getIDNAdmins(): Observable<any> {

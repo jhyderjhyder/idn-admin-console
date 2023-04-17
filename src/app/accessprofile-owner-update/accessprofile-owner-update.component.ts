@@ -18,6 +18,9 @@ const AccessProfileDescriptionMaxLength = 50;
   styleUrls: ['./accessprofile-owner-update.component.css'],
 })
 export class ChangeAccessProfileOwnerComponent implements OnInit {
+  private isNavigating = false;
+  private abortController = new AbortController();
+
   accessProfiles: AccessProfile[];
   loading: boolean;
   allOwnersFetched: boolean;
@@ -28,6 +31,11 @@ export class ChangeAccessProfileOwnerComponent implements OnInit {
   invalidMessage: string[];
   validToSubmit: boolean;
   accessProfileCount: number;
+  defaultLimit = 50; //default limit for Access Profiles API is 50
+  retryDelay = 3000; //retry delay for 3 seconds
+  maxRetries = 5; // Number of times to retry
+  allAPData: any;
+  loadedCount: number;
 
   public modalRef: BsModalRef;
 
@@ -48,8 +56,15 @@ export class ChangeAccessProfileOwnerComponent implements OnInit {
     this.getAllAccessProfiles();
   }
 
+  public ngOnDestroy() {
+    this.isNavigating = true;
+    this.abortController.abort();
+    this.allAPData = null;
+    this.accessProfiles = [];
+  }
+
   reset(clearMsg: boolean) {
-    this.accessProfiles = null;
+    this.accessProfiles = [];
     this.selectAll = false;
     this.newOwnerAll = null;
     this.searchText = null;
@@ -57,74 +72,106 @@ export class ChangeAccessProfileOwnerComponent implements OnInit {
     this.allOwnersFetched = false;
     this.invalidMessage = [];
     this.accessProfileCount = null;
+    this.loadedCount = null;
+    this.allAPData = null;
     if (clearMsg) {
       this.messageService.clearAll();
       this.errorMessage = null;
     }
   }
 
-  getAllAccessProfiles() {
+  async getAllAccessProfiles() {
     this.allOwnersFetched = false;
     this.loading = true;
     this.accessProfileCount = 0;
-    this.idnService
-      .getAllAccessProfiles()
-      .subscribe(async allAccessProfiles => {
-        this.accessProfiles = [];
-        this.accessProfileCount = allAccessProfiles.length;
-        let fetchedOwnerCount = 0;
-        let index = 0;
-        for (const each of allAccessProfiles) {
-          if (index > 0 && index % 10 == 0) {
-            // After processing every batch (10 AP), wait for 2 seconds before calling another API to avoid 429
-            // Too Many Requests Error
-            await this.sleep(2000);
+    this.accessProfiles = [];
+    let fetchedOwnerCount = 0;
+
+    try {
+      const data = await this.getAllAccessProfilesData();
+      this.accessProfileCount = data.length;
+
+      //Sort it alphabetically
+      data.sort((a, b) => a.name.localeCompare(b.name));
+      this.allAPData = data;
+
+      let index = 0;
+      for (const each of data) {
+        if (index > 0 && index % 10 == 0) {
+          // After processing every batch (10 AP), wait for 1 second before calling another API to avoid 429
+          // Too Many Requests Error
+          await this.sleep(1000);
+        }
+        index++;
+
+        const accessProfile = new AccessProfile();
+        accessProfile.id = each.id;
+        accessProfile.name = each.name;
+        if (each.description) {
+          if (each.description.length > AccessProfileDescriptionMaxLength) {
+            accessProfile.description =
+              each.description.substring(0, AccessProfileDescriptionMaxLength) +
+              '...';
+          } else {
+            accessProfile.description = each.description;
           }
-          index++;
+        }
+        accessProfile.id = each.id;
+        accessProfile.enabled = each.enabled;
 
-          const accessProfile = new AccessProfile();
-          accessProfile.id = each.id;
-          accessProfile.name = each.name;
-          if (each.description) {
-            if (each.description.length > AccessProfileDescriptionMaxLength) {
-              accessProfile.description =
-                each.description.substring(
-                  0,
-                  AccessProfileDescriptionMaxLength
-                ) + '...';
-            } else {
-              accessProfile.description = each.description;
-            }
-          }
-          accessProfile.id = each.id;
-          accessProfile.enabled = each.enabled;
+        accessProfile.entitlements = each.entitlements.length;
 
-          accessProfile.entitlements = each.entitlements.length;
-
+        if (!this.isNavigating) {
           const query = new SimpleQueryCondition();
           query.attribute = 'id';
           query.value = each.owner.id;
 
-          this.idnService.searchAccounts(query).subscribe(searchResult => {
-            if (searchResult.length > 0) {
-              accessProfile.owner = new SourceOwner();
-              accessProfile.owner.accountId = searchResult[0].id;
-              accessProfile.owner.accountName = searchResult[0].name;
-              accessProfile.owner.displayName = searchResult[0].displayName;
-              accessProfile.currentOwnerAccountName = searchResult[0].name;
-              accessProfile.currentOwnerDisplayName =
-                searchResult[0].displayName;
-            }
-            fetchedOwnerCount++;
-            if (fetchedOwnerCount == this.accessProfileCount) {
-              this.allOwnersFetched = true;
-            }
-          });
-
-          this.accessProfiles.push(accessProfile);
+          const searchResult = await this.idnService
+            .searchAccounts(query)
+            .toPromise();
+          if (searchResult.length > 0) {
+            accessProfile.owner = new SourceOwner();
+            accessProfile.owner.accountId = searchResult[0].id;
+            accessProfile.owner.accountName = searchResult[0].name;
+            accessProfile.owner.displayName = searchResult[0].displayName;
+            accessProfile.currentOwnerAccountName = searchResult[0].name;
+            accessProfile.currentOwnerDisplayName = searchResult[0].displayName;
+          }
+          fetchedOwnerCount++;
+          if (fetchedOwnerCount == this.accessProfileCount) {
+            this.allOwnersFetched = true;
+          }
         }
-        this.loading = false;
-      });
+
+        this.accessProfiles.push(accessProfile);
+        this.loadedCount = this.accessProfiles.length;
+      }
+    } catch (error) {
+      console.error(error);
+    }
+    this.loading = false;
+  }
+
+  public async getAllAccessProfilesData(): Promise<any> {
+    const count = await this.idnService
+      .getTotalAccessProfilesCount()
+      .toPromise();
+    const allData: AccessProfile[] = [];
+
+    for (
+      let offset = 0;
+      allData.length < count && !this.isNavigating;
+      offset += this.defaultLimit
+    ) {
+      const dataPage = await this.idnService
+        .getAllAccessProfiles(offset, this.defaultLimit, {
+          signal: this.abortController.signal,
+        })
+        .toPromise();
+      allData.push(...dataPage);
+    }
+
+    return allData;
   }
 
   saveInCsv() {
@@ -147,7 +194,7 @@ export class ChangeAccessProfileOwnerComponent implements OnInit {
     };
 
     const currentUser = this.authenticationService.currentUserValue;
-    const fileName = `${currentUser.tenant}-accessprofiles`;
+    const fileName = `${currentUser.tenant}-accessprofiles-owners`;
     const arr = [];
     for (const each of this.accessProfiles) {
       const record = Object.assign(each);
@@ -305,9 +352,9 @@ export class ChangeAccessProfileOwnerComponent implements OnInit {
     let index = 0;
     for (const each of arr) {
       if (index > 0 && index % 10 == 0) {
-        // After processing every batch (10 accessProfiles), wait for 2 seconds before calling another API to avoid 429
+        // After processing every batch (10 accessProfiles), wait for 1 second before calling another API to avoid 429
         // Too Many Requests Error
-        await this.sleep(2000);
+        await this.sleep(1000);
       }
       index++;
 

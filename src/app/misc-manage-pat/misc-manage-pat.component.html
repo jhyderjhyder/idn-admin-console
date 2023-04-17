@@ -112,7 +112,7 @@
           <div class="form-group row">
             <div class="col-sm-12 text-start mb-3 mt-5">
               To delete the PAT, enter exact PAT ID in below textbox for confirmation and click 'Delete' button
-              &nbsp;<input type="text" class="form-control col-sm-8" id="rule-name" [(ngModel)]="deletePATNameText" placeholder="PAT ID" aria-describedby="basic-addon3" autocomplete="off">
+              &nbsp;<input type="text" class="form-control col-sm-8" id="rule-name" [(ngModel)]="deletePATNameText" (keyup.enter)="deletePAT()" placeholder="PAT ID" aria-describedby="basic-addon3" autocomplete="off">
             </div>
           </div>
           <div class="row mrgbtm small">

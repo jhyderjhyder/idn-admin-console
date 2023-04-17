@@ -45,8 +45,8 @@
     </button>
   </div>
   <div class="col-sm-2 text-end">
-    <button type="button" [disabled]="loading" (click)="exportAllRules($event)" class="btn btn-primary btn-sm" name="exportAllRules">
-      Export All
+    <button type="button" [disabled]="loading || exporting" (click)="exportAllRules($event)" class="btn btn-primary btn-sm" name="exportAllRules">
+      {{ exporting ? 'Wait...' : 'Export All' }}
     </button>
   </div>
 </div>
@@ -224,7 +224,7 @@
           <div class="form-group row">
             <div class="col-sm-12 text-start mb-3">
               To delete the rule, enter exact rule name in below textbox for confirmation and click 'Delete' button
-              &nbsp;<input type="text" class="form-control col-sm-8 mt-3" id="rule-name" [(ngModel)]="deleteRuleNameText" placeholder="Rule name" aria-describedby="basic-addon3" autocomplete="off">
+              &nbsp;<input type="text" class="form-control col-sm-8 mt-3" id="rule-name" [(ngModel)]="deleteRuleNameText" (keyup.enter)="deleteRule()" placeholder="Rule name" aria-describedby="basic-addon3" autocomplete="off">
             </div>
           </div>
           <div class="row mrgbtm small">

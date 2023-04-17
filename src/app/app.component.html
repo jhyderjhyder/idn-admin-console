@@ -96,9 +96,10 @@
             Misc
           </a>
           <div class="dropdown-menu" aria-labelledby="navbarRules">
-            <a class="dropdown-item" routerLink="/misc-org-time-update">Set Org Time</a>
-            <a class="dropdown-item" routerLink="/misc-manage-pat">Manage PAT</a>
+            <a class="dropdown-item" routerLink="/entitlement-management">Manage Entitlements</a>
             <a class="dropdown-item" routerLink="/identity-admin-management">Manage Admins</a>
+            <a class="dropdown-item" routerLink="/misc-manage-pat">Manage PAT</a>
+            <a class="dropdown-item" routerLink="/misc-org-time-update">Set Org Time</a>
             <a class="dropdown-item" routerLink="/misc-org-stats">Org Statistics</a>
           </div>
         </li>
@@ -135,8 +136,10 @@
 </div>
 <div class="container col-10">
   <nav class="navbar navbar-custom navbar-expand-lg">
-    <div class="col-sm-12 text-center text-white">
+    <div class="col-sm-12 text-center text-white d-block">
       <small>IDN Admin Console v{{ version }}</small>
+      <br>
+      <small *ngIf="newVersionAvailable" style="color: orange;">A new version of the software is available: {{ latestVersion }}</small>
     </div>
   </nav>
   <br>

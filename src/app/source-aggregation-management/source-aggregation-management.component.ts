@@ -28,6 +28,8 @@ export class AggregationManagementComponent implements OnInit {
   accntAggScheduleLoaded: boolean;
   entAggScheduleLoaded: boolean;
   loading: boolean;
+  loadedCount: number;
+  sourceCount: number;
 
   invalidMessage: string[];
 
@@ -60,6 +62,9 @@ export class AggregationManagementComponent implements OnInit {
     this.cronExpAll = null;
     this.searchText = null;
     this.loading = false;
+    this.loadedCount = null;
+    this.sourceCount = null;
+
     this.invalidMessage = [];
     if (clearMsg) {
       this.messageService.clearAll();
@@ -71,17 +76,29 @@ export class AggregationManagementComponent implements OnInit {
     this.accntAggScheduleLoaded = false;
     this.entAggScheduleLoaded = false;
     this.loading = true;
-    this.idnService.getAllSources().subscribe(searchResult => {
+    this.idnService.getAllSources().subscribe(async searchResult => {
       this.sources = [];
       this.sourcesToShow = [];
       const allSources = searchResult.filter(
         each => each.type && each.type != 'DelimitedFile'
       );
       const count = allSources.length;
+      this.sourceCount = allSources.length;
       let fetchAccntAggScheduleCount = 0;
       let fetchEntAggScheduleCount = 0;
 
+      let index = 0;
+
+      //Sort it alphabetically
+      allSources.sort((a, b) => a.name.localeCompare(b.name));
       for (const each of allSources) {
+        if (index > 0 && index % 10 == 0) {
+          // After processing every batch (10 sources), wait for 1 second before calling another API to avoid 429
+          // Too Many Requests Error
+          await this.sleep(1000);
+        }
+        index++;
+
         const source = new Source();
         source.id = each.id;
         source.cloudExternalID = each.connectorAttributes.cloudExternalId;
@@ -141,9 +158,14 @@ export class AggregationManagementComponent implements OnInit {
 
         this.sources.push(source);
         this.sourcesToShow.push(source);
+        this.loadedCount = this.sources.length;
       }
       this.loading = false;
     });
+  }
+
+  async sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
   }
 
   resetSourcesToShow() {

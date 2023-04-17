@@ -192,7 +192,7 @@ export class MockIDNService {
     return of();
   }
 
-  getRoleCount(): Observable<any> {
+  getTotalRolesCount(): Observable<any> {
     return of();
   }
 

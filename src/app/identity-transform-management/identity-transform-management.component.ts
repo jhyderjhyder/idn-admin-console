@@ -22,6 +22,9 @@ export class IdentityTransformManagementComponent implements OnInit {
   invalidMessage: string[];
   searchText: string;
   loading: boolean;
+  exporting: boolean;
+  totalCount: number;
+  allTransforms: any;
 
   transforms: Transform[];
   zip: JSZip = new JSZip();
@@ -57,6 +60,9 @@ export class IdentityTransformManagementComponent implements OnInit {
     this.deleteTransformNameText = null;
     this.searchText = null;
     this.loading = false;
+    this.exporting = false;
+    this.totalCount = null;
+    this.allTransforms = null;
     this.invalidMessage = [];
     if (clearMsg) {
       this.messageService.clearAll();
@@ -67,6 +73,8 @@ export class IdentityTransformManagementComponent implements OnInit {
     this.loading = true;
     this.idnService.getAllTransforms().subscribe(results => {
       this.transforms = [];
+      this.totalCount = results.length;
+      this.allTransforms = results;
       for (const each of results) {
         const transform = new Transform();
         transform.id = each.id;
@@ -357,25 +365,25 @@ export class IdentityTransformManagementComponent implements OnInit {
   }
 
   exportAllTransforms() {
-    this.idnService.getAllTransforms().subscribe(results => {
-      this.transforms = [];
-      for (const each of results) {
-        const transform = new Transform();
-        const jsonData = JSON.stringify(each, null, 4);
-        transform.name = each.name;
-        transform.type = each.type;
-        const fileName =
-          'Transform - ' + transform.type + ' - ' + transform.name + '.json';
-        this.zip.file(`${fileName}`, jsonData);
-      }
-      const currentUser = this.authenticationService.currentUserValue;
-      const zipFileName = `${currentUser.tenant}-transforms.zip`;
+    this.exporting = true;
 
-      this.zip.generateAsync({ type: 'blob' }).then(function (content) {
-        saveAs(content, zipFileName);
-      });
+    // Get the already fetched this.allTransforms to export since its in a single page
+    for (const each of this.allTransforms) {
+      const transform = new Transform();
+      const jsonData = JSON.stringify(each, null, 4);
+      transform.name = each.name;
+      transform.type = each.type;
+      const fileName =
+        'Transform - ' + transform.type + ' - ' + transform.name + '.json';
+      this.zip.file(`${fileName}`, jsonData);
+    }
+    const currentUser = this.authenticationService.currentUserValue;
+    const zipFileName = `${currentUser.tenant}-transforms.zip`;
 
-      this.ngOnInit();
+    this.zip.generateAsync({ type: 'blob' }).then(function (content) {
+      saveAs(content, zipFileName);
     });
+
+    this.exporting = false;
   }
 }

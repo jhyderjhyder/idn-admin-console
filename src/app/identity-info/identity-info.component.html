@@ -82,8 +82,7 @@
 
 <div class="form-group row mb-3 align-items-center" *ngIf="!loading">
   <div class="col-sm-4 text-start">
-    <input id="accountName" class="form-control py-2 border-start-0 border" type="text" [(ngModel)]="accountName"
-      placeholder="Enter Value">
+    <input id="accountName" class="form-control py-2 border-start-0 border" type="text" [(ngModel)]="accountName" (keyup.enter)="submit()" placeholder="Enter Value">
   </div>
 
   <div *ngIf="!loading" class="col-sm-2 text-end">

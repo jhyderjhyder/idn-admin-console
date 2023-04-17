@@ -24,7 +24,10 @@ export class ErrorInterceptor implements HttpInterceptor {
   ): Observable<HttpEvent<any>> {
     return next.handle(request).pipe(
       catchError(err => {
-        if (err.status === 401) {
+        if (
+          err.status === 401 &&
+          !err.url.startsWith('https://api.github.com/repos/') //Hack for Version Check error since GitHub API was throwing random 401 Bad Credentials and Logging the user out due to this
+        ) {
           // auto logout if 401 response returned from api
           this.authenticationService.logout();
           this.route.navigate(['/login']);

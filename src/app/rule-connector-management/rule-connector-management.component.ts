@@ -26,6 +26,7 @@ export class ImportRuleComponent implements OnInit {
   invalidMessage: string[];
   searchText: string;
   loading: boolean;
+  exporting: boolean;
   zip: JSZip = new JSZip();
   buttonClicked: string;
   convertXMLResult: string;
@@ -60,6 +61,7 @@ export class ImportRuleComponent implements OnInit {
     this.deleteRuleNameText = null;
     this.searchText = null;
     this.loading = false;
+    this.exporting = false;
     this.invalidMessage = [];
     if (clearMsg) {
       this.messageService.clearAll();
@@ -505,6 +507,7 @@ export class ImportRuleComponent implements OnInit {
   }
 
   exportAllRules($event) {
+    this.exporting = true;
     if ($event && $event != '') {
       this.buttonClicked = $event.target.name;
     }
@@ -526,5 +529,6 @@ export class ImportRuleComponent implements OnInit {
     this.zip.generateAsync({ type: 'blob' }).then(function (content) {
       saveAs(content, zipFileName);
     });
+    this.exporting = false;
   }
 }

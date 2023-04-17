@@ -108,7 +108,7 @@
           <div class="form-group row">
             <div class="col-sm-12 text-start mb-3 mt-5">
               To revoke ALL the permissions, enter exact User ID in below textbox for confirmation and click 'Revoke' button
-              &nbsp;<input type="text" class="form-control col-sm-8" id="rule-name" [(ngModel)]="revokeAdminNameText" placeholder="ID" aria-describedby="basic-addon3" autocomplete="off">
+              &nbsp;<input type="text" class="form-control col-sm-8" id="rule-name" [(ngModel)]="revokeAdminNameText" (keyup.enter)="revokePermission()" placeholder="ID" aria-describedby="basic-addon3" autocomplete="off">
             </div>
           </div>
           <div class="row mrgbtm small">

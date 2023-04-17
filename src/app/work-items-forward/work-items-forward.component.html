@@ -113,9 +113,9 @@
             <div class="col-sm-12 text-start">
               To forward the request, enter new owner account name and comment in below textbox for confirmation and click 'Forward' button
               <br><br>
-              <b>New Owner:</b> <input type="text" class="form-control col-sm-6" id="owner-name" [(ngModel)]="newOwner" placeholder="Enter Identity Account Name" aria-describedby="basic-addon3" autocomplete="off">
+              <b>New Owner:</b> <input type="text" class="form-control col-sm-6" id="owner-name" [(ngModel)]="newOwner" (keyup.enter)="checkForwardWorkItem()" placeholder="Enter Identity Account Name" aria-describedby="basic-addon3" autocomplete="off">
               <br>
-              <b>Comment:</b> <input type="text" class="form-control col-sm-6" id="comment" [(ngModel)]="forwardComment" placeholder="Enter Comment" aria-describedby="basic-addon3" autocomplete="off" maxlength="255">
+              <b>Comment:</b> <input type="text" class="form-control col-sm-6" id="comment" [(ngModel)]="forwardComment" (keyup.enter)="checkForwardWorkItem()" placeholder="Enter Comment" aria-describedby="basic-addon3" autocomplete="off" maxlength="255">
             </div>
           </div>
           <div class="row mrgbtm small">

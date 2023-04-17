@@ -13,6 +13,7 @@ import { MessageService } from './service/message.service';
 import { AuthenticationService } from './service/authentication-service.service';
 import { User } from './model/user';
 import { environment } from 'src/environments/environment';
+import { HttpClient } from '@angular/common/http';
 
 @Component({
   selector: 'app-root',
@@ -24,6 +25,11 @@ export class AppComponent {
   currentUser: User;
   launchedFromIframe: boolean;
   version = environment.VERSION;
+
+  //version check against GitHub
+  latestVersion: string;
+  currentVersion: string;
+  newVersionAvailable: boolean;
 
   idleState = 'Not started.';
   lastPing?: Date = null;
@@ -37,7 +43,8 @@ export class AppComponent {
     private messageService: MessageService,
     private authenticationService: AuthenticationService,
     private idle: Idle,
-    keepalive: Keepalive
+    keepalive: Keepalive,
+    private http: HttpClient
   ) {
     this.routeEvent(this.route);
     this.authenticationService.currentUser.subscribe(user => {
@@ -45,10 +52,21 @@ export class AppComponent {
       this.reset();
     });
 
-    // sets an idle timeout of 5 minutes. After this setTimeout kicks in to logout the user
-    idle.setIdle(300);
-    // sets a timeout period of 30 seconds. after 30 seconds of inactivity, the user will be considered timed out and will be logged out.
-    idle.setTimeout(30);
+    // fetch the latest version from the GitHub repository
+    this.http
+      .get(
+        'https://api.github.com/repos/piyush-khandelwal-sp/idn-admin-console/releases/latest'
+      )
+      .subscribe((data: any) => {
+        this.latestVersion = data.tag_name;
+        this.currentVersion = 'v' + this.version;
+        this.newVersionAvailable = this.latestVersion !== this.currentVersion;
+      });
+
+    // sets an idle timeout of 10 minutes. After this setTimeout kicks in to logout the user
+    idle.setIdle(600);
+    // sets a timeout period of 1 min. after 1 min of inactivity, the user will be considered timed out and will be logged out.
+    idle.setTimeout(60);
     // sets the default interrupts, in this case, things like clicks, scrolls, touches to the document
     idle.setInterrupts(DEFAULT_INTERRUPTSOURCES);
 
