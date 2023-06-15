@@ -20,6 +20,8 @@ export class SourceInfoComponent implements OnInit {
   loadedCount: number;
   sourceCount: number;
   allSources: any;
+  rawObject: string;
+  rawObjectId: string;
 
   zip: JSZip = new JSZip();
 
@@ -36,6 +38,8 @@ export class SourceInfoComponent implements OnInit {
   ngOnInit() {
     this.reset(true);
     this.search();
+    this.rawObject = null;
+    this.rawObjectId = null;
   }
 
   reset(clearMsg: boolean) {
@@ -102,6 +106,32 @@ export class SourceInfoComponent implements OnInit {
 
   sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
+  }
+  //Show the full content of object in questions
+  getDetails(input: Source) {
+    for (const each of this.allSources) {
+      if (each.id == input.id) {
+        this.rawObject = JSON.stringify(each, null, 4);
+        this.rawObjectId = input.id;
+      }
+    }
+  }
+
+  save() {
+    const rawData = (
+      document.getElementById('userUpdatedObject') as HTMLInputElement
+    ).value;
+    this.idnService.updateSource(rawData, this.rawObjectId).subscribe(
+      searchResult => {
+        console.log(searchResult);
+      },
+      err => {
+        this.messageService.handleIDNError(err);
+      }
+    );
+
+    console.log(this.rawObjectId);
+    console.log(rawData);
   }
 
   exportAllSources() {

@@ -1,13 +1,13 @@
-<nav class="navbar navbar-expand-lg navbar-light bg-light p-3 mb-3 rounded" aria-label="breadcrumb">
-  <ol class="breadcrumb m-0">
-    <li class="breadcrumb-item"><a class="text-decoration-none" routerLink="/identity-info">Home</a></li>
-    <li class="breadcrumb-item">Sources</li>
-    <li class="breadcrumb-item active" aria-current="page">Run Aggregations</li>
-  </ol>
-</nav>
+<div class="form-group row mb-3">
+  <div class="col-sm-12 text-start">
+    <span class="fw-bold">Bulk run Many sources.  </span>
+    <span class="fw-bold">To aggregate the source, select the items below and then click the 'Submit' button. </span>
+    <span class="fw-bold">For Delimited File type source, click the 'Choose file' button in the 'CSV File' column to upload file first before submitting.</span>
+  </div>
+</div>
 <form name="form" #f="ngForm" novalidate contactRequired>
   <div class="form-group row align-items-center mb-3">
-    <div class="col-md-10">
+    <div class="col-md-6">
       <div class="input-group">
         <span class="input-group-text bg-white border-end-0">
           <i class="fa fa-search"></i>
@@ -21,6 +21,13 @@
         Refresh
       </button>
     </div>
+    <div class="form-group row mb-3" *ngIf="!loading">
+      <div class="col-sm-12 text-end">
+        <button type="button" (click)="showSubmitConfirmModal()" class="btn btn-primary btn-sm">
+          Submit
+        </button>
+      </div>
+    </div>
   </div>
 </form>
 <div class="form-group row mb-3" *ngIf="loading">
@@ -28,20 +35,8 @@
     <span class="spinner-border spinner-border-sm me-1"></span>Loaded: {{loadedCount}} / {{sourceCount}} ({{((loadedCount/sourceCount) * 100).toFixed(2)}}%)
   </div>
 </div>
-<div class="form-group row mb-3" *ngIf="!loading">
-  <div class="col-sm-12 text-start">
-    <span class="fw-bold">To aggregate the source, select the items below and then click the 'Submit' button. </span>
-    <span class="fw-bold">For Delimited File type source, click the 'Choose file' button in the 'CSV File' column to upload file first before submitting.
-    </span>
-  </div>
-</div>
-<div class="form-group row mb-3" *ngIf="!loading">
-  <div class="col-sm-12 text-end">
-    <button type="button" (click)="showSubmitConfirmModal()" class="btn btn-primary btn-sm">
-      Submit
-    </button>
-  </div>
-</div>
+
+
 <div class="form-group row" *ngIf="!loading && sources">
   <div class="col-sm-10 text-start">
     <span class="fw-bold">Total: {{ sourceCount }} </span>

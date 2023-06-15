@@ -12,4 +12,5 @@ export class AccessRequestStatus {
   sodViolationState: string;
   approvalDetails: Array<{}>;
   accessRequestPhases: Array<{}>;
+  id: string;
 }

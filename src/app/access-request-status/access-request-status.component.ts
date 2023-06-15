@@ -124,6 +124,7 @@ export class AccessRequestStatusComponent implements OnInit {
           accessRequestStatus.requestedFor = each.requestedFor.name;
           accessRequestStatus.approvalDetails = each.approvalDetails;
           accessRequestStatus.accessRequestPhases = each.accessRequestPhases;
+          accessRequestStatus.id = each.accessRequestId;
 
           if (each.requesterComment && each.requesterComment.comment) {
             accessRequestStatus.requesterComment =

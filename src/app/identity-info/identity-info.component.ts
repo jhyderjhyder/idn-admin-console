@@ -236,8 +236,12 @@ export class IdentityInfoComponent implements OnInit {
       const atts = Object.entries(identity[0].attributes);
       for (let i = 0; i < atts.length; i++) {
         const [name, value] = atts[i];
-        this.identityInfo.attributes.push({ name: name, value: value });
+        this.identityInfo.attributes.push({
+          name: name,
+          value: value.toString(),
+        });
       }
+      this.identityInfo.attributes.sort((a, b) => a.name.localeCompare(b.name));
     }
 
     if (identity[0].appCount) {
