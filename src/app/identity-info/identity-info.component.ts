@@ -6,7 +6,7 @@ import { PageResults } from '../model/page-results';
 import { EntitlementSimple } from '../model/entitlement-simple';
 import { Account } from '../model/account';
 import { AccessRequestStatus } from '../model/access-request-status';
-import { IdentityAttribute } from '../model/identity-attribute';
+import { IdentityAttribute} from '../model/identity-attribute';
 import { AuthenticationService } from '../service/authentication-service.service';
 import { AngularCsv } from 'angular-csv-ext/dist/Angular-csv';
 import { WorkItem } from '../model/work-item';
@@ -236,8 +236,11 @@ export class IdentityInfoComponent implements OnInit {
       const atts = Object.entries(identity[0].attributes);
       for (let i = 0; i < atts.length; i++) {
         const [name, value] = atts[i];
-        this.identityInfo.attributes.push({ name: name, value: value });
+        this.identityInfo.attributes.push({ name: name, value: value.toString() });
+        
       }
+      this.identityInfo.attributes.sort((a, b) => a.name.localeCompare(b.name));
+      
     }
 
     if (identity[0].appCount) {

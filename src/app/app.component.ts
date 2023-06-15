@@ -55,7 +55,7 @@ export class AppComponent {
     // fetch the latest version from the GitHub repository
     this.http
       .get(
-        'https://api.github.com/repos/piyush-khandelwal-sp/idn-admin-console/releases/latest'
+        'https://api.github.com/repos/jhyderjhyder/idn-admin-console/releases/latest'
       )
       .subscribe((data: any) => {
         this.latestVersion = data.tag_name;

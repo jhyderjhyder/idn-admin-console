@@ -51,7 +51,12 @@ export class IdentityAttribute {
   managerAccountName: string;
   orgPermission: string[];
   cloudStatus: string;
-  attributes: Array<{}>;
+  attributes: Array<Basic>;
   hasPATToken: boolean;
   cloudId: string;
+}
+
+export class Basic {
+  name: string;
+  value: string;
 }
