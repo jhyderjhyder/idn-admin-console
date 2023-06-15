@@ -1,5 +1,6 @@
-
+<div>
 <form name="form" #f="ngForm" novalidate contactRequired>
+
   <div class="form-group row align-items-center mb-3">
     <div class="col-md-8">
       <div class="input-group"> 
@@ -10,17 +11,37 @@
         placeholder="Type Source Name, description, cloudExternalID or type to filter the result.">
     </div>
   </div>
-    <div class="col-sm-2 text-end">
+    <div class="col-sm-1 text-end">
       <button type="button" [disabled]="loading || exporting" (click)="exportAllSources()" class="btn btn-primary btn-sm">
         {{ exporting ? 'Wait...' : 'Export All' }}
       </button>
     </div>
-    <div class="col-sm-2 text-end">
+    <div class="col-sm-1 text-end">
       <button type="button" [disabled]="loading" (click)="ngOnInit()" class="btn btn-primary btn-sm">
         Refresh
       </button>
     </div>
+    <div class="col-sm-1 text-end">
+      <button type="button" [disabled]="!rawObject" (click)="save()" class="btn btn-primary btn-sm">
+        Save
+      </button>
+    </div>
   </div>
+
+  <!--Raw Edit Screen-->
+  <div class="row" *ngIf="rawObject" >
+    <div class="col-sm-10">
+      Debug Object
+    </div>
+  </div>
+  
+  <div class="row" *ngIf="rawObject" >
+    <div class="col-sm-12">
+      <textarea id="userUpdatedObject" placeholder style="min-height:600px; min-width: 100%;">{{rawObject}}</textarea>
+    </div>
+  </div>
+<!--End Raw Edit Screen-->
+
 </form>
 <div class="form-group row mb-3" *ngIf="loading">
   <div class="col-sm-12 text-end">
@@ -46,17 +67,21 @@
       <th scope="col">Entitlement Count</th>
     </tr>
   </thead>
-  <tbody class="text-center align-middle" *ngIf="sources">
+  <tbody class="text-center align-middle" *ngIf="sources && !rawObject">
     <tr *ngFor="let s of sources | filter:searchText:['cloudExternalID', 'name', 'description', 'type']">
       <td [ngStyle]="{'color':s.name.includes('Authoritative') ? 'green' : 'black' }">{{ s.name }}</td>
       <td>{{ s.internalName }}</td>
       <td>{{ s.description }}</td>
       <td>{{ s.type }}</td>
       <td>{{ s.cloudExternalID }}</td>
-      <td>{{ s.id }}</td>
+      <td>
+        <a class="page-link" href="javascript:void(0);" (click)="getDetails(s)">{{ s.id }}</a>
+      </td>
       <td>{{ s.accountsCount }}</td>
       <td>{{ s.entitlementsCount }}</td>
     </tr>
   </tbody>
 </table>
+
 <br>
+</div>

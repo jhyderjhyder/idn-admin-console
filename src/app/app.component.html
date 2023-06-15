@@ -38,7 +38,6 @@ class="col-sm-5 text-end" *ngIf="currentUser">Tenant:  {{currentUser.tenant}}</d
               <a class="dropdown-item" routerLink="/identity-info">Identity Info</a>
               <a class="dropdown-item" routerLink="/identity-profile-management">Manage Identity Profile</a>
               <a class="dropdown-item" routerLink="/identity-attribute-index">Manage Identity Attribute Index</a>
-              <a class="dropdown-item" routerLink="/identity-transform-management">Manage Transforms</a>
               <a class="dropdown-item" routerLink="/identity-lcs-management">Manage LCS</a>
             </div>
           </li>
@@ -78,9 +77,10 @@ class="col-sm-5 text-end" *ngIf="currentUser">Tenant:  {{currentUser.tenant}}</d
           </li>
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarRules" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              Rules
+              Transform
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarRules">
+              <a class="dropdown-item" routerLink="/identity-transform-management">Manage Transforms</a>
               <a class="dropdown-item" routerLink="/rule-cloud-management">Manage Cloud Rules</a>
               <a class="dropdown-item" routerLink="/rule-connector-management">Manage Connector Rules</a>
             </div>
