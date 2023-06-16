@@ -121,17 +121,22 @@ export class SourceInfoComponent implements OnInit {
     const rawData = (
       document.getElementById('userUpdatedObject') as HTMLInputElement
     ).value;
-    this.idnService.updateSource(rawData, this.rawObjectId).subscribe(
-      searchResult => {
-        console.log(searchResult);
-      },
-      err => {
-        this.messageService.handleIDNError(err);
-      }
-    );
+    try {
+      const data = JSON.parse(rawData);
 
-    console.log(this.rawObjectId);
-    console.log(rawData);
+      this.idnService.updateSource(data, this.rawObjectId).subscribe(
+        searchResult => {
+          alert('Save Success');
+          console.log(searchResult);
+        },
+        err => {
+          this.messageService.handleIDNError(err);
+          alert('Cant Save');
+        }
+      );
+    } catch (err) {
+      alert('Json Invalid:' + err);
+    }
   }
 
   exportAllSources() {

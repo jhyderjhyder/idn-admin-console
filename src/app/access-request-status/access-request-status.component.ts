@@ -25,6 +25,7 @@ export class AccessRequestStatusComponent implements OnInit {
   filters: string;
   page: PageResults;
   lineNumber;
+  rawObject: string;
 
   constructor(
     private idnService: IDNService,
@@ -35,9 +36,16 @@ export class AccessRequestStatusComponent implements OnInit {
   ngOnInit() {
     this.reset();
     this.getAllAccessRequestStatus();
+    this.rawObject = null;
   }
   pickData(input) {
     this.lineNumber = input;
+  }
+  getRawDetails(input) {
+    this.lineNumber = input;
+    //JSON.stringify(each, null, 4);
+    const obj = JSON.stringify(this.accessRequestStatuses[input], null, 4);
+    this.rawObject = obj;
   }
 
   /**
