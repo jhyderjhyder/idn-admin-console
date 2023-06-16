@@ -128,8 +128,8 @@ export class IDNService {
       headers: new HttpHeaders({}),
       'Content-Type': 'application/json',
     };
-    const data = JSON.parse(rawFormData);
-    return this.http.put(url, data, myHttpOptions);
+    // const data = JSON.parse(rawFormData);
+    return this.http.put(url, rawFormData, myHttpOptions);
   }
 
   getAllSources(): Observable<any> {
