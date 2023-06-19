@@ -30,7 +30,7 @@ export class WorkItemsStatusComponent implements OnInit {
   ngOnInit() {
     this.reset();
     this.getAllWorkItemsStatus();
-    this.rawObject =null;
+    this.rawObject = null;
   }
 
   reset() {
@@ -172,9 +172,12 @@ export class WorkItemsStatusComponent implements OnInit {
 
   getRawDetails(input) {
     //JSON.stringify(each, null, 4);
-    const obj = JSON.stringify(this.workItemsStatuses[input].rawObject, null, 4);
+    const obj = JSON.stringify(
+      this.workItemsStatuses[input].rawObject,
+      null,
+      4
+    );
     this.rawObject = obj;
-    
   }
 
   saveInCsv() {

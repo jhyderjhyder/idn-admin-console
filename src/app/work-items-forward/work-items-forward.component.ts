@@ -191,7 +191,6 @@ export class WorkItemsForwardComponent implements OnInit {
     //JSON.stringify(each, null, 4);
     const obj = JSON.stringify(this.pendingWorkItems[input].rawObject, null, 4);
     this.rawObject = obj;
-    
   }
   saveInCsv() {
     const options = {
