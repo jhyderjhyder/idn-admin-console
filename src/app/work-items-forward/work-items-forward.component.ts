@@ -24,6 +24,7 @@ export class WorkItemsForwardComponent implements OnInit {
   validToSubmit: boolean;
   invalidMessage: string[];
   identityInfo: IdentityAttribute;
+  rawObject: string;
 
   public modalRef: BsModalRef;
 
@@ -39,6 +40,7 @@ export class WorkItemsForwardComponent implements OnInit {
   ngOnInit() {
     this.reset(true);
     this.getAllPendingWorkItems();
+    this.rawObject = null;
   }
 
   reset(clearMsg: boolean) {
@@ -63,6 +65,7 @@ export class WorkItemsForwardComponent implements OnInit {
       this.pendingWorkItems = [];
       for (const each of results) {
         const pendingWorkItem = new WorkItem();
+        pendingWorkItem.rawObject = each;
         pendingWorkItem.id = each.id;
 
         if (each.requesterDisplayName) {
@@ -183,6 +186,13 @@ export class WorkItemsForwardComponent implements OnInit {
     this.forwardWorkItemConfirmModal.hide();
   }
 
+  getRawDetails(input) {
+    //this.lineNumber = input;
+    //JSON.stringify(each, null, 4);
+    const obj = JSON.stringify(this.pendingWorkItems[input].rawObject, null, 4);
+    this.rawObject = obj;
+    
+  }
   saveInCsv() {
     const options = {
       fieldSeparator: ',',

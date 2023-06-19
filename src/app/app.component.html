@@ -41,14 +41,7 @@ class="col-sm-5 text-end" *ngIf="currentUser">Tenant:  {{currentUser.tenant}}</d
               <a class="dropdown-item" routerLink="/identity-lcs-management">Manage LCS</a>
             </div>
           </li>
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarAccounts" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              Accounts
-            </a>
-            <div class="dropdown-menu" aria-labelledby="navbarAccounts">
-              <a class="dropdown-item" routerLink="/multiple-accounts-report">Multiple Accounts Report</a>
-            </div>
-          </li>
+
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarAccessProfiles" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               Access
@@ -60,6 +53,14 @@ class="col-sm-5 text-end" *ngIf="currentUser">Tenant:  {{currentUser.tenant}}</d
               <a class="dropdown-item" routerLink="/role-owner-update">Role Ownership Bulk</a>
               <a class="dropdown-item" routerLink="/role-duplicate">Role Duplicates</a>
               <a class="dropdown-item" routerLink="/entitlement-management">Entitlements Ownership Bulk</a>
+            </div>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="navbarAccounts" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              Accounts
+            </a>
+            <div class="dropdown-menu" aria-labelledby="navbarAccounts">
+              <a class="dropdown-item" routerLink="/multiple-accounts-report">Multiple Accounts Report</a>
             </div>
           </li>
           <li class="nav-item dropdown">
@@ -77,7 +78,7 @@ class="col-sm-5 text-end" *ngIf="currentUser">Tenant:  {{currentUser.tenant}}</d
           </li>
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarRules" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              Transform
+              Code
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarRules">
               <a class="dropdown-item" routerLink="/identity-transform-management">Manage Transforms</a>
