@@ -57,6 +57,7 @@
 <table class="table table-striped table-bordered">
   <thead class="table-secondary text-center align-middle">
     <tr>
+      <th scope="col">Raw</th>
       <th scope="col">Source Name</th>
       <th scope="col">Internal Name</th>
       <th scope="col">Source Description</th>
@@ -68,14 +69,21 @@
     </tr>
   </thead>
   <tbody class="text-center align-middle" *ngIf="sources && !rawObject">
-    <tr *ngFor="let s of sources | filter:searchText:['cloudExternalID', 'name', 'description', 'type']">
+    <tr *ngFor="let i =index; let s of sources | filter:searchText:['cloudExternalID', 'name', 'description', 'type']">
+      <td>
+        <button type="button" class="btn btn-primary"
+         (click)="getDetails(s)">
+        {{ i+1 }}
+        </button>
+      </td>
       <td [ngStyle]="{'color':s.name.includes('Authoritative') ? 'green' : 'black' }">{{ s.name }}</td>
+ 
       <td>{{ s.internalName }}</td>
       <td>{{ s.description }}</td>
       <td>{{ s.type }}</td>
       <td>{{ s.cloudExternalID }}</td>
       <td>
-        <a class="page-link" href="javascript:void(0);" (click)="getDetails(s)">{{ s.id }}</a>
+        <a  style="color: blue;" class="page-link" href="javascript:void(0);" (click)="getDetails(s)">{{ s.id }}</a>
       </td>
       <td>{{ s.accountsCount }}</td>
       <td>{{ s.entitlementsCount }}</td>

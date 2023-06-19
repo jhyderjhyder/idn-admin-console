@@ -19,6 +19,7 @@ export class WorkItemsStatusComponent implements OnInit {
   totalOpen: number;
   totalCompleted: number;
   totalWorkItems: number;
+  rawObject: string;
 
   constructor(
     private idnService: IDNService,
@@ -29,6 +30,7 @@ export class WorkItemsStatusComponent implements OnInit {
   ngOnInit() {
     this.reset();
     this.getAllWorkItemsStatus();
+    this.rawObject = null;
   }
 
   reset() {
@@ -58,6 +60,7 @@ export class WorkItemsStatusComponent implements OnInit {
       for (const each of results) {
         const workItemsStatus = new WorkItem();
         workItemsStatus.id = each.id;
+        workItemsStatus.rawObject = each;
 
         if (each.requesterDisplayName) {
           workItemsStatus.requesterDisplayName = each.requesterDisplayName;
@@ -106,6 +109,7 @@ export class WorkItemsStatusComponent implements OnInit {
     this.idnService.getWorkItemsCompleted().subscribe(results => {
       for (const each of results) {
         const workItemsStatus = new WorkItem();
+        workItemsStatus.rawObject = each;
         workItemsStatus.id = each.id;
         workItemsStatus.created = each.created;
         workItemsStatus.description = each.description;
@@ -164,6 +168,16 @@ export class WorkItemsStatusComponent implements OnInit {
     this.workItemsStatuses.sort((a, b) => a.created.localeCompare(b.created));
 
     this.loading = false;
+  }
+
+  getRawDetails(input) {
+    //JSON.stringify(each, null, 4);
+    const obj = JSON.stringify(
+      this.workItemsStatuses[input].rawObject,
+      null,
+      4
+    );
+    this.rawObject = obj;
   }
 
   saveInCsv() {

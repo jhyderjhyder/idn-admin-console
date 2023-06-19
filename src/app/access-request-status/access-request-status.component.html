@@ -116,7 +116,7 @@
 <table class="table table-striped table-bordered">
   <thead class="table-secondary text-center align-middle">
     <tr>
-      <th scope="col" class="col-1">#</th>
+      <th scope="col" class="col-1">Raw</th>
       <th scope="col" class="col-1">Access Name</th>
       <th scope="col" class="col-2">Access Type</th>
       <th scope="col" class="col-2">Request Type</th>
@@ -131,14 +131,15 @@
   <tbody class="text-center align-middle" *ngIf="accessRequestStatuses && !loading && !rawObject">
     <tr
       *ngFor="let i =index; let a of accessRequestStatuses | filter:searchText:['accessName', 'accessType', 'requestType', 'state', 'requester', 'requestedFor']; ">
-      <td class="col-1">{{ page.offset+1+i}}</td>
+      <td class="col-1">
+        <button type="button" class="btn btn-primary"
+        data-bs-target="#accessRequestDetails" (click)="getRawDetails(i)">
+        {{ page.offset+1+i}}
+      </button>
       <td class="col-1">{{ a.accessName }}</td>
       <td class="col-2">{{ a.accessType }}</td>
       <td class="col-2">
-        <button type="button" class="btn btn-primary"
-        data-bs-target="#accessRequestDetails" (click)="getRawDetails(i)">
-        {{ a.requestType }}
-      </button>
+      {{ a.requestType }}<br>
       {{ a.id }}
          </td>
       <td class="col-1">
