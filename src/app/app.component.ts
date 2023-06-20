@@ -64,9 +64,9 @@ export class AppComponent {
       });
 
     // sets an idle timeout of 10 minutes. After this setTimeout kicks in to logout the user
-    idle.setIdle(600);
+    idle.setIdle(60 * 60);
     // sets a timeout period of 1 min. after 1 min of inactivity, the user will be considered timed out and will be logged out.
-    idle.setTimeout(60);
+    idle.setTimeout(60 * 30);
     // sets the default interrupts, in this case, things like clicks, scrolls, touches to the document
     idle.setInterrupts(DEFAULT_INTERRUPTSOURCES);
 

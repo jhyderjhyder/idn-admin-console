@@ -35,10 +35,10 @@ class="col-sm-5 text-end" *ngIf="currentUser">Tenant:  {{currentUser.tenant}}</d
               Identities
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarIdentity">
-              <a class="dropdown-item" routerLink="/identity-info">Identity Info</a>
-              <a class="dropdown-item" routerLink="/identity-profile-management">Manage Identity Profile</a>
-              <a class="dropdown-item" routerLink="/identity-attribute-index">Manage Identity Attribute Index</a>
-              <a class="dropdown-item" routerLink="/identity-lcs-management">Manage LCS</a>
+              <a class="dropdown-item" routerLink="/identity-info">Search Details</a>
+              <a class="dropdown-item" routerLink="/identity-profile-management">Identity Profile</a>
+              <a class="dropdown-item" routerLink="/identity-attribute-index">Attribute Index</a>
+              <a class="dropdown-item" routerLink="/identity-lcs-management">LCS</a>
             </div>
           </li>
 
@@ -47,12 +47,12 @@ class="col-sm-5 text-end" *ngIf="currentUser">Tenant:  {{currentUser.tenant}}</d
               Access
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarAccessProfiles">
-              <a class="dropdown-item" routerLink="/accessprofile-management">Access Profiles Manage</a>
-              <a class="dropdown-item" routerLink="/accessprofile-owner-update">Access Profile Ownership</a>
-              <a class="dropdown-item" routerLink="/role-management">Roles Manage Bulk</a>
-              <a class="dropdown-item" routerLink="/role-owner-update">Role Ownership Bulk</a>
+              <a class="dropdown-item" routerLink="/accessprofile-management">AccessProfile Report</a>
+              <a class="dropdown-item" routerLink="/accessprofile-owner-update">AccessProfile Ownership</a>
+              <a class="dropdown-item" routerLink="/role-management">Role Report</a>
+              <a class="dropdown-item" routerLink="/role-owner-update">Role Ownership</a>
               <a class="dropdown-item" routerLink="/role-duplicate">Role Duplicates</a>
-              <a class="dropdown-item" routerLink="/entitlement-management">Entitlements Ownership Bulk</a>
+              <a class="dropdown-item" routerLink="/entitlement-management">Entitlements Ownership</a>
             </div>
           </li>
           <li class="nav-item dropdown">
@@ -60,20 +60,23 @@ class="col-sm-5 text-end" *ngIf="currentUser">Tenant:  {{currentUser.tenant}}</d
               Accounts
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarAccounts">
-              <a class="dropdown-item" routerLink="/multiple-accounts-report">Multiple Accounts Report</a>
+              <a class="dropdown-item" routerLink="/account-search">Search Details</a>
+              <a class="dropdown-item" routerLink="/multiple-accounts-report">Multiple Report</a>
+
             </div>
           </li>
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarManageSource" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              Connections
+              Sources
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarManageSource">
-              <a class="dropdown-item" routerLink="/source-aggregation-management">Aggregation Schedules</a>
-              <a class="dropdown-item" routerLink="/source-owner-update">Source Owners</a>
-              <a class="dropdown-item" routerLink="/source-aggregation-run">Run Aggregations</a>
+              <a class="dropdown-item" routerLink="/source-info">Debug</a>
+              <a class="dropdown-item" routerLink="/source-aggregation-management">Schedules</a>
+              <a class="dropdown-item" routerLink="/source-owner-update">Owners</a>
+              <a class="dropdown-item" routerLink="/source-aggregation-run">Aggregations</a>
               <a class="dropdown-item" routerLink="/source-create-profile">Manage Create Profile</a>
-              <a class="dropdown-item" routerLink="/source-reset">Reset Source</a>
-              <a class="dropdown-item" routerLink="/source-info">Source Info</a>
+              <a class="dropdown-item" routerLink="/source-reset">Reset</a>
+              
             </div>
           </li>
           <li class="nav-item dropdown">
@@ -81,27 +84,27 @@ class="col-sm-5 text-end" *ngIf="currentUser">Tenant:  {{currentUser.tenant}}</d
               Code
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarRules">
-              <a class="dropdown-item" routerLink="/identity-transform-management">Manage Transforms</a>
-              <a class="dropdown-item" routerLink="/rule-cloud-management">Manage Cloud Rules</a>
-              <a class="dropdown-item" routerLink="/rule-connector-management">Manage Connector Rules</a>
+              <a class="dropdown-item" routerLink="/identity-transform-management">Transforms</a>
+              <a class="dropdown-item" routerLink="/rule-cloud-management">Cloud Rules</a>
+              <a class="dropdown-item" routerLink="/rule-connector-management">Connector Rules</a>
             </div>
           </li>
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarRules" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              Requests
+              AccessRequests
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarRules">
-              <a class="dropdown-item" routerLink="/access-request-status">Access Request Status</a>
-              <a class="dropdown-item" routerLink="/access-request-approval-forward">Access Request Approval Forward</a>
+              <a class="dropdown-item" routerLink="/access-request-status">Status</a>
+              <a class="dropdown-item" routerLink="/access-request-approval-forward">Approval Forward</a>
             </div>
           </li>
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarRules" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              Work Items
+              WorkItems
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarRules">
-              <a class="dropdown-item" routerLink="/work-items-status">Work Items Status</a>
-              <a class="dropdown-item" routerLink="/work-items-forward">Work Items Pending Forward</a>
+              <a class="dropdown-item" routerLink="/work-items-status">Status</a>
+              <a class="dropdown-item" routerLink="/work-items-forward">Pending Forward</a>
             </div>
           </li>
           <li class="nav-item dropdown">
