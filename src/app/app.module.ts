@@ -50,6 +50,7 @@ import { SearchFilterPipe } from './shared/search-filter.pipe';
 import { ErrorInterceptor } from './helper/error.interceptor';
 import { BasicAuthInterceptor } from './helper/basic-auth.interceptor';
 import { AppRoutingModule } from './app-routing.module';
+import { AccountSearchComponent } from './account-search/account-search.component';
 
 @NgModule({
   declarations: [
@@ -87,6 +88,7 @@ import { AppRoutingModule } from './app-routing.module';
     MessagesComponent,
     LoginComponent,
     SearchFilterPipe,
+    AccountSearchComponent,
   ],
   imports: [
     BrowserModule,

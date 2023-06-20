@@ -487,6 +487,47 @@ export class IDNService {
       .post(url, payload, { observe: 'response' })
       .pipe(catchError(this.handleError(`searchAccounts`)));
   }
+  /*
+   * Gets accounts correlated or not
+   */
+  searchApplicationAccounts(
+    query: SimpleQueryCondition,
+    page: PageResults,
+    searchType: String,
+    searchAttribute: String
+  ): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    const url =
+      `https://${currentUser.tenant}.api.${currentUser.domain}/v3/accounts/?count=true&limit=` +
+      page.limit +
+      '&offset=' +
+      page.offset;
+
+    let filter = '';
+    let preFilter = false;
+    if (query.value) {
+      filter =
+        '&filters=' +
+        searchAttribute +
+        ' ' +
+        searchType +
+        '  "' +
+        query.value +
+        '"';
+      preFilter = true;
+    }
+    if (query.attribute) {
+      if (preFilter == false) {
+        filter = '&filters=sourceId eq "' + query.attribute + '"';
+      } else {
+        filter = filter + ' and sourceId eq "' + query.attribute + '"';
+      }
+    }
+    //console.log(url+filter);
+    return this.http
+      .get(url + filter, { observe: 'response' })
+      .pipe(catchError(this.handleError(`searchAccounts`)));
+  }
 
   updateSourceOwner(source: Source): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;

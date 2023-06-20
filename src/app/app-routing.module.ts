@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 
 // Application imports
+import { AccountSearchComponent } from './account-search/account-search.component';
 import { MultipleAccountsComponent } from './multiple-accounts-report/multiple-accounts-report.component';
 import { AccessRequestStatusComponent } from './access-request-status/access-request-status.component';
 import { AccessRequestApprovalForwardComponent } from './access-request-approval-forward/access-request-approval-forward.component';
@@ -41,6 +42,11 @@ const routes: Routes = [
   {
     path: 'multiple-accounts-report',
     component: MultipleAccountsComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'account-search',
+    component: AccountSearchComponent,
     canActivate: [AuthGuard],
   },
   {

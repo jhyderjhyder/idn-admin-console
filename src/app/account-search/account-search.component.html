@@ -1,0 +1,148 @@
+<div class="form-group" >
+    <div class="row" *ngIf="loading">
+      <div class="col-sm-12 text-end">
+        <span class="spinner-border spinner-border-sm me-1"></span>Loading...
+      </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-2">AccountName</div>
+        <div class="col-sm-4">
+            <input id="accountName" class="form-control py-2 border-start-0 border" type="text" [(ngModel)]="accountName" (keyup.enter)="submit()" placeholder="Enter Value">
+        </div>
+      <div class="col-sm-2">
+        <label for="filterTypes">
+            <select id="filterTypes" [(ngModel)]="selectedFilterTypes">
+              <option *ngFor="let item of filterTypes">{{item.name}}</option>
+            </select>
+          </label>
+      </div>
+        <div class="col-sm-2 text-start">
+            <button type="button" [disabled]="loading" (click)="ngOnInit()" class="btn btn-primary btn-sm">
+              Reset
+            </button>
+          </div>
+    </div>
+    <div class="row">
+        <div class="col-sm-2">Source Id#</div>
+        <div class="col-sm-4">
+            <input id="sourceName" class="form-control py-2 border-start-0 border" type="text" [(ngModel)]="sourceName" placeholder="Copy ID number">
+        </div>
+        <div class="col-sm-2">
+            <label for="selectedFilterAttributes">
+                <select id="selectedFilterAttributes" [(ngModel)]="selectedFilterAttributes">
+                  <option *ngFor="let item of filterAttributes">{{item}}</option>
+                </select>
+              </label>
+          </div>
+        <div class="col-sm-2 text-start">
+            <button type="button" (click)="submit()" class="btn btn-primary btn-sm">
+              Submit
+            </button>
+          </div>
+    </div>
+   
+    <!--Account Summary Start-->
+    <div *ngIf="!loading && identityList">
+        <br>
+        <div class="row" >
+            <div class="border col-sm-1">SourceName</div>
+            <div class="border col-sm-1">NativeIdentity</div>
+            <div class="border col-sm-1">Name</div>
+            <div class="border col-sm-1">SystemAccount</div>
+            <div class="border col-sm-1">Uncorrelated</div>
+            <div class="border col-sm-1">Disabled</div>
+            <div class="border col-sm-1">Locked</div>
+            <div class="border col-sm-1">Manual Corr</div>
+            <div class="border col-sm-3">ID</div>
+            <div class="border col-sm-1">Details</div>
+        </div>
+        <div class="row" *ngFor="let item of identityList; let i =index" >
+            <div class="border col-sm-1">{{i+1}} {{item.sourceName}}</div>
+            <div class="border col-sm-1 text-break"> {{item.nativeIdentity}}</div>
+            <div class="border col-sm-1 text-break"> {{item.name}}</div>
+            <div class="border col-sm-1"> {{item.systemAccount}}</div>
+            <div class="border col-sm-1"> {{item.uncorrelated}}</div>
+            <div class="border col-sm-1"> {{item.disabled}}</div>
+            <div class="border col-sm-1"> {{item.locked}}</div>
+            <div class="border col-sm-1"> {{item.manuallyCorrelated}}</div>
+            <div class="border col-sm-3">{{item.sourceId}}</div>
+            <div class="border col-sm-1">
+                <button type="button" (click)="getDetails(i)" class="btn btn-primary btn-sm">
+                Details
+              </button>
+              </div>
+        </div>
+</div>
+    <!--Account Summary End-->
+<br>
+<b>Global Attributes</b>
+    <!--Start Account Details-->
+    <div *ngIf="!loading && details && rawObject">
+        <br>
+        <div class="row" *ngIf="rawObject">
+            <div class="border col-sm-4">ID</div>
+            <div class="border col-sm-8">{{rawObject.id}}</div>
+        </div>
+        <div class="row" *ngIf="rawObject">
+            <div class="border col-sm-4">Name</div>
+            <div class="border col-sm-8">{{rawObject.name}}</div>
+        </div>
+        <div class="row" *ngIf="rawObject">
+            <div class="border col-sm-4">Native Identity</div>
+            <div class="border col-sm-8">{{rawObject.nativeIdentity}}</div>
+        </div>
+        <div class="row" *ngIf="rawObject">
+            <div class="border col-sm-4">Created</div>
+            <div class="border col-sm-8">{{rawObject.created}}</div>
+        </div>
+        <div class="row" *ngIf="rawObject">
+            <div class="border col-sm-4">Modified</div>
+            <div class="border col-sm-8">{{rawObject.modified}}</div>
+        </div>
+        <div class="row" *ngIf="rawObject">
+            <div class="border col-sm-4">Source Name</div>
+            <div class="border col-sm-8">{{rawObject.sourceName}}</div>
+        </div>
+        <div class="row" *ngIf="rawObject">
+            <div class="border col-sm-4">Source Id</div>
+            <div class="border col-sm-8">{{rawObject.sourceId}}</div>
+        </div>
+        <div class="row" *ngIf="rawObject">
+            <div class="border col-sm-4">Has Entitlements</div>
+            <div class="border col-sm-8">{{rawObject.hasEntitlements}}</div>
+        </div>
+        <div class="row" *ngIf="rawObject">
+            <div class="border col-sm-4">Manually Correlated</div>
+            <div class="border col-sm-8">{{rawObject.manuallyCorrelated}}</div>
+        </div>
+        <div class="row" *ngIf="rawObject">
+            <div class="border col-sm-4">Locked</div>
+            <div class="border col-sm-8">{{rawObject.locked}}</div>
+        </div>
+        <div class="row" *ngIf="rawObject">
+            <div class="border col-sm-4">Disabled</div>
+            <div class="border col-sm-8">{{rawObject.disabled}}</div>
+        </div>
+        <div class="row" *ngIf="rawObject">
+            <div class="border col-sm-4">System Account</div>
+            <div class="border col-sm-8">{{rawObject.systemAccount}}</div>
+        </div>
+        <div class="row" *ngIf="rawObject">
+            <div class="border col-sm-4">Authoritative</div>
+            <div class="border col-sm-8">{{rawObject.authoritative}}</div>
+        </div>
+        
+<br>
+<b>Account Attributes</b>
+<br>
+        <div *ngFor="let item of details; let i =index" >
+            <div class="row">
+                <div class="border col-sm-4">{{item.name}}</div>
+                <div class="border col-sm-8">{{item.value}}</div>
+            </div>
+
+        </div>
+    </div>
+</div>
+<br>
+
