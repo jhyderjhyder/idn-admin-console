@@ -89,7 +89,10 @@ export class AccountSearchComponent implements OnInit {
       this.details = new Array();
       const atts = Object.entries(this.identityList[input].attributes);
       for (let i = 0; i < atts.length; i++) {
-        const [name, value] = atts[i];
+        let [name, value] = atts[i];
+        if (value == null) {
+          value = '';
+        }
         this.details.push({
           name: name,
           value: value.toString(),
