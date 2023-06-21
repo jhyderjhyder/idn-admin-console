@@ -91,7 +91,7 @@ export class AccountSearchComponent implements OnInit {
       for (let i = 0; i < atts.length; i++) {
         let [name, value] = atts[i];
         if (value == null) {
-          value = '';
+          value = 'NULL';
         }
         this.details.push({
           name: name,
