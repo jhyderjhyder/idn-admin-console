@@ -27,7 +27,7 @@ export class IdentityTransformManagementComponent implements OnInit {
   exporting: boolean;
   totalCount: number;
   allTransforms: any;
-  rawObject:boolean;
+  rawObject: boolean;
 
   transforms: Transform[];
   zip: JSZip = new JSZip();
@@ -57,9 +57,9 @@ export class IdentityTransformManagementComponent implements OnInit {
   }
 
   reset(clearMsg: boolean) {
-    this.rawObject =null;
+    this.rawObject = null;
     const elem = document.getElementById('jsonRaw');
-    elem.innerHTML=""; 
+    elem.innerHTML = '';
     this.transformToImport = null;
     this.transformToUpdate = null;
     this.transformToDelete = null;
@@ -144,27 +144,21 @@ export class IdentityTransformManagementComponent implements OnInit {
   }
 
   showJson(selectedTransform: Transform) {
+    this.idnService.getTransformById(selectedTransform.id).subscribe(result => {
+      const transform = new Transform();
+      transform.name = result.name;
+      transform.type = result.type;
+      this.rawObject = result;
+      //result = JSON.stringify(result, null, 4);
+      const options: JsonFormatOptions = new JsonFormatOptions();
+      options.lineNumbers = false;
+      options.quoteKeys = true;
 
-    this.idnService.getTransformById(selectedTransform.id).subscribe(
-      result => {
-        const transform = new Transform();
-        transform.name = result.name;
-        transform.type = result.type;
-        this.rawObject = result;
-        //result = JSON.stringify(result, null, 4);
-        var options: JsonFormatOptions = new JsonFormatOptions();
-        options.lineNumbers=false;
-        options.quoteKeys=true;
-        
-        //https://github.com/center-key/pretty-print-json
-        const html = prettyPrintJson.toHtml(result, options);
-        const elem = document.getElementById('jsonRaw');
-        elem.innerHTML = html;
-      });
-
-
-
-    
+      //https://github.com/center-key/pretty-print-json
+      const html = prettyPrintJson.toHtml(result, options);
+      const elem = document.getElementById('jsonRaw');
+      elem.innerHTML = html;
+    });
   }
 
   hideDeleteTransformConfirmModal() {

@@ -46,19 +46,20 @@ export class AccessRequestStatusComponent implements OnInit {
   getRawDetails(input) {
     this.lineNumber = input;
     //JSON.stringify(each, null, 4);
-    var options: JsonFormatOptions = new JsonFormatOptions();
-    options.lineNumbers=false;
-    options.quoteKeys=true;
-    
+    const options: JsonFormatOptions = new JsonFormatOptions();
+    options.lineNumbers = false;
+    options.quoteKeys = true;
+
     //https://github.com/center-key/pretty-print-json
-    const html = prettyPrintJson.toHtml(this.accessRequestStatuses[input], options);
+    const html = prettyPrintJson.toHtml(
+      this.accessRequestStatuses[input],
+      options
+    );
     //const obj = JSON.stringify(this.accessRequestStatuses[input], null, 4);
 
     const elem = document.getElementById('jsonRaw');
     this.rawObject = prettyPrintJson.toHtml(html);
     elem.innerHTML = html;
-   
-    
   }
 
   /**

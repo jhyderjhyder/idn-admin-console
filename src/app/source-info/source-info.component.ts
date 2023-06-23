@@ -6,6 +6,8 @@ import { MessageService } from '../service/message.service';
 import { AuthenticationService } from '../service/authentication-service.service';
 import * as JSZip from 'jszip';
 import { saveAs } from 'file-saver';
+import { prettyPrintJson } from 'pretty-print-json';
+import { JsonFormatOptions } from '../model/json-format-options';
 
 @Component({
   selector: 'app-source-info',
@@ -53,6 +55,8 @@ export class SourceInfoComponent implements OnInit {
     if (clearMsg) {
       this.messageService.clearAll();
     }
+    this.rawObjectId = null;
+    document.getElementById('jsonRaw').innerHTML = '';
   }
 
   search() {
@@ -108,11 +112,51 @@ export class SourceInfoComponent implements OnInit {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
   //Show the full content of object in questions
-  getDetails(input: Source) {
+  editJson(input: Source) {
     for (const each of this.allSources) {
       if (each.id == input.id) {
         this.rawObject = JSON.stringify(each, null, 4);
         this.rawObjectId = input.id;
+      }
+    }
+  }
+  viewJson(input: Source) {
+    for (const each of this.allSources) {
+      if (each.id == input.id) {
+        //this.rawObject = JSON.stringify(each, null, 4);
+        this.rawObjectId = input.id;
+        const options: JsonFormatOptions = new JsonFormatOptions();
+        options.lineNumbers = false;
+        options.quoteKeys = true;
+
+        //https://github.com/center-key/pretty-print-json
+        const html = prettyPrintJson.toHtml(each, options);
+        const elem = document.getElementById('jsonRaw');
+        elem.innerHTML = html;
+      }
+    }
+  }
+
+  viewJsonProvisioningPolicy(input: Source) {
+    for (const each of this.allSources) {
+      if (each.id == input.id) {
+        //this.rawObject = JSON.stringify(each, null, 4);
+        this.rawObjectId = input.id;
+        const options: JsonFormatOptions = new JsonFormatOptions();
+        options.lineNumbers = false;
+        options.quoteKeys = true;
+
+        this.idnService.getSourceV3ProvisioningPolicy(each.id).subscribe(
+          searchResult => {
+            //https://github.com/center-key/pretty-print-json
+            const html = prettyPrintJson.toHtml(searchResult, options);
+            const elem = document.getElementById('jsonRaw');
+            elem.innerHTML = html;
+          },
+          err => {
+            this.messageService.handleIDNError(err);
+          }
+        );
       }
     }
   }

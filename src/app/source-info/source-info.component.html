@@ -40,7 +40,9 @@
       <textarea id="userUpdatedObject" placeholder style="min-height:600px; min-width: 100%;">{{rawObject}}</textarea>
     </div>
   </div>
+
 <!--End Raw Edit Screen-->
+<pre id=jsonRaw class=json-container style="background-color: black;"></pre>
 
 </form>
 <div class="form-group row mb-3" *ngIf="loading">
@@ -57,7 +59,7 @@
 <table class="table table-striped table-bordered">
   <thead class="table-secondary text-center align-middle">
     <tr>
-      <th scope="col">Raw</th>
+      <th scope="col">#</th>
       <th scope="col">Source Name</th>
       <th scope="col">Internal Name</th>
       <th scope="col">Source Description</th>
@@ -66,15 +68,13 @@
       <th scope="col">ID</th>
       <th scope="col">Account Count</th>
       <th scope="col">Entitlement Count</th>
+      <th scope="col">Actions</th>
     </tr>
   </thead>
-  <tbody class="text-center align-middle" *ngIf="sources && !rawObject">
+  <tbody class="text-center align-middle" *ngIf="sources && !rawObjectId">
     <tr *ngFor="let i =index; let s of sources | filter:searchText:['cloudExternalID', 'name', 'description', 'type']">
       <td>
-        <button type="button" class="btn btn-primary"
-         (click)="getDetails(s)">
         {{ i+1 }}
-        </button>
       </td>
       <td [ngStyle]="{'color':s.name.includes('Authoritative') ? 'green' : 'black' }">{{ s.name }}</td>
  
@@ -83,10 +83,22 @@
       <td>{{ s.type }}</td>
       <td>{{ s.cloudExternalID }}</td>
       <td>
-        <a  style="color: blue;" class="page-link" href="javascript:void(0);" (click)="getDetails(s)">{{ s.id }}</a>
+        <a  style="color: blue;" class="page-link" href="javascript:void(0);" (click)="viewJson(s)">{{ s.id }}</a>
       </td>
       <td>{{ s.accountsCount }}</td>
       <td>{{ s.entitlementsCount }}</td>
+      <td>
+        <div class="btn-group" role="group">
+          <button id="btnGroupDrop1" type="button" class="btn btn-primary btn-sm dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Select
+          </button>
+          <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+            <a class="dropdown-item" (click)="editJson(s)">Edit</a>
+            <a class="dropdown-item" (click)="viewJson(s)">View</a>
+            <a class="dropdown-item" (click)="viewJsonProvisioningPolicy(s)">View-ProvisioningPolicy</a>
+          </div>
+        </div>
+      </td>
     </tr>
   </tbody>
 </table>
