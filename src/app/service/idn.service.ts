@@ -161,6 +161,12 @@ export class IDNService {
     */
   }
 
+  getSourceV3ProvisioningPolicy(v3ApplicationID: string): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/sources/${v3ApplicationID}/provisioning-policies`;
+    return this.http.get(url);
+  }
+
   resetSource(cloudExternalID: string, skipType: string): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
     const url = `https://${currentUser.tenant}.api.${currentUser.domain}/cc/api/source/reset/${cloudExternalID}`;

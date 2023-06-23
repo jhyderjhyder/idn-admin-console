@@ -7,6 +7,8 @@ import { MessageService } from '../service/message.service';
 import { Transform } from '../model/transform';
 import * as JSZip from 'jszip';
 import { AuthenticationService } from '../service/authentication-service.service';
+import { prettyPrintJson } from 'pretty-print-json';
+import { JsonFormatOptions } from '../model/json-format-options';
 
 @Component({
   selector: 'app-identity-transform-management',
@@ -25,6 +27,7 @@ export class IdentityTransformManagementComponent implements OnInit {
   exporting: boolean;
   totalCount: number;
   allTransforms: any;
+  rawObject: boolean;
 
   transforms: Transform[];
   zip: JSZip = new JSZip();
@@ -54,6 +57,9 @@ export class IdentityTransformManagementComponent implements OnInit {
   }
 
   reset(clearMsg: boolean) {
+    this.rawObject = null;
+    const elem = document.getElementById('jsonRaw');
+    elem.innerHTML = '';
     this.transformToImport = null;
     this.transformToUpdate = null;
     this.transformToDelete = null;
@@ -135,6 +141,24 @@ export class IdentityTransformManagementComponent implements OnInit {
     this.transformToDelete.internal = selectedTransform.internal;
     this.validToSubmit = false;
     this.deleteTransformConfirmModal.show();
+  }
+
+  showJson(selectedTransform: Transform) {
+    this.idnService.getTransformById(selectedTransform.id).subscribe(result => {
+      const transform = new Transform();
+      transform.name = result.name;
+      transform.type = result.type;
+      this.rawObject = result;
+      //result = JSON.stringify(result, null, 4);
+      const options: JsonFormatOptions = new JsonFormatOptions();
+      options.lineNumbers = false;
+      options.quoteKeys = true;
+
+      //https://github.com/center-key/pretty-print-json
+      const html = prettyPrintJson.toHtml(result, options);
+      const elem = document.getElementById('jsonRaw');
+      elem.innerHTML = html;
+    });
   }
 
   hideDeleteTransformConfirmModal() {

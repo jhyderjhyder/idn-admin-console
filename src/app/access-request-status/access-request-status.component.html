@@ -113,7 +113,7 @@
 
 
 <br>
-<table class="table table-striped table-bordered">
+<table class="table table-striped table-bordered" *ngIf="accessRequestStatuses && !loading && !rawObject">
   <thead class="table-secondary text-center align-middle">
     <tr>
       <th scope="col" class="col-1">Raw</th>
@@ -163,13 +163,15 @@
       Debug Object
     </div>
   </div>
-  
+ 
+  <pre id=jsonRaw class=json-container style="background-color: black;"></pre>
+  <!--
   <div class="row" *ngIf="rawObject" >
     <div class="col-sm-12">
       <textarea id="userUpdatedObject" placeholder style="min-height:600px; min-width: 100%;">{{rawObject}}</textarea>
     </div>
   </div>
-<!--End Raw Edit Screen-->
+--End Raw Edit Screen-->
 
 <!-- Button to Open the Modal -->
 

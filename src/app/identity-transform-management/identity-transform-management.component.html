@@ -55,7 +55,8 @@
     <span class="fw-bold">Click 'Select' button in Actions column and select 'Download', 'Update', or 'Delete' to download, update, or delete a transform</span>
   </div>
 </div>
-<table class="table table-striped table-bordered">
+<pre id=jsonRaw class=json-container style="background-color: black;"></pre>
+<table class="table table-striped table-bordered" *ngIf="!rawObject">
   <thead class="table-secondary text-center align-middle">
     <tr>
       <th>Name</th>
@@ -80,6 +81,7 @@
             <a class="dropdown-item" (click)="downloadTransform(t.id)">Download</a>
             <a class="dropdown-item" (click)="showUpdateTransformConfirmModal(t)">Update</a>
             <a class="dropdown-item" (click)="showDeleteTransformModal(t)">Delete</a>
+            <a class="dropdown-item" (click)="showJson(t)">View</a>
           </div>
         </div>
       </td>
