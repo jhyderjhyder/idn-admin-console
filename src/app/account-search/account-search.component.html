@@ -1,4 +1,13 @@
 <div class="form-group" >
+    <div class="row">
+    <div class="col-sm-12 text-start">
+        <span class="fw-bold">If you know the account you can find the Identity that is owned by the account.  </span>
+        <br>
+        <br>
+    </div>
+     
+
+    </div>
     <div class="row" *ngIf="loading">
       <div class="col-sm-12 text-end">
         <span class="spinner-border spinner-border-sm me-1"></span>Loading...
@@ -25,7 +34,13 @@
     <div class="row">
         <div class="col-sm-2">Source Id#</div>
         <div class="col-sm-4">
-            <input id="sourceName" class="form-control py-2 border-start-0 border" type="text" [(ngModel)]="sourceName" placeholder="Copy ID number">
+
+            <label for="filterTypes">
+                <select id="filterApplications" [(ngModel)]="sourceName">
+                  <option *ngFor="let item of filterApplications">{{item.name}}</option>
+                </select>
+              </label>
+            <!--input id="sourceName" class="form-control py-2 border-start-0 border" type="text" [(ngModel)]="sourceName" placeholder="Copy ID number" -->
         </div>
         <div class="col-sm-2">
             <label for="selectedFilterAttributes">
@@ -75,10 +90,26 @@
 </div>
     <!--Account Summary End-->
 <br>
-<b>Global Attributes</b>
+
     <!--Start Account Details-->
     <div *ngIf="!loading && details && rawObject">
+        <b>Owner Info</b>
         <br>
+        <div class="row" *ngIf="rawIdentity">
+            <div class="border col-sm-4">DisplayName</div>
+            <div class="border col-sm-8">{{rawIdentity.displayName}}</div>
+        </div>
+        <div class="row" *ngIf="rawIdentity">
+            <div class="border col-sm-4">Name</div>
+            <div class="border col-sm-8">{{rawIdentity.name}}</div>
+        </div>
+        
+        <b>Global Attributes</b>
+        <br>
+        <div class="row" *ngIf="rawObject">
+            <div class="border col-sm-4">Owner</div>
+            <div class="border col-sm-8">{{rawObject.identityId}}</div>
+        </div>
         <div class="row" *ngIf="rawObject">
             <div class="border col-sm-4">ID</div>
             <div class="border col-sm-8">{{rawObject.id}}</div>
