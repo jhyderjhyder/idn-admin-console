@@ -6,6 +6,8 @@ import { MessageService } from '../service/message.service';
 import { AccessRequestStatus } from '../model/access-request-status';
 import { SimpleQueryCondition } from '../model/simple-query-condition';
 import { PageResults } from '../model/page-results';
+import { prettyPrintJson } from 'pretty-print-json';
+import { JsonFormatOptions } from '../model/json-format-options';
 
 @Component({
   selector: 'app-access-request-status',
@@ -44,8 +46,19 @@ export class AccessRequestStatusComponent implements OnInit {
   getRawDetails(input) {
     this.lineNumber = input;
     //JSON.stringify(each, null, 4);
-    const obj = JSON.stringify(this.accessRequestStatuses[input], null, 4);
-    this.rawObject = obj;
+    var options: JsonFormatOptions = new JsonFormatOptions();
+    options.lineNumbers=false;
+    options.quoteKeys=true;
+    
+    //https://github.com/center-key/pretty-print-json
+    const html = prettyPrintJson.toHtml(this.accessRequestStatuses[input], options);
+    //const obj = JSON.stringify(this.accessRequestStatuses[input], null, 4);
+
+    const elem = document.getElementById('jsonRaw');
+    this.rawObject = prettyPrintJson.toHtml(html);
+    elem.innerHTML = html;
+   
+    
   }
 
   /**
