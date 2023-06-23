@@ -6,6 +6,7 @@ import { SimpleQueryCondition } from '../model/simple-query-condition';
 import { PageResults } from '../model/page-results';
 import { BasicAttributes } from '../model/basic-attributes';
 import { AccountOnly } from '../model/AccountOnly';
+import { IdentityAttribute } from '../model/identity-attribute';
 
 @Component({
   selector: 'app-account-search',
@@ -23,6 +24,8 @@ export class AccountSearchComponent implements OnInit {
   filterTypes: Array<BasicAttributes>;
   selectedFilterAttributes: string;
   filterAttributes: Array<String>;
+  filterApplications: Array<BasicAttributes>;
+  rawIdentity: IdentityAttribute;
 
   //Pages
   page: PageResults;
@@ -32,6 +35,10 @@ export class AccountSearchComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    if (this.filterApplications == null) {
+      this.loading = true;
+      this.getApplicationNames();
+    }
     this.page = new PageResults();
     this.page.limit = 50;
     this.details = null;
@@ -41,7 +48,41 @@ export class AccountSearchComponent implements OnInit {
     this.addFilterTypes();
     this.loading = false;
   }
+  /*
+Populate the dropdown of sources you
+can pick from
+*/
+  getApplicationNames() {
+    this.filterApplications = new Array<BasicAttributes>();
+    const all = new BasicAttributes();
+    all.name = 'ALL';
+    all.value = '';
+    this.filterApplications.push(all);
 
+    this.idnService.getAllSources().subscribe(response => {
+      const searchResult = response;
+      for (let i = 0; i < searchResult.length; i++) {
+        const app = searchResult[i];
+        const basic = new BasicAttributes();
+        basic.name = app['name'];
+        basic.value = app['id'];
+        this.filterApplications.push(basic);
+      }
+    });
+  }
+
+  getOwnerDetails(identityID) {
+    this.idnService.searchIdentities(identityID).subscribe(response => {
+      const one = response[0];
+      this.rawIdentity = new IdentityAttribute();
+      this.rawIdentity.displayName = one['displayName'];
+      this.rawIdentity.name = one['name'];
+      //this.rawIdentity = response;
+    });
+  }
+  /*
+Loads the dropdown for filter types
+*/
   addFilterTypes() {
     const eq = new BasicAttributes();
     eq.name = 'Equal';
@@ -85,6 +126,9 @@ export class AccountSearchComponent implements OnInit {
 
   getDetails(input) {
     this.rawObject = this.identityList[input];
+    if (this.rawObject['identityId']) {
+      this.getOwnerDetails(this.rawObject['identityId']);
+    }
     if (this.identityList[input].attributes) {
       this.details = new Array();
       const atts = Object.entries(this.identityList[input].attributes);
@@ -112,11 +156,19 @@ export class AccountSearchComponent implements OnInit {
     query.attribute = this.sourceName;
     query.value = this.accountName;
 
+    //Loop the array of English filters looking for the sailpoint filterName
     let filter = 'co';
     for (let i = 0; i < this.filterTypes.length; i++) {
       const b = this.filterTypes[i];
       if (b.name == this.selectedFilterTypes) {
         filter = b.value;
+      }
+    }
+    //Loop the array of application names looking for the ID# of the source
+    for (let i = 0; i < this.filterApplications.length; i++) {
+      const b = this.filterApplications[i];
+      if (b.name == this.sourceName) {
+        query.attribute = b.value;
       }
     }
 
