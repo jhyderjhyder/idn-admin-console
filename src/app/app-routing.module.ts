@@ -36,6 +36,7 @@ import { ManagePATComponent } from './misc-manage-pat/misc-manage-pat.component'
 import { OrgStatsComponent } from './misc-org-stats/misc-org-stats.component';
 import { LoginComponent } from './login/login.component';
 import { AuthGuard } from './helper/auth.guard';
+import { ReassignmentsComponent } from './reassignments/reassignments.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/identity-info', pathMatch: 'full' },
@@ -183,6 +184,11 @@ const routes: Routes = [
   {
     path: 'misc-manage-pat',
     component: ManagePATComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'reassignments',
+    component: ReassignmentsComponent,
     canActivate: [AuthGuard],
   },
   {

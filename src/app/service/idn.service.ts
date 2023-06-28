@@ -1398,6 +1398,15 @@ export class IDNService {
     return this.http.post(url, null);
   }
 
+  getAllReassignments(): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/reassignment-configurations`;
+
+    return this.http
+      .get(url, this.httpOptions)
+      .pipe(catchError(this.handleError(`getAllTransforms`)));
+  }
+
   private logError(error: string) {
     this.messageService.addError(`${error}`);
   }

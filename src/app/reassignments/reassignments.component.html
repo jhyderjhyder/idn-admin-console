@@ -1,0 +1,52 @@
+<div class="form-group" >
+    <div class="row">
+    <div class="col-sm-12 text-start">
+        <span class="fw-bold">Helps you understand why workitem was directed to a diffrent user</span>
+        <br>
+        <br>
+    </div>
+     
+
+    </div>
+    <div class="row" *ngIf="loading">
+      <div class="col-sm-12 text-end">
+        <span class="spinner-border spinner-border-sm me-1"></span>Loading...
+      </div>
+    </div>
+    <div class="row">
+        <div class="form-group row align-items-center mb-3">
+            <div class="col-md-10">
+              <div class="input-group">
+                <span class="input-group-text bg-white border-end-0">
+                  <i class="fa fa-search"></i>
+                </span>
+                <input class="form-control py-2 border-start-0 border" type="text" name="search" [(ngModel)]="searchText" 
+                autocomplete="off" placeholder="internal value to filter the result.">
+              </div>
+            </div>
+        <div class="col-sm-2 text-start">
+            <button type="button" [disabled]="loading" (click)="ngOnInit()" class="btn btn-primary btn-sm">
+              Reset
+            </button>
+          </div>
+    </div>
+    <div class="row" >
+        <div class="border col-sm-1">Raw</div>
+        <div class="border col-sm-2">Person</div>
+        <div class="border col-sm-2">Type</div>
+        <div class="border col-sm-2">Delegate</div>
+        <div class="border col-sm-2">StartDate</div>
+        <div class="border col-sm-2">EndDate</div>
+    </div>
+    <div class="row" *ngFor="let item of listReassignments | filter:searchText:['identityName', 'configType', 'targetName']; let i =index" >
+        <div class="border col-sm-1">{{i+1}} </div>
+        <div class="border col-sm-2">{{item.identityName}}</div>
+        <div class="border col-sm-2">{{item.configType}}</div>
+        <div class="border col-sm-2">{{item.targetName}}</div>
+        <div class="border col-sm-2">{{item.startDate}}</div>
+        <div class="border col-sm-2">{{item.endDate}}</div>
+    </div>
+
+</div>
+<br>
+<br>

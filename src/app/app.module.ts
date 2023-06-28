@@ -51,6 +51,7 @@ import { ErrorInterceptor } from './helper/error.interceptor';
 import { BasicAuthInterceptor } from './helper/basic-auth.interceptor';
 import { AppRoutingModule } from './app-routing.module';
 import { AccountSearchComponent } from './account-search/account-search.component';
+import { ReassignmentsComponent } from './reassignments/reassignments.component';
 
 @NgModule({
   declarations: [
@@ -89,6 +90,7 @@ import { AccountSearchComponent } from './account-search/account-search.componen
     LoginComponent,
     SearchFilterPipe,
     AccountSearchComponent,
+    ReassignmentsComponent,
   ],
   imports: [
     BrowserModule,
