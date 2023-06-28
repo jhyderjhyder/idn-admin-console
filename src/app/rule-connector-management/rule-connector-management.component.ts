@@ -92,6 +92,14 @@ export class ImportRuleComponent implements OnInit {
 
         this.rules.push(rule);
       }
+      const sortedRules = this.rules.sort((a, b) =>
+        a.name.toLowerCase() < b.name.toLowerCase()
+          ? -1
+          : b.name.toLowerCase() > a.name.toLowerCase()
+          ? 1
+          : 0
+      );
+      this.rules = sortedRules;
       this.loading = false;
     });
   }

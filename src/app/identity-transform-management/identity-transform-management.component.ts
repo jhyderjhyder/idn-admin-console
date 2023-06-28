@@ -90,6 +90,15 @@ export class IdentityTransformManagementComponent implements OnInit {
 
         this.transforms.push(transform);
       }
+      //https://stackabuse.com/sort-array-of-objects-by-string-property-value/
+      const sortedTransforms = this.transforms.sort((a, b) =>
+        a.name.toLowerCase() < b.name.toLowerCase()
+          ? -1
+          : b.name.toLowerCase() > a.name.toLowerCase()
+          ? 1
+          : 0
+      );
+      this.transforms = sortedTransforms;
       this.loading = false;
     });
   }
