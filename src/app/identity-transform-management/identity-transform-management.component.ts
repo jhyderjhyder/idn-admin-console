@@ -356,6 +356,8 @@ export class IdentityTransformManagementComponent implements OnInit {
           this.invalidMessage.push(
             'Invalid Transform JSON file: transform attributes body is not specified.'
           );
+        }else{
+          this.transformToUpdate.attributes = parsedTransformJSON.attributes;
         }
         //verify transform id
         if (parsedTransformJSON.id) {

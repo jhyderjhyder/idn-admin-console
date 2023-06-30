@@ -61,7 +61,7 @@ export class AppComponent {
         this.latestVersion = data.tag_name;
         this.currentVersion =  this.version;
         this.newVersionAvailable = this.latestVersion !== this.currentVersion;
-        console.log(this.latestVersion + "--" + this.currentVersion)
+        //console.log(this.latestVersion + "--" + this.currentVersion)
       });
 
     // sets an idle timeout of 10 minutes. After this setTimeout kicks in to logout the user
