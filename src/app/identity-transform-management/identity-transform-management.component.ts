@@ -225,6 +225,7 @@ export class IdentityTransformManagementComponent implements OnInit {
 
   updateTransform() {
     this.messageService.clearAll();
+    console.log(this.transformToUpdate)
     this.idnService.updateTransform(this.transformToUpdate).subscribe(
       () => {
         this.updateTransformConfirmModal.hide();
@@ -351,11 +352,15 @@ export class IdentityTransformManagementComponent implements OnInit {
           );
         }
         //verify transform attribute body exists
+        console.log("attributes to update:" + parsedTransformJSON.attributes);
+        console.log(parsedTransformJSON.attributes);
         if (!parsedTransformJSON.attributes) {
           valid = false;
           this.invalidMessage.push(
             'Invalid Transform JSON file: transform attributes body is not specified.'
           );
+        }else{
+          this.transformToUpdate.attributes = parsedTransformJSON.attributes;
         }
         //verify transform id
         if (parsedTransformJSON.id) {
