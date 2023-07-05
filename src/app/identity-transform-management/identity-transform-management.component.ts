@@ -162,6 +162,7 @@ export class IdentityTransformManagementComponent implements OnInit {
       const options: JsonFormatOptions = new JsonFormatOptions();
       options.lineNumbers = false;
       options.quoteKeys = true;
+      options.trailingComma =false;
 
       //https://github.com/center-key/pretty-print-json
       const html = prettyPrintJson.toHtml(result, options);

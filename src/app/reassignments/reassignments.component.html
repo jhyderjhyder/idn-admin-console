@@ -30,23 +30,28 @@
             </button>
           </div>
     </div>
-    <div class="row" >
-        <div class="border col-sm-1">Raw</div>
-        <div class="border col-sm-2">Person</div>
-        <div class="border col-sm-2">Type</div>
-        <div class="border col-sm-2">Delegate</div>
-        <div class="border col-sm-2">StartDate</div>
-        <div class="border col-sm-2">EndDate</div>
-    </div>
-    <div class="row" *ngFor="let item of listReassignments | filter:searchText:['identityName', 'configType', 'targetName']; let i =index" >
-        <div class="border col-sm-1">{{i+1}} </div>
-        <div class="border col-sm-2">{{item.identityName}}</div>
-        <div class="border col-sm-2">{{item.configType}}</div>
-        <div class="border col-sm-2">{{item.targetName}}</div>
-        <div class="border col-sm-2">{{item.startDate}}</div>
-        <div class="border col-sm-2">{{item.endDate}}</div>
-    </div>
+    <table class="table table-striped table-bordered">
+      <thead class="table-secondary align-middle">
+        <tr>
+          <th scope="col">Raw</th>
+          <th scope="col">Person</th>
+          <th scope="col">Type</th>
+          <th scope="col">Delegate</th>
+          <th scope="col">StartDate</th>
+          <th scope="col">EndDate</th>
+        </tr>
+      </thead>
+        <tbody>
+           <tr *ngFor="let item of listReassignments | filter:searchText:['identityName', 'configType', 'targetName']; let i =index" >
+              <th scope="col">{{i+1}} </th>
+              <th scope="col">{{item.identityName}}</th>
+              <th scope="col">{{item.configType}}</th>
+              <th scope="col">{{item.targetName}}</th>
+              <th scope="col">{{item.startDate}}</th>
+              <th scope="col">{{item.endDate}}</th>
+          </tr>
+        </tbody>
+      </table>
 
-</div>
 <br>
 <br>
