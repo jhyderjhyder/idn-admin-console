@@ -39,6 +39,8 @@ export class AccessRequestStatusComponent implements OnInit {
     this.reset();
     this.getAllAccessRequestStatus();
     this.rawObject = null;
+    const elem = document.getElementById('jsonRaw');
+    elem.innerHTML = '';
   }
   pickData(input) {
     this.lineNumber = input;
@@ -49,6 +51,7 @@ export class AccessRequestStatusComponent implements OnInit {
     const options: JsonFormatOptions = new JsonFormatOptions();
     options.lineNumbers = false;
     options.quoteKeys = true;
+    options.trailingComma = false;
 
     //https://github.com/center-key/pretty-print-json
     const html = prettyPrintJson.toHtml(

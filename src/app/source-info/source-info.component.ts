@@ -145,7 +145,7 @@ export class SourceInfoComponent implements OnInit {
         const options: JsonFormatOptions = new JsonFormatOptions();
         options.lineNumbers = false;
         options.quoteKeys = true;
-        options.trailingComma =false;
+        options.trailingComma = false;
 
         this.idnService.getSourceV3ProvisioningPolicy(each.id).subscribe(
           searchResult => {

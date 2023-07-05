@@ -28,6 +28,8 @@ export class IdentityTransformManagementComponent implements OnInit {
   totalCount: number;
   allTransforms: any;
   rawObject: boolean;
+  rawObjectEdit: string;
+  rawObjectId: string;
 
   transforms: Transform[];
   zip: JSZip = new JSZip();
@@ -73,6 +75,7 @@ export class IdentityTransformManagementComponent implements OnInit {
     if (clearMsg) {
       this.messageService.clearAll();
     }
+    this.rawObjectEdit = null;
   }
 
   getAllTransforms() {
@@ -162,13 +165,42 @@ export class IdentityTransformManagementComponent implements OnInit {
       const options: JsonFormatOptions = new JsonFormatOptions();
       options.lineNumbers = false;
       options.quoteKeys = true;
-      options.trailingComma =false;
+      options.trailingComma = false;
 
       //https://github.com/center-key/pretty-print-json
       const html = prettyPrintJson.toHtml(result, options);
       const elem = document.getElementById('jsonRaw');
       elem.innerHTML = html;
     });
+  }
+
+  editJson(selectedTransform: Transform) {
+    this.idnService.getTransformById(selectedTransform.id).subscribe(result => {
+      this.rawObjectEdit = JSON.stringify(result, null, 4);
+      this.rawObjectId = result.id;
+    });
+  }
+
+  save() {
+    const rawData = (
+      document.getElementById('userUpdatedObject') as HTMLInputElement
+    ).value;
+    try {
+      const data = JSON.parse(rawData);
+
+      this.idnService.updateTransform(data).subscribe(
+        searchResult => {
+          alert('Save Success');
+          console.log(searchResult);
+        },
+        err => {
+          this.messageService.handleIDNError(err);
+          alert('Cant Save');
+        }
+      );
+    } catch (err) {
+      alert('Json Invalid:' + err);
+    }
   }
 
   hideDeleteTransformConfirmModal() {
@@ -357,7 +389,7 @@ export class IdentityTransformManagementComponent implements OnInit {
           this.invalidMessage.push(
             'Invalid Transform JSON file: transform attributes body is not specified.'
           );
-        }else{
+        } else {
           this.transformToUpdate.attributes = parsedTransformJSON.attributes;
         }
         //verify transform id
