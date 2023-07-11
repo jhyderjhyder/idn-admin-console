@@ -7,6 +7,8 @@ import { MessageService } from '../service/message.service';
 import { AccessRequestApprovalsPending } from '../model/access-request-approvals-pending';
 import { SimpleQueryCondition } from '../model/simple-query-condition';
 import { IdentityAttribute } from '../model/identity-attribute';
+import { JsonFormatOptions } from '../model/json-format-options';
+import { prettyPrintJson } from 'pretty-print-json';
 
 @Component({
   selector: 'app-access-request-approval-forward',
@@ -24,6 +26,8 @@ export class AccessRequestApprovalForwardComponent implements OnInit {
   validToSubmit: boolean;
   invalidMessage: string[];
   identityInfo: IdentityAttribute;
+  pendingApprovalsRaw: object[];
+  rawObject: boolean;
 
   public modalRef: BsModalRef;
 
@@ -42,6 +46,9 @@ export class AccessRequestApprovalForwardComponent implements OnInit {
   }
 
   reset(clearMsg: boolean) {
+    this.rawObject = false;
+    const elem = document.getElementById('jsonRaw');
+    elem.innerHTML = '';
     this.pendingApprovals = null;
     this.approvalToForward = null;
     this.newOwner = null;
@@ -61,7 +68,9 @@ export class AccessRequestApprovalForwardComponent implements OnInit {
     this.loading = true;
     this.idnService.getAccessRequestApprovalsPending().subscribe(results => {
       this.pendingApprovals = [];
+      this.pendingApprovalsRaw = [];
       for (const each of results) {
+        this.pendingApprovalsRaw.push(each);
         const pendingApproval = new AccessRequestApprovalsPending();
         pendingApproval.id = each.id;
         pendingApproval.name = each.name;
@@ -110,6 +119,20 @@ export class AccessRequestApprovalForwardComponent implements OnInit {
     } else {
       this.invalidMessage.push('Identity Account Name cannot be null.');
     }
+  }
+
+  showJson(input) {
+    const options: JsonFormatOptions = new JsonFormatOptions();
+    options.lineNumbers = false;
+    options.quoteKeys = true;
+    options.trailingComma = false;
+    const result = this.pendingApprovalsRaw[input];
+    this.rawObject = true;
+
+    //https://github.com/center-key/pretty-print-json
+    const html = prettyPrintJson.toHtml(result, options);
+    const elem = document.getElementById('jsonRaw');
+    elem.innerHTML = html;
   }
 
   forwardApproval(identity) {
