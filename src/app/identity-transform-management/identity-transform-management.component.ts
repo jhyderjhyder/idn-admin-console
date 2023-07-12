@@ -5,10 +5,18 @@ import { ModalDirective } from 'ngx-bootstrap/modal';
 import { IDNService } from '../service/idn.service';
 import { MessageService } from '../service/message.service';
 import { Transform } from '../model/transform';
+import {
+  IdentityPreview,
+  IdentityPreviewAttributeConfig,
+  IdentityPreviewAttributeTransforms,
+  IdentityPreviewAttributes,
+  IdentityPreviewTransformDefinition,
+} from '../model/identity-preview';
 import * as JSZip from 'jszip';
 import { AuthenticationService } from '../service/authentication-service.service';
 import { prettyPrintJson } from 'pretty-print-json';
 import { JsonFormatOptions } from '../model/json-format-options';
+import { BasicAttributes } from '../model/basic-attributes';
 
 @Component({
   selector: 'app-identity-transform-management',
@@ -30,6 +38,12 @@ export class IdentityTransformManagementComponent implements OnInit {
   rawObject: boolean;
   rawObjectEdit: string;
   rawObjectId: string;
+  formSourceName: string;
+  formApplicationAttribute: string;
+  formPersonName: string;
+  IdentityPreview: IdentityPreview;
+  filterApplications: Array<BasicAttributes>;
+  stringApplication: Array<String>;
 
   transforms: Transform[];
   zip: JSZip = new JSZip();
@@ -46,6 +60,8 @@ export class IdentityTransformManagementComponent implements OnInit {
   importTransformFile: ElementRef;
   @ViewChild('updateTransformFile', { static: false })
   updateTransformFile: ElementRef;
+  @ViewChild('testTransformConfirmModal', { static: false })
+  testTransformConfirmModal: ModalDirective;
 
   constructor(
     private idnService: IDNService,
@@ -56,6 +72,7 @@ export class IdentityTransformManagementComponent implements OnInit {
   ngOnInit() {
     this.reset(true);
     this.getAllTransforms();
+    this.getApplicationNames();
   }
 
   reset(clearMsg: boolean) {
@@ -153,6 +170,106 @@ export class IdentityTransformManagementComponent implements OnInit {
     this.transformToDelete.internal = selectedTransform.internal;
     this.validToSubmit = false;
     this.deleteTransformConfirmModal.show();
+  }
+
+  showTestTransformModal(selectedTransform: Transform) {
+    this.invalidMessage = [];
+    this.deleteTransformNameText = null;
+    this.transformToDelete = new Transform();
+    this.transformToDelete.id = selectedTransform.id;
+    this.transformToDelete.name = selectedTransform.name;
+    this.transformToDelete.type = selectedTransform.type;
+    this.transformToDelete.internal = selectedTransform.internal;
+    this.validToSubmit = false;
+    this.testTransformConfirmModal.show();
+  }
+  hideTestTransformConfirmModal() {
+    this.testTransformConfirmModal.hide();
+  }
+
+  getApplicationNames() {
+    this.filterApplications = new Array<BasicAttributes>();
+    const b = new BasicAttributes();
+    b.name = '';
+    b.value = '';
+    this.filterApplications.push(b);
+    this.stringApplication = new Array<String>();
+
+    this.idnService.getAllSources().subscribe(response => {
+      const searchResult = response;
+      for (let i = 0; i < searchResult.length; i++) {
+        const app = searchResult[i];
+        const basic = new BasicAttributes();
+        basic.name = app['name'];
+        basic.value = app['id'];
+        this.filterApplications.push(basic);
+        this.stringApplication.push(basic.name);
+      }
+    });
+  }
+  async runTransform() {
+    let personId = '';
+    const person = await this.idnService
+      .getPersonID(this.formPersonName)
+      .toPromise();
+    if (person.length > 0) {
+      personId = person[0].id;
+    } else {
+      this.invalidMessage.push('Cant find person');
+    }
+
+    const ip = new IdentityPreview();
+    ip.identityId = personId;
+
+    const attributes = new IdentityPreviewAttributes();
+    let email = this.formApplicationAttribute;
+    if (email == null) {
+      email = 'PrimaryLanID';
+    }
+    //console.log("source:" + this.formSourceName);
+    let appId = '';
+    for (const each of this.filterApplications) {
+      if (each.name == this.formSourceName) {
+        appId = each.value;
+      }
+    }
+    attributes.applicationId = appId;
+
+    attributes.applicationName = this.formSourceName;
+    attributes.attributeName = email;
+    attributes.sourceName = this.formSourceName;
+    attributes.id = this.transformToDelete.name;
+    attributes.type = 'reference';
+    const transformDefinition1 = new IdentityPreviewTransformDefinition();
+    transformDefinition1.attributes = attributes;
+    transformDefinition1.type = 'accountAttribute';
+
+    const preview = new IdentityPreviewAttributeTransforms();
+    preview.transformDefinition = transformDefinition1;
+    const attConfig = new IdentityPreviewAttributeConfig();
+    attConfig.attributeTransforms = new Array();
+    attConfig.attributeTransforms.push(preview);
+
+    ip.identityAttributeConfig = attConfig;
+    const test = JSON.stringify(ip);
+    console.log(test);
+
+    this.idnService.getTransformResults(ip).subscribe(
+      result => {
+        // console.log(result.previewAttributes);
+
+        for (const each of result.previewAttributes) {
+          //const att = JSON.parse(each);
+          const name = each.name;
+          if (name == 'email') {
+            alert(each.value);
+          }
+        }
+      },
+      err => {
+        alert(JSON.stringify(err));
+      }
+    );
   }
 
   showJson(selectedTransform: Transform) {

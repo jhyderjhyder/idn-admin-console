@@ -19,6 +19,7 @@ import { IdentityProfile } from '../model/identity-profile';
 import { IdentityAttribute } from '../model/identity-attribute';
 import { Transform } from '../model/transform';
 import { PageResults } from '../model/page-results';
+import { IdentityPreview } from '../model/identity-preview';
 
 @Injectable({
   providedIn: 'root',
@@ -1405,6 +1406,28 @@ export class IDNService {
     return this.http
       .get(url, this.httpOptions)
       .pipe(catchError(this.handleError(`getAllTransforms`)));
+  }
+  /**
+   * Method to post IdentityPreview object to get Return Vlaue
+   * @param profileId
+   * @returns
+   */
+  getTransformResults(profileId: IdentityPreview): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/identity-profiles/identity-preview`;
+
+    return this.http.post(url, profileId, this.httpOptions);
+  }
+  /*
+  Simple query to just the get the public parts of the identity.  
+  */
+  getPersonID(input: string): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/public-identities?filters=alias eq "${input}"&limit=1`;
+    //console.log(url);
+    return this.http
+      .get(url, this.httpOptions)
+      .pipe(catchError(this.handleError(`getPersonId`)));
   }
 
   private logError(error: string) {

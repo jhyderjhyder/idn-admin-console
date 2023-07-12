@@ -103,6 +103,7 @@
             <a class="dropdown-item" (click)="showDeleteTransformModal(t)">Delete</a>
             <a class="dropdown-item" (click)="showJson(t)">View</a>
             <a class="dropdown-item" (click)="editJson(t)">Edit</a>
+            <a class="dropdown-item" (click)="showTestTransformModal(t)">Test </a>
           </div>
         </div>
       </td>
@@ -254,6 +255,68 @@
               <span>
                 <button type="button" class="btn btn-success btn-sm" (click)="deleteTransform()">
                   Delete
+                </button>
+              </span>
+            </div>
+          </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div bsModal #testTransformConfirmModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="dialog-child-name">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 id="dialog-child-name" class="modal-title pull-left font-weight-bold">
+          Test Transform
+        </h5>
+        <button type="button" class="btn close pull-right" aria-label="Close" (click)="hideDeleteTransformConfirmModal()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+          <div class="form-group row mb-2">
+            <div class="col-sm-12 text-start" *ngIf="transformToDelete">
+                <span class="fw-bold">Name:</span>&nbsp;{{ transformToDelete.name }}<br>
+                <span class="fw-bold">Type:</span>&nbsp;{{ transformToDelete.type }}<br>
+                <span class="fw-bold">ID:</span>&nbsp;{{ transformToDelete.id }}<br>
+                <span class="fw-bold">Internal:</span>&nbsp;{{ transformToDelete.internal }}<br>
+            </div>
+          </div>
+          <div class="form-group row">
+            <div class="col-sm-12 text-start">
+              
+            </div>
+          </div>
+          <div class="form-group row mb-3">
+            <div class="col-sm-12 text-start">
+             Provide the Identity to test the transform with
+              &nbsp;<input type="text" class="form-control col-sm-8 mt-2" id="person-name"  [(ngModel)]="formPersonName"placeholder="Person" aria-describedby="basic-addon3" autocomplete="off">
+            </div>
+            <div class="col-sm-12 text-start">
+              Application Attribute (Required From Application Schema)
+               &nbsp;<input type="text" class="form-control col-sm-8 mt-2" id="application-attribute" [(ngModel)]="formApplicationAttribute" placeholder="PrimaryLanID" aria-describedby="basic-addon3" autocomplete="off">
+             </div>
+             <div class="col-sm-12 text-start">
+              Source Name
+              <!-- &nbsp;<input type="text" class="form-control col-sm-8 mt-2" id="source-name" [(ngModel)]="formSourceName" placeholder="HR System" aria-describedby="basic-addon3" autocomplete="off">
+              -->
+               
+              &nbsp;<select class="form-control col-sm-8 mt-2" id="formSourceName" [(ngModel)]="formSourceName">
+                  <option *ngFor="let item of filterApplications">{{item.name}}</option>
+                </select>
+             
+             
+              </div>
+          </div>
+          <div class="row mrgbtm small">
+            <div class="col-md-12 text-end">
+              <button type="button" (click)="hideTestTransformConfirmModal()" class="btn btn-danger btn-sm">Cancel</button>
+              &nbsp;&nbsp;&nbsp;
+              <span>
+                <button type="button" class="btn btn-success btn-sm" (click)="runTransform()">
+                  Run
                 </button>
               </span>
             </div>
