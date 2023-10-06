@@ -135,7 +135,7 @@ export class IDNService {
 
   getAllSources(): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/sources`;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/sources?sorters=name`;
 
     return this.http
       .get(url, this.httpOptions)
