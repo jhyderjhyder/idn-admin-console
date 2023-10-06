@@ -133,9 +133,25 @@ export class IDNService {
     return this.http.put(url, rawFormData, myHttpOptions);
   }
 
+  updateProvisioningPlan(rawFormData, primaryKeySource): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    const childURL =
+      `/v3/sources/` + primaryKeySource + `/provisioning-policies/bulk-update`;
+    const url =
+      `https://${currentUser.tenant}.api.${currentUser.domain}` + childURL;
+    console.log(url);
+
+    const myHttpOptions = {
+      headers: new HttpHeaders({}),
+      'Content-Type': 'application/json',
+    };
+    // const data = JSON.parse(rawFormData);
+    return this.http.post(url, rawFormData, myHttpOptions);
+  }
+
   getAllSources(): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/sources`;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/sources?sorters=name`;
 
     return this.http
       .get(url, this.httpOptions)

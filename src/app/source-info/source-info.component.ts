@@ -24,6 +24,7 @@ export class SourceInfoComponent implements OnInit {
   allSources: any;
   rawObject: string;
   rawObjectId: string;
+  rawProvisioningId: string;
 
   zip: JSZip = new JSZip();
 
@@ -42,6 +43,7 @@ export class SourceInfoComponent implements OnInit {
     this.search();
     this.rawObject = null;
     this.rawObjectId = null;
+    this.rawProvisioningId = null;
   }
 
   reset(clearMsg: boolean) {
@@ -83,6 +85,10 @@ export class SourceInfoComponent implements OnInit {
         source.cloudExternalID = each.connectorAttributes.cloudExternalId;
         source.name = each.name;
         source.description = each.description;
+        if (each.description.length > 10) {
+          source.description = each.description.slice(0, 10) + '...';
+        }
+
         source.type = each.type;
         source.authoritative = each.authoritative;
 
@@ -120,6 +126,25 @@ export class SourceInfoComponent implements OnInit {
       }
     }
   }
+
+  editJsonProvisioningPolicy(input: Source) {
+    for (const each of this.allSources) {
+      if (each.id == input.id) {
+        this.idnService.getSourceV3ProvisioningPolicy(each.id).subscribe(
+          searchResult => {
+            this.rawObject = JSON.stringify(searchResult, null, 4);
+          },
+          err => {
+            this.messageService.handleIDNError(err);
+          }
+        );
+
+        this.rawObjectId = input.id;
+        this.rawProvisioningId = 'Working on it';
+      }
+    }
+  }
+
   viewJson(input: Source) {
     for (const each of this.allSources) {
       if (each.id == input.id) {
@@ -167,18 +192,35 @@ export class SourceInfoComponent implements OnInit {
       document.getElementById('userUpdatedObject') as HTMLInputElement
     ).value;
     try {
-      const data = JSON.parse(rawData);
+      if (this.rawProvisioningId != null) {
+        const data = JSON.parse(rawData);
 
-      this.idnService.updateSource(data, this.rawObjectId).subscribe(
-        searchResult => {
-          alert('Save Success');
-          console.log(searchResult);
-        },
-        err => {
-          this.messageService.handleIDNError(err);
-          alert('Cant Save');
-        }
-      );
+        this.idnService
+          .updateProvisioningPlan(data, this.rawObjectId)
+          .subscribe(
+            searchResult => {
+              alert('Save ProvisioningPolicy Success');
+              console.log(searchResult);
+            },
+            err => {
+              this.messageService.handleIDNError(err);
+              alert('Cant Save ProvisioningPolicy');
+            }
+          );
+      } else {
+        const data = JSON.parse(rawData);
+
+        this.idnService.updateSource(data, this.rawObjectId).subscribe(
+          searchResult => {
+            alert('Save Success');
+            console.log(searchResult);
+          },
+          err => {
+            this.messageService.handleIDNError(err);
+            alert('Cant Save');
+          }
+        );
+      }
     } catch (err) {
       alert('Json Invalid:' + err);
     }
