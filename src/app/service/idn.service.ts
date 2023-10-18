@@ -499,9 +499,30 @@ export class IDNService {
       '&offset=' +
       page.offset;
 
+    let search = null;
+    if (query.lastName != null && query.lastName != '') {
+      search = 'attributes.lastname:' + query.lastName;
+    }
+    if (query.firstName != null && query.firstName != '') {
+      const search2 = 'attributes.firstname:' + query.firstName;
+      if (search == null) {
+        search = search2;
+      } else {
+        search = search + ' AND ' + search2;
+      }
+    }
+    if (query.value != null && query.value != '') {
+      const search2 = `${query.attribute}:\"${query.value}\"`;
+      if (search == null) {
+        search = search2;
+      } else {
+        search = search + ' AND ' + search2;
+      }
+    }
+
     const payload = {
       query: {
-        query: `${query.attribute}:${query.value}`,
+        query: search,
       },
       indices: ['identities'],
     };
