@@ -3,6 +3,82 @@
     <span class="spinner-border spinner-border-sm me-1"></span>Loading...
   </div>
 </div>
+
+<div class="form-group row mb-3" *ngIf="!loading">
+  <div class="col-sm-10 text-start">
+    <span class="fw-bold">Enter Identity's Account Name (like *) and click the 'Search' button . 
+      Or select another option to search based on firstname, lastname, identitficationNumber, email or phone.
+       
+      Click on the Manager's name (if exists) to get their details. 
+      Click on 'Download' to save the report after Search</span>
+  </div>
+  <div class="col-sm-2 text-start">
+    <button type="button" [disabled]="loading" (click)="ngOnInit()" class="btn btn-primary btn-sm">
+      Reset
+    </button>
+  </div>
+</div>
+<div class="collapse" id="extendedSearch">
+  <div class="card card-body row">
+    <table class="border"><tr><td>FirstName</td><td>LastName</td></tr>
+    <tr>
+      <td><input id="firstName" class="form-control py-2 border-start-0 border" type="text" [(ngModel)]="firstName" (keyup.enter)="submit()" placeholder="Enter Value"></td>
+      <td><input id="lastName" class="form-control py-2 border-start-0 border" type="text" [(ngModel)]="lastName" (keyup.enter)="submit()" placeholder="Enter Value"></td>
+    </tr>
+    </table>
+  
+  </div>
+</div>
+<!--Headers-->
+<div class=" row mb-3 align-items-center bg-success text-white">
+  <div class="col-sm-4 text-start">Search Text</div>
+  <div class="col-sm-2 text-center">On</div>
+  <div class="col-sm-2 text-end">Action</div>
+</div>
+
+
+
+
+<div class="form-group row mb-3 align-items-center" *ngIf="!loading">
+  <div class="col-sm-4 text-start">
+    <input id="accountName" class="form-control py-2 border-start-0 border" type="text" [(ngModel)]="accountName" (keyup.enter)="submit()" placeholder="Enter Value">
+  </div>
+
+
+  <div *ngIf="!loading" class="col-sm-2 text-end">
+    <label for="filterTypes">
+      <select id="filterTypes" [(ngModel)]="selectedFilterTypes">
+        <option *ngFor="let item of filterTypes">{{item}}</option>
+      </select>
+    </label>
+  </div>
+
+  <div class="col-sm-1 text-end">
+    <button type="button" (click)="submit()" class="btn btn-primary btn-sm">
+      Search
+    </button>
+  </div>
+  <div class="col-sm-2 text-end">
+      <button class="btn btn-info btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#extendedSearch" aria-expanded="false" aria-controls="extendedSearch">
+        Extended Search
+      </button>
+  </div>
+ 
+
+  <div class="col-sm-2 text-start">
+    <button type="button" *ngIf="identityInfo" [disabled]="loading" (click)="refreshIdentity()"
+      class="btn btn-primary btn-sm">
+      Refresh Identity
+    </button>
+  </div>
+  <div class="col-sm-1 text-start">
+    <button type="button" *ngIf="identityInfo" [disabled]="loading" (click)="saveInCsv()"
+      class="btn btn-primary btn-sm">
+      Download
+    </button>
+  </div>
+</div>
+
 <!--Start pagination Information Just change hte ngIf -->
 <div class="row" *ngIf="!loading && identityList">
   <div class="col-sm-2 text-start">
@@ -50,61 +126,7 @@
     </tr>
   </table>
 </div>
-<div class="form-group row mb-3" *ngIf="!loading">
-  <div class="col-sm-10 text-start">
-    <span class="fw-bold">Enter Identity's Account Name (like *) and click the 'Search' button . 
-      Or select another option to search based on firstname, lastname, identitficationNumber, email or phone.
-       
-      Click on the Manager's name (if exists) to get their details. 
-      Click on 'Download' to save the report after Search</span>
-  </div>
-  <div class="col-sm-2 text-start">
-    <button type="button" [disabled]="loading" (click)="ngOnInit()" class="btn btn-primary btn-sm">
-      Reset
-    </button>
-  </div>
-</div>
-<!--Headers-->
-<div class=" row mb-3 align-items-center bg-success text-white">
-  <div class="col-sm-4 text-start">Search Text</div>
-  <div class="col-sm-2 text-center">On</div>
-  <div class="col-sm-2 text-end">Action</div>
-</div>
 
-
-
-<div class="form-group row mb-3 align-items-center" *ngIf="!loading">
-  <div class="col-sm-4 text-start">
-    <input id="accountName" class="form-control py-2 border-start-0 border" type="text" [(ngModel)]="accountName" (keyup.enter)="submit()" placeholder="Enter Value">
-  </div>
-
-  <div *ngIf="!loading" class="col-sm-2 text-end">
-    <label for="filterTypes">
-      <select id="filterTypes" [(ngModel)]="selectedFilterTypes">
-        <option *ngFor="let item of filterTypes">{{item}}</option>
-      </select>
-    </label>
-  </div>
-
-  <div class="col-sm-2 text-end">
-    <button type="button" (click)="submit()" class="btn btn-primary btn-sm">
-      Search
-    </button>
-  </div>
-
-  <div class="col-sm-2 text-start">
-    <button type="button" *ngIf="identityInfo" [disabled]="loading" (click)="refreshIdentity()"
-      class="btn btn-primary btn-sm">
-      Refresh Identity
-    </button>
-  </div>
-  <div class="col-sm-2 text-start">
-    <button type="button" *ngIf="identityInfo" [disabled]="loading" (click)="saveInCsv()"
-      class="btn btn-primary btn-sm">
-      Download
-    </button>
-  </div>
-</div>
 
 <div *ngIf="!loading && identityInfo">
 <ul class="nav nav-tabs" id="myTab" role="tablist">

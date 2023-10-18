@@ -25,6 +25,8 @@ export class IdentityInfoComponent implements OnInit {
 
   //new
   accountName: string;
+  lastName: string;
+  firstName: string;
   identityInfo: IdentityAttribute;
   filterTypes: Array<string>;
   selectedFilterTypes: string;
@@ -53,8 +55,8 @@ export class IdentityInfoComponent implements OnInit {
 
   initFilterTypes() {
     this.filterTypes.push('name');
-    this.filterTypes.push('firstname');
-    this.filterTypes.push('lastname');
+    //this.filterTypes.push('firstname');
+    // this.filterTypes.push('lastname');
     this.filterTypes.push('identificationNumber');
     this.filterTypes.push('email');
     this.filterTypes.push('phone');
@@ -130,56 +132,50 @@ export class IdentityInfoComponent implements OnInit {
     this.loading = true;
     this.identityList = null;
 
-    if (this.accountName && this.accountName.trim() != '') {
-      const query = new SimpleQueryCondition();
-      let attributes = true;
-      if (this.selectedFilterTypes == 'name') {
-        query.attribute = this.selectedFilterTypes;
-        attributes = false;
-      }
-      if (this.selectedFilterTypes == 'manager') {
-        query.attribute = this.selectedFilterTypes + '.name';
-        attributes = false;
-      }
-      if (attributes == true) {
-        query.attribute = 'attributes.' + this.selectedFilterTypes;
-      }
-
-      query.value = this.accountName;
-
-      this.idnService
-        .searchAccountsPaged(query, this.page)
-        .subscribe(response => {
-          const searchResult = response.body;
-          const headers = response.headers;
-          this.page.xTotalCount = headers.get('X-Total-Count');
-          //Lets not load the data if we have more than one result
-          if (
-            (searchResult && searchResult.length > 1) ||
-            this.page.offset != 0
-          ) {
-            this.messageService.setError(
-              `Multiple records found. Click 'Show Details' to select the record.`
-            );
-            this.identityList = searchResult;
-          }
-
-          if (
-            searchResult &&
-            searchResult.length == 1 &&
-            this.page.offset == 0
-          ) {
-            this.getIdentityInfo(searchResult);
-          }
-
-          if (searchResult && searchResult.length == 0) {
-            this.validToSubmit = false;
-            this.messageService.setError(`Record not found.`);
-          }
-        });
-    } else {
-      this.messageService.setError('Search value is needed.');
+    const query = new SimpleQueryCondition();
+    query.firstName = this.firstName;
+    query.lastName = this.lastName;
+    let attributes = true;
+    if (this.selectedFilterTypes == 'name') {
+      query.attribute = this.selectedFilterTypes;
+      attributes = false;
     }
+    if (this.selectedFilterTypes == 'manager') {
+      query.attribute = this.selectedFilterTypes + '.name';
+      attributes = false;
+    }
+    if (attributes == true) {
+      query.attribute = 'attributes.' + this.selectedFilterTypes;
+    }
+
+    query.value = this.accountName;
+
+    this.idnService
+      .searchAccountsPaged(query, this.page)
+      .subscribe(response => {
+        const searchResult = response.body;
+        const headers = response.headers;
+        this.page.xTotalCount = headers.get('X-Total-Count');
+        //Lets not load the data if we have more than one result
+        if (
+          (searchResult && searchResult.length > 1) ||
+          this.page.offset != 0
+        ) {
+          this.messageService.setError(
+            `Multiple records found. Click 'Show Details' to select the record.`
+          );
+          this.identityList = searchResult;
+        }
+
+        if (searchResult && searchResult.length == 1 && this.page.offset == 0) {
+          this.getIdentityInfo(searchResult);
+        }
+
+        if (searchResult && searchResult.length == 0) {
+          this.validToSubmit = false;
+          this.messageService.setError(`Record not found.`);
+        }
+      });
 
     this.loading = false;
   }
