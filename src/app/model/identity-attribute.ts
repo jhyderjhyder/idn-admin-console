@@ -1,3 +1,5 @@
+import { AccountActivities } from './accountactivities';
+
 export class IdentityAttribute {
   displayName: string;
   extendedNumber: string;
@@ -54,6 +56,7 @@ export class IdentityAttribute {
   attributes: Array<Basic>;
   hasPATToken: boolean;
   cloudId: string;
+  activities: Array<AccountActivities>;
 }
 
 export class Basic {

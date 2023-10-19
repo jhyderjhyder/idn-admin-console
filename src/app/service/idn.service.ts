@@ -123,7 +123,6 @@ export class IDNService {
     const url =
       `https://${currentUser.tenant}.api.${currentUser.domain}/v3/sources/` +
       primaryKeySource;
-    console.log(url);
 
     const myHttpOptions = {
       headers: new HttpHeaders({}),
@@ -139,7 +138,6 @@ export class IDNService {
       `/v3/sources/` + primaryKeySource + `/provisioning-policies/bulk-update`;
     const url =
       `https://${currentUser.tenant}.api.${currentUser.domain}` + childURL;
-    console.log(url);
 
     const myHttpOptions = {
       headers: new HttpHeaders({}),
@@ -550,6 +548,23 @@ export class IDNService {
       .pipe(catchError(this.handleError(`searchAccounts`)));
   }
 
+  searchActivites(filterString): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/search/`;
+
+    const payload = {
+      query: {
+        query: filterString,
+      },
+      indices: ['accountactivities'],
+      sort: ['modified'],
+    };
+
+    return this.http
+      .post(url, payload, { observe: 'response' })
+      .pipe(catchError(this.handleError(`searchActivities`)));
+  }
+
   /**
    * This is used on the identity page that pulls back all attributes that can be used
    * for searching and finding a user
@@ -599,7 +614,7 @@ export class IDNService {
         filter = filter + ' and sourceId eq "' + query.attribute + '"';
       }
     }
-    //console.log(url+filter);
+
     return this.http
       .get(url + filter, { observe: 'response' })
       .pipe(catchError(this.handleError(`searchAccounts`)));
@@ -1202,7 +1217,6 @@ export class IDNService {
   getEntilementsPaged(filters, page: PageResults): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
     const filteredURL = '';
-    console.log(filters);
 
     const url =
       `https://${currentUser.tenant}.api.${currentUser.domain}/beta/entitlements?` +
@@ -1493,7 +1507,7 @@ export class IDNService {
   getPersonID(input: string): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
     const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/public-identities?filters=alias eq "${input}"&limit=1`;
-    //console.log(url);
+
     return this.http
       .get(url, this.httpOptions)
       .pipe(catchError(this.handleError(`getPersonId`)));

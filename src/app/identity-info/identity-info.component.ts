@@ -10,6 +10,7 @@ import { IdentityAttribute } from '../model/identity-attribute';
 import { AuthenticationService } from '../service/authentication-service.service';
 import { AngularCsv } from 'angular-csv-ext/dist/Angular-csv';
 import { WorkItem } from '../model/work-item';
+import { AccountActivities } from '../model/accountactivities';
 
 @Component({
   selector: 'app-identity-info',
@@ -22,6 +23,8 @@ export class IdentityInfoComponent implements OnInit {
   errorMessage: string;
   invalidMessage: string[];
   validToSubmit: boolean;
+
+  rawActivities: string;
 
   //newsearch options
   accountName: string;
@@ -142,8 +145,43 @@ export class IdentityInfoComponent implements OnInit {
     this.messageService.clearAll();
     this.getIdentityInfo(value);
   }
+  showRawActivity(input) {
+    this.rawActivities = this.identityInfo.activities[input].raw;
+  }
+
+  getProvisionActions() {
+    this.rawActivities = null;
+    this.identityInfo.activities = new Array<AccountActivities>();
+    const queryString =
+      "recipient.name:'" + this.identityInfo.displayName + "'";
+    console.log(queryString);
+
+    this.idnService.searchActivites(queryString).subscribe(response => {
+      const searchResult = response.body;
+      //Lets not load the data if we have more than one result
+
+      for (let i = 0; i < searchResult.length; i++) {
+        this.filterTypes.push(searchResult[i].name);
+        const ac = new AccountActivities();
+        ac.action = searchResult[i].action;
+        ac.id = searchResult[i].id;
+        ac.requester = searchResult[i].requester.name;
+        ac.stage = searchResult[i].stage;
+        ac.modified = searchResult[i].modified;
+        ac.status = searchResult[i].status;
+        ac.source = searchResult[i].sources;
+        if (searchResult[i].errors != null) {
+          ac.errors = searchResult[i].errors;
+        }
+        ac.raw = JSON.stringify(searchResult, null, 4);
+
+        this.identityInfo.activities.push(ac);
+      }
+    });
+  }
 
   submit() {
+    this.identityInfo = null;
     this.messageService.clearError();
     this.validToSubmit = true;
     this.invalidMessage = [];
@@ -375,6 +413,7 @@ export class IdentityInfoComponent implements OnInit {
     this.getAllAccessRequestStatus();
     this.getAllWorkItemsStatus();
     this.getOwnedEntitlements();
+    this.getProvisionActions();
   }
 
   getOwnedEntitlements() {
