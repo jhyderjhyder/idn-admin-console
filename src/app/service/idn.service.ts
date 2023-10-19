@@ -1217,7 +1217,7 @@ export class IDNService {
   getEntilementsPaged(filters, page: PageResults): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
     const filteredURL = '';
-
+    console.log(filters);
     const url =
       `https://${currentUser.tenant}.api.${currentUser.domain}/beta/entitlements?` +
       filteredURL +
