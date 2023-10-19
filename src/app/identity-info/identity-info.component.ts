@@ -23,10 +23,13 @@ export class IdentityInfoComponent implements OnInit {
   invalidMessage: string[];
   validToSubmit: boolean;
 
-  //new
+  //newsearch options
   accountName: string;
   lastName: string;
   firstName: string;
+  email: string;
+  managerName: string;
+
   identityInfo: IdentityAttribute;
   filterTypes: Array<string>;
   selectedFilterTypes: string;
@@ -57,10 +60,21 @@ export class IdentityInfoComponent implements OnInit {
     this.filterTypes.push('name');
     //this.filterTypes.push('firstname');
     // this.filterTypes.push('lastname');
-    this.filterTypes.push('identificationNumber');
-    this.filterTypes.push('email');
-    this.filterTypes.push('phone');
-    this.filterTypes.push('manager');
+    //this.filterTypes.push('identificationNumber');
+    //this.filterTypes.push('email');
+    //this.filterTypes.push('phone');
+    //this.filterTypes.push('manager');
+
+    this.idnService.searchableAttributes().subscribe(response => {
+      const searchResult = response.body;
+      const headers = response.headers;
+      this.page.xTotalCount = headers.get('X-Total-Count');
+      //Lets not load the data if we have more than one result
+
+      for (let i = 0; i < searchResult.length; i++) {
+        this.filterTypes.push(searchResult[i].name);
+      }
+    });
     /*
     This is optional but you can pass a set of attributes
     you want to search on like departement.  This will
@@ -104,6 +118,10 @@ export class IdentityInfoComponent implements OnInit {
     this.invalidMessage = [];
     this.identityInfo = null;
     this.accountName = null;
+    this.firstName = null;
+    this.lastName = null;
+    this.managerName = null;
+    this.email = null;
     if (clearMsg) {
       this.messageService.clearAll();
       this.errorMessage = null;
@@ -135,6 +153,8 @@ export class IdentityInfoComponent implements OnInit {
     const query = new SimpleQueryCondition();
     query.firstName = this.firstName;
     query.lastName = this.lastName;
+    query.email = this.email;
+    query.managerName = this.managerName;
     let attributes = true;
     if (this.selectedFilterTypes == 'name') {
       query.attribute = this.selectedFilterTypes;
@@ -459,6 +479,10 @@ export class IdentityInfoComponent implements OnInit {
 
   getManagerInfo() {
     this.accountName = this.identityInfo.managerAccountName;
+    this.firstName = null;
+    this.lastName = null;
+    this.managerName = null;
+    this.email = null;
     this.selectedFilterTypes = 'name';
     this.submit();
   }

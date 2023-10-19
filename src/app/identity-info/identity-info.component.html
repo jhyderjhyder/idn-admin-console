@@ -12,18 +12,26 @@
       Click on the Manager's name (if exists) to get their details. 
       Click on 'Download' to save the report after Search</span>
   </div>
+  <!--
   <div class="col-sm-2 text-start">
     <button type="button" [disabled]="loading" (click)="ngOnInit()" class="btn btn-primary btn-sm">
       Reset
     </button>
   </div>
+-->
 </div>
-<div class="collapse" id="extendedSearch">
-  <div class="card card-body row">
-    <table class="border"><tr><td>FirstName</td><td>LastName</td></tr>
+<div class="collapse" id="extendedSearch" >
+  <div class="card card-body row" style="background-color: rgb(44, 44, 44);">
+    <table class="border">
+      <tr bgcolor="#ddd"><th>First Name</th><th>Last Name</th></tr>
     <tr>
-      <td><input id="firstName" class="form-control py-2 border-start-0 border" type="text" [(ngModel)]="firstName" (keyup.enter)="submit()" placeholder="Enter Value"></td>
-      <td><input id="lastName" class="form-control py-2 border-start-0 border" type="text" [(ngModel)]="lastName" (keyup.enter)="submit()" placeholder="Enter Value"></td>
+      <td bgcolor="#ddd"><input id="firstName" class="form-control py-2 border-start-0 border" type="text" [(ngModel)]="firstName" (keyup.enter)="submit()" placeholder="Enter Value"></td>
+      <td bgcolor="#ddd"><input id="lastName" class="form-control py-2 border-start-0 border" type="text" [(ngModel)]="lastName" (keyup.enter)="submit()" placeholder="Enter Value"></td>
+    </tr>
+    <tr bgcolor="#ddd"><th>Email</th><th>Manager Name</th></tr>
+    <tr>
+      <td bgcolor="#ddd"><input id="Email" class="form-control py-2 border-start-0 border" type="text" [(ngModel)]="email" (keyup.enter)="submit()" placeholder="Enter Value"></td>
+      <td bgcolor="#ddd"><input id="managerName" class="form-control py-2 border-start-0 border" type="text" [(ngModel)]="managerName" (keyup.enter)="submit()" placeholder="Enter Value"></td>
     </tr>
     </table>
   
@@ -33,19 +41,19 @@
 <div class=" row mb-3 align-items-center bg-success text-white">
   <div class="col-sm-4 text-start">Search Text</div>
   <div class="col-sm-2 text-center">On</div>
-  <div class="col-sm-2 text-end">Action</div>
+  <div class="col-sm-2 text-end">Actions</div>
 </div>
 
 
 
 
 <div class="form-group row mb-3 align-items-center" *ngIf="!loading">
-  <div class="col-sm-4 text-start">
+  <div class="col-sm-3 text-start">
     <input id="accountName" class="form-control py-2 border-start-0 border" type="text" [(ngModel)]="accountName" (keyup.enter)="submit()" placeholder="Enter Value">
   </div>
 
 
-  <div *ngIf="!loading" class="col-sm-2 text-end">
+  <div *ngIf="!loading" class="col-sm-3 text-end">
     <label for="filterTypes">
       <select id="filterTypes" [(ngModel)]="selectedFilterTypes">
         <option *ngFor="let item of filterTypes">{{item}}</option>
@@ -53,28 +61,34 @@
     </label>
   </div>
 
+
+
   <div class="col-sm-1 text-end">
     <button type="button" (click)="submit()" class="btn btn-primary btn-sm">
       Search
     </button>
   </div>
-  <div class="col-sm-2 text-end">
-      <button class="btn btn-info btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#extendedSearch" aria-expanded="false" aria-controls="extendedSearch">
-        Extended Search
+
+  <div class="col-sm-1 text-start">
+    <button type="button" [disabled]="loading" (click)="ngOnInit()" class="btn btn-primary btn-sm">
+      Reset
+    </button>
+  </div>
+  <div class="col-sm-1">
+      <button class="btn btn-secondary btn-sm" type="button" data-bs-toggle="collapse" data-bs-target="#extendedSearch" aria-expanded="false" aria-controls="extendedSearch">
+        Advanced Search
       </button>
   </div>
  
 
-  <div class="col-sm-2 text-start">
-    <button type="button" *ngIf="identityInfo" [disabled]="loading" (click)="refreshIdentity()"
-      class="btn btn-primary btn-sm">
+  <div class="col-sm-1 text-start">
+    <button class="btn btn-secondary btn-sm" type="button" *ngIf="identityInfo" [disabled]="loading" (click)="refreshIdentity()">
       Refresh Identity
     </button>
   </div>
   <div class="col-sm-1 text-start">
-    <button type="button" *ngIf="identityInfo" [disabled]="loading" (click)="saveInCsv()"
-      class="btn btn-primary btn-sm">
-      Download
+    <button class="btn btn-secondary btn-sm" type="button" *ngIf="identityInfo" [disabled]="loading" (click)="saveInCsv()">
+      Download Report
     </button>
   </div>
 </div>

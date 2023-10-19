@@ -511,6 +511,24 @@ export class IDNService {
         search = search + ' AND ' + search2;
       }
     }
+
+    if (query.email != null && query.email != '') {
+      const search2 = 'attributes.email:' + query.email;
+      if (search == null) {
+        search = search2;
+      } else {
+        search = search + ' AND ' + search2;
+      }
+    }
+    if (query.managerName != null && query.managerName != '') {
+      const search2 = 'manager.name:' + query.managerName;
+      if (search == null) {
+        search = search2;
+      } else {
+        search = search + ' AND ' + search2;
+      }
+    }
+
     if (query.value != null && query.value != '') {
       const search2 = `${query.attribute}:\"${query.value}\"`;
       if (search == null) {
@@ -519,7 +537,7 @@ export class IDNService {
         search = search + ' AND ' + search2;
       }
     }
-
+    console.log(search);
     const payload = {
       query: {
         query: search,
@@ -530,6 +548,20 @@ export class IDNService {
     return this.http
       .post(url, payload, { observe: 'response' })
       .pipe(catchError(this.handleError(`searchAccounts`)));
+  }
+
+  /**
+   * This is used on the identity page that pulls back all attributes that can be used
+   * for searching and finding a user
+   * @returns
+   */
+  searchableAttributes(): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/identity-attributes?count=true`;
+
+    return this.http
+      .get(url, { observe: 'response' })
+      .pipe(catchError(this.handleError(`searchableAttributes`)));
   }
   /*
    * Gets accounts correlated or not
