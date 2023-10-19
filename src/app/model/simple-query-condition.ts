@@ -3,4 +3,6 @@ export class SimpleQueryCondition {
   value: string;
   lastName: string;
   firstName: string;
+  email: string;
+  managerName: string;
 }
