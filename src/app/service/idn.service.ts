@@ -510,8 +510,15 @@ export class IDNService {
       }
     }
 
+    //for the email if the object contains the @ simple it gets treated special.
     if (query.email != null && query.email != '') {
-      const search2 = 'attributes.email:' + query.email;
+      let search2 = '';
+      if (query.email.includes('@')) {
+        search2 = `attributes.email:\"` + query.email + `\"`;
+      } else {
+        search2 = 'attributes.email:' + query.email;
+      }
+
       if (search == null) {
         search = search2;
       } else {
@@ -528,7 +535,8 @@ export class IDNService {
     }
 
     if (query.value != null && query.value != '') {
-      const search2 = `${query.attribute}:\"${query.value}\"`;
+      const processed = query.value.split('\\').join('\\\\');
+      const search2 = `${query.attribute}:\"${processed}\"`;
       if (search == null) {
         search = search2;
       } else {

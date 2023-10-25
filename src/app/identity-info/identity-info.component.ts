@@ -73,9 +73,13 @@ export class IdentityInfoComponent implements OnInit {
       const headers = response.headers;
       this.page.xTotalCount = headers.get('X-Total-Count');
       //Lets not load the data if we have more than one result
-
+      const names = new Array();
       for (let i = 0; i < searchResult.length; i++) {
-        this.filterTypes.push(searchResult[i].name);
+        names.push(searchResult[i].name);
+      }
+      names.sort();
+      for (let i = 0; i < names.length; i++) {
+        this.filterTypes.push(names[i]);
       }
     });
     /*
@@ -149,6 +153,10 @@ export class IdentityInfoComponent implements OnInit {
     this.rawActivities = this.identityInfo.activities[input].raw;
   }
 
+  clearProvisionDetails(){
+    this.rawActivities = null;
+  }
+
   getProvisionActions() {
     this.rawActivities = null;
     this.identityInfo.activities = new Array<AccountActivities>();
@@ -173,7 +181,7 @@ export class IdentityInfoComponent implements OnInit {
         if (searchResult[i].errors != null) {
           ac.errors = searchResult[i].errors;
         }
-        ac.raw = JSON.stringify(searchResult, null, 4);
+        ac.raw = JSON.stringify(searchResult[i], null, 4);
 
         this.identityInfo.activities.push(ac);
       }
