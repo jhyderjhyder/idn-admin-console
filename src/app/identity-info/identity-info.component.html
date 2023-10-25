@@ -655,7 +655,11 @@
       <button type="button" (click)="getProvisionActions()" class="btn btn-primary btn-sm">
         Reload List
       </button>
+ 
     </div>
+    <button *ngIf="rawActivities" type="button" (click)="clearProvisionDetails()" class="btn btn-primary btn-sm">
+      Clear
+    </button>
     <div class="row" *ngIf="rawActivities" >
       <div class="col-sm-12">
         <textarea id="userUpdatedObject" placeholder style="min-height:600px; min-width: 100%;">{{rawActivities}}</textarea>

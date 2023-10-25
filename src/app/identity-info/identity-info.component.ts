@@ -153,6 +153,10 @@ export class IdentityInfoComponent implements OnInit {
     this.rawActivities = this.identityInfo.activities[input].raw;
   }
 
+  clearProvisionDetails(){
+    this.rawActivities = null;
+  }
+
   getProvisionActions() {
     this.rawActivities = null;
     this.identityInfo.activities = new Array<AccountActivities>();
@@ -177,7 +181,7 @@ export class IdentityInfoComponent implements OnInit {
         if (searchResult[i].errors != null) {
           ac.errors = searchResult[i].errors;
         }
-        ac.raw = JSON.stringify(searchResult, null, 4);
+        ac.raw = JSON.stringify(searchResult[i], null, 4);
 
         this.identityInfo.activities.push(ac);
       }
