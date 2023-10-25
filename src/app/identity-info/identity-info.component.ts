@@ -73,9 +73,13 @@ export class IdentityInfoComponent implements OnInit {
       const headers = response.headers;
       this.page.xTotalCount = headers.get('X-Total-Count');
       //Lets not load the data if we have more than one result
-
+      const names = new Array();
       for (let i = 0; i < searchResult.length; i++) {
-        this.filterTypes.push(searchResult[i].name);
+        names.push(searchResult[i].name);
+      }
+      names.sort();
+      for (let i = 0; i < names.length; i++) {
+        this.filterTypes.push(names[i]);
       }
     });
     /*
