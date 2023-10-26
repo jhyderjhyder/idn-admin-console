@@ -10,6 +10,7 @@ import { IdentityAttribute } from '../model/identity-attribute';
 import { AuthenticationService } from '../service/authentication-service.service';
 import { AngularCsv } from 'angular-csv-ext/dist/Angular-csv';
 import { WorkItem } from '../model/work-item';
+import { IdentityActions } from '../model/IdentityActions';
 import { AccountActivities } from '../model/accountactivities';
 
 @Component({
@@ -37,6 +38,7 @@ export class IdentityInfoComponent implements OnInit {
   filterTypes: Array<string>;
   selectedFilterTypes: string;
   identityList: Array<IdentityAttribute>;
+  identityActions: Array<IdentityActions>;
 
   //Pages
   page: PageResults;
@@ -44,6 +46,8 @@ export class IdentityInfoComponent implements OnInit {
   accessRequestStatuses: AccessRequestStatus[];
   workItemsStatuses: WorkItem[];
   entitlements: Array<{}>;
+
+  searchText: string;
 
   constructor(
     private idnService: IDNService,
@@ -153,12 +157,13 @@ export class IdentityInfoComponent implements OnInit {
     this.rawActivities = this.identityInfo.activities[input].raw;
   }
 
-  clearProvisionDetails(){
+  clearProvisionDetails() {
     this.rawActivities = null;
   }
 
   getProvisionActions() {
     this.rawActivities = null;
+    this.identityActions = new Array<IdentityActions>();
     this.identityInfo.activities = new Array<AccountActivities>();
     const queryString =
       "recipient.name:'" + this.identityInfo.displayName + "'";
@@ -178,6 +183,44 @@ export class IdentityInfoComponent implements OnInit {
         ac.modified = searchResult[i].modified;
         ac.status = searchResult[i].status;
         ac.source = searchResult[i].sources;
+        const items = searchResult[i].expansionItems;
+        if (items) {
+          for (let ii = 0; ii < items.length; ii++) {
+            const item = items[ii];
+            const ia = new IdentityActions();
+            if (item.name) {
+              ia.name = item.name;
+            }
+            if (searchResult[i].created) {
+              ia.created = searchResult[i].created;
+            }
+            if (searchResult[i].action) {
+              const trigger = searchResult[i].action.toString();
+              ia.trigger = trigger;
+              if (trigger === 'Access Request') {
+                ia.trigger = 'User';
+              }
+              if (trigger === 'Identity Refresh') {
+                ia.trigger = 'System';
+              }
+            }
+
+            if (item.attributeRequest) {
+              if (item.attributeRequest.op) {
+                ia.op = item.attributeRequest.op;
+              }
+              if (item.attributeRequest.value) {
+                ia.value = item.attributeRequest.value;
+              }
+            }
+            if (item.source) {
+              if (item.source.name) {
+                ia.source = item.source.name;
+              }
+            }
+            this.identityActions.push(ia);
+          }
+        }
         if (searchResult[i].errors != null) {
           ac.errors = searchResult[i].errors;
         }
