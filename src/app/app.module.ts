@@ -52,6 +52,7 @@ import { BasicAuthInterceptor } from './helper/basic-auth.interceptor';
 import { AppRoutingModule } from './app-routing.module';
 import { AccountSearchComponent } from './account-search/account-search.component';
 import { ReassignmentsComponent } from './reassignments/reassignments.component';
+import { IdentityCompareComponent } from './identity-compare/identity-compare.component';
 
 @NgModule({
   declarations: [
@@ -91,6 +92,7 @@ import { ReassignmentsComponent } from './reassignments/reassignments.component'
     SearchFilterPipe,
     AccountSearchComponent,
     ReassignmentsComponent,
+    IdentityCompareComponent,
   ],
   imports: [
     BrowserModule,

@@ -1,0 +1,107 @@
+
+<div class="form-group" >
+    <div class="row">
+        <div class="col-sm-12 text-start">
+            <span class="fw-bold">If you Know someone who has access you can look and see what access they have that you dont</span>
+            <br>
+            <br>
+        </div>
+     </div>
+     <div class="row">
+        <div class="col-sm-6 text-start">
+            <p><b>User With Access</b><input id="master" 
+                class="form-control py-2 border-start-0 border" 
+                type="text" [(ngModel)]="master" placeholder="Template User">
+                </p>
+        </div>
+        <div class="col-sm-6 text-start">
+            <p><b>User Needs Access</b><input id="clone" 
+                class="form-control py-2 border-start-0 border" 
+                type="text" [(ngModel)]="clone" placeholder="Clone User">
+            </p>
+        </div>
+     </div>
+
+     <div class="row">
+        <div class="col-sm-3 text-start">
+                <button type="button" (click)="submit()" class="btn btn-primary btn-sm">
+                    Load Data
+                  </button>
+        </div>
+        <div class="col-sm-3 text-start">
+            <button type="button" (click)="reset()" class="btn btn-primary btn-sm">
+                Reset
+              </button>
+    </div>
+        <div class="col-sm-6 text-start">
+                <button *ngIf="!cloneLoading && !masterLoading" type="button" (click)="compare()" class="btn btn-primary btn-sm">
+                  Show Delta
+                </button>
+        </div>
+    </div>
+</div>
+
+
+
+
+
+<table class="table table-striped table-bordered">
+    <thead class="table-secondary align-middle">
+        <tr>
+            <th scope="col">Type</th>
+            <th scope="col">User With Access </th>
+            <th scope="col">User Missing Access</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+            <th scope="col">Display Name</th>
+            <th scope="col">{{valueMasterUser}}</th>
+            <th scope="col"> {{valueCloneUser}}</th>
+        </tr>
+        <tr>
+            <th scope="col">Number of Applications</th>
+            <th scope="col">{{masterAppCount}}</th>
+            <th scope="col"> {{cloneAppCount}}</th>
+        </tr>
+        <tr>
+            <th scope="col">Number of Entitlements</th>
+            <th scope="col">{{masterEntCount}}</th>
+            <th scope="col">{{cloneEntCount}}</th>
+        </tr>
+        <tr>
+            <th scope="col">OverLaped Access Removed</th>
+            <th scope="col">{{deltaRemovedEntries}}</th>
+            <th scope="col"></th>
+        </tr>
+        
+        
+      </tbody>
+</table>
+
+
+
+<h2>{{this.valueDisplayed}}</h2>
+
+
+
+<!--Account Summary Start-->
+<div *ngFor="let application of delta; let i =index">
+<p><b>{{application.applicationName }}</b></p>
+
+<table class="table table-striped table-bordered">
+    <thead class="table-secondary align-middle">
+        <tr>
+            <th scope="col">SourceName</th>
+            <th scope="col">Entitlements</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of application.simpleName; let i =index" >
+            <th scope="col">{{i+1}}</th>
+            <th scope="col"> {{item}}</th>
+        </tr>
+      </tbody>
+</table>
+</div>
+<!--Account Summary End-->
