@@ -48,6 +48,7 @@ export class IdentityInfoComponent implements OnInit {
   entitlements: Array<{}>;
 
   searchText: string;
+  searchText2: string;
 
   constructor(
     private idnService: IDNService,
@@ -138,6 +139,8 @@ export class IdentityInfoComponent implements OnInit {
       this.errorMessage = null;
     }
     this.identityList = null;
+    this.searchText = null;
+    this.searchText2 = null;
   }
 
   /*
@@ -323,7 +326,7 @@ export class IdentityInfoComponent implements OnInit {
       this.identityInfo.accountCount = identity[0].accountCount;
 
       const accounts = identity[0].accounts;
-      this.identityInfo.accountArray = new Array();
+      this.identityInfo.accountArray = new Array<Account>();
       for (let i = 0; i < accounts.length; i++) {
         const data = {} as Account;
         data.accountId = accounts[i].accountId;

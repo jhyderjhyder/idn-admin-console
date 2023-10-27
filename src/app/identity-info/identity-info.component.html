@@ -160,12 +160,12 @@
     <button class="nav-link" id="ownership-tab" data-bs-toggle="tab" data-bs-target="#ownership" 
     type="button" role="tab" aria-controls="ownership" aria-selected="false">Ownership</button>
   </li>
-  <!--
+  
   <li class="nav-item" role="presentation">
     <button class="nav-link" id="entitlements-tab" data-bs-toggle="tab" data-bs-target="#entitlements" 
     type="button" role="tab" aria-controls="entitlements" aria-selected="false">Entitlements</button>
   </li>
-  -->
+  
   <li class="nav-item" role="presentation">
     <button class="nav-link" id="profiles-tab" data-bs-toggle="tab" data-bs-target="#profiles" 
     type="button" role="tab" aria-controls="profiles" aria-selected="false">Roles</button>
@@ -507,6 +507,9 @@
 
   <div class="tab-pane fade" id="entitlements" role="tabpanel" aria-labelledby="Entitlements-tab">
     <p></p>
+    <p><b>Optional Filter</b>
+      <input class="form-control py-2 border-start-0 border" type="text" name="search" [(ngModel)]="searchText2" autocomplete="off" placeholder="Type Name Value or Source to filter results">
+    </p>
     <table class="table table-striped table-bordered" *ngIf="!loading && identityInfo">
       <thead class="table-secondary align-middle">
         <tr>
@@ -519,7 +522,7 @@
       </thead>
       <tbody>
         
-        <tr *ngFor="let item of identityInfo.entitlementArray; let i =index" >
+        <tr *ngFor="let item of (identityInfo.entitlementArray | filter:searchText2:['sourceName', 'displayName']); let i =index" >
           <td>{{i+1}}</td>
           <td>{{item.sourceName}}</td>
           <td>{{item.attribute}}</td>
@@ -533,24 +536,6 @@
 
   <div class="tab-pane fade" id="profiles" role="tabpanel" aria-labelledby="profiles-tab">
     <p></p>
-    <p>Profiles</p>
-    <table class="table table-striped table-bordered" *ngIf="!loading && identityInfo">
-      <thead class="table-secondary align-middle">
-        <tr>
-          <td>#</td>
-          <td><b>Application</b></td>
-          <td><b>Name</b></td>
-        </tr>
-      </thead>
-      <tbody>
-        
-        <tr *ngFor="let item of identityInfo.accessProfileArray; let i =index" >
-          <td>{{i+1}}</td>
-          <td>{{item.source.name}}</td>
-          <td>{{item.name}}</td>
-        </tr>
-      </tbody>
-    </table>
 
     <p>Roles</p>
     <table class="table table-striped table-bordered" *ngIf="!loading && identityInfo">
@@ -568,6 +553,26 @@
         </tr>
       </tbody>
     </table>
+
+    <p>Profiles</p>
+    <table class="table table-striped table-bordered" *ngIf="!loading && identityInfo">
+      <thead class="table-secondary align-middle">
+        <tr>
+          <td>#</td>
+          <td><b>Application</b></td>
+          <td><b>Name</b></td>
+        </tr>
+      </thead>
+      <tbody>
+        
+        <tr *ngFor="let item of identityInfo.accessProfileArray ; let i =index" >
+          <td>{{i+1}}</td>
+          <td>{{item.source.name}}</td>
+          <td>{{item.name}}</td>
+        </tr>
+      </tbody>
+    </table>
+
   </div>
   <!--End of the Profiles Details-->
 
