@@ -37,6 +37,7 @@ import { OrgStatsComponent } from './misc-org-stats/misc-org-stats.component';
 import { LoginComponent } from './login/login.component';
 import { AuthGuard } from './helper/auth.guard';
 import { ReassignmentsComponent } from './reassignments/reassignments.component';
+import { IdentityCompareComponent } from './identity-compare/identity-compare.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/identity-info', pathMatch: 'full' },
@@ -158,6 +159,11 @@ const routes: Routes = [
   {
     path: 'identity-lcs-management',
     component: IdentityLCSComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'identity-compare',
+    component: IdentityCompareComponent,
     canActivate: [AuthGuard],
   },
   {
