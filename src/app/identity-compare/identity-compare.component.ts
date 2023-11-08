@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { SimpleQueryCondition } from '../model/simple-query-condition';
-import { SimpleCompare } from '../model/SimpleCompare';
+import { DeltaRemoved, SimpleCompare } from '../model/SimpleCompare';
 import { IDNService } from '../service/idn.service';
 
 @Component({
@@ -26,6 +26,7 @@ export class IdentityCompareComponent implements OnInit {
   masterDetails: Array<SimpleCompare>;
   cloneDetails: Array<SimpleCompare>;
   delta: Array<SimpleCompare>;
+  deltaString: Array<DeltaRemoved>;
 
   constructor(private idnService: IDNService) {}
   ngOnInit() {
@@ -38,6 +39,7 @@ export class IdentityCompareComponent implements OnInit {
     this.masterDetails = new Array<SimpleCompare>();
     this.cloneDetails = new Array<SimpleCompare>();
     this.delta = new Array<SimpleCompare>();
+    this.deltaString = null;
     this.cloneEntCount = 0;
     this.cloneAppCount = 0;
     this.masterAppCount = 0;
@@ -46,6 +48,7 @@ export class IdentityCompareComponent implements OnInit {
     this.deltaRemovedEntries = 0;
     this.valueMasterUser = '';
     this.valueCloneUser = '';
+    this.valueDisplayed = null;
   }
 
   /*
@@ -73,7 +76,7 @@ export class IdentityCompareComponent implements OnInit {
         }
         this.masterLoading = false;
         this.delta = structuredClone(this.masterDetails);
-        this.valueDisplayed = 'User With Access';
+        this.valueDisplayed = 'All of [' + this.valueMasterUser + '] Access';
       }
     });
 
@@ -95,6 +98,7 @@ export class IdentityCompareComponent implements OnInit {
   }
 
   compare() {
+    this.deltaString = new Array<DeltaRemoved>();
     this.delta = structuredClone(this.masterDetails);
 
     for (let i = 0; i < this.cloneDetails.length; i++) {
@@ -106,7 +110,7 @@ export class IdentityCompareComponent implements OnInit {
         this.removeEntry(sname, appName);
       }
     }
-    this.valueDisplayed = 'OverLap Removed';
+    this.valueDisplayed = 'Access You might want to request';
     /*
     this.delta.forEach( function (value){
       console.log(value);
@@ -126,6 +130,12 @@ export class IdentityCompareComponent implements OnInit {
         for (let y = 0; y < deltaItem.simpleName.length; y++) {
           const valuedelta = deltaItem.simpleName[y];
           if (valuedelta === entitlement) {
+            const removed = new DeltaRemoved();
+            const split = entitlement.split('::');
+            removed.applicationName = application;
+            removed.entName = split[1];
+            removed.entType = split[0];
+            this.deltaString.push(removed);
             this.deltaRemovedEntries++;
           } else {
             update.push(valuedelta.toString());
