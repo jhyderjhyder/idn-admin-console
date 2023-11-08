@@ -1211,7 +1211,7 @@ export class IDNService {
     }
 
     const url =
-      `https://${currentUser.tenant}.api.${currentUser.domain}/v3/access-request-status?sorters=-created` +
+      `https://${currentUser.tenant}.api.${currentUser.domain}/beta/access-request-status?sorters=-created` +
       filteredURL +
       '&limit=' +
       page.limit +

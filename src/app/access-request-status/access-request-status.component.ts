@@ -16,6 +16,7 @@ import { JsonFormatOptions } from '../model/json-format-options';
 })
 export class AccessRequestStatusComponent implements OnInit {
   accessRequestStatuses: AccessRequestStatus[];
+  accessReqeustStatusesRaw: Object[];
   searchText: string;
   loading: boolean;
   totalPending: number;
@@ -55,7 +56,7 @@ export class AccessRequestStatusComponent implements OnInit {
 
     //https://github.com/center-key/pretty-print-json
     const html = prettyPrintJson.toHtml(
-      this.accessRequestStatuses[input],
+      this.accessReqeustStatusesRaw[input],
       options
     );
     //const obj = JSON.stringify(this.accessRequestStatuses[input], null, 4);
@@ -110,6 +111,7 @@ export class AccessRequestStatusComponent implements OnInit {
     this.page = new PageResults();
     this.page.limit = 25;
     this.accessRequestStatuses = null;
+    this.accessReqeustStatusesRaw = null;
     this.searchText = null;
     this.loading = false;
     this.requestedFor = null;
@@ -137,6 +139,7 @@ export class AccessRequestStatusComponent implements OnInit {
         const headers = response.headers;
         this.page.xTotalCount = headers.get('X-Total-Count');
 
+        this.accessReqeustStatusesRaw = [];
         this.accessRequestStatuses = [];
         for (const each of results) {
           const accessRequestStatus = new AccessRequestStatus();
@@ -162,6 +165,7 @@ export class AccessRequestStatusComponent implements OnInit {
           }
 
           this.accessRequestStatuses.push(accessRequestStatus);
+          this.accessReqeustStatusesRaw.push(each);
         }
         this.loading = false;
       });
