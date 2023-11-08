@@ -169,7 +169,7 @@ export class IdentityInfoComponent implements OnInit {
     this.identityActions = new Array<IdentityActions>();
     this.identityInfo.activities = new Array<AccountActivities>();
     const queryString =
-      "recipient.name:'" + this.identityInfo.displayName + "'";
+      'recipient.name:"' + this.identityInfo.displayName + '"';
     console.log(queryString);
 
     this.idnService.searchActivites(queryString).subscribe(response => {
