@@ -565,7 +565,7 @@ export class IDNService {
         query: filterString,
       },
       indices: ['accountactivities'],
-      sort: ['modified'],
+      sort: ['-modified'],
     };
 
     return this.http
