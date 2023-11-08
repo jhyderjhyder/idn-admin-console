@@ -16,7 +16,7 @@ import { JsonFormatOptions } from '../model/json-format-options';
 })
 export class AccessRequestStatusComponent implements OnInit {
   accessRequestStatuses: AccessRequestStatus[];
-  accessReqeustStatusesRaw: Object[];
+  accessRequestStatusesRaw: Object[];
   searchText: string;
   loading: boolean;
   totalPending: number;
@@ -56,7 +56,7 @@ export class AccessRequestStatusComponent implements OnInit {
 
     //https://github.com/center-key/pretty-print-json
     const html = prettyPrintJson.toHtml(
-      this.accessReqeustStatusesRaw[input],
+      this.accessRequestStatusesRaw[input],
       options
     );
     //const obj = JSON.stringify(this.accessRequestStatuses[input], null, 4);
@@ -111,7 +111,7 @@ export class AccessRequestStatusComponent implements OnInit {
     this.page = new PageResults();
     this.page.limit = 25;
     this.accessRequestStatuses = null;
-    this.accessReqeustStatusesRaw = null;
+    this.accessRequestStatusesRaw = null;
     this.searchText = null;
     this.loading = false;
     this.requestedFor = null;
@@ -139,7 +139,7 @@ export class AccessRequestStatusComponent implements OnInit {
         const headers = response.headers;
         this.page.xTotalCount = headers.get('X-Total-Count');
 
-        this.accessReqeustStatusesRaw = [];
+        this.accessRequestStatusesRaw = [];
         this.accessRequestStatuses = [];
         for (const each of results) {
           const accessRequestStatus = new AccessRequestStatus();
@@ -153,7 +153,23 @@ export class AccessRequestStatusComponent implements OnInit {
           accessRequestStatus.approvalDetails = each.approvalDetails;
           accessRequestStatus.accessRequestPhases = each.accessRequestPhases;
           accessRequestStatus.id = each.accessRequestId;
-
+          if (
+            each.sodViolationContext &&
+            each.sodViolationContext.violationCheckResult
+          ) {
+            if (
+              Array.isArray(
+                each.sodViolationContext.violationCheckResult.violatedPolicies
+              )
+            ) {
+              accessRequestStatus.violationSize =
+                each.sodViolationContext.violationCheckResult.violatedPolicies.length;
+            } else {
+              accessRequestStatus.violationSize = -2;
+            }
+          } else {
+            accessRequestStatus.violationSize = 0;
+          }
           if (each.requesterComment && each.requesterComment.comment) {
             accessRequestStatus.requesterComment =
               each.requesterComment.comment;
@@ -165,7 +181,7 @@ export class AccessRequestStatusComponent implements OnInit {
           }
 
           this.accessRequestStatuses.push(accessRequestStatus);
-          this.accessReqeustStatusesRaw.push(each);
+          this.accessRequestStatusesRaw.push(each);
         }
         this.loading = false;
       });
