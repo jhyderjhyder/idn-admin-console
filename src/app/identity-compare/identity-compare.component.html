@@ -80,8 +80,14 @@
 </table>
 
 
+<div *ngIf="!deltaString">
+    <h2>{{valueDisplayed}}</h2>
+</div>
 
-<h2>{{this.valueDisplayed}}</h2>
+<div *ngIf="deltaString">
+    <h2 >Access [{{valueMasterUser}}] has that [{{valueCloneUser}}] does not </h2>
+</div>
+
 
 
 
@@ -105,3 +111,24 @@
 </table>
 </div>
 <!--Account Summary End-->
+
+<div *ngIf="deltaString">
+    <hr>
+   <h2>Entitlements Both Users Share</h2>
+    <table class="table table-striped table-bordered">
+        <thead class="table-secondary align-middle">
+            <tr>
+                <th scope="col">Application</th>
+                <th scope="col">Type</th>
+                <th scope="col">Entitlements</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let application of deltaString; let i =index" >
+                <th scope="col">{{application.applicationName}}</th>
+                <th scope="col"> {{application.entType}}</th>
+                <th scope="col"> {{application.entName}}</th>
+            </tr>
+          </tbody>
+    </table>
+    </div>
