@@ -215,6 +215,9 @@ export class IdentityInfoComponent implements OnInit {
               if (item.attributeRequest.value) {
                 ia.value = item.attributeRequest.value;
               }
+              if (item.attributeRequest.name){
+                ia.name = item.attributeRequest.name;
+              }
             }
             if (item.source) {
               if (item.source.name) {

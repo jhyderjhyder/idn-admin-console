@@ -44,6 +44,7 @@ export class SourceInfoComponent implements OnInit {
     this.rawObject = null;
     this.rawObjectId = null;
     this.rawProvisioningId = null;
+    this.searchText = null;
   }
 
   reset(clearMsg: boolean) {
