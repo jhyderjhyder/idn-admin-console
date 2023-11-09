@@ -14,4 +14,5 @@ export class AccessRequestStatus {
   accessRequestPhases: Array<{}>;
   violationSize: number;
   id: string;
+  raw: object;
 }
