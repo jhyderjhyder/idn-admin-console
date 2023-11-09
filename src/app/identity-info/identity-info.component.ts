@@ -49,6 +49,7 @@ export class IdentityInfoComponent implements OnInit {
 
   searchText: string;
   searchText2: string;
+  rawAccessRequest: string;
 
   constructor(
     private idnService: IDNService,
@@ -160,6 +161,18 @@ export class IdentityInfoComponent implements OnInit {
     this.rawActivities = this.identityInfo.activities[input].raw;
   }
 
+  showRawAccessRequest(input) {
+    const jsonText = JSON.stringify(
+      this.accessRequestStatuses[input].raw,
+      null,
+      4
+    );
+    this.rawAccessRequest = jsonText;
+  }
+  clearAccessRequestDetails() {
+    this.rawAccessRequest = null;
+  }
+
   clearProvisionDetails() {
     this.rawActivities = null;
   }
@@ -215,7 +228,7 @@ export class IdentityInfoComponent implements OnInit {
               if (item.attributeRequest.value) {
                 ia.value = item.attributeRequest.value;
               }
-              if (item.attributeRequest.name){
+              if (item.attributeRequest.name) {
                 ia.name = item.attributeRequest.name;
               }
             }
@@ -495,6 +508,7 @@ export class IdentityInfoComponent implements OnInit {
         accessRequestStatus.created = each.created;
         accessRequestStatus.requester = each.requester.name;
         accessRequestStatus.requestedFor = each.requestedFor.name;
+        accessRequestStatus.raw = each;
 
         if (each.requesterComment && each.requesterComment.comment) {
           accessRequestStatus.requesterComment = each.requesterComment.comment;

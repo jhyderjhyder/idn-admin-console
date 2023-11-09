@@ -203,6 +203,10 @@
       </thead>
       <tbody>
         <tr>
+          <td>Name</td>
+          <td>{{ identityInfo.name }}</td>
+        </tr>
+        <tr>
           <td>ID</td>
           <td>{{ identityInfo.id }}</td>
         </tr>
@@ -601,38 +605,54 @@
   <!--End of the Accounts Details-->
 
   <div class="tab-pane fade" id="requests" role="tabpanel" aria-labelledby="requests-tab">
+    <button *ngIf="rawAccessRequest" type="button" (click)="clearAccessRequestDetails()" class="btn btn-primary btn-sm">
+      Clear
+    </button>
+    <div class="row" *ngIf="rawAccessRequest" >
+      <div class="col-sm-12">
+        <textarea id="userUpdatedObject" placeholder style="min-height:600px; min-width: 100%;">{{rawAccessRequest}}</textarea>
+      </div>
+    </div>
     <p></p>
-    <table class="table table-striped table-bordered">
-      <thead class="table-secondary text-center align-middle">
-        <tr>
-          <th scope="col" class="col-1">#</th>
-          <th scope="col" class="col-1">Access Name</th>
-          <th scope="col" class="col-2">Access Type</th>
-          <th scope="col" class="col-2">Request Type</th>
-          <th scope="col" class="col-1">Request State</th>
-          <th scope="col" class="col-1">SOD Violation</th>
-          <th scope="col" class="col-1">Created</th>
-          <th scope="col" class="col-2">Requester</th>
-          <th scope="col" class="col-2">Requested For</th>
-          <th scope="col" class="col-1">Requester Comment</th>
-        </tr>
-      </thead>
-      <tbody class="text-center align-middle" *ngIf="accessRequestStatuses && !loading" >
-        <tr
-          *ngFor="let a of accessRequestStatuses ; let i =index" >
-          <td clas="col-1">{{i+1}}</td>
-          <td class="col-1">{{ a.accessName }}</td>
-          <td class="col-2">{{ a.accessType }}</td>
-          <td class="col-2">{{ a.requestType }}</td>
-          <td class="col-1">{{ a.state }}</td>
-          <td class="col-1">{{ a.sodViolationState }}</td>
-          <td class="col-1">{{ a.created | date:'yyyy-MM-dd hh:mm:ss aa' }}</td>
-          <td class="col-2">{{ a.requester }}</td>
-          <td class="col-2">{{ a.requestedFor }}</td>
-          <td class="col-2">{{ a.requesterComment }}</td>
-        </tr>
-      </tbody>
-    </table>
+    <div *ngIf="!rawAccessRequest">
+      <table class="table table-striped table-bordered">
+        <thead class="table-secondary text-center align-middle">
+          <tr>
+            <th scope="col" class="col-1">#</th>
+            <th scope="col" class="col-1">Access Name</th>
+            <th scope="col" class="col-2">Access Type</th>
+            <th scope="col" class="col-2">Request Type</th>
+            <th scope="col" class="col-1">Request State</th>
+            <th scope="col" class="col-1">SOD Violation</th>
+            <th scope="col" class="col-1">Created</th>
+            <th scope="col" class="col-2">Requester</th>
+            <th scope="col" class="col-2">Requested For</th>
+            <th scope="col" class="col-1">Requester Comment</th>
+          </tr>
+        </thead>
+        <tbody class="text-center align-middle" *ngIf="accessRequestStatuses && !loading" >
+          <tr
+            *ngFor="let a of accessRequestStatuses ; let i =index" >
+            <td clas="col-1">
+              <button type="button" class="btn btn-primary"
+              data-bs-target="#work-items-status" (click)="showRawAccessRequest(i)">
+              {{1+i}}
+              </button>
+
+            </td>
+            <td class="col-1">{{ a.accessName }}</td>
+            <td class="col-2">{{ a.accessType }}</td>
+            <td class="col-2">{{ a.requestType }}</td>
+            <td class="col-1">{{ a.state }}</td>
+            <td class="col-1">{{ a.sodViolationState }}</td>
+            <td class="col-1">{{ a.created | date:'yyyy-MM-dd hh:mm:ss aa' }}</td>
+            <td class="col-2">{{ a.requester }}</td>
+            <td class="col-2">{{ a.requestedFor }}</td>
+            <td class="col-2">{{ a.requesterComment }}</td>
+          </tr>
+        </tbody>
+      </table>
+      </div>
   </div>
   <!--End of the requests Details-->
 
@@ -672,37 +692,39 @@
         <textarea id="userUpdatedObject" placeholder style="min-height:600px; min-width: 100%;">{{rawActivities}}</textarea>
       </div>
     </div>
-    <table class="table table-striped table-bordered">
-      <thead class="table-secondary text-center align-middle">
-        <tr>
-          <th scope="col" class="col-1">#</th>
-          <th scope="col" class="col-1">ID/Date</th>
-          <th scope="col" class="col-2">Action</th>
-          <th scope="col" class="col-2">Status</th>
-          <th scope="col" class="col-2">Stage</th>
-          <th scope="col" class="col-2">Sources</th>
-          <th scope="col" class="col-2">Errors</th>
- 
-        </tr>
-      </thead>
-      <tbody class="text-center align-middle" *ngIf="workItemsStatuses && !loading" >
-        <tr
-          *ngFor="let actv of identityInfo.activities ; let i =index" >
-          <td class="col-sm-1">
-            <button type="button" class="btn btn-primary"
-            data-bs-target="#work-items-status" (click)="showRawActivity(i)">
-            {{1+i}}
-            </button>
-          </td>
-          <td class="col-1">{{ actv.id }}<p> {{actv.modified}} </p></td>
-          <td class="col-2">{{ actv.action }}</td>
-          <td class="col-2">{{ actv.status }}</td>
-          <td class="col-2">{{ actv.stage }}</td>
-          <td class="col-2">{{ actv.source }}</td>
-          <td class="col-2">{{ actv.errors }}</td>
-        </tr>
-      </tbody>
-    </table>
+    <div *ngIf="!rawActivities">
+      <table class="table table-striped table-bordered">
+        <thead class="table-secondary text-center align-middle">
+          <tr>
+            <th scope="col" class="col-1">#</th>
+            <th scope="col" class="col-1">Date</th>
+            <th scope="col" class="col-2">Action</th>
+            <th scope="col" class="col-2">Status</th>
+            <th scope="col" class="col-2">Stage</th>
+            <th scope="col" class="col-2">Sources</th>
+            <th scope="col" class="col-2">Errors</th>
+  
+          </tr>
+        </thead>
+        <tbody class="text-center align-middle" *ngIf="workItemsStatuses && !loading" >
+          <tr
+            *ngFor="let actv of identityInfo.activities ; let i =index" >
+            <td class="col-sm-1">
+              <button type="button" class="btn btn-primary"
+              data-bs-target="#work-items-status" (click)="showRawActivity(i)">
+              {{1+i}}
+              </button>
+            </td>
+            <td class="col-1">{{actv.modified}}</td>
+            <td class="col-2">{{ actv.action }}</td>
+            <td class="col-2">{{ actv.status }}</td>
+            <td class="col-2">{{ actv.stage }}</td>
+            <td class="col-2">{{ actv.source }}</td>
+            <td class="col-2">{{ actv.errors }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 
   <!--End of the activities section-->
