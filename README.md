@@ -125,6 +125,14 @@ We are looking for (list is not exhaustive)
 
 ![Check Work Items Status](resources/readme/check-work-items-status.png)
 
+![Edit Hidden Source Objects](resources/readme/manage-sources.png)
+
+![View Recent Provisioning for User](resources/readme/provisioning-log.png)
+
+![Validate Transforms](resources/readme/test-trainsforms.png)
+
+![View Transforms](resources/readme/view-transforms.png)
+
 ## Development
 Any code modificaiton should run via Lint and Format process. GitHub Actions will check this on all PR and merge requests but you can fix it locally by running the following command
 

@@ -924,7 +924,13 @@ export class IDNService {
 
     return this.http.delete(url, myHttpOptions);
   }
-
+/**
+ * This is used on the Identity page it only provides one set of
+ * data that lets you know about any internal access the user has in IdentityNow
+ * such as ORG_ADMIN
+ * @param alias 
+ * @returns 
+ */
   getUserByAlias(alias: string): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
     const url = `https://${currentUser.tenant}.api.${currentUser.domain}/cc/api/user/get?alias=${alias}`;
