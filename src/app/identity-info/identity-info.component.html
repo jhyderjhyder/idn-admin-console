@@ -152,10 +152,12 @@
     <button class="nav-link" id="person-tab" data-bs-toggle="tab" data-bs-target="#person" 
     type="button" role="tab" aria-controls="person" aria-selected="false">Attributes</button>
   </li>
+  <!--
   <li class="nav-item" role="presentation">
     <button class="nav-link" id="counts-tab" data-bs-toggle="tab" data-bs-target="#counts" 
     type="button" role="tab" aria-controls="counts" aria-selected="false">Counts</button>
   </li>
+  -->
   <li class="nav-item" role="presentation">
     <button class="nav-link" id="ownership-tab" data-bs-toggle="tab" data-bs-target="#ownership" 
     type="button" role="tab" aria-controls="ownership" aria-selected="false">Ownership</button>
@@ -195,6 +197,7 @@
 <div class="tab-content" id="myTabContent">
   <div class="tab-pane fade show active" id="idDetails" role="tabpanel" aria-labelledby="home-tab">
   <p></p>
+
     <table class="table table-striped table-bordered" *ngIf="!loading && identityInfo">
       <thead class="table-secondary align-middle">
         <tr>
@@ -253,6 +256,38 @@
         </tr>
       </tbody>
     </table>
+
+
+    <table class="table table-striped table-bordered" *ngIf="!loading && identityInfo">
+      <thead class="table-secondary align-middle">
+        <tr>
+          <th scope="col" colspan="2">Cube Size</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Accounts</td>
+          <td>{{ identityInfo.accountCount }}</td>
+        </tr>
+        <tr>
+          <td>Access Profiles</td>
+          <td>{{ identityInfo.accessProfileCount }}</td>
+        </tr>
+        <tr>
+          <td>Roles</td>
+          <td>{{ identityInfo.roleCount }}</td>
+        </tr>
+        <tr>
+          <td>Entitlements</td>
+          <td>{{ identityInfo.entitlementCount }}</td>
+        </tr>
+        <tr>
+          <td>Total Access (Entitlements / AP / Roles)</td>
+          <td>{{ identityInfo.accessCount }}</td>
+        </tr>
+      </tbody>
+    </table>
+
   </div>
   <!--End of the home Tab-->
 
