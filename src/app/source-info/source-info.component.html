@@ -8,7 +8,7 @@
         <i class="fa fa-search"></i>
       </span>
       <input class="form-control py-2 border-start-0 border" type="text" name="search" [(ngModel)]="searchText" autocomplete="off" 
-        placeholder="Type Source Name, description, cloudExternalID or type to filter the result.">
+        placeholder="Type Source Name, health, description, cloudExternalID or type to filter the result.">
     </div>
   </div>
     <div class="col-sm-1 text-end">
@@ -65,13 +65,14 @@
       <th scope="col">Type</th>
       <th scope="col">cloudExternalID</th>
       <th scope="col">ID</th>
-      <th scope="col">Account Count</th>
-      <th scope="col">Entitlement Count</th>
+      <th scope="col">Schema Count</th>
+      <th scope="col">Last Agg Date</th>
       <th scope="col">Actions</th>
+      <th scope="col">Healthy</th>
     </tr>
   </thead>
   <tbody class="text-center align-middle" *ngIf="sources && !rawObjectId">
-    <tr *ngFor="let i =index; let s of sources | filter:searchText:['cloudExternalID', 'name', 'description', 'type']">
+    <tr *ngFor="let i =index; let s of sources | filter:searchText:['cloudExternalID', 'name', 'description', 'type', 'internalName']">
       <td>
         {{ i+1 }}
       </td>
@@ -83,8 +84,8 @@
       <td>
         <a  style="color: blue;" class="page-link" href="javascript:void(0);" (click)="viewJson(s)">{{ s.id }}</a>
       </td>
-      <td>{{ s.accountsCount }}</td>
-      <td>{{ s.entitlementsCount }}</td>
+      <td>{{ s.schemaCount }}</td>
+      <td>{{ s.lastAggregationDate | date: 'yyyy/MM/dd' }}</td>
       <td>
         <div class="btn-group" role="group">
           <button id="btnGroupDrop1" type="button" class="btn btn-primary btn-sm dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -98,6 +99,7 @@
           </div>
         </div>
       </td>
+      <td>{{ s.internalName }}</td>
     </tr>
   </tbody>
 </table>

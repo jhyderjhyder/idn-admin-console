@@ -24,4 +24,6 @@ export class Source {
   entitlementsCount: string;
   internalName: string;
   authoritative: string;
+  lastAggregationDate: string;
+  schemaCount: string;
 }
