@@ -97,11 +97,12 @@ export class SourceInfoComponent implements OnInit {
           source.name = source.name + ' (Authoritative)';
         }
 
-        this.idnService.getSourceCCApi(source.cloudExternalID).subscribe(
+        this.idnService.getSourceV3Api(source.id).subscribe(
           searchResult => {
-            source.accountsCount = searchResult.accountsCount;
-            source.entitlementsCount = searchResult.entitlementsCount;
-            source.internalName = searchResult.health.name;
+            source.schemaCount = searchResult.schemas.length;
+            source.lastAggregationDate =
+              searchResult.connectorAttributes.lastAggregationDate_account;
+            source.internalName = searchResult.healthy;
           },
           err => {
             this.messageService.handleIDNError(err);
