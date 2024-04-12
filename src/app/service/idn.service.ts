@@ -156,6 +156,24 @@ export class IDNService {
       .pipe(catchError(this.handleError(`getAllSources`)));
   }
 
+  getAllVAClusters(): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/managed-clusters`;
+
+    return this.http
+      .get(url, this.httpOptions)
+      .pipe(catchError(this.handleError(`getAllVaClusters`)));
+  }
+
+  getClusterDetails(sourceId: string): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/managed-clusters/${sourceId}/status?type=VA`;
+
+    return this.http
+      .get(url, this.httpOptions)
+      .pipe(catchError(this.handleError(`getClusterDetails`)));
+  }
+
   getSource(sourceId: string): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
     const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/sources/${sourceId}`;
@@ -1220,7 +1238,11 @@ export class IDNService {
    * @param page
    * @returns
    */
-  getAccessRequestStatusPaged(filters, page: PageResults): Observable<any> {
+  getAccessRequestStatusPaged(
+    filters,
+    page: PageResults,
+    count
+  ): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
     let filteredURL = '';
     if (filters != null) {
@@ -1234,7 +1256,8 @@ export class IDNService {
       page.limit +
       '&offset=' +
       page.offset +
-      '&count=true';
+      '&count=' +
+      count;
 
     return this.http.get(url, { observe: 'response' });
   }

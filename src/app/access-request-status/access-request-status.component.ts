@@ -133,8 +133,9 @@ export class AccessRequestStatusComponent implements OnInit {
     });
 
     this.idnService
-      .getAccessRequestStatusPaged(this.filters, this.page)
+      .getAccessRequestStatusPaged(this.filters, this.page, true)
       .subscribe(response => {
+        console.log(response.states);
         const results = response.body;
         const headers = response.headers;
         this.page.xTotalCount = headers.get('X-Total-Count');
@@ -184,7 +185,10 @@ export class AccessRequestStatusComponent implements OnInit {
           this.accessRequestStatusesRaw.push(each);
         }
         this.loading = false;
-      });
+      }),
+      err => {
+        console.log('timeout' + err);
+      };
   }
 
   saveInCsv() {
