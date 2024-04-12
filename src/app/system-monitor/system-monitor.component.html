@@ -1,0 +1,39 @@
+<p>VA needing review: {{vaIssues }}</p>
+<p>Clusters needing review: {{clusterIssues }}</p>
+<table class="table table-striped table-bordered">
+    <thead class="table-secondary text-center align-middle">
+      <tr>
+        <th scope="col">Cluster Name</th>
+        <th scope="col">Cluster Description</th>
+        <th scope="col">Cluster Status</th>
+        <th scope="col">Client Status</th>
+        <th scope="col">Client Version</th>
+        <th scope="col">Client IP</th>
+      </tr>
+    </thead>
+    <tbody class="text-center align-middle" *ngIf="cluster">
+      <tr *ngFor="let c of cluster">
+
+        <td>{{ c.name }}</td>
+        <td>{{ c.description }}</td>
+        <td>{{ c.status }}</td> 
+        <td>{{ c.clientStatus }}</td>
+        <td>{{ c.clientVersion }}</td>
+        <td>{{ c.clientIp }}</td>
+       
+      </tr>
+    </tbody>
+  </table>
+<!--
+            id: string;
+        ccgVersion: string;
+        status: string;
+        description: string;
+        details: string[];
+        clientid: string;
+        clientStatus: string;
+        clientHypervisor: string;
+        clientVersion:string;
+        clientIp:string;
+        clientHostName:string;
+-->

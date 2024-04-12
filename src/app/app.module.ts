@@ -53,6 +53,7 @@ import { AppRoutingModule } from './app-routing.module';
 import { AccountSearchComponent } from './account-search/account-search.component';
 import { ReassignmentsComponent } from './reassignments/reassignments.component';
 import { IdentityCompareComponent } from './identity-compare/identity-compare.component';
+import { SystemMonitorComponent } from './system-monitor/system-monitor.component';
 
 @NgModule({
   declarations: [
@@ -93,6 +94,7 @@ import { IdentityCompareComponent } from './identity-compare/identity-compare.co
     AccountSearchComponent,
     ReassignmentsComponent,
     IdentityCompareComponent,
+    SystemMonitorComponent,
   ],
   imports: [
     BrowserModule,

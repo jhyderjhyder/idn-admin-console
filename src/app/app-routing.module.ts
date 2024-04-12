@@ -38,6 +38,7 @@ import { LoginComponent } from './login/login.component';
 import { AuthGuard } from './helper/auth.guard';
 import { ReassignmentsComponent } from './reassignments/reassignments.component';
 import { IdentityCompareComponent } from './identity-compare/identity-compare.component';
+import { SystemMonitorComponent } from './system-monitor/system-monitor.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/identity-info', pathMatch: 'full' },
@@ -99,6 +100,11 @@ const routes: Routes = [
   {
     path: 'source-reset',
     component: ResetSourceComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'system-monitor',
+    component: SystemMonitorComponent,
     canActivate: [AuthGuard],
   },
   {
