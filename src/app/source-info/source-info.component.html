@@ -22,6 +22,11 @@
       </button>
     </div>
     <div class="col-sm-1 text-end">
+      <button type="button" [disabled]="loading" (click)="clearJsonRaw()" class="btn btn-primary btn-sm">
+        Clear Raw
+      </button>
+    </div>
+    <div class="col-sm-1 text-end">
       <button type="button" [disabled]="!rawObject" (click)="save()" class="btn btn-primary btn-sm">
         Save
       </button>
@@ -96,6 +101,7 @@
             <a class="dropdown-item" (click)="viewJson(s)">View</a>
             <a class="dropdown-item" (click)="viewJsonProvisioningPolicy(s)">View-ProvisioningPolicy</a>
             <a class="dropdown-item" (click)="editJsonProvisioningPolicy(s)">Edit-ProvisioningPolicy</a>
+            <a class="dropdown-item" (click)="testConnection(s)">Test Souce</a>
           </div>
         </div>
       </td>

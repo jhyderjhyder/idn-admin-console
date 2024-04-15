@@ -1,5 +1,66 @@
-<p>VA needing review: {{vaIssues }}</p>
-<p>Clusters needing review: {{clusterIssues }}</p>
+
+<!--Header row to show summary information currently does not filter by requestee-->
+
+<div class=" form-group row">
+  <div class="col-sm-2 text-start bg-dark text-white">
+    <span class="fw-bold">-</span>
+  </div>
+  <div class="col-sm-1 text-start bg-dark text-white">
+    <span class="fw-bold">total</span>
+  </div>
+  <div class="col-sm-1 bg-success text-white text-start">
+    <span class="fw-bold">Good</span>
+  </div>
+  <div class="col-sm-1 bg-warning text-white text-start">
+    <span class="fw-bold">Warning</span>
+  </div>
+  <div class="col-sm-1 bg-danger text-white text-start">
+    <span class="fw-bold">Error</span>
+  </div>
+</div>
+
+<div class=" form-group row">
+  <div class="col-sm-2 text-start bg-dark text-white">
+    <span class="fw-bold">VA Clusters</span>
+  </div>
+  <div class="col-sm-1 text-start bg-dark text-white">
+    <span class="fw-bold">{{ clusterGood + clusterWarning + clusterError}}</span>
+  </div>
+  <div class="col-sm-1 bg-success text-white text-start">
+    <span class="fw-bold">{{ clusterGood }} </span>
+  </div>
+  <div class="col-sm-1 bg-warning text-white text-start">
+    <span class="fw-bold">{{ clusterWarning }} </span>
+  </div>
+  <div class="col-sm-1 bg-danger text-white text-start">
+    <span class="fw-bold">{{ clusterError }} </span>
+  </div>
+</div>
+
+<div class=" form-group row">
+  <div class="col-sm-2 text-start bg-dark text-white">
+    <span class="fw-bold">VA Servers</span>
+  </div>
+  <div class="col-sm-1 text-start bg-dark text-white">
+    <span class="fw-bold">{{ vaGood + vaWarning + vaError}}</span>
+  </div>
+  <div class="col-sm-1 bg-success text-white text-start">
+    <span class="fw-bold">{{ vaGood }} </span>
+  </div>
+  <div class="col-sm-1 bg-warning text-white text-start">
+    <span class="fw-bold">{{ vaWarning }} </span>
+  </div>
+  <div class="col-sm-1 bg-danger text-white text-start">
+    <span class="fw-bold">{{ vaError }} </span>
+  </div>
+</div>
+
+<button type="button" (click)="download()" class="btn btn-primary btn-sm">
+  Json
+</button>
+<button type="button" (click)="saveInCsv()" class="btn btn-primary btn-sm">
+  CSV
+</button>
 <table class="table table-striped table-bordered">
     <thead class="table-secondary text-center align-middle">
       <tr>

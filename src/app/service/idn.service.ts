@@ -183,6 +183,15 @@ export class IDNService {
       .pipe(catchError(this.handleError(`getAggregationSources`)));
   }
 
+  getSourceTest(sourceId: string): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/sources/${sourceId}/connector/test-configuration`;
+
+    return this.http
+      .post(url, this.httpOptions)
+      .pipe(catchError(this.handleError(`getSourceTest`)));
+  }
+
   getSourceCCApi(cloudExternalID: string): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
     const url = `https://${currentUser.tenant}.api.${currentUser.domain}/cc/api/source/get/${cloudExternalID}`;

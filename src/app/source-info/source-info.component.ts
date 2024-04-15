@@ -164,6 +164,33 @@ export class SourceInfoComponent implements OnInit {
     }
   }
 
+  clearJsonRaw() {
+    const elem = document.getElementById('jsonRaw');
+    elem.innerHTML = null;
+  }
+
+  testConnection(input: Source) {
+    const elem = document.getElementById('jsonRaw');
+    elem.innerHTML = null;
+    for (const each of this.allSources) {
+      if (each.id == input.id) {
+        this.idnService.getSourceTest(each.id).subscribe(searchResult => {
+          const options: JsonFormatOptions = new JsonFormatOptions();
+          options.lineNumbers = false;
+          options.quoteKeys = true;
+          //https://github.com/center-key/pretty-print-json
+          const html = prettyPrintJson.toHtml(searchResult, options);
+
+          const elem = document.getElementById('jsonRaw');
+          elem.innerHTML = html;
+          if (searchResult.status != null) {
+            window.alert(searchResult.status);
+          }
+        });
+      }
+    }
+  }
+
   viewJsonProvisioningPolicy(input: Source) {
     for (const each of this.allSources) {
       if (each.id == input.id) {
