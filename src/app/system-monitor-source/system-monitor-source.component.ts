@@ -133,11 +133,11 @@ export class SystemMonitorSourceComponent implements OnInit {
       useHeader: true,
       headers: [
         'name',
-        'testConnectionStatus',
-        'testConnectionDetails',
-        'lastAggregationDate',
-        'health',
         'type',
+        'testConnectionStatus',
+        'health',
+        'lastAggregationDate',
+        'testConnectionDetails',
       ],
       nullToEmptyString: true,
     };
