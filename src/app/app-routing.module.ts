@@ -39,6 +39,7 @@ import { AuthGuard } from './helper/auth.guard';
 import { ReassignmentsComponent } from './reassignments/reassignments.component';
 import { IdentityCompareComponent } from './identity-compare/identity-compare.component';
 import { SystemMonitorComponent } from './system-monitor/system-monitor.component';
+import { SystemMonitorSourceComponent } from './system-monitor-source/system-monitor-source.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/identity-info', pathMatch: 'full' },
@@ -105,6 +106,11 @@ const routes: Routes = [
   {
     path: 'system-monitor',
     component: SystemMonitorComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'system-monitor-source',
+    component: SystemMonitorSourceComponent,
     canActivate: [AuthGuard],
   },
   {

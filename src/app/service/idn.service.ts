@@ -189,7 +189,7 @@ export class IDNService {
 
     return this.http
       .post(url, this.httpOptions)
-      .pipe(catchError(this.handleError(`getSourceTest`)));
+      .pipe(catchError(this.hideError(`getSourceTest`)));
   }
 
   getSourceCCApi(cloudExternalID: string): Observable<any> {
@@ -1593,6 +1593,25 @@ export class IDNService {
       if (logErr) {
         this.logError(`${operation} failed: ${error.message}`);
       }
+      // const the app keep running by returning an empty result.
+      return of(result as T);
+    };
+  }
+
+  private hideError<T>(result?: T) {
+    return (error: any): Observable<T> => {
+      // TODO: send the error to remote logging infrastructure
+      console.error(error); // log to console instead
+      result = error.message;
+      if (error.message != null) {
+        if (error.message.errorMessage != null) {
+          result = error.message.errorMessage;
+        }
+      }
+      if (error.status == 429) {
+        console.log('toMany requests');
+      }
+
       // const the app keep running by returning an empty result.
       return of(result as T);
     };
