@@ -1,0 +1,74 @@
+<p>Source Health Report</p>
+
+<div class=" form-group row">
+  <div class="col-sm-2 text-start bg-dark text-white">
+    <span class="fw-bold">Sources</span>
+  </div>
+  <div class="col-sm-1 text-start bg-dark text-white">
+    <span class="fw-bold">{{ loadedCount}}</span>
+  </div>
+  <div class="col-sm-1 bg-success text-white text-start">
+    <span class="fw-bold">{{ success }} </span>
+  </div>
+  <div class="col-sm-1 bg-warning text-white text-start">
+    <span class="fw-bold">{{ unknown }} </span>
+  </div>
+  <div class="col-sm-1 bg-danger text-white text-start">
+    <span class="fw-bold">{{ failure }} </span>
+  </div>
+</div>
+
+<div class="row">
+  <div class="col-sm-1 text-end">
+          <button type="button" [disabled]="block" (click)="search()" class="btn btn-primary btn-sm">
+            {{ block ? 'Wait...' : 'Restart Test' }}
+          </button>
+        </div>
+
+  <div class="col-sm-1 text-end">
+    <button type="button" [disabled]="block" (click)="saveInCsv()" class="btn btn-primary btn-sm">
+  CSV Extract
+    </button> 
+  </div>
+
+  <div class="form-group row mb-3" *ngIf="loading">
+      <div class="col-sm-12 text-end">
+        <span class="spinner-border spinner-border-sm me-1"></span>Loaded: {{loadedCount}} / {{sourceCount}} ({{((loadedCount/sourceCount) * 100).toFixed(2)}}%)
+      </div>
+  </div>
+</div>
+<div class="form-group row mb-3">
+  <input class="form-control py-2 border-start-0 border" type="text" name="search" [(ngModel)]="searchText" autocomplete="off" 
+  placeholder="Status">
+</div>
+
+  <table class="table table-striped table-bordered table-layout:fixed">
+    <thead class="table-secondary text-center align-middle">
+      <tr>
+        <th scope="col">Source Name</th>
+        <th scope="col">Status</th>
+        <th scope="col">ErrorDetails</th>
+        <th scope="col">Last Agg Date</th>
+        <th scope="col">Healthy</th>
+      </tr>
+    </thead>
+    <tbody class="text-center align-middle" *ngIf="sources">
+      <tr *ngFor="let i =index; let s of sources | filter:searchText:['testConnectionStatus']">
+        <td>
+          {{ s.name }}
+        </td>
+        <td>
+          {{ s.testConnectionStatus }}
+        </td>
+        <td>
+          {{ s.testConnectionDetails }}
+        </td>
+        <td>
+          {{ s.lastAggregationDate | date: 'yyyy/MM/dd' }}
+        </td>
+        <td>
+          {{ s.health }}
+        </td>
+      </tr>
+    </tbody>
+    </table>

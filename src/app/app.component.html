@@ -78,7 +78,6 @@ class="col-sm-5 text-end" *ngIf="currentUser">Tenant:  {{currentUser.tenant}}</d
               <a class="dropdown-item" routerLink="/source-aggregation-run">Aggregations</a>
               <a class="dropdown-item" routerLink="/source-create-profile">Manage Create Profile</a>
               <a class="dropdown-item" routerLink="/source-reset">Reset</a>
-              <a class="dropdown-item" routerLink="/system-monitor">VA Monitor</a>
               
             </div>
           </li>
@@ -115,6 +114,9 @@ class="col-sm-5 text-end" *ngIf="currentUser">Tenant:  {{currentUser.tenant}}</d
               System
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarRules">
+              <a class="dropdown-item" routerLink="/system-monitor">Monitor VA</a>
+              <a class="dropdown-item" routerLink="/system-monitor-source">Monitor Sources</a>
+              <br>
               <a class="dropdown-item" routerLink="/identity-admin-management">Manage Admins</a>
               <a class="dropdown-item" routerLink="/misc-manage-pat">Manage PAT</a>
               <a class="dropdown-item" routerLink="/misc-org-time-update">Set Org Time</a>

@@ -23,7 +23,10 @@ export class Source {
   accountsCount: string;
   entitlementsCount: string;
   internalName: string;
+  health: string;
   authoritative: string;
   lastAggregationDate: string;
   schemaCount: string;
+  testConnectionStatus: string;
+  testConnectionDetails: string;
 }
