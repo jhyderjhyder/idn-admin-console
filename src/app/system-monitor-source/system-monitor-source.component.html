@@ -2,19 +2,19 @@
 
 <div class=" form-group row">
   <div class="col-sm-2 text-start bg-dark text-white">
-    <span class="fw-bold">Sources</span>
+    <span class="fw-bold">Sources tested ({{loadedCount/(success + unknown + failure)  | percent }})</span>
   </div>
   <div class="col-sm-1 text-start bg-dark text-white">
-    <span class="fw-bold">{{ loadedCount}}</span>
+    <span class="fw-bold">{{ loadedCount}} </span>
   </div>
   <div class="col-sm-1 bg-success text-white text-start">
-    <span class="fw-bold">{{ success }} </span>
+    <span class="fw-bold">{{ success }} ({{success/(success + unknown + failure)  | percent }})</span>
   </div>
   <div class="col-sm-1 bg-warning text-white text-start">
-    <span class="fw-bold">{{ unknown }} </span>
+    <span class="fw-bold">{{ unknown }} ({{unknown/(success + unknown + failure)  | percent }})</span>
   </div>
   <div class="col-sm-1 bg-danger text-white text-start">
-    <span class="fw-bold">{{ failure }} </span>
+    <span class="fw-bold">{{ failure }} ({{failure/(success + unknown + failure)  | percent }})</span>
   </div>
 </div>
 

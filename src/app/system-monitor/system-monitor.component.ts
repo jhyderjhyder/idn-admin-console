@@ -24,6 +24,7 @@ export class SystemMonitorComponent implements OnInit {
   clusterGood: number;
   clusterWarning: number;
   zip: JSZip = new JSZip();
+  searchText: string;
 
   constructor(
     private idnService: IDNService,
