@@ -91,7 +91,7 @@ export class AccountReportComponent implements OnInit {
       decimalseparator: '.',
       showLabels: true,
       useHeader: true,
-      headers: ['name', 'accountSize', 'uncorrelated', 'entSize'],
+      headers: ['name', 'accountSize', 'uncorrelated', 'entSize', 'comment'],
       nullToEmptyString: true,
     };
 
