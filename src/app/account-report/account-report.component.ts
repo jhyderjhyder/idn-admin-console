@@ -50,6 +50,13 @@ export class AccountReportComponent implements OnInit {
         const source = new AccountTotals();
         source.id = each.id;
         source.name = each.name;
+        source.comment = '';
+        if (each.connectorAttributes.user != null) {
+          source.comment = 'user:' + each.connectorAttributes.user;
+        }
+        if (each.connectorAttributes.user != null) {
+          source.comment = 'user:' + each.connectorAttributes.user;
+        }
 
         /**
          * Lets get the accounts
@@ -84,7 +91,7 @@ export class AccountReportComponent implements OnInit {
       decimalseparator: '.',
       showLabels: true,
       useHeader: true,
-      headers: ['name', 'accountSize', 'uncorrelated', 'entSize'],
+      headers: ['name', 'accountSize', 'uncorrelated', 'entSize', 'comment'],
       nullToEmptyString: true,
     };
 
