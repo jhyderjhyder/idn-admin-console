@@ -55,6 +55,7 @@ import { ReassignmentsComponent } from './reassignments/reassignments.component'
 import { IdentityCompareComponent } from './identity-compare/identity-compare.component';
 import { SystemMonitorComponent } from './system-monitor/system-monitor.component';
 import { SystemMonitorSourceComponent } from './system-monitor-source/system-monitor-source.component';
+import { AccountReportComponent } from './account-report/account-report.component';
 
 @NgModule({
   declarations: [
@@ -97,6 +98,7 @@ import { SystemMonitorSourceComponent } from './system-monitor-source/system-mon
     IdentityCompareComponent,
     SystemMonitorComponent,
     SystemMonitorSourceComponent,
+    AccountReportComponent,
   ],
   imports: [
     BrowserModule,

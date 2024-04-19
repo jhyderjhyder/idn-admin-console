@@ -40,6 +40,7 @@ import { ReassignmentsComponent } from './reassignments/reassignments.component'
 import { IdentityCompareComponent } from './identity-compare/identity-compare.component';
 import { SystemMonitorComponent } from './system-monitor/system-monitor.component';
 import { SystemMonitorSourceComponent } from './system-monitor-source/system-monitor-source.component';
+import { AccountReportComponent } from './account-report/account-report.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/identity-info', pathMatch: 'full' },
@@ -51,6 +52,11 @@ const routes: Routes = [
   {
     path: 'account-search',
     component: AccountSearchComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'account-report',
+    component: AccountReportComponent,
     canActivate: [AuthGuard],
   },
   {

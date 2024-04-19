@@ -31,7 +31,6 @@ export class SystemMonitorComponent implements OnInit {
     private authenticationService: AuthenticationService
   ) {}
   ngOnInit() {
-    console.log('Started Monitor');
     this.getStatus();
   }
 
@@ -52,7 +51,7 @@ export class SystemMonitorComponent implements OnInit {
         if (each.status == 'NORMAL') {
           this.clusterGood++;
         } else {
-          if (each.status != 'WARNING') {
+          if (each.status == 'WARNING') {
             this.clusterWarning++;
           } else {
             this.clusterError++;

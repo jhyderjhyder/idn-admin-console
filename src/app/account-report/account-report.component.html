@@ -1,0 +1,28 @@
+<p>Sources: {{sources.length}}</p>
+
+<button type="button" (click)="saveInCsv()" class="btn btn-primary btn-sm">
+    CSV
+  </button>
+
+<table class="table table-striped table-bordered">
+    <thead class="table-secondary text-center align-middle">
+      <tr>
+        <th scope="col">Name</th>
+        <th scope="col">Accounts</th>
+        <th scope="col">Uncorrelated</th>
+        <th scope="col">%</th>
+        <th scope="col">Entitlementments</th>
+      </tr>
+    </thead>
+    <tbody class="text-center align-middle" *ngIf="sources">
+      <tr *ngFor="let c of sources">
+
+        <td>{{ c.name }}</td>
+        <td>{{ c.accountSize }}</td>
+        <td>{{ c.uncorrelated}}</td>
+        <td>{{ c.uncorrelated / c.accountSize | percent}}</td>
+        <td>{{ c.entSize }}</td> 
+       
+      </tr>
+    </tbody>
+  </table>
