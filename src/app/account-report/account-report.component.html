@@ -13,6 +13,7 @@
         <th scope="col">%</th>
         <th scope="col">Entitlementments</th>
         <th scope="col">ServiceAccount</th>
+        <th scope="col">Type</th>
       </tr>
     </thead>
     <tbody class="text-center align-middle" *ngIf="sources">
@@ -23,7 +24,8 @@
         <td>{{ c.uncorrelated}}</td>
         <td>{{ c.uncorrelated / c.accountSize | percent}}</td>
         <td>{{ c.entSize }}</td> 
-        <td>{{ c.comment }}</td> 
+        <td>{{ c.serviceAccount }}</td> 
+        <td>{{ c.type }}</td> 
        
       </tr>
     </tbody>

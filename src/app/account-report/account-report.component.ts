@@ -20,7 +20,7 @@ export class AccountReportComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    console.log('Started Monitor');
+    this.sources = [];
     //this.getStatus();
     this.query();
   }
@@ -50,12 +50,45 @@ export class AccountReportComponent implements OnInit {
         const source = new AccountTotals();
         source.id = each.id;
         source.name = each.name;
-        source.comment = '';
+        source.serviceAccount = '';
+        source.type = each.type;
         if (each.connectorAttributes.user != null) {
-          source.comment = 'user:' + each.connectorAttributes.user;
+          source.serviceAccount = 'user:' + each.connectorAttributes.user;
         }
-        if (each.connectorAttributes.user != null) {
-          source.comment = 'user:' + each.connectorAttributes.user;
+
+        if (each.connectorAttributes.clientID != null) {
+          source.serviceAccount =
+            'clientID:' + each.connectorAttributes.clientID;
+        }
+
+        if (each.connectorAttributes.client_id != null) {
+          source.serviceAccount =
+            'client_id:' + each.connectorAttributes.client_id;
+        }
+
+        if (each.connectorAttributes.forestSettings) {
+          source.serviceAccount =
+            'forestSetting:' + each.connectorAttributes.forestSettings[0].user;
+        }
+        if (each.connectorAttributes.genericWebServiceBaseUrl) {
+          source.url = each.connectorAttributes.genericWebServiceBaseUrl;
+        }
+
+        if (each.connectorAttributes.host) {
+          source.url = each.connectorAttributes.host;
+        }
+
+        if (
+          each['connectorAttributes']['jco.client.mshost'] &&
+          each['connectorAttributes']['jco.client.mshost'] != null
+        ) {
+          if (source.url != '') {
+            source.url = source.url + ' | ';
+          }
+          source.url =
+            source.url +
+            'mshost:' +
+            each['connectorAttributes']['jco.client.mshost'];
         }
 
         /**
@@ -91,7 +124,15 @@ export class AccountReportComponent implements OnInit {
       decimalseparator: '.',
       showLabels: true,
       useHeader: true,
-      headers: ['name', 'accountSize', 'uncorrelated', 'entSize', 'comment'],
+      headers: [
+        'name',
+        'accountSize',
+        'uncorrelated',
+        'entSize',
+        'serviceAccount',
+        'type',
+        'url',
+      ],
       nullToEmptyString: true,
     };
 
