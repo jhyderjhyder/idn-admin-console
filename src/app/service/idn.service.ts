@@ -666,6 +666,30 @@ export class IDNService {
       .pipe(catchError(this.handleError(`searchAccounts`)));
   }
 
+  countApplicationAccounts(
+    appID: String,
+    unCorrelatedOnly: boolean
+  ): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/accounts?count=true&limit=1&filters=sourceId eq "${appID}"`;
+
+    if (unCorrelatedOnly) {
+      url = url + `and uncorrelated eq true`;
+    }
+    return this.http
+      .get(url, { observe: 'response' })
+      .pipe(catchError(this.handleError(`countAccounts`)));
+  }
+
+  countEntitlements(appID: String): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/entitlements?count=true&limit=1&filters=source.id eq "${appID}"`;
+
+    return this.http
+      .get(url, { observe: 'response' })
+      .pipe(catchError(this.handleError(`countAccounts`)));
+  }
+
   updateSourceOwner(source: Source): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
     const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/sources/${source.id}`;
@@ -971,7 +995,7 @@ export class IDNService {
    */
   getUserByAlias(alias: string): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/cc/api/user/get?alias=${alias}`;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/identities?alias=${alias}`;
 
     return this.http.get(url, this.httpOptions);
   }

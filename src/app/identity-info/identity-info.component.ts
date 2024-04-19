@@ -349,6 +349,10 @@ export class IdentityInfoComponent implements OnInit {
         data.accountName = accounts[i].name;
         data.accountDisabled = accounts[i].disabled;
         data.sourceName = accounts[i].source.name;
+        if (data.sourceName == 'IdentityNow') {
+          this.identityInfo.orgPermission =
+            accounts[i].entitlementAttributes.assignedGroups.join('; ');
+        }
         data.sourceId = accounts[i].source.id;
 
         this.identityInfo.accountArray.push(data);
@@ -473,11 +477,12 @@ export class IdentityInfoComponent implements OnInit {
           identity[0].owns.governanceGroups;
       }
     }
-    this.idnService
+    /*this.idnService
       .getUserByAlias(this.identityInfo.name)
       .subscribe(userDetail => {
         this.identityInfo.orgPermission = userDetail.role.join('; ');
       });
+      */
 
     //Get recent access requests
     this.getAllAccessRequestStatus();

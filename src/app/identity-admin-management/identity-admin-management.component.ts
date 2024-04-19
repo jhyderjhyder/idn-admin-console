@@ -78,10 +78,10 @@ export class IdentityAdminManagementComponent implements OnInit {
             identity.cloudId = v2Identity.id;
           });
 
-          this.idnService.getUserByAlias(each.name).subscribe(userDetail => {
+          /*  this.idnService.getUserByAlias(each.name).subscribe(userDetail => {
             identity.orgPermission = userDetail.role;
           });
-
+          */
           this.identities.push(identity);
         }
       }
