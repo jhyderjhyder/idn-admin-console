@@ -51,10 +51,14 @@ class="col-sm-5 text-end" *ngIf="currentUser">Tenant:  {{currentUser.tenant}}</d
             <div class="dropdown-menu" aria-labelledby="navbarAccessProfiles">
               <a class="dropdown-item" routerLink="/accessprofile-management">AccessProfile Report</a>
               <a class="dropdown-item" routerLink="/accessprofile-owner-update">AccessProfile Ownership</a>
+              <br>
               <a class="dropdown-item" routerLink="/role-management">Role Report</a>
               <a class="dropdown-item" routerLink="/role-owner-update">Role Ownership</a>
               <a class="dropdown-item" routerLink="/role-duplicate">Role Duplicates</a>
+              <a class="dropdown-item" routerLink="/role-contains-ent">Role Contains Entitlement</a>
+              <br>
               <a class="dropdown-item" routerLink="/entitlement-management">Entitlements Ownership</a>
+
             </div>
           </li>
           <li class="nav-item dropdown">
@@ -80,6 +84,8 @@ class="col-sm-5 text-end" *ngIf="currentUser">Tenant:  {{currentUser.tenant}}</d
               <a class="dropdown-item" routerLink="/source-aggregation-run">Aggregations</a>
               <a class="dropdown-item" routerLink="/source-create-profile">Manage Create Profile</a>
               <a class="dropdown-item" routerLink="/source-reset">Reset</a>
+              <br>
+              <a class="dropdown-item" routerLink="/system-monitor-source">Monitor Sources</a>
               
             </div>
           </li>

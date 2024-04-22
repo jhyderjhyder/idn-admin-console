@@ -524,6 +524,48 @@ export class IDNService {
       .pipe(catchError(this.handleError(`searchAccounts`)));
   }
 
+  //Used for the reports of roles containing entitlements
+  searchEntitlements(input: SimpleQueryCondition): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/search/?count=true&limit=5`;
+
+    let payload = {
+      query: {
+        query: `name:${input.value}`,
+      },
+      indices: ['entitlements'],
+    };
+    if (input.attribute) {
+      payload = {
+        query: {
+          query: `name:${input.value} AND source.id:${input.attribute}`,
+        },
+        indices: ['entitlements'],
+      };
+    }
+
+    return this.http
+      .post(url, payload, this.httpOptions)
+      .pipe(catchError(this.handleError(`searchEntitlements`)));
+  }
+
+  //Used for the reports of roles containing entitlements
+  rolesContainingOneEntitlement(idNumber): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/search/?count=true`;
+
+    const payload = {
+      query: {
+        query: `@entitlements(id:${idNumber})`,
+      },
+      indices: ['roles'],
+    };
+
+    return this.http
+      .post(url, payload, this.httpOptions)
+      .pipe(catchError(this.handleError(`searchEntitlements`)));
+  }
+
   searchAccountsPaged(
     query: SimpleQueryCondition,
     page: PageResults
