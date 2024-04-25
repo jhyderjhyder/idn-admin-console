@@ -87,7 +87,6 @@ export class RoleContainsEntComponent implements OnInit {
         basic.name = app['name'];
         basic.value = app['id'];
         this.filterApplications.push(basic);
-   
       }
     });
   }
