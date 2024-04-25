@@ -350,8 +350,13 @@ export class IdentityInfoComponent implements OnInit {
         data.accountDisabled = accounts[i].disabled;
         data.sourceName = accounts[i].source.name;
         if (data.sourceName == 'IdentityNow') {
-          this.identityInfo.orgPermission =
-            accounts[i].entitlementAttributes.assignedGroups.join('; ');
+          if (
+            accounts[i].entitlementAttributes != null &&
+            accounts[i].entitlementAttributes.assignedGroups != null
+          ) {
+            this.identityInfo.orgPermission =
+              accounts[i].entitlementAttributes.assignedGroups.join('; ');
+          }
         }
         data.sourceId = accounts[i].source.id;
 
