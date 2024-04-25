@@ -1,0 +1,69 @@
+<p>Last 3 days of failures</p>
+
+<div class=" form-group row">
+  <div class="col-sm-2 text-start bg-dark text-white">
+    <span class="fw-bold">Failures</span>
+  </div>
+  <div class="col-sm-1 text-start bg-dark text-white">
+    <span class="fw-bold">{{ errors.length}} </span>
+  </div>
+  <div class="col-sm-2 text-start bg-dark text-white">
+    <span class="fw-bold">Refresh Errors: {{ refreshCount}} </span>
+  </div>
+  <div class="col-sm-2 text-start bg-dark text-white">
+    <span class="fw-bold">Request Errors: {{ accessRequestCount}} </span>
+  </div>
+ 
+</div>
+
+<div class="form-group row mb-3">
+    <div class="col-sm-9 text-start bg-dark text-white">
+        <input class="form-control py-2 border-start-0 border" type="text" name="search" [(ngModel)]="searchText" autocomplete="off" 
+        placeholder="Sources or Errors">
+  </div> 
+
+  <div class="col-sm-1 text-end">
+    <button type="button" (click)="saveInCsv()" class="btn btn-primary btn-sm">
+  CSV Extract
+    </button> 
+  </div>
+</div>
+<table class="table table-striped table-bordered table-layout:fixed">
+    <thead class="table-secondary text-center align-middle">
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">tracking Number</th>
+        <th scope="col">Created</th>
+        <th scope="col">Identity</th>
+        <th scope="col">Sources</th>
+        <th scope="col">Action</th>
+        <th scope="col">Errors</th>
+      </tr>
+    </thead>
+    <tbody class="text-center align-middle" *ngIf="errors">
+      <tr *ngFor="let i =index; let e of errors | filter:searchText:['sources', 'firstError', 'identityName']">
+        <td>
+            {{ i+1 }}
+          </td>
+          <td>
+            {{ e.created | date: 'yyyy/MM/dd' }}
+          </td>
+          <td>
+          {{ e.trackingNumber }}
+        </td>
+        <td>
+            {{ e.identityName }}
+          </td>
+        <td>
+          {{ e.sources }}
+        </td>
+        <td>
+          {{ e.action }}
+        </td>
+        <td>
+          {{ e.firstError}}
+        </td>
+
+      </tr>
+    </tbody>
+    </table>
