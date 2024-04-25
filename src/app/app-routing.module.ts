@@ -42,6 +42,7 @@ import { SystemMonitorComponent } from './system-monitor/system-monitor.componen
 import { SystemMonitorSourceComponent } from './system-monitor-source/system-monitor-source.component';
 import { AccountReportComponent } from './account-report/account-report.component';
 import { RoleContainsEntComponent } from './role-contains-ent/role-contains-ent.component';
+import { ReportFailuresComponent } from './report-failures/report-failures.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/identity-info', pathMatch: 'full' },
@@ -58,6 +59,11 @@ const routes: Routes = [
   {
     path: 'account-report',
     component: AccountReportComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'report-failures',
+    component: ReportFailuresComponent,
     canActivate: [AuthGuard],
   },
   {

@@ -57,6 +57,7 @@ import { SystemMonitorComponent } from './system-monitor/system-monitor.componen
 import { SystemMonitorSourceComponent } from './system-monitor-source/system-monitor-source.component';
 import { AccountReportComponent } from './account-report/account-report.component';
 import { RoleContainsEntComponent } from './role-contains-ent/role-contains-ent.component';
+import { ReportFailuresComponent } from './report-failures/report-failures.component';
 
 @NgModule({
   declarations: [
@@ -101,6 +102,7 @@ import { RoleContainsEntComponent } from './role-contains-ent/role-contains-ent.
     SystemMonitorSourceComponent,
     AccountReportComponent,
     RoleContainsEntComponent,
+    ReportFailuresComponent,
   ],
   imports: [
     BrowserModule,
