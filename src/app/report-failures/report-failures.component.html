@@ -2,16 +2,19 @@
 
 <div class=" form-group row">
   <div class="col-sm-2 text-start bg-dark text-white">
-    <span class="fw-bold">Failures</span>
+    <span class="fw-bold">Total Failures</span>
   </div>
   <div class="col-sm-1 text-start bg-dark text-white">
-    <span class="fw-bold">{{ errors.length}} </span>
+    <span class="fw-bold">{{ totalFailures}} </span>
   </div>
   <div class="col-sm-2 text-start bg-dark text-white">
     <span class="fw-bold">Refresh Errors: {{ refreshCount}} </span>
   </div>
   <div class="col-sm-2 text-start bg-dark text-white">
     <span class="fw-bold">Request Errors: {{ accessRequestCount}} </span>
+  </div>
+  <div class="col-sm-2 text-start bg-dark text-white">
+    <span class="fw-bold">Compleated: {{ successCount}} </span>
   </div>
  
 </div>
@@ -46,11 +49,12 @@
             {{ i+1 }}
           </td>
           <td>
-            {{ e.created | date: 'yyyy/MM/dd' }}
+            {{ e.trackingNumber }}
           </td>
           <td>
-          {{ e.trackingNumber }}
-        </td>
+            {{ e.created | date: 'yyyy/MM/dd' }}
+          </td>
+       
         <td>
             {{ e.identityName }}
           </td>
