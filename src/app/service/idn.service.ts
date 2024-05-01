@@ -151,9 +151,21 @@ export class IDNService {
     const currentUser = this.authenticationService.currentUserValue;
     const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/sources?sorters=name`;
 
-    return this.http
-      .get(url, this.httpOptions)
-      .pipe(catchError(this.handleError(`getAllSources`)));
+    return this.http.get(url, this.httpOptions).pipe(
+      catchError(error => {
+        if (error.status === 429) {
+          console.warn('Rate limited. Retrying in 2 seconds...');
+          this.sleep(2000);
+          return this.getAllSources();
+        } else {
+          catchError(this.handleError(`getAllSources`));
+        }
+      })
+    );
+  }
+
+  sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
   }
 
   getAllVAClusters(): Observable<any> {
@@ -206,12 +218,44 @@ export class IDNService {
   getSourceV3Api(cloudExternalID: string): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
     const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/sources/${cloudExternalID}`;
-    return this.http.get(url);
+    return this.http.get(url).pipe(
+      catchError(error => {
+        if (error.status === 429) {
+          console.warn('Rate limited. Retrying in 2 seconds...');
+          this.sleep(2000);
+          return this.getSourceV3Api(cloudExternalID);
+        } else {
+          catchError(this.handleError(`getSourceV3Api`));
+        }
+      })
+    );
+
     /*
     return this.http.get(url).pipe(
       catchError(this.handleError(`getAggregationSchedules`))
     );
     */
+  }
+
+  getTaskStatus(compleationStatus: string): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/task-status?count=true&filters=completionStatus eq"${compleationStatus}"&sorters=-created`;
+    if (compleationStatus != null) {
+    } else {
+      url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/task-status/pending-tasks`;
+    }
+
+    return this.http.get(url).pipe(
+      catchError(error => {
+        if (error.status === 429) {
+          console.warn('Rate limited. Retrying in 2 seconds...');
+          this.sleep(2000);
+          return this.getTaskStatus(compleationStatus);
+        } else {
+          catchError(this.handleError(`getSourceV3Api`));
+        }
+      })
+    );
   }
 
   getSourceV3ProvisioningPolicy(v3ApplicationID: string): Observable<any> {

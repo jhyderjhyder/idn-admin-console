@@ -1,0 +1,63 @@
+<p>Export Task Results</p>
+<label for="filterTypes">
+    <select id="filterOption" [(ngModel)]="filterType">
+      <option *ngFor="let item of filterOption">{{item}}</option>
+    </select>
+  </label>
+  <button type="button" (click)="submit()" class="btn btn-primary btn-sm">
+    Submit
+  </button>
+  <button type="button" (click)="saveInCsv()" class="btn btn-primary btn-sm">
+    CSV
+  </button>
+  
+<table class="table table-striped table-bordered table-layout:fixed">
+    <thead class="table-secondary text-center align-middle">
+        <tr>
+            <th scope="col">#</th>
+            <th scope="col">tracking Number</th>
+            <th scope="col">Created</th>
+            <th scope="col">Compleated</th>
+            <th scope="col">Description</th>
+            <th scope="col">Target</th>
+            <th scope="col">Status</th>
+            <th scope="col">Details</th>
+        </tr>
+    </thead>
+    <tbody class="text-center align-middle" *ngIf="tasks">
+        <tr *ngFor="let i =index; let t of tasks">
+            <td>
+                {{ i+1 }}
+            </td>
+            <td>
+                {{t.id}}
+            </td>
+            <td>
+                {{t.created}}
+            </td>
+            <td>
+                {{t.completed}}
+            </td>
+            <td>
+                {{t.description}}
+            </td>
+            <td>
+                <div *ngIf="t.target">
+                    {{t.target.name}}
+                </div>
+                
+            </td>
+            <td>
+                {{ t.completionStatus}}
+            </td>
+            <td>
+                <div *ngIf="t.messages">
+                    <div *ngFor="let m of t.messages">
+                        {{m.key}}
+                    </div>
+                </div>
+            </td>
+
+        </tr>
+    </tbody>
+</table>
