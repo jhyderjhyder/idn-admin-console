@@ -638,7 +638,7 @@ export class IDNService {
 
   searchActivites(filterString): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/search/`;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/search/?count=true`;
 
     const payload = {
       query: {

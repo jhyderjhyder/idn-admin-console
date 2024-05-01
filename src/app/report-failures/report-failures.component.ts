@@ -15,10 +15,17 @@ export class ReportFailuresComponent implements OnInit {
   accessRequestCount: number;
   refreshCount: number;
   searchText: string;
+  successCount: number;
+  totalFailures: number;
   ngOnInit(): void {
+    this.errors =new Array();
     console.log('Startying query');
+    this.getRecordCount('success', 'created:[now-3d TO now] AND status:"Complete"');
     this.getData('created:[now-3d TO now] AND status:"incomplete"');
+    
   }
+
+
 
   saveInCsv() {
     const options = {
@@ -42,12 +49,30 @@ export class ReportFailuresComponent implements OnInit {
     new AngularCsv(this.errors, 'errors', options);
   }
 
+  getRecordCount(success, queryString):number {
+    var count = 0;
+    this.accessRequestCount = 0;
+    this.refreshCount = 0;
+     this.idnService.searchActivites(queryString).subscribe(response => {
+      const headers = response.headers;
+      count= headers.get('X-Total-Count');
+      if (success=="success"){
+        this.successCount = count;
+      }
+      console.log(count);
+    });
+    return count;
+    
+  }
+
   getData(queryString) {
     this.accessRequestCount = 0;
     this.refreshCount = 0;
     this.idnService.searchActivites(queryString).subscribe(response => {
       const searchResult = response.body;
       this.errors = new Array();
+      const headers = response.headers;
+      this.totalFailures = headers.get('X-Total-Count');
       for (let i = 0; i < searchResult.length; i++) {
         const rf = new ReportFailures();
         rf.action = searchResult[i].action;
