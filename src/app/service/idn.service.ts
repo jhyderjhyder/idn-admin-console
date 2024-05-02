@@ -563,9 +563,17 @@ export class IDNService {
       indices: ['identities'],
     };
 
-    return this.http
-      .post(url, payload, this.httpOptions)
-      .pipe(catchError(this.handleError(`searchAccounts`)));
+    return this.http.post(url, payload, this.httpOptions).pipe(
+      catchError(error => {
+        if (error.status === 429) {
+          console.warn('Rate limited. Retrying in 2 seconds...');
+          this.sleep(2000);
+          return this.searchAccounts(query);
+        } else {
+          catchError(this.handleError(`searchAccounts`));
+        }
+      })
+    );
   }
 
   //Used for the reports of roles containing entitlements
@@ -1083,7 +1091,17 @@ export class IDNService {
     const currentUser = this.authenticationService.currentUserValue;
     const url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/identities?alias=${alias}`;
 
-    return this.http.get(url, this.httpOptions);
+    return this.http.get(url, this.httpOptions).pipe(
+      catchError(error => {
+        if (error.status === 429) {
+          console.warn('Rate limited. Retrying in 2 seconds...');
+          this.sleep(2000);
+          return this.getUserByAlias(alias);
+        } else {
+          catchError(this.handleError(`getUserByAlias`));
+        }
+      })
+    );
   }
 
   exportCloudRules(): Observable<any> {
