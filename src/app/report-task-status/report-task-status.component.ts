@@ -66,7 +66,11 @@ export class ReportTaskStatusComponent implements OnInit {
       rp.created = item['created'];
       rp.completed = item['completed'];
       rp.unique = item['uniqueName'];
-      rp.target = item['target']['name'];
+      if (item['target'] != null) {
+        rp.target = item['target']['name'];
+      } else {
+        rp.target = 'N/A';
+      }
       rp.launcher = item['launcher'];
       rp.description = item['description'];
       let messageString = '';
