@@ -5,6 +5,8 @@ import { IDNService } from '../service/idn.service';
 import { MessageService } from '../service/message.service';
 import { PAT } from '../model/pat';
 import { SimpleQueryCondition } from '../model/simple-query-condition';
+import { AngularCsv } from 'angular-csv-ext/dist/Angular-csv';
+import { AuthenticationService } from '../service/authentication-service.service';
 
 @Component({
   selector: 'app-misc-manage-pat',
@@ -30,7 +32,8 @@ export class ManagePATComponent implements OnInit {
 
   constructor(
     private idnService: IDNService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private authenticationService: AuthenticationService
   ) {}
 
   ngOnInit() {
@@ -132,5 +135,21 @@ export class ManagePATComponent implements OnInit {
 
   hidedeletePATConfirmModal() {
     this.deletePATConfirmModal.hide();
+  }
+
+  saveInCsv() {
+    const options = {
+      fieldSeparator: ',',
+      quoteStrings: '"',
+      decimalseparator: '.',
+      showLabels: true,
+      useHeader: true,
+      nullToEmptyString: true,
+    };
+
+    const currentUser = this.authenticationService.currentUserValue;
+    const fileName = `${currentUser.tenant}-patTokens`;
+
+    new AngularCsv(this.pats, fileName, options);
   }
 }
