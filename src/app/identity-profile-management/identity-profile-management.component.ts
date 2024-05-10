@@ -65,7 +65,7 @@ export class IdentityProfileManagementComponent implements OnInit {
 
   getAllIdentityProfiles() {
     this.loading = true;
-    this.idnService.getIdentityProfilesv1().subscribe(allIdentityProfiles => {
+    this.idnService.getIdentityProfiles().subscribe(allIdentityProfiles => {
       this.identityProfiles = [];
       this.allIdentityProfiles = allIdentityProfiles;
       for (const each of allIdentityProfiles) {
@@ -83,7 +83,7 @@ export class IdentityProfileManagementComponent implements OnInit {
 
         identityProfile.priority = each.priority;
         // identityProfile.authSourceName = each.authoritativeSource.name;
-        identityProfile.authSourceName = each.source.name;
+        identityProfile.authSourceName = each.authoritativeSource.name;
         //identityProfile.identityRefreshRequired = each.identityRefreshRequired;
         if (each.status === 'DIRTY') {
           identityProfile.identityRefreshRequired = true;

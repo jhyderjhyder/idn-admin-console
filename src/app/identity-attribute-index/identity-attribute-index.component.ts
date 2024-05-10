@@ -69,7 +69,7 @@ export class IdentityAttributeIndexComponent implements OnInit {
           identityAttribute.sources = each.sources;
           identityAttribute.type = each.type;
 
-          if (each.searchable && each.extendedNumber > 9) {
+          if (each.searchable) {
             this.indexedAttributes.push(identityAttribute);
           } else if (!each.searchable) {
             this.unindexedAttributes.push(identityAttribute);

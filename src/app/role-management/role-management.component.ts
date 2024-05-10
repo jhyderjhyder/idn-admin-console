@@ -469,14 +469,6 @@ export class RoleManagementComponent implements OnInit {
     this.submitRoleRefreshConfirmModal.hide();
   }
 
-  roleRefresh() {
-    this.idnService.refreshAllRoles().subscribe(() => {
-      this.closeRoleRefreshModalDisplayMsg();
-      this.reset(false);
-      this.getAllRoles();
-    });
-  }
-
   closeRoleRefreshModalDisplayMsg() {
     if (this.errorMessage != null) {
       this.messageService.setError(this.errorMessage);
