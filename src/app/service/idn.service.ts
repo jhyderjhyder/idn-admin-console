@@ -1426,7 +1426,19 @@ Supported API's
       '&count=' +
       count;
 
-    return this.http.get(url, { observe: 'response' });
+    return this.http.get(url, { observe: 'response' }).pipe(
+      catchError(error => {
+        if (error.status === 429) {
+          this.logError('Rate limited. Retrying in 2 seconds...');
+          this.sleep(2000);
+          return this.getAllSources();
+        } else {
+          this.logError(`timeout getting record counts returning last 200`);
+          page.limit = 200;
+          return this.getAccessRequestStatusPaged(filters, page, false);
+        }
+      })
+    );
   }
 
   getEntilementsPaged(filters, page: PageResults): Observable<any> {
@@ -1442,7 +1454,15 @@ Supported API's
       page.offset +
       '&count=true';
 
-    return this.http.get(url, { observe: 'response' });
+    return this.http.get(url, { observe: 'response' }).pipe(
+      catchError(error => {
+        if (error.status === 429) {
+          this.logError('Rate limited. Retrying in 2 seconds...');
+          this.sleep(2000);
+          return this.getEntilementsPaged(filters, page);
+        }
+      })
+    );
   }
 
   getAccessRequestApprovalsPending(): Observable<any> {
