@@ -68,13 +68,13 @@ API's to sunset #16
     formData: FormData
   ): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/cc/api/source/loadAccounts/${cloudExternalID}`;
+    const url = `https://${currentUser.tenant}.${currentUser.domain}/cc/api/source/loadAccounts/${cloudExternalID}`;
 
     const myHttpOptions = {
       headers: new HttpHeaders({}),
     };
     //replacement api/beta/import-accounts
-    //https://sailpoint.api.identitynow.com/beta/source{id}/load-accounts
+    //https://sailpoint.identitynow.com/beta/source{id}/load-accounts
     return this.http.post(url, formData, myHttpOptions);
   }
 
@@ -86,13 +86,13 @@ API's to sunset #16
    */
   getSourceCCApi(cloudExternalID: string): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/cc/api/source/get/${cloudExternalID}`;
+    const url = `https://${currentUser.tenant}.${currentUser.domain}/cc/api/source/get/${cloudExternalID}`;
     return this.http.get(url);
   }
 
   resetSource(cloudExternalID: string, skipType: string): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/cc/api/source/reset/${cloudExternalID}`;
+    const url = `https://${currentUser.tenant}.${currentUser.domain}/cc/api/source/reset/${cloudExternalID}`;
 
     const myHttpOptions = {
       headers: new HttpHeaders({
@@ -111,13 +111,13 @@ API's to sunset #16
 
   getAggregationSchedules(cloudExternalID: string): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/cc/api/source/getAggregationSchedules/${cloudExternalID}`;
+    const url = `https://${currentUser.tenant}.${currentUser.domain}/cc/api/source/getAggregationSchedules/${cloudExternalID}`;
     return this.http.get(url);
   }
 
   getEntitlementAggregationSchedules(cloudExternalID: string): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/cc/api/source/getEntitlementAggregationSchedules/${cloudExternalID}`;
+    const url = `https://${currentUser.tenant}.${currentUser.domain}/cc/api/source/getEntitlementAggregationSchedules/${cloudExternalID}`;
     return this.http.get(url);
   }
 
@@ -125,7 +125,7 @@ API's to sunset #16
     const currentUser = this.authenticationService.currentUserValue;
     let encodedCronExp = this.codec.encodeValue(source.accountAggCronExp);
     encodedCronExp = encodedCronExp.replace('?', '%3F');
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/cc/api/source/scheduleAggregation/${source.cloudExternalID}?enable=${enable}&cronExp=${encodedCronExp}`;
+    const url = `https://${currentUser.tenant}.${currentUser.domain}/cc/api/source/scheduleAggregation/${source.cloudExternalID}?enable=${enable}&cronExp=${encodedCronExp}`;
 
     const myHttpOptions = {
       headers: new HttpHeaders({}),
@@ -141,7 +141,7 @@ API's to sunset #16
     let encodedCronExp = this.codec.encodeValue(source.entAggCronExp);
     encodedCronExp = encodedCronExp.replace('?', '%3F');
     const url = `https://${currentUser.tenant}.
-                  api.${currentUser.domain}/cc/api/source/scheduleEntitlementAggregation/
+                  ${currentUser.domain}/cc/api/source/scheduleEntitlementAggregation/
                   ${source.cloudExternalID}?enable=${enable}&cronExp=${encodedCronExp}`;
 
     const myHttpOptions = {
@@ -152,7 +152,7 @@ API's to sunset #16
 
   refreshIdentityProfilev1(profileId: string): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/cc/api/profile/refresh/${profileId}`;
+    const url = `https://${currentUser.tenant}.${currentUser.domain}/cc/api/profile/refresh/${profileId}`;
 
     const myHttpOptions = {
       headers: new HttpHeaders({}),
@@ -163,7 +163,7 @@ API's to sunset #16
 
   refreshSingleIdentity(identityId: string): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/cc/api/system/refreshIdentities`;
+    const url = `https://${currentUser.tenant}.${currentUser.domain}/cc/api/system/refreshIdentities`;
 
     const payload = {
       filter: `name == \"${identityId}\"`,
@@ -182,14 +182,14 @@ API's to sunset #16
 
   getV2IdentityID(alias: string): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v2/identities/${alias}`;
+    const url = `https://${currentUser.tenant}.${currentUser.domain}/v2/identities/${alias}`;
 
     return this.http.get(url, this.httpOptions);
   }
 
   revokeAdminPermission(cloudId: string, permission: string): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/cc/api/user/updatePermissions?ids=${cloudId}&isAdmin=0&adminType=${permission}`;
+    const url = `https://${currentUser.tenant}.${currentUser.domain}/cc/api/user/updatePermissions?ids=${cloudId}&isAdmin=0&adminType=${permission}`;
 
     return this.http.post(url, null);
   }
@@ -202,7 +202,7 @@ Supported API's
 
   updateProfilePriorityv1(profile: IdentityProfile): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/identity-profiles/${profile.id}`;
+    const url = `https://${currentUser.tenant}.${currentUser.domain}/beta/identity-profiles/${profile.id}`;
 
     const payload = [
       {
@@ -221,7 +221,7 @@ Supported API's
   }
   getAllIdentityAttributes(): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/identity-attributes`;
+    const url = `https://${currentUser.tenant}.${currentUser.domain}/beta/identity-attributes`;
 
     return this.http
       .get(url, this.httpOptions)
@@ -230,7 +230,7 @@ Supported API's
 
   updateAttributeIndex(attribute: IdentityAttribute): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/identity-attributes/${attribute.name}`;
+    const url = `https://${currentUser.tenant}.${currentUser.domain}/beta/identity-attributes/${attribute.name}`;
 
     const payload = {
       displayName: attribute.displayName,
@@ -244,7 +244,7 @@ Supported API's
   }
   getIdentityProfiles(): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/identity-profiles`;
+    const url = `https://${currentUser.tenant}.${currentUser.domain}/v3/identity-profiles`;
 
     return this.http
       .get(url, this.httpOptions)
@@ -253,7 +253,7 @@ Supported API's
 
   searchMultipleAccounts(): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/search/aggregate`;
+    const url = `https://${currentUser.tenant}.${currentUser.domain}/v3/search/aggregate`;
 
     const payload = {
       query: {
@@ -299,7 +299,7 @@ Supported API's
 
   searchIdentities(identityId: string): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/search/identities`;
+    const url = `https://${currentUser.tenant}.${currentUser.domain}/v3/search/identities`;
 
     const payload = {
       query: {
@@ -313,7 +313,7 @@ Supported API's
   updateSource(rawFormData, primaryKeySource): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
     const url =
-      `https://${currentUser.tenant}.api.${currentUser.domain}/v3/sources/` +
+      `https://${currentUser.tenant}.${currentUser.domain}/v3/sources/` +
       primaryKeySource;
 
     const myHttpOptions = {
@@ -329,7 +329,7 @@ Supported API's
     const childURL =
       `/v3/sources/` + primaryKeySource + `/provisioning-policies/bulk-update`;
     const url =
-      `https://${currentUser.tenant}.api.${currentUser.domain}` + childURL;
+      `https://${currentUser.tenant}.${currentUser.domain}` + childURL;
 
     const myHttpOptions = {
       headers: new HttpHeaders({}),
@@ -341,7 +341,7 @@ Supported API's
 
   getAllSources(): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/sources?sorters=name`;
+    const url = `https://${currentUser.tenant}.${currentUser.domain}/v3/sources?sorters=name`;
 
     return this.http.get(url, this.httpOptions).pipe(
       catchError(error => {
@@ -358,7 +358,7 @@ Supported API's
 
   getAllVAClusters(): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/managed-clusters`;
+    const url = `https://${currentUser.tenant}.${currentUser.domain}/beta/managed-clusters`;
 
     return this.http
       .get(url, this.httpOptions)
@@ -367,7 +367,7 @@ Supported API's
 
   getClusterDetails(sourceId: string): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/managed-clusters/${sourceId}/status?type=VA`;
+    const url = `https://${currentUser.tenant}.${currentUser.domain}/beta/managed-clusters/${sourceId}/status?type=VA`;
 
     return this.http
       .get(url, this.httpOptions)
@@ -376,7 +376,7 @@ Supported API's
 
   getSource(sourceId: string): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/sources/${sourceId}`;
+    const url = `https://${currentUser.tenant}.${currentUser.domain}/v3/sources/${sourceId}`;
 
     return this.http
       .get(url, this.httpOptions)
@@ -385,7 +385,7 @@ Supported API's
 
   getSourceTest(sourceId: string): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/sources/${sourceId}/connector/test-configuration`;
+    const url = `https://${currentUser.tenant}.${currentUser.domain}/beta/sources/${sourceId}/connector/test-configuration`;
 
     return this.http
       .post(url, this.httpOptions)
@@ -394,7 +394,7 @@ Supported API's
 
   getSourceV3Api(cloudExternalID: string): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/sources/${cloudExternalID}`;
+    const url = `https://${currentUser.tenant}.${currentUser.domain}/v3/sources/${cloudExternalID}`;
     return this.http.get(url).pipe(
       catchError(error => {
         if (error.status === 429) {
@@ -416,10 +416,10 @@ Supported API's
 
   getTaskStatus(compleationStatus: string): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/task-status?count=true&filters=completionStatus eq"${compleationStatus}"&sorters=-created`;
+    let url = `https://${currentUser.tenant}.${currentUser.domain}/beta/task-status?count=true&filters=completionStatus eq"${compleationStatus}"&sorters=-created`;
     if (compleationStatus != null) {
     } else {
-      url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/task-status/pending-tasks`;
+      url = `https://${currentUser.tenant}.${currentUser.domain}/beta/task-status/pending-tasks`;
     }
 
     return this.http.get(url).pipe(
@@ -437,13 +437,13 @@ Supported API's
 
   getSourceV3ProvisioningPolicy(v3ApplicationID: string): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/sources/${v3ApplicationID}/provisioning-policies`;
+    const url = `https://${currentUser.tenant}.${currentUser.domain}/v3/sources/${v3ApplicationID}/provisioning-policies`;
     return this.http.get(url);
   }
 
   getTotalRolesCount(): Observable<number> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/roles?limit=1&count=true`;
+    const url = `https://${currentUser.tenant}.${currentUser.domain}/v3/roles?limit=1&count=true`;
 
     return this.http.get(url, { observe: 'response' }).pipe(
       map(response => response.headers.get('X-Total-Count')),
@@ -454,7 +454,7 @@ Supported API's
 
   getAllRoles(offset: number, limit: number, options?: any): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/roles?offset=${offset}&limit=${limit}`;
+    const url = `https://${currentUser.tenant}.${currentUser.domain}/v3/roles?offset=${offset}&limit=${limit}`;
 
     return this.http
       .get(url, {
@@ -476,7 +476,7 @@ Supported API's
 
   getRoleIdentityCount(role: Role): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/roles/${role.id}/assigned-identities?limit=1&count=true`;
+    const url = `https://${currentUser.tenant}.${currentUser.domain}/v3/roles/${role.id}/assigned-identities?limit=1&count=true`;
 
     return this.http
       .get(url, { observe: 'response' })
@@ -485,7 +485,7 @@ Supported API's
 
   updateRoleOwner(role: Role): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/roles/${role.id}`;
+    const url = `https://${currentUser.tenant}.${currentUser.domain}/v3/roles/${role.id}`;
 
     const myHttpOptions = {
       headers: new HttpHeaders({
@@ -513,7 +513,7 @@ Supported API's
 
   updateRole(role: Role, path: string, enable: boolean): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/roles/${role.id}`;
+    const url = `https://${currentUser.tenant}.${currentUser.domain}/v3/roles/${role.id}`;
 
     const myHttpOptions = {
       headers: new HttpHeaders({
@@ -534,7 +534,7 @@ Supported API's
 
   duplicateRole(role: Role, newRoleName: string): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/roles`;
+    const url = `https://${currentUser.tenant}.${currentUser.domain}/v3/roles`;
 
     const payload = {
       name: `${newRoleName}`,
@@ -551,7 +551,7 @@ Supported API's
 
   deleteRole(role: Role): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/roles/${role.id}`;
+    const url = `https://${currentUser.tenant}.${currentUser.domain}/v3/roles/${role.id}`;
 
     const myHttpOptions = {
       headers: new HttpHeaders({}),
@@ -566,7 +566,7 @@ Supported API's
     options?: any
   ): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/access-profiles?offset=${offset}&limit=${limit}`;
+    const url = `https://${currentUser.tenant}.${currentUser.domain}/v3/access-profiles?offset=${offset}&limit=${limit}`;
 
     return this.http
       .get(url, {
@@ -588,7 +588,7 @@ Supported API's
 
   updateAccessProfileOwner(accessProfile: AccessProfile): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/access-profiles/${accessProfile.id}`;
+    const url = `https://${currentUser.tenant}.${currentUser.domain}/v3/access-profiles/${accessProfile.id}`;
 
     const myHttpOptions = {
       headers: new HttpHeaders({
@@ -620,7 +620,7 @@ Supported API's
     enable: boolean
   ): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/access-profiles/${accessProfile.id}`;
+    const url = `https://${currentUser.tenant}.${currentUser.domain}/v3/access-profiles/${accessProfile.id}`;
 
     const myHttpOptions = {
       headers: new HttpHeaders({
@@ -641,7 +641,7 @@ Supported API's
 
   deleteAccessProfile(accessProfile: AccessProfile): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/access-profiles/${accessProfile.id}`;
+    const url = `https://${currentUser.tenant}.${currentUser.domain}/v3/access-profiles/${accessProfile.id}`;
 
     const myHttpOptions = {
       headers: new HttpHeaders({}),
@@ -652,7 +652,7 @@ Supported API's
 
   searchAccounts(query: SimpleQueryCondition): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/search/`;
+    const url = `https://${currentUser.tenant}.${currentUser.domain}/v3/search/`;
 
     const payload = {
       query: {
@@ -677,7 +677,7 @@ Supported API's
   //Used for the reports of roles containing entitlements
   searchEntitlements(input: SimpleQueryCondition): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/search/?count=true&limit=5`;
+    const url = `https://${currentUser.tenant}.${currentUser.domain}/v3/search/?count=true&limit=5`;
 
     let payload = {
       query: {
@@ -702,7 +702,7 @@ Supported API's
   //Used for the reports of roles containing entitlements
   rolesContainingOneEntitlement(idNumber): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/search/?count=true`;
+    const url = `https://${currentUser.tenant}.${currentUser.domain}/v3/search/?count=true`;
 
     const payload = {
       query: {
@@ -722,7 +722,7 @@ Supported API's
   ): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
     const url =
-      `https://${currentUser.tenant}.api.${currentUser.domain}/v3/search/?count=true&limit=` +
+      `https://${currentUser.tenant}.${currentUser.domain}/v3/search/?count=true&limit=` +
       page.limit +
       '&offset=' +
       page.offset;
@@ -788,7 +788,7 @@ Supported API's
 
   searchActivites(filterString): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/search/?count=true`;
+    const url = `https://${currentUser.tenant}.${currentUser.domain}/v3/search/?count=true`;
 
     const payload = {
       query: {
@@ -810,7 +810,7 @@ Supported API's
    */
   searchableAttributes(): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/identity-attributes?count=true`;
+    const url = `https://${currentUser.tenant}.${currentUser.domain}/beta/identity-attributes?count=true`;
 
     return this.http
       .get(url, { observe: 'response' })
@@ -827,7 +827,7 @@ Supported API's
   ): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
     const url =
-      `https://${currentUser.tenant}.api.${currentUser.domain}/v3/accounts/?count=true&limit=` +
+      `https://${currentUser.tenant}.${currentUser.domain}/v3/accounts/?count=true&limit=` +
       page.limit +
       '&offset=' +
       page.offset;
@@ -863,7 +863,7 @@ Supported API's
     unCorrelatedOnly: boolean
   ): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/accounts?count=true&limit=1&filters=sourceId eq "${appID}"`;
+    let url = `https://${currentUser.tenant}.${currentUser.domain}/v3/accounts?count=true&limit=1&filters=sourceId eq "${appID}"`;
 
     if (unCorrelatedOnly) {
       url = url + `and uncorrelated eq true`;
@@ -875,7 +875,7 @@ Supported API's
 
   countEntitlements(appID: String): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/entitlements?count=true&limit=1&filters=source.id eq "${appID}"`;
+    const url = `https://${currentUser.tenant}.${currentUser.domain}/beta/entitlements?count=true&limit=1&filters=source.id eq "${appID}"`;
 
     return this.http
       .get(url, { observe: 'response' })
@@ -884,7 +884,7 @@ Supported API's
 
   updateSourceOwner(source: Source): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/sources/${source.id}`;
+    const url = `https://${currentUser.tenant}.${currentUser.domain}/v3/sources/${source.id}`;
 
     const myHttpOptions = {
       headers: new HttpHeaders({
@@ -912,7 +912,7 @@ Supported API's
 
   getAccountAggregationStatus(taskId: string): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/account-aggregations/${taskId}/status`;
+    const url = `https://${currentUser.tenant}.${currentUser.domain}/beta/account-aggregations/${taskId}/status`;
 
     return this.http
       .get(url)
@@ -921,21 +921,21 @@ Supported API's
 
   getConnectorRules(): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/connector-rules`;
+    const url = `https://${currentUser.tenant}.${currentUser.domain}/beta/connector-rules`;
 
     return this.http.get(url, this.httpOptions);
   }
 
   getConnectorRuleById(ruleId: string): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/connector-rules/${ruleId}`;
+    const url = `https://${currentUser.tenant}.${currentUser.domain}/beta/connector-rules/${ruleId}`;
 
     return this.http.get(url, this.httpOptions);
   }
 
   importConnectorRule(rule: Rule): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/connector-rules`;
+    const url = `https://${currentUser.tenant}.${currentUser.domain}/beta/connector-rules`;
 
     const myHttpOptions = {
       headers: new HttpHeaders({}),
@@ -960,7 +960,7 @@ Supported API's
 
   updateConnectorRule(rule: Rule): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/connector-rules/${rule.id}`;
+    const url = `https://${currentUser.tenant}.${currentUser.domain}/beta/connector-rules/${rule.id}`;
 
     const myHttpOptions = {
       headers: new HttpHeaders({}),
@@ -987,7 +987,7 @@ Supported API's
 
   deleteConnectorRule(rule: Rule): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/connector-rules/${rule.id}`;
+    const url = `https://${currentUser.tenant}.${currentUser.domain}/beta/connector-rules/${rule.id}`;
 
     const myHttpOptions = {
       headers: new HttpHeaders({}),
@@ -998,21 +998,21 @@ Supported API's
 
   getOrgConfig(): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/org-config`;
+    const url = `https://${currentUser.tenant}.${currentUser.domain}/beta/org-config`;
 
     return this.http.get(url, this.httpOptions);
   }
 
   getHostingData(): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/tenant-data/hosting-data`;
+    const url = `https://${currentUser.tenant}.${currentUser.domain}/beta/tenant-data/hosting-data`;
 
     return this.http.get(url, this.httpOptions);
   }
 
   getIdentityCount(): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/search/identities?limit=1&count=true`;
+    const url = `https://${currentUser.tenant}.${currentUser.domain}/v3/search/identities?limit=1&count=true`;
 
     const payload = {
       query: {
@@ -1025,28 +1025,28 @@ Supported API's
 
   getAccountCount(): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/accounts?limit=1&count=true`;
+    const url = `https://${currentUser.tenant}.${currentUser.domain}/v3/accounts?limit=1&count=true`;
 
     return this.http.get(url, { observe: 'response' });
   }
 
   getIdentityProfileCount(): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/identity-profiles?limit=1&count=true`;
+    const url = `https://${currentUser.tenant}.${currentUser.domain}/v3/identity-profiles?limit=1&count=true`;
 
     return this.http.get(url, { observe: 'response' });
   }
 
   getSourceCount(): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/sources?limit=1&count=true`;
+    const url = `https://${currentUser.tenant}.${currentUser.domain}/v3/sources?limit=1&count=true`;
 
     return this.http.get(url, { observe: 'response' });
   }
 
   getTotalAccessProfilesCount(): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/access-profiles?limit=1&count=true`;
+    const url = `https://${currentUser.tenant}.${currentUser.domain}/v3/access-profiles?limit=1&count=true`;
 
     return this.http.get(url, { observe: 'response' }).pipe(
       map(response => response.headers.get('X-Total-Count')),
@@ -1057,35 +1057,35 @@ Supported API's
 
   getEntitlementCount(): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/entitlements?limit=1&count=true`;
+    const url = `https://${currentUser.tenant}.${currentUser.domain}/beta/entitlements?limit=1&count=true`;
 
     return this.http.get(url, { observe: 'response' });
   }
 
   getTotalCampaignCount(): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/campaigns?limit=1&count=true`;
+    const url = `https://${currentUser.tenant}.${currentUser.domain}/beta/campaigns?limit=1&count=true`;
 
     return this.http.get(url, { observe: 'response' });
   }
 
   getActiveCampaignCount(): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/campaigns?limit=1&count=true&filters=status eq "ACTIVE"`;
+    const url = `https://${currentUser.tenant}.${currentUser.domain}/beta/campaigns?limit=1&count=true&filters=status eq "ACTIVE"`;
 
     return this.http.get(url, { observe: 'response' });
   }
 
   getCompletedCampaignCount(): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/campaigns?limit=1&count=true&filters=status eq "COMPLETED"`;
+    const url = `https://${currentUser.tenant}.${currentUser.domain}/beta/campaigns?limit=1&count=true&filters=status eq "COMPLETED"`;
 
     return this.http.get(url, { observe: 'response' });
   }
 
   getPasswordChangeCount(): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/search?limit=1&count=true`;
+    const url = `https://${currentUser.tenant}.${currentUser.domain}/v3/search?limit=1&count=true`;
 
     const payload = {
       query: {
@@ -1100,7 +1100,7 @@ Supported API's
 
   getProvisioningActivityCount(): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/search?limit=1&count=true`;
+    const url = `https://${currentUser.tenant}.${currentUser.domain}/v3/search?limit=1&count=true`;
 
     const payload = {
       query: {
@@ -1114,14 +1114,14 @@ Supported API's
 
   getValidTimeZones(): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/org-config/valid-time-zones`;
+    const url = `https://${currentUser.tenant}.${currentUser.domain}/beta/org-config/valid-time-zones`;
 
     return this.http.get(url, this.httpOptions);
   }
 
   updateOrgTimeConfig(timeZoneValue: string): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/org-config`;
+    const url = `https://${currentUser.tenant}.${currentUser.domain}/beta/org-config`;
 
     const myHttpOptions = {
       headers: new HttpHeaders({
@@ -1142,21 +1142,21 @@ Supported API's
 
   getAllPAT(): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/personal-access-tokens`;
+    const url = `https://${currentUser.tenant}.${currentUser.domain}/v3/personal-access-tokens`;
 
     return this.http.get(url, this.httpOptions);
   }
 
   getUserPAT(id: string): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/personal-access-tokens?owner-id=${id}`;
+    const url = `https://${currentUser.tenant}.${currentUser.domain}/v3/personal-access-tokens?owner-id=${id}`;
 
     return this.http.get(url, this.httpOptions);
   }
 
   deletePAT(pat: PAT): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/personal-access-tokens/${pat.id}`;
+    const url = `https://${currentUser.tenant}.${currentUser.domain}/v3/personal-access-tokens/${pat.id}`;
 
     const myHttpOptions = {
       headers: new HttpHeaders({}),
@@ -1173,7 +1173,7 @@ Supported API's
    */
   getUserByAlias(alias: string): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/identities?alias=${alias}`;
+    const url = `https://${currentUser.tenant}.${currentUser.domain}/beta/identities?alias=${alias}`;
 
     return this.http.get(url, this.httpOptions).pipe(
       catchError(error => {
@@ -1190,7 +1190,7 @@ Supported API's
 
   exportCloudRules(): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/sp-config/export`;
+    const url = `https://${currentUser.tenant}.${currentUser.domain}/beta/sp-config/export`;
 
     const payload = {
       description: 'Export Rules - Call by IDN Admin Console',
@@ -1204,7 +1204,7 @@ Supported API's
 
   checkSPConfigJobStatus(jobId: string): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/sp-config/export/${jobId}`;
+    const url = `https://${currentUser.tenant}.${currentUser.domain}/beta/sp-config/export/${jobId}`;
 
     return this.http
       .get(url, this.httpOptions)
@@ -1213,7 +1213,7 @@ Supported API's
 
   downloadSPConfigExport(jobId: string): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/sp-config/export/${jobId}/download`;
+    const url = `https://${currentUser.tenant}.${currentUser.domain}/beta/sp-config/export/${jobId}/download`;
 
     return this.http
       .get(url, this.httpOptions)
@@ -1222,7 +1222,7 @@ Supported API's
 
   getAllIdentityProfiles(): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/identity-profiles?sorters=priority`;
+    const url = `https://${currentUser.tenant}.${currentUser.domain}/v3/identity-profiles?sorters=priority`;
 
     return this.http
       .get(url, this.httpOptions)
@@ -1231,14 +1231,14 @@ Supported API's
 
   refreshIdentityProfile(profileId: string): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/identity-profiles/${profileId}/refresh-identities`;
+    const url = `https://${currentUser.tenant}.${currentUser.domain}/v3/identity-profiles/${profileId}/refresh-identities`;
 
     return this.http.post(url, this.httpOptions);
   }
 
   updateProfilePriority(profile: IdentityProfile): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/identity-profiles/${profile.id}`;
+    const url = `https://${currentUser.tenant}.${currentUser.domain}/v3/identity-profiles/${profile.id}`;
 
     const myHttpOptions = {
       headers: new HttpHeaders({
@@ -1259,7 +1259,7 @@ Supported API's
 
   getAllTransforms(): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/transforms`;
+    const url = `https://${currentUser.tenant}.${currentUser.domain}/v3/transforms`;
 
     return this.http
       .get(url, this.httpOptions)
@@ -1268,14 +1268,14 @@ Supported API's
 
   getTransformById(transformId: string): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/transforms/${transformId}`;
+    const url = `https://${currentUser.tenant}.${currentUser.domain}/v3/transforms/${transformId}`;
 
     return this.http.get(url, this.httpOptions);
   }
 
   updateTransform(transform: Transform): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/transforms/${transform.id}`;
+    const url = `https://${currentUser.tenant}.${currentUser.domain}/v3/transforms/${transform.id}`;
 
     const payload = transform;
 
@@ -1284,14 +1284,14 @@ Supported API's
 
   deleteTransform(transformId: string): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/transforms/${transformId}`;
+    const url = `https://${currentUser.tenant}.${currentUser.domain}/v3/transforms/${transformId}`;
 
     return this.http.delete(url, this.httpOptions);
   }
 
   createTransform(transform: Transform): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/transforms/`;
+    const url = `https://${currentUser.tenant}.${currentUser.domain}/v3/transforms/`;
 
     const payload = transform;
 
@@ -1300,7 +1300,7 @@ Supported API's
 
   getSourceCreateProfile(sourceId: string): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/sources/${sourceId}/provisioning-policies/CREATE`;
+    const url = `https://${currentUser.tenant}.${currentUser.domain}/v3/sources/${sourceId}/provisioning-policies/CREATE`;
 
     return this.http.get(url, this.httpOptions);
   }
@@ -1310,7 +1310,7 @@ Supported API's
     attribute: string
   ): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/sources/${sourceId}/provisioning-policies`;
+    const url = `https://${currentUser.tenant}.${currentUser.domain}/v3/sources/${sourceId}/provisioning-policies`;
 
     const payload = {
       name: 'Account',
@@ -1336,7 +1336,7 @@ Supported API's
     attribute: string
   ): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/sources/${sourceId}/provisioning-policies/CREATE`;
+    const url = `https://${currentUser.tenant}.${currentUser.domain}/v3/sources/${sourceId}/provisioning-policies/CREATE`;
 
     const myHttpOptions = {
       headers: new HttpHeaders({
@@ -1367,7 +1367,7 @@ Supported API's
     attributeJSONIndex: number
   ): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/sources/${sourceId}/provisioning-policies/CREATE`;
+    const url = `https://${currentUser.tenant}.${currentUser.domain}/v3/sources/${sourceId}/provisioning-policies/CREATE`;
 
     const myHttpOptions = {
       headers: new HttpHeaders({
@@ -1392,7 +1392,7 @@ Supported API's
       filteredURL = filteredURL + filters;
     }
     const url =
-      `https://${currentUser.tenant}.api.${currentUser.domain}/v3/access-request-status?sorters=-created` +
+      `https://${currentUser.tenant}.${currentUser.domain}/v3/access-request-status?sorters=-created` +
       filteredURL;
 
     return this.http.get(url, this.httpOptions);
@@ -1417,7 +1417,7 @@ Supported API's
     }
 
     const url =
-      `https://${currentUser.tenant}.api.${currentUser.domain}/beta/access-request-status?sorters=-created` +
+      `https://${currentUser.tenant}.${currentUser.domain}/beta/access-request-status?sorters=-created` +
       filteredURL +
       '&limit=' +
       page.limit +
@@ -1446,7 +1446,7 @@ Supported API's
     const filteredURL = '';
     console.log(filters);
     const url =
-      `https://${currentUser.tenant}.api.${currentUser.domain}/beta/entitlements?` +
+      `https://${currentUser.tenant}.${currentUser.domain}/beta/entitlements?` +
       filteredURL +
       '&limit=' +
       page.limit +
@@ -1467,7 +1467,7 @@ Supported API's
 
   getAccessRequestApprovalsPending(): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/access-request-approvals/pending?sorters=-created`;
+    const url = `https://${currentUser.tenant}.${currentUser.domain}/v3/access-request-approvals/pending?sorters=-created`;
 
     return this.http.get(url, this.httpOptions);
   }
@@ -1478,7 +1478,7 @@ Supported API's
     comment: string
   ): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/access-request-approvals/${approvalToForwardId}/forward`;
+    const url = `https://${currentUser.tenant}.${currentUser.domain}/v3/access-request-approvals/${approvalToForwardId}/forward`;
 
     const payload = {
       newOwnerId: newOwnerId,
@@ -1496,7 +1496,7 @@ Supported API's
     }
 
     const url =
-      `https://${currentUser.tenant}.api.${currentUser.domain}/v3/work-items?sorters=-created` +
+      `https://${currentUser.tenant}.${currentUser.domain}/v3/work-items?sorters=-created` +
       filteredURL;
 
     return this.http.get(url, this.httpOptions);
@@ -1504,21 +1504,21 @@ Supported API's
 
   getWorkItemsPending(): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/work-items?sorters=-created`;
+    const url = `https://${currentUser.tenant}.${currentUser.domain}/v3/work-items?sorters=-created`;
 
     return this.http.get(url, this.httpOptions);
   }
 
   getWorkItemsCompleted(): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/work-items/completed?sorters=-created`;
+    const url = `https://${currentUser.tenant}.${currentUser.domain}/v3/work-items/completed?sorters=-created`;
 
     return this.http.get(url, this.httpOptions);
   }
 
   getWorkItemsSummary(): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/work-items/summary`;
+    const url = `https://${currentUser.tenant}.${currentUser.domain}/v3/work-items/summary`;
 
     return this.http.get(url, this.httpOptions);
   }
@@ -1529,7 +1529,7 @@ Supported API's
     comment: string
   ): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/work-items/${workItemId}/forward`;
+    const url = `https://${currentUser.tenant}.${currentUser.domain}/v3/work-items/${workItemId}/forward`;
 
     const payload = {
       targetOwnerId: newOwnerId,
@@ -1546,7 +1546,7 @@ Supported API's
     newOwnerId: string
   ): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/entitlements/${entitlementId}`;
+    const url = `https://${currentUser.tenant}.${currentUser.domain}/beta/entitlements/${entitlementId}`;
 
     let payload = null;
 
@@ -1586,7 +1586,7 @@ Supported API's
     value: boolean
   ): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/entitlements/${entitlementId}`;
+    const url = `https://${currentUser.tenant}.${currentUser.domain}/beta/entitlements/${entitlementId}`;
 
     const payload = {
       op: `${op}`,
@@ -1609,28 +1609,28 @@ Supported API's
 
   getAccessRequestApprovalsSummary(): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/access-request-approvals/approval-summary`;
+    const url = `https://${currentUser.tenant}.${currentUser.domain}/v3/access-request-approvals/approval-summary`;
 
     return this.http.get(url, this.httpOptions);
   }
 
   getIdentityProfile(profileId: string): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/identity-profiles/${profileId}`;
+    const url = `https://${currentUser.tenant}.${currentUser.domain}/v3/identity-profiles/${profileId}`;
 
     return this.http.get(url, this.httpOptions);
   }
 
   getIdentityProfileLCS(profileId: string): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/identity-profiles/${profileId}/lifecycle-states`;
+    const url = `https://${currentUser.tenant}.${currentUser.domain}/v3/identity-profiles/${profileId}/lifecycle-states`;
 
     return this.http.get(url, this.httpOptions);
   }
 
   deleteIdentityProfileLCS(profileId: string, lcsId: string): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/identity-profiles/${profileId}/lifecycle-states/${lcsId}`;
+    const url = `https://${currentUser.tenant}.${currentUser.domain}/v3/identity-profiles/${profileId}/lifecycle-states/${lcsId}`;
 
     const myHttpOptions = {
       headers: new HttpHeaders({}),
@@ -1646,7 +1646,7 @@ Supported API's
       params = '?filters=name sw "' + filters + '"' + '&count=true';
     }
     const url =
-      `https://${currentUser.tenant}.api.${currentUser.domain}/beta/entitlements` +
+      `https://${currentUser.tenant}.${currentUser.domain}/beta/entitlements` +
       params +
       '&limit=' +
       page.limit +
@@ -1659,7 +1659,7 @@ Supported API's
 
   getIDNAdmins(): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/search`;
+    const url = `https://${currentUser.tenant}.${currentUser.domain}/v3/search`;
 
     const payload = {
       queryType: 'SAILPOINT',
@@ -1686,7 +1686,7 @@ Supported API's
 
   getAllReassignments(): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/reassignment-configurations`;
+    const url = `https://${currentUser.tenant}.${currentUser.domain}/beta/reassignment-configurations`;
 
     return this.http
       .get(url, this.httpOptions)
@@ -1699,7 +1699,7 @@ Supported API's
    */
   getTransformResults(profileId: IdentityPreview): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/identity-profiles/identity-preview`;
+    const url = `https://${currentUser.tenant}.${currentUser.domain}/v3/identity-profiles/identity-preview`;
 
     return this.http.post(url, profileId, this.httpOptions);
   }
@@ -1708,7 +1708,7 @@ Supported API's
   */
   getPersonID(input: string): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/public-identities?filters=alias eq "${input}"&limit=1`;
+    const url = `https://${currentUser.tenant}.${currentUser.domain}/v3/public-identities?filters=alias eq "${input}"&limit=1`;
 
     return this.http
       .get(url, this.httpOptions)

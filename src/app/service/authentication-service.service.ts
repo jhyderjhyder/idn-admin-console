@@ -51,7 +51,8 @@ export class AuthenticationService {
   }
 
   authenticate(user: User): any {
-    const url = `https://${user.tenant}.api.${user.domain}/oauth/token?grant_type=client_credentials&client_id=${user.clientId}&client_secret=${user.clientSecret}`;
+    let url = `https://${user.tenant}.${user.domain}/oauth/token?grant_type=client_credentials&client_id=${user.clientId}&client_secret=${user.clientSecret}`;
+    
     return this.http
       .post(url, {}, { observe: 'response' })
       .pipe(catchError(this.handleError(`authenticate`, null, true)));
@@ -59,7 +60,7 @@ export class AuthenticationService {
 
   checkOrgAdminAccess(authUser: User): any {
     const headers = { Authorization: 'Bearer ' + authUser.accessToken };
-    const url = `https://${authUser.tenant}.api.${authUser.domain}/beta/org-config`;
+    const url = `https://${authUser.tenant}.${authUser.domain}/beta/org-config`;
     return this.http
       .get(url, { headers })
       .pipe(catchError(this.handleError(`checkOrgAdminAccess`, null, true)));

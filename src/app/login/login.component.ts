@@ -96,7 +96,7 @@ export class LoginComponent implements OnInit {
     if (typeof this.f.domain.value != 'undefined' && this.f.domain.value) {
       user.domain = this.f.domain.value;
     } else {
-      user.domain = 'identitynow.com';
+      user.domain = 'api.identitynow.com';
     }
 
     this.authenticationService.authenticate(user).subscribe(
