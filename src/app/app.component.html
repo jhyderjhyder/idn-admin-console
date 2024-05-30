@@ -3,7 +3,7 @@
   <div class="col-sm-3" style="color:rgb(61, 8, 158); background-color: white;">
   <a class="navbar-brand" href="#">
     <img src="./assets/images/sp_logo.png" alt="SailPoint" class="navbar-brand-image">
-  </a>Community Admin Support Tool
+  </a>Read Only Admin Portal
 </div>
 
 <div style="background-color: black; color:white; background-image: linear-gradient(to right, white, black);" 
@@ -37,9 +37,6 @@ class="col-sm-5 text-end" *ngIf="currentUser">Tenant:  {{currentUser.tenant}}</d
             <div class="dropdown-menu" aria-labelledby="navbarIdentity">
               <a class="dropdown-item" routerLink="/identity-info">Search Details</a>
               <a class="dropdown-item" routerLink="/identity-compare">Identity Compare</a>
-              <a class="dropdown-item" routerLink="/identity-profile-management">Identity Profile</a>
-              <a class="dropdown-item" routerLink="/identity-attribute-index">Attribute Index</a>
-              <a class="dropdown-item" routerLink="/identity-lcs-management">LifeCycle State</a>
               
             </div>
           </li>
@@ -49,16 +46,10 @@ class="col-sm-5 text-end" *ngIf="currentUser">Tenant:  {{currentUser.tenant}}</d
               Access
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarAccessProfiles">
-              <a class="dropdown-item" routerLink="/accessprofile-management">AccessProfile Report</a>
-              <a class="dropdown-item" routerLink="/accessprofile-owner-update">AccessProfile Ownership</a>
-              <br>
               <a class="dropdown-item" routerLink="/role-management">Role Report</a>
               <a class="dropdown-item" routerLink="/role-owner-update">Role Ownership</a>
               <a class="dropdown-item" routerLink="/role-duplicate">Role Duplicates</a>
               <a class="dropdown-item" routerLink="/role-contains-ent">Role Contains Entitlement</a>
-              <br>
-              <a class="dropdown-item" routerLink="/entitlement-management">Entitlements Ownership</a>
-
             </div>
           </li>
           <li class="nav-item dropdown">
@@ -79,26 +70,11 @@ class="col-sm-5 text-end" *ngIf="currentUser">Tenant:  {{currentUser.tenant}}</d
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarManageSource">
               <a class="dropdown-item" routerLink="/source-info">Debug</a>
-              <a class="dropdown-item" routerLink="/source-aggregation-management">Schedules</a>
-              <a class="dropdown-item" routerLink="/source-owner-update">Owners</a>
-              <a class="dropdown-item" routerLink="/source-aggregation-run">Aggregations</a>
-              <a class="dropdown-item" routerLink="/source-create-profile">Manage Create Profile</a>
-              <a class="dropdown-item" routerLink="/source-reset">Reset</a>
-              <br>
               <a class="dropdown-item" routerLink="/system-monitor-source">Monitor Sources</a>
               
             </div>
           </li>
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarRules" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              Code
-            </a>
-            <div class="dropdown-menu" aria-labelledby="navbarRules">
-              <a class="dropdown-item" routerLink="/identity-transform-management">Transforms</a>
-              <a class="dropdown-item" routerLink="/rule-cloud-management">Cloud Rules</a>
-              <a class="dropdown-item" routerLink="/rule-connector-management">Connector Rules</a>
-            </div>
-          </li>
+
           <li class="nav-item dropdown">
             <a class="nav-link dropdown-toggle" href="#" id="navbarRules" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
               AccessRequests
@@ -123,14 +99,9 @@ class="col-sm-5 text-end" *ngIf="currentUser">Tenant:  {{currentUser.tenant}}</d
             </a>
             <div class="dropdown-menu" aria-labelledby="navbarRules">
               <a class="dropdown-item" routerLink="/system-monitor">Monitor VA</a>
-              <a class="dropdown-item" routerLink="/system-monitor-source">Monitor Sources</a>
               <a class="dropdown-item" routerLink="/report-failures">Provisioning Failures</a>
               <a class="dropdown-item" routerLink="/report-task-status">Task History</a>
               <br>
-              <a class="dropdown-item" routerLink="/identity-admin-management">Manage Admins</a>
-              <a class="dropdown-item" routerLink="/misc-manage-pat">Manage PAT</a>
-              <a class="dropdown-item" routerLink="/misc-org-time-update">Set Org Time</a>
-              <a class="dropdown-item" routerLink="/misc-org-stats">Org Statistics</a>
               <a class="dropdown-item" routerLink="/reassignments">Out of Office</a>
             </div>
           </li>
