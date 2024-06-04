@@ -853,9 +853,24 @@ Supported API's
       }
     }
 
-    return this.http
-      .get(url + filter, { observe: 'response' })
-      .pipe(catchError(this.handleError(`searchAccounts`)));
+    return this.http.get(url + filter, { observe: 'response' }).pipe(
+      catchError(error => {
+        if (error.status === 429) {
+          this.logError('Rate limited. Retrying in 2 seconds...');
+          this.sleep(2000);
+          return this.searchApplicationAccounts(
+            query,
+            page,
+            searchType,
+            searchAttribute
+          );
+        } else {
+          this.logError(`timeout getting record counts returning last 200`);
+          page.limit = 200;
+          this.handleError(`searchApplicationAccounts`);
+        }
+      })
+    );
   }
 
   countApplicationAccounts(
@@ -868,18 +883,36 @@ Supported API's
     if (unCorrelatedOnly) {
       url = url + `and uncorrelated eq true`;
     }
-    return this.http
-      .get(url, { observe: 'response' })
-      .pipe(catchError(this.handleError(`countAccounts`)));
+    return this.http.get(url, { observe: 'response' }).pipe(
+      catchError(error => {
+        if (error.status === 429) {
+          this.logError('Rate limited. Retrying in 2 seconds...');
+          this.sleep(2000);
+          return this.countApplicationAccounts(appID, unCorrelatedOnly);
+        } else {
+          this.logError(`timeout getting record counts returning last 200`);
+          this.handleError(`countApplicationAccounts`);
+        }
+      })
+    );
   }
 
   countEntitlements(appID: String): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
     const url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/entitlements?count=true&limit=1&filters=source.id eq "${appID}"`;
 
-    return this.http
-      .get(url, { observe: 'response' })
-      .pipe(catchError(this.handleError(`countAccounts`)));
+    return this.http.get(url, { observe: 'response' }).pipe(
+      catchError(error => {
+        if (error.status === 429) {
+          this.logError('Rate limited. Retrying in 2 seconds...');
+          this.sleep(2000);
+          return this.countEntitlements(appID);
+        } else {
+          this.logError(`timeout getting record counts returning last 200`);
+          this.handleError(`countEntitlments`);
+        }
+      })
+    );
   }
 
   updateSourceOwner(source: Source): Observable<any> {
