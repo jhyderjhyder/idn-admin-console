@@ -20,6 +20,7 @@ import { IdentityAttribute } from '../model/identity-attribute';
 import { Transform } from '../model/transform';
 import { PageResults } from '../model/page-results';
 import { IdentityPreview } from '../model/identity-preview';
+import { RevokeRole } from '../model/revokeRole';
 
 @Injectable({
   providedIn: 'root',
@@ -674,6 +675,15 @@ Supported API's
     );
   }
 
+  revokeRole(query: RevokeRole): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/access-requests/`;
+    //There is no return from this endpoint not sure what to do?
+    return this.http
+      .post(url, query, this.httpOptions)
+      .pipe(catchError(this.handleError(`revokeRole`)));
+  }
+
   //Used for the reports of roles containing entitlements
   searchEntitlements(input: SimpleQueryCondition): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
@@ -908,7 +918,6 @@ Supported API's
           this.sleep(2000);
           return this.countEntitlements(appID);
         } else {
-          this.logError(`timeout getting record counts returning last 200`);
           this.handleError(`countEntitlments`);
         }
       })
@@ -1466,7 +1475,6 @@ Supported API's
           this.sleep(2000);
           return this.getAllSources();
         } else {
-          this.logError(`timeout getting record counts returning last 200`);
           page.limit = 200;
           return this.getAccessRequestStatusPaged(filters, page, false);
         }

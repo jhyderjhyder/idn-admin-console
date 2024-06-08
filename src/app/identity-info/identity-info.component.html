@@ -582,6 +582,7 @@
         <tr>
           <td>#</td>
           <td><b>Name</b></td>
+          <td><b>Request</b></td>
         </tr>
       </thead>
       <tbody>
@@ -589,6 +590,8 @@
         <tr *ngFor="let item of identityInfo.roleArray; let i =index" >
           <td>{{i+1}}</td>
           <td>{{item.name}}</td>
+          <td><button type="button" class="btn btn-primary"(click)="revokeRole(item.id)">Revoke
+            </button></td>
         </tr>
       </tbody>
     </table>
