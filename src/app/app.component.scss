@@ -6,6 +6,11 @@ $nav-item-width: 180px;
 $nav-item-height: 67px;
 $padding-left: 60px;
 
+.navbar-custom-2 {
+
+    background-image: linear-gradient(60deg, #4e4c4c 5%,#000 90%);
+    }
+
 .navbar-custom {
     background-color: $dark-blue-background;
     .navbar-brand {

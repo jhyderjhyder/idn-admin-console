@@ -1,155 +1,59 @@
+<!--Top Menu-->
 <div class="row" style="background-color: white; color:white; background-image: linear-gradient(to right, white, black);">
   <div class="col-sm-1" style="background-color: white;"></div>
   <div class="col-sm-3" style="color:rgb(61, 8, 158); background-color: white;">
-  <a class="navbar-brand" href="#">
-    <img src="./assets/images/sp_logo.png" alt="SailPoint" class="navbar-brand-image">
-  </a>Community Admin Support Tool
-</div>
-
-<div style="background-color: black; color:white; background-image: linear-gradient(to right, white, black);" 
-class="col-sm-5 text-end" *ngIf="currentUser">Tenant:  {{currentUser.tenant}}</div>
-<div style="background-color: black; color:white;" class="col-sm-3 text-end" *ngIf="currentUser">
-  <a class=" btn btn-link text-white" (click)="logout()"><i class="fa fa-sign-out" aria-hidden="true">Logout</i></a>
-</div>
-
-<div class="row" style="background-color: black;">
-  <div class="col-sm-12 text-end" style="color:white;background-color: rgb(10, 10, 10);height: 5px;">
+    <a class="navbar-brand" href="#">
+      <img src="./assets/images/sp_logo.png" alt="SailPoint" class="navbar-brand-image">
+    </a>Community Admin Support Tool
   </div>
-</div>
 
-  <div class="row" style="background-color: #0033a1;">
-    <div class="col-sm-1"></div>
-    <div class="col-sm-11">
-  <nav class="navbar navbar-custom navbar-dark navbar-expand-lg">
-    <div class="col-sm-12 text-center text-white" *ngIf="!currentUser">
-      IDN Admin Console
+  <div style="background-color: black; color:white; background-image: linear-gradient(to right, white, black);" class="col-sm-5 text-end" >
+    <div *ngIf="currentUser">Tenant:  {{currentUser.tenant}}</div>
+  </div>
+
+  <div style="background-color: black; color:white;" class="col-sm-3 text-end" >
+    <div *ngIf="currentUser">
+      <a class=" btn btn-link text-white" (click)="logout()"><i class="fa fa-sign-out" aria-hidden="true">Logout</i></a>
     </div>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar" *ngIf="currentUser">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-
-      <div class="collapse navbar-collapse row m-1" id="collapsibleNavbar" *ngIf="currentUser">
-        <ul class="navbar-nav col-md-9 me-auto">
-          <li class="nav-item dropdown ">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarIdentity" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              Identities
-            </a>
-            <div class="dropdown-menu" aria-labelledby="navbarIdentity">
-              <a class="dropdown-item" routerLink="/identity-info">Search Details</a>
-              <a class="dropdown-item" routerLink="/identity-compare">Identity Compare</a>
-              <a class="dropdown-item" routerLink="/identity-profile-management">Identity Profile</a>
-              <a class="dropdown-item" routerLink="/identity-attribute-index">Attribute Index</a>
-              <a class="dropdown-item" routerLink="/identity-lcs-management">LifeCycle State</a>
-              
-            </div>
-          </li>
-
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarAccessProfiles" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              Access
-            </a>
-            <div class="dropdown-menu" aria-labelledby="navbarAccessProfiles">
-              <a class="dropdown-item" routerLink="/accessprofile-management">AccessProfile Report</a>
-              <a class="dropdown-item" routerLink="/accessprofile-owner-update">AccessProfile Ownership</a>
-              <br>
-              <a class="dropdown-item" routerLink="/role-management">Role Report</a>
-              <a class="dropdown-item" routerLink="/role-owner-update">Role Ownership</a>
-              <a class="dropdown-item" routerLink="/role-duplicate">Role Duplicates</a>
-              <a class="dropdown-item" routerLink="/role-contains-ent">Role Contains Entitlement</a>
-              <br>
-              <a class="dropdown-item" routerLink="/entitlement-management">Entitlements Ownership</a>
-
-            </div>
-          </li>
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarAccounts" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              Accounts
-            </a>
-            <div class="dropdown-menu" aria-labelledby="navbarAccounts">
-              <a class="dropdown-item" routerLink="/account-search">Search Details</a>
-              <a class="dropdown-item" routerLink="/multiple-accounts-report">Multiple Report</a>
-              <br>
-              <a class="dropdown-item" routerLink="/account-report">Totals Report</a>
-
-            </div>
-          </li>
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarManageSource" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              Sources
-            </a>
-            <div class="dropdown-menu" aria-labelledby="navbarManageSource">
-              <a class="dropdown-item" routerLink="/source-info">Debug</a>
-              <a class="dropdown-item" routerLink="/source-aggregation-management">Schedules</a>
-              <a class="dropdown-item" routerLink="/source-owner-update">Owners</a>
-              <a class="dropdown-item" routerLink="/source-aggregation-run">Aggregations</a>
-              <a class="dropdown-item" routerLink="/source-create-profile">Manage Create Profile</a>
-              <a class="dropdown-item" routerLink="/source-reset">Reset</a>
-              <br>
-              <a class="dropdown-item" routerLink="/system-monitor-source">Monitor Sources</a>
-              
-            </div>
-          </li>
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarRules" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              Code
-            </a>
-            <div class="dropdown-menu" aria-labelledby="navbarRules">
-              <a class="dropdown-item" routerLink="/identity-transform-management">Transforms</a>
-              <a class="dropdown-item" routerLink="/rule-cloud-management">Cloud Rules</a>
-              <a class="dropdown-item" routerLink="/rule-connector-management">Connector Rules</a>
-            </div>
-          </li>
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarRules" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              AccessRequests
-            </a>
-            <div class="dropdown-menu" aria-labelledby="navbarRules">
-              <a class="dropdown-item" routerLink="/access-request-status">Approval Status</a>
-              <a class="dropdown-item" routerLink="/access-request-approval-forward">Approval Forward</a>
-            </div>
-          </li>
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarRules" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              WorkItems
-            </a>
-            <div class="dropdown-menu" aria-labelledby="navbarRules">
-              <a class="dropdown-item" routerLink="/work-items-status">Manual WorkItems</a>
-              <a class="dropdown-item" routerLink="/work-items-forward">Pending Forward</a>
-            </div>
-          </li>
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarRules" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              System
-            </a>
-            <div class="dropdown-menu" aria-labelledby="navbarRules">
-              <a class="dropdown-item" routerLink="/system-monitor">Monitor VA</a>
-              <a class="dropdown-item" routerLink="/system-monitor-source">Monitor Sources</a>
-              <a class="dropdown-item" routerLink="/report-failures">Provisioning Failures</a>
-              <a class="dropdown-item" routerLink="/report-task-status">Task History</a>
-              <br>
-              <a class="dropdown-item" routerLink="/identity-admin-management">Manage Admins</a>
-              <a class="dropdown-item" routerLink="/misc-manage-pat">Manage PAT</a>
-              <a class="dropdown-item" routerLink="/misc-org-time-update">Set Org Time</a>
-              <a class="dropdown-item" routerLink="/misc-org-stats">Org Statistics</a>
-              <a class="dropdown-item" routerLink="/reassignments">Out of Office</a>
-            </div>
-          </li>
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" id="navbarRules" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-              About
-            </a>
-            <div class="dropdown-menu" aria-labelledby="navbarRules">
-              <a class="dropdown-item" routerLink="/release-history">Release History</a>
-              <a class="dropdown-item" routerLink="/credits">Credits</a>
-            </div>
-          </li>
-        </ul>
-      
-      </div>
-  </nav>
   </div>
+
+  <div *ngIf="!currentUser"class="row" style="background-color: #000;">
+    <div class="col-sm-12 text-end" style="color:#fff;background-color: #000;height: 5px;">
+    </div>
   </div>
 </div>
+<!--End of Top Menu-->
+
+
+
+    <!-- NAVBAR-->
+    <nav class="navbar navbar-expand-md navbar-dark bg-dark shadow-sm py-0 navbar-custom-2" *ngIf="currentUser">
+      <div class="container">
+
+        <button type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation" class="navbar-toggler"><span class="navbar-toggler-icon"></span></button>
+    
+        <div id="navbarSupportedContent" class="collapse navbar-collapse">
+          <ul class="navbar-nav ml-auto">
+            <!--Menu from Array-->
+          <div *ngFor="let main of menu">
+            <li class="nav-item dropdown ">
+              <a class="nav-link dropdown-toggle" href="#" id="{{main.id}}" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                {{main.title}}
+              </a>
+              <div class="dropdown-menu"  aria-labelledby="navbarIdentity">
+                <div *ngFor="let p of main.links">
+                  <a *ngIf="p.skip==false" class="dropdown-item" routerLink={{p.route}} >{{p.name}}</a>
+                  <div *ngIf="p.skip==true" class="dropdown-divider"></div>
+                </div>
+              </div>
+            </li>
+          </div>
+  <!-- End Menu From Array-->
+          </ul>
+        </div>
+      </div>
+    </nav>
+    <!--New Nav Bar-->
 
 <div class="row" *ngIf="currentUser">
     <div class="col-sm-12 text-end" style="color:white;background-color: rgb(10, 10, 10);height: 5px;">

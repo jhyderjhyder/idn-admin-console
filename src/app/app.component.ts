@@ -14,6 +14,7 @@ import { AuthenticationService } from './service/authentication-service.service'
 import { User } from './model/user';
 import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
+import { Menu} from './app.menu';
 
 @Component({
   selector: 'app-root',
@@ -25,6 +26,7 @@ export class AppComponent {
   currentUser: User;
   launchedFromIframe: boolean;
   version = environment.VERSION;
+  menu = Menu;
 
   //version check against GitHub
   latestVersion: string;
@@ -44,7 +46,9 @@ export class AppComponent {
     private authenticationService: AuthenticationService,
     private idle: Idle,
     keepalive: Keepalive,
-    private http: HttpClient
+    private http: HttpClient,
+
+    
   ) {
     this.routeEvent(this.route);
     this.authenticationService.currentUser.subscribe(user => {
@@ -52,6 +56,7 @@ export class AppComponent {
       this.reset();
     });
 
+   
     // fetch the latest version from the GitHub repository
     this.http
       .get(
