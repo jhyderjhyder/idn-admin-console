@@ -20,6 +20,7 @@ import { IdentityAttribute } from '../model/identity-attribute';
 import { Transform } from '../model/transform';
 import { PageResults } from '../model/page-results';
 import { IdentityPreview } from '../model/identity-preview';
+import { RevokeRole } from '../model/revokeRole';
 
 @Injectable({
   providedIn: 'root',
@@ -672,6 +673,15 @@ Supported API's
         }
       })
     );
+  }
+
+  revokeRole(query: RevokeRole): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/access-requests/`;
+    //There is no return from this endpoint not sure what to do?
+    return this.http
+      .post(url, query, this.httpOptions)
+      .pipe(catchError(this.handleError(`revokeRole`)));
   }
 
   //Used for the reports of roles containing entitlements

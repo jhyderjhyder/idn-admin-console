@@ -12,6 +12,7 @@ import { AngularCsv } from 'angular-csv-ext/dist/Angular-csv';
 import { WorkItem } from '../model/work-item';
 import { IdentityActions } from '../model/IdentityActions';
 import { AccountActivities } from '../model/accountactivities';
+import { RevokeRole, RevokeRoleItem } from '../model/revokeRole';
 
 @Component({
   selector: 'app-identity-info',
@@ -389,6 +390,7 @@ export class IdentityInfoComponent implements OnInit {
 
     if (identity[0].roleCount) {
       this.identityInfo.roleCount = identity[0].roleCount;
+
       this.identityInfo.roleNames = identity[0].access
         .filter(each => each.type === 'ROLE')
         .map(each => each.displayName)
@@ -606,6 +608,25 @@ export class IdentityInfoComponent implements OnInit {
     this.email = null;
     this.selectedFilterTypes = 'name';
     this.submit();
+  }
+
+  revokeRole(id) {
+    const r = new RevokeRole();
+    r.requestType = 'REVOKE_ACCESS';
+    const people = new Array();
+    people.push(this.identityInfo.id);
+    r.requestedFor = people;
+    const item = new RevokeRoleItem();
+    item.id = id;
+    item.comment = 'Admin Tool Revoke Request';
+    item.type = 'ROLE';
+    const items = new Array();
+    items.push(item);
+    r.requestedItems = items;
+    console.log(r);
+    this.idnService.revokeRole(r).subscribe(data => {
+      window.alert('submited:' + data);
+    });
   }
 
   refreshIdentity() {

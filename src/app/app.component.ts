@@ -14,7 +14,7 @@ import { AuthenticationService } from './service/authentication-service.service'
 import { User } from './model/user';
 import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
-import { Menu} from './app.menu';
+import { Menu } from './app.menu';
 
 @Component({
   selector: 'app-root',
@@ -46,9 +46,7 @@ export class AppComponent {
     private authenticationService: AuthenticationService,
     private idle: Idle,
     keepalive: Keepalive,
-    private http: HttpClient,
-
-    
+    private http: HttpClient
   ) {
     this.routeEvent(this.route);
     this.authenticationService.currentUser.subscribe(user => {
@@ -56,14 +54,13 @@ export class AppComponent {
       this.reset();
     });
 
-   
     // fetch the latest version from the GitHub repository
     this.http
       .get(
         'https://api.github.com/repos/jhyderjhyder/idn-admin-console/releases/latest'
       )
       .subscribe((data: any) => {
-        this.latestVersion = data.tag_name;
+        this.latestVersion = data.name;
         this.currentVersion = this.version;
         this.newVersionAvailable = this.latestVersion !== this.currentVersion;
         //console.log(this.latestVersion + "--" + this.currentVersion)
