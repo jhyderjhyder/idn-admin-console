@@ -354,8 +354,9 @@ export class IdentityInfoComponent implements OnInit {
             accounts[i].entitlementAttributes != null &&
             accounts[i].entitlementAttributes.assignedGroups != null
           ) {
+            console.log(accounts[i].entitlementAttributes.assignedGroups);
             this.identityInfo.orgPermission =
-              accounts[i].entitlementAttributes.assignedGroups.join('; ');
+              accounts[i].entitlementAttributes.assignedGroups;
           }
         }
         data.sourceId = accounts[i].source.id;

@@ -908,7 +908,6 @@ Supported API's
           this.sleep(2000);
           return this.countEntitlements(appID);
         } else {
-          this.logError(`timeout getting record counts returning last 200`);
           this.handleError(`countEntitlments`);
         }
       })
@@ -1466,7 +1465,6 @@ Supported API's
           this.sleep(2000);
           return this.getAllSources();
         } else {
-          this.logError(`timeout getting record counts returning last 200`);
           page.limit = 200;
           return this.getAccessRequestStatusPaged(filters, page, false);
         }
