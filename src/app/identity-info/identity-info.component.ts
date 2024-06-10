@@ -437,6 +437,7 @@ export class IdentityInfoComponent implements OnInit {
         data.description = ents[i].description;
         data.attribute = ents[i].attribute;
         data.sourceName = ents[i].source.name;
+        data.id = ents[i].id;
 
         this.identityInfo.entitlementArray.push(data);
       }
@@ -611,6 +612,14 @@ export class IdentityInfoComponent implements OnInit {
   }
 
   revokeRole(id) {
+    this.revoke(id, 'ROLE');
+  }
+
+  revokeEntitlement(id) {
+    this.revoke(id, 'ENTITLEMENT');
+  }
+
+  revoke(id, type) {
     const r = new RevokeRole();
     r.requestType = 'REVOKE_ACCESS';
     const people = new Array();
@@ -619,7 +628,7 @@ export class IdentityInfoComponent implements OnInit {
     const item = new RevokeRoleItem();
     item.id = id;
     item.comment = 'Admin Tool Revoke Request';
-    item.type = 'ROLE';
+    item.type = type;
     const items = new Array();
     items.push(item);
     r.requestedItems = items;

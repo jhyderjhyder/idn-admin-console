@@ -557,6 +557,7 @@
           <td><b>Attribute</b></td>
           <td><b>DisplayName</b></td>
           <td><b>Description</b></td>
+          <td><b>Request</b></td>
         </tr>
       </thead>
       <tbody>
@@ -567,6 +568,7 @@
           <td>{{item.attribute}}</td>
           <td>{{item.displayName}}</td>
           <td>{{item.description}}</td>
+          <td><button type="button" class="btn btn-primary"(click)="revokeEntitlement(item.id)">Revoke</button></td>
         </tr>
       </tbody>
     </table>
