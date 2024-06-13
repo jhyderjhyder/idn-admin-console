@@ -82,20 +82,25 @@ export class ResetSourceComponent implements OnInit {
 
         const source = new Source();
         source.id = each.id;
-        source.cloudExternalID = each.connectorAttributes.cloudExternalId;
+        source.cloudExternalID = each.id;
         source.name = each.name;
         source.description = each.description;
         source.type = each.type;
 
-        this.idnService.getSourceCCApi(source.cloudExternalID).subscribe(
-          searchResult => {
-            source.accountsCount = searchResult.accountsCount;
-            source.entitlementsCount = searchResult.entitlementsCount;
-          },
-          err => {
-            this.messageService.handleIDNError(err);
-          }
-        );
+        this.idnService
+          .countApplicationAccounts(source.cloudExternalID, false)
+          .subscribe(response => {
+            const headers = response.headers;
+            source.accountsCount = headers.get('X-Total-Count');
+            //source.entitlementsCount = searchResult.entitlementsCount;
+          });
+
+        this.idnService
+          .countEntitlements(source.cloudExternalID)
+          .subscribe(response => {
+            const headers = response.headers;
+            source.entitlementsCount = headers.get('X-Total-Count');
+          });
 
         this.sources.push(source);
         this.loadedCount = this.sources.length;

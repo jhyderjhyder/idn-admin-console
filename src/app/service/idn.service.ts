@@ -66,17 +66,18 @@ API's to sunset #16
 
   aggregateSourceOwner(
     cloudExternalID: string,
-    formData: FormData
+    payload: object
   ): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/cc/api/source/loadAccounts/${cloudExternalID}`;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/sources/${cloudExternalID}/load-accounts`;
 
     const myHttpOptions = {
       headers: new HttpHeaders({}),
     };
+
     //replacement api/beta/import-accounts
     //https://sailpoint.api.identitynow.com/beta/source{id}/load-accounts
-    return this.http.post(url, formData, myHttpOptions);
+    return this.http.post(url, payload, myHttpOptions);
   }
 
   /**
@@ -87,13 +88,13 @@ API's to sunset #16
    */
   getSourceCCApi(cloudExternalID: string): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/cc/api/source/get/${cloudExternalID}`;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/sources/${cloudExternalID}`;
     return this.http.get(url);
   }
 
   resetSource(cloudExternalID: string, skipType: string): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/cc/api/source/reset/${cloudExternalID}`;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/sources/${cloudExternalID}/remove-accounts/`;
 
     const myHttpOptions = {
       headers: new HttpHeaders({
@@ -164,18 +165,10 @@ API's to sunset #16
 
   refreshSingleIdentity(identityId: string): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/cc/api/system/refreshIdentities`;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/identities/process`;
 
     const payload = {
-      filter: `name == \"${identityId}\"`,
-      refreshArgs: {
-        correlateEntitlements: 'true',
-        promoteAttributes: 'true',
-        refreshManagerStatus: 'true',
-        synchronizeAttributes: 'true',
-        pruneIdentities: 'true',
-        provision: 'true',
-      },
+      identityIds: [identityId],
     };
 
     return this.http.post(url, payload, this.httpOptions);
@@ -896,11 +889,11 @@ Supported API's
     return this.http.get(url, { observe: 'response' }).pipe(
       catchError(error => {
         if (error.status === 429) {
-          this.logError('Rate limited. Retrying in 2 seconds...');
+          //this.logError('Rate limited. Retrying in 2 seconds...');
           this.sleep(2000);
           return this.countApplicationAccounts(appID, unCorrelatedOnly);
         } else {
-          this.logError(`timeout getting record counts returning last 200`);
+          //this.logError(`timeout getting record counts returning last 200`);
           this.handleError(`countApplicationAccounts`);
         }
       })
@@ -914,7 +907,7 @@ Supported API's
     return this.http.get(url, { observe: 'response' }).pipe(
       catchError(error => {
         if (error.status === 429) {
-          this.logError('Rate limited. Retrying in 2 seconds...');
+          //this.logError('Rate limited. Retrying in 2 seconds...');
           this.sleep(2000);
           return this.countEntitlements(appID);
         } else {
