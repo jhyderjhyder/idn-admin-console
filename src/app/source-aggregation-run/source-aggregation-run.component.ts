@@ -78,7 +78,7 @@ export class AggregateSourceComponent implements OnInit {
 
         const source = new Source();
         source.id = each.id;
-        source.cloudExternalID = each.connectorAttributes.cloudExternalId;
+        source.cloudExternalID = each.id;
         source.name = each.name;
         source.description = each.description;
         source.type = each.type;
@@ -168,11 +168,14 @@ export class AggregateSourceComponent implements OnInit {
       if (each.aggregateSourceFormData == null) {
         each.aggregateSourceFormData = new FormData();
       }
+      let disableOptimization = 'false';
+
       if (each.aggSourceDisableOptimization) {
-        each.aggregateSourceFormData.append('disableOptimization', 'true');
-      } else {
-        each.aggregateSourceFormData.append('disableOptimization', 'false');
+        disableOptimization = 'true';
       }
+      const payload = {
+        disableOptimization: disableOptimization,
+      };
 
       if (index > 0 && index % 10 == 0) {
         // After processing every batch (10 sources), wait for 1 second before calling another API to avoid 429
@@ -182,10 +185,7 @@ export class AggregateSourceComponent implements OnInit {
       index++;
 
       this.idnService
-        .aggregateSourceOwner(
-          each.cloudExternalID,
-          each.aggregateSourceFormData
-        )
+        .aggregateSourceOwner(each.cloudExternalID, payload)
         .subscribe(
           searchResult => {
             processedCount++;
