@@ -5,6 +5,7 @@ import { AggregationTask } from '.././model/aggregation-task';
 export class Source {
   id: string;
   cloudExternalID: string;
+  cloudDisplayName: string;
   name: string;
   description: string;
   type: string;
