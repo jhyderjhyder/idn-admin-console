@@ -68,7 +68,7 @@
       <th scope="col">Source Name</th>
       <th scope="col">Source Description</th>
       <th scope="col">Type</th>
-      <th scope="col">cloudExternalID</th>
+      <th scope="col">cloudExternalID<br>cloudDisplayName</th>
       <th scope="col">ID</th>
       <th scope="col">Schema Count</th>
       <th scope="col">Last Agg Date</th>
@@ -85,7 +85,9 @@
  
       <td><span class="text-truncate">{{ s.description }}</span></td>
       <td>{{ s.type }}</td>
-      <td>{{ s.cloudExternalID }}</td>
+      <td>{{ s.cloudExternalID }}
+        <br>{{s.cloudDisplayName}}
+      </td>
       <td>
         <a  style="color: blue;" class="page-link" href="javascript:void(0);" (click)="viewJson(s)">{{ s.id }}</a>
       </td>

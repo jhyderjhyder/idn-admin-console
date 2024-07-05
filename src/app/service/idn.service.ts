@@ -111,6 +111,25 @@ API's to sunset #16
     return this.http.post(url, payload, myHttpOptions);
   }
 
+  resetSourceEnt(cloudExternalID: string, skipType: string): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/entitlements/reset/sources/${cloudExternalID}`;
+
+    const myHttpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/x-www-form-urlencoded',
+      }),
+    };
+
+    let payload = null;
+
+    if (skipType != null) {
+      payload = 'skip=' + `${skipType}`;
+    }
+
+    return this.http.post(url, payload, myHttpOptions);
+  }
+
   getAggregationSchedules(cloudExternalID: string): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
     const url = `https://${currentUser.tenant}.api.${currentUser.domain}/cc/api/source/getAggregationSchedules/${cloudExternalID}`;
@@ -422,6 +441,41 @@ Supported API's
           console.warn('Rate limited. Retrying in 2 seconds...');
           this.sleep(2000);
           return this.getTaskStatus(compleationStatus);
+        } else {
+          catchError(this.handleError(`getSourceV3Api`));
+        }
+      })
+    );
+  }
+
+  endTask(stringTaskID: string): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/task-status/${stringTaskID}`;
+    const data = [
+      {
+        op: 'replace',
+        path: '/completionStatus',
+        value: 'Error',
+      },
+      {
+        op: 'replace',
+        path: '/completed',
+        value: '2024-01-01T01:00:01.166Z',
+      },
+    ];
+
+    const myHttpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json-patch+json',
+      }),
+    };
+
+    return this.http.patch(url, data, myHttpOptions).pipe(
+      catchError(error => {
+        if (error.status === 429) {
+          console.warn('Rate limited. Retrying in 2 seconds...');
+          this.sleep(2000);
+          return this.getTaskStatus(stringTaskID);
         } else {
           catchError(this.handleError(`getSourceV3Api`));
         }

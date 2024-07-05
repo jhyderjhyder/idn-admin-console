@@ -169,7 +169,7 @@ export class ResetSourceComponent implements OnInit {
     this.skipType = 'accounts';
 
     this.idnService
-      .resetSource(this.sourceToReset.cloudExternalID, this.skipType)
+      .resetSourceEnt(this.sourceToReset.cloudExternalID, this.skipType)
       .subscribe(
         () => {
           //this.closeModalDisplayMsg();
@@ -209,6 +209,29 @@ export class ResetSourceComponent implements OnInit {
 
     this.idnService
       .resetSource(this.sourceToReset.cloudExternalID, this.skipType)
+      .subscribe(
+        () => {
+          //this.closeModalDisplayMsg();
+          this.resetSourceBothConfirmModal.hide();
+          this.messageService
+            .add(`Source accounts and entitlements in progress. 
+                          Please check Org -> Admin -> Dashboard -> Monitor. 
+                          Hit Refresh to see the count drop for the source to 0 if successful`);
+          this.sourceToReset = null;
+          this.skipType = null;
+          this.reset(false);
+          this.search();
+        },
+        err => {
+          this.resetSourceBothConfirmModal.hide();
+          this.sourceToReset = null;
+          this.skipType = null;
+          this.messageService.handleIDNError(err);
+        }
+      );
+
+    this.idnService
+      .resetSourceEnt(this.sourceToReset.cloudExternalID, this.skipType)
       .subscribe(
         () => {
           //this.closeModalDisplayMsg();

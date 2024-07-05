@@ -82,9 +82,14 @@ export class SourceInfoComponent implements OnInit {
         index++;
 
         const source = new Source();
+        source.name = each.name;
         source.id = each.id;
         source.cloudExternalID = each.connectorAttributes.cloudExternalId;
-        source.name = each.name;
+        source.cloudDisplayName = each.connectorAttributes.cloudDisplayName;
+        if (source.cloudDisplayName == source.name) {
+          source.cloudDisplayName = '';
+        }
+
         source.description = each.description;
         if (each.description.length > 10) {
           source.description = each.description.slice(0, 10) + '...';
