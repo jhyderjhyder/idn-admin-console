@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { IDNService } from '../service/idn.service';
 import { AngularCsv } from 'angular-csv-ext/dist/Angular-csv';
+//import { forEach } from 'jszip';
 
 @Component({
   selector: 'app-report-task-status',
@@ -10,9 +11,10 @@ import { AngularCsv } from 'angular-csv-ext/dist/Angular-csv';
 export class ReportTaskStatusComponent implements OnInit {
   constructor(private idnService: IDNService) {}
 
-  tasks: [];
+  tasks: Array<Object>;
   filterType: string;
   filterOption: Array<String>;
+  workflowCase: number;
   ngOnInit(): void {
     this.filterOption = new Array<String>();
     this.filterOption.push('ERROR');
@@ -24,7 +26,14 @@ export class ReportTaskStatusComponent implements OnInit {
   }
 
   submit() {
+    this.workflowCase = 0;
     this.getData();
+  }
+
+  endTask(id) {
+    this.idnService.endTask(id).subscribe(response => {
+      JSON.stringify(response);
+    });
   }
 
   getData(): void {
@@ -32,8 +41,17 @@ export class ReportTaskStatusComponent implements OnInit {
     if (filter == 'RUNNING') {
       filter = null;
     }
+    this.tasks = new Array();
     this.idnService.getTaskStatus(filter).subscribe(response => {
-      this.tasks = response;
+      for (const each of response) {
+        if (each.description != null && each.description === 'Workflow Case') {
+          //Hiding workflow cases
+          this.workflowCase++;
+        } else {
+          this.tasks.push(each);
+        }
+      }
+      //this.tasks = response;
     });
   }
 
