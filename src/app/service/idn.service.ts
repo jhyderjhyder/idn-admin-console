@@ -113,7 +113,7 @@ API's to sunset #16
 
   resetSourceEnt(cloudExternalID: string, skipType: string): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/entitlements/reset/${cloudExternalID}`;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/entitlements/reset/sources/${cloudExternalID}`;
 
     const myHttpOptions = {
       headers: new HttpHeaders({
