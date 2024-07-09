@@ -168,15 +168,20 @@ export class AggregateSourceComponent implements OnInit {
       if (each.aggregateSourceFormData == null) {
         each.aggregateSourceFormData = new FormData();
       }
-      let disableOptimization = 'false';
+     /* let disableOptimization = 'false';
 
       if (each.aggSourceDisableOptimization) {
         disableOptimization = 'true';
       }
+      
       const payload = {
         disableOptimization: disableOptimization,
       };
+      */
 
+      const formData: FormData = new FormData();
+
+      formData.append("disableOptimization", "true");
       if (index > 0 && index % 10 == 0) {
         // After processing every batch (10 sources), wait for 1 second before calling another API to avoid 429
         // Too Many Requests Error
@@ -185,7 +190,7 @@ export class AggregateSourceComponent implements OnInit {
       index++;
 
       this.idnService
-        .aggregateSourceOwner(each.cloudExternalID, payload)
+        .aggregateSourceOwner(each.cloudExternalID, formData)
         .subscribe(
           searchResult => {
             processedCount++;
