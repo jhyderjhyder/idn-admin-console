@@ -1596,11 +1596,17 @@ Supported API's
     return this.http.get(url, this.httpOptions);
   }
 
-  getWorkItemsPending(): Observable<any> {
+  getWorkItemsPending(page: PageResults): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/work-items?sorters=-created`;
+    const url =
+      `https://${currentUser.tenant}.api.${currentUser.domain}/v3/work-items?sorters=-created` +
+      '&limit=' +
+      page.limit +
+      '&offset=' +
+      page.offset +
+      '&count=true';
 
-    return this.http.get(url, this.httpOptions);
+    return this.http.get(url, { observe: 'response' });
   }
 
   getWorkItemsCompleted(): Observable<any> {

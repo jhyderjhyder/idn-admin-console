@@ -5,6 +5,7 @@ import { AuthenticationService } from '../service/authentication-service.service
 import { MessageService } from '../service/message.service';
 import { WorkItem } from '../model/work-item';
 import { SimpleQueryCondition } from '../model/simple-query-condition';
+import { PageResults } from '../model/page-results';
 
 @Component({
   selector: 'app-work-items-status',
@@ -20,6 +21,7 @@ export class WorkItemsStatusComponent implements OnInit {
   totalCompleted: number;
   totalWorkItems: number;
   rawObject: string;
+  page: PageResults;
 
   constructor(
     private idnService: IDNService,
@@ -34,11 +36,33 @@ export class WorkItemsStatusComponent implements OnInit {
   }
 
   reset() {
+    this.page = new PageResults();
+    this.page.limit = 250;
     this.workItemsStatuses = null;
     this.searchText = null;
     this.errorMessage = null;
     this.loading = false;
     this.messageService.clearAll();
+  }
+
+  /**
+   * Copy these three functions to any
+   * page you want to have paggination
+   */
+  //Get the next page
+  getNextPage() {
+    this.page.nextPage;
+    this.getAllWorkItemsStatus();
+  }
+  //Get the previous page
+  getPrevPage() {
+    this.page.prevPage;
+    this.getAllWorkItemsStatus();
+  }
+  //Pick the page Number you want
+  getOnePage(input) {
+    this.page.getPageByNumber(input - 1);
+    this.getAllWorkItemsStatus();
   }
 
   getAllWorkItemsStatus() {
@@ -56,7 +80,11 @@ export class WorkItemsStatusComponent implements OnInit {
 
     this.workItemsStatuses = [];
 
-    this.idnService.getWorkItemsPending().subscribe(results => {
+    this.idnService.getWorkItemsPending(this.page).subscribe(response => {
+      const results = response.body;
+      const headers = response.headers;
+
+      this.page.xTotalCount = headers.get('X-Total-Count');
       for (const each of results) {
         const workItemsStatus = new WorkItem();
         workItemsStatus.id = each.id;
