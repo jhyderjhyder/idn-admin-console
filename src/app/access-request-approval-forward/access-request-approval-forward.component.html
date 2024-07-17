@@ -19,7 +19,7 @@
   </div>
 </form>
 <div class="form-group row mt-3" *ngIf="loading">
-  <div class="col-sm-10 text-start">
+  <div class="col-sm-8 text-start">
     <span class="fw-bold">Loading will take time... Please wait!!!</span>
   </div>
   <div class="col-sm-2 text-end">
@@ -27,6 +27,29 @@
   </div>
 </div>
 <pre id=jsonRaw class=json-container style="background-color: black;"></pre>
+
+<!--Start pagination Information Just change hte ngIf -->
+<div class="row" *ngIf="pendingApprovals && !loading">
+  <div class="col-sm-2 text-start">
+    Total Records Found:
+    {{page.xTotalCount}}
+  </div>
+  <div class="col-sm-2 text-start">
+    Page:
+    {{page.currentPage}} of {{page.totalPages}}
+  </div>
+  <nav aria-label="Page navigation">
+    <ul class="pagination">
+      <li *ngIf="page.showPreviousButton" class="page-item"><a class="page-link" href="javascript:void(0);" (click)="getPrevPage()">Previous</a></li>
+        <li class="page-item" *ngFor="let item of page.paggination(); let i =index">
+          <a class="page-link" href="javascript:void(0);" (click)="getOnePage(item)">{{item}}</a>
+      </li>
+      <li *ngIf="page.hasMorePages" class="page-item"><a class="page-link" href="javascript:void(0);" (click)="getNextPage()">Next</a></li>
+    </ul>
+  </nav>
+</div>
+<!--End of Pagination Info-->
+
 <div *ngIf="pendingApprovals && !loading" class="row mt-3">
   <div class="col-sm-10 text-start">
     <span class="fw-bold">This report shows pending access request approvals for tenant (latest 250 records). Use the

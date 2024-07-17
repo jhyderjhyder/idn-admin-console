@@ -83,6 +83,7 @@ export class SourceInfoComponent implements OnInit {
 
         const source = new Source();
         source.name = each.name;
+        source.labels = each.labels;
         source.id = each.id;
         source.cloudExternalID = each.connectorAttributes.cloudExternalId;
         source.cloudDisplayName = each.connectorAttributes.cloudDisplayName;

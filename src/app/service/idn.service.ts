@@ -1553,11 +1553,16 @@ Supported API's
     );
   }
 
-  getAccessRequestApprovalsPending(): Observable<any> {
+  getAccessRequestApprovalsPending(page: PageResults): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/access-request-approvals/pending?sorters=-created`;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/access-request-approvals/pending?sorters=-created` +
+    '&limit=' +
+      page.limit +
+      '&offset=' +
+      page.offset +
+      '&count=true';
 
-    return this.http.get(url, this.httpOptions);
+    return this.http.get(url, { observe: 'response' });
   }
 
   forwardAccessRequestApproval(
