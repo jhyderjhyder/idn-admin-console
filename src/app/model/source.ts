@@ -30,5 +30,5 @@ export class Source {
   schemaCount: string;
   testConnectionStatus: string;
   testConnectionDetails: string;
-  labels: Array<[string]>;
+  labels: string[];
 }

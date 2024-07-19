@@ -51,6 +51,7 @@
         <th scope="col">Last Agg Date</th>
         <th scope="col">Healthy</th>
         <th scope="col">Type</th>
+        <th scope="col">Tags</th>
       </tr>
     </thead>
     <tbody class="text-center align-middle" *ngIf="sources">
@@ -72,6 +73,9 @@
         </td>
         <td>
           {{ s.type }}
+        </td>
+        <td>
+          {{ s.labels }}
         </td>
       </tr>
     </tbody>
