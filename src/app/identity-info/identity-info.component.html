@@ -568,7 +568,7 @@
           <td>{{item.attribute}}</td>
           <td>{{item.displayName}}</td>
           <td>{{item.description}}</td>
-          <td><button type="button" class="btn btn-primary"(click)="revokeEntitlement(item.id)">Revoke</button></td>
+          <td><button type="button" class="btn btn-primary"(click)="revokeEntitlement(item)">Revoke</button></td>
         </tr>
       </tbody>
     </table>
@@ -592,7 +592,7 @@
         <tr *ngFor="let item of identityInfo.roleArray; let i =index" >
           <td>{{i+1}}</td>
           <td>{{item.name}}</td>
-          <td><button type="button" class="btn btn-primary"(click)="revokeRole(item.id)">Revoke
+          <td><button type="button" class="btn btn-primary"(click)="revokeRole(item)">Revoke
             </button></td>
         </tr>
       </tbody>
@@ -807,3 +807,41 @@
   </div>
 </div>
 </div>
+
+
+<div bsModal #revokeRequest="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="dialog-child-name">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 id="dialog-child-name" class="modal-title pull-left font-weight-bold">
+          Submit Request for Revoke
+        </h5>
+        <!--<button type="button" class="btn close pull-right" aria-label="Close" (click)="hideResetSourceBothConfirmModal()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      -->
+      </div>
+      <div class="modal-body" *ngIf="tempRevoke">
+          <div class="form-group row mb-2">
+            <div class="col-sm-12 text-start" >
+                <span class="fw-bold">id:</span>&nbsp;{{tempRevoke.id}}<br>
+                <span class="fw-bold">Name:</span>&nbsp;{{tempRevoke.displayName}}<br>
+                <span class="fw-bold">Type:</span>&nbsp;{{tempRevokeType}}<br>
+               
+            </div>
+            <div class="col-sm-4 text-start">
+              <button type="button" class="btn btn-success btn-sm" (click)="revoke(tempRevoke.id, tempRevokeType)">
+                Yes I am Sure
+              </button>
+            </div>
+            <div class="col-sm-4 text-start">
+              <button type="button" class="btn btn-primary btn-sm" (click)="cancelRevoke()">
+                Cancel
+              </button>
+            </div>
+          </div>
+      </div>
+    </div>
+  </div>
+</div>
+

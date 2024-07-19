@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { IDNService } from '../service/idn.service';
 import { MessageService } from '../service/message.service';
 import { SimpleQueryCondition } from '../model/simple-query-condition';
@@ -13,6 +13,8 @@ import { WorkItem } from '../model/work-item';
 import { IdentityActions } from '../model/IdentityActions';
 import { AccountActivities } from '../model/accountactivities';
 import { RevokeRole, RevokeRoleItem } from '../model/revokeRole';
+import { ModalDirective } from 'ngx-bootstrap/modal';
+import { Entitlement } from '../model/entitlement';
 
 @Component({
   selector: 'app-identity-info',
@@ -20,6 +22,8 @@ import { RevokeRole, RevokeRoleItem } from '../model/revokeRole';
   styleUrls: ['./identity-info.component.css'],
 })
 export class IdentityInfoComponent implements OnInit {
+  tempRevoke: Entitlement;
+  tempRevokeType: string;
   loading: boolean;
   allOwnersFetched: boolean;
   errorMessage: string;
@@ -58,7 +62,11 @@ export class IdentityInfoComponent implements OnInit {
     private messageService: MessageService
   ) {}
 
+  @ViewChild('revokeRequest', { static: false })
+  revokeRequest: ModalDirective;
+
   ngOnInit() {
+    this.tempRevoke = new Entitlement();
     this.page = new PageResults();
     this.selectedFilterTypes = 'name';
     this.filterTypes = Array<string>();
@@ -612,11 +620,24 @@ export class IdentityInfoComponent implements OnInit {
   }
 
   revokeRole(id) {
-    this.revoke(id, 'ROLE');
+    this.tempRevoke = id;
+    this.tempRevokeType = 'ROLE';
+    this.revokeRequest.show();
+    //this.revoke(id, 'ROLE');
   }
 
   revokeEntitlement(id) {
-    this.revoke(id, 'ENTITLEMENT');
+    this.tempRevoke = id;
+    this.tempRevokeType = 'ENTITLEMENT';
+
+    console.log(id);
+    this.revokeRequest.show();
+  }
+
+  cancelRevoke() {
+    this.tempRevoke = null;
+    this.tempRevokeType = null;
+    this.revokeRequest.hide();
   }
 
   revoke(id, type) {
