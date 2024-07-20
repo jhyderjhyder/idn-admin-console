@@ -1632,6 +1632,22 @@ Supported API's
     );
   }
 
+  getRoleDetails(value: string): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/roles/${value}`;
+
+    return this.http.get(url, this.httpOptions).pipe(
+      catchError(error => {
+        if (error.status === 429) {
+          this.sleep(2000);
+          return this.getRoleDetails(value);
+        } else {
+          catchError(this.handleError(`getTags`));
+        }
+      })
+    );
+  }
+
   getWorkItemsStatus(filters): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
     let filteredURL = '';

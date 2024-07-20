@@ -22,6 +22,9 @@ import { Entitlement } from '../model/entitlement';
   styleUrls: ['./identity-info.component.css'],
 })
 export class IdentityInfoComponent implements OnInit {
+  roleDetailsEnt: Array<EntitlementSimple>;
+
+  userComment: string;
   tempRevoke: Entitlement;
   tempRevokeType: string;
   loading: boolean;
@@ -64,6 +67,9 @@ export class IdentityInfoComponent implements OnInit {
 
   @ViewChild('revokeRequest', { static: false })
   revokeRequest: ModalDirective;
+
+  @ViewChild('roleDetailsModal', { static: false })
+  roleDetailsModal: ModalDirective;
 
   ngOnInit() {
     this.tempRevoke = new Entitlement();
@@ -640,6 +646,34 @@ export class IdentityInfoComponent implements OnInit {
     this.revokeRequest.hide();
   }
 
+  cancelRoleDetails() {
+    this.tempRevoke = null;
+    this.tempRevokeType = null;
+    this.roleDetailsModal.hide();
+  }
+  roleDetails(item) {
+    console.log(item);
+    this.roleDetailsModal.show();
+    this.idnService.getRoleDetails(item.id).subscribe(data => {
+      this.roleDetailsEnt = new Array();
+      for (const each of data.entitlements) {
+        const es = new EntitlementSimple();
+        es.id = each.id;
+        es.displayName = each.name;
+        let found = 'false';
+        //roleDetailsEnt: Array<EntitlementSimple>;
+        for (const master of this.identityInfo.entitlementArray) {
+          const data = master as EntitlementSimple;
+          if (data.id == es.id) {
+            found = 'true';
+          }
+        }
+        es.attribute = found;
+        this.roleDetailsEnt.push(es);
+      }
+    });
+  }
+
   revoke(id, type) {
     const r = new RevokeRole();
     r.requestType = 'REVOKE_ACCESS';
@@ -648,7 +682,10 @@ export class IdentityInfoComponent implements OnInit {
     r.requestedFor = people;
     const item = new RevokeRoleItem();
     item.id = id;
-    item.comment = 'Admin Tool Revoke Request';
+    if (this.userComment == null) {
+      this.userComment = '';
+    }
+    item.comment = 'Admin Tool:' + this.userComment;
     item.type = type;
     const items = new Array();
     items.push(item);
