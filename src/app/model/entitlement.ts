@@ -17,4 +17,5 @@ export class Entitlement {
   newOwner: SourceOwner;
   currentOwnerAccountName: string;
   currentOwnerDisplayName: string;
+  displayName: string;
 }

@@ -69,6 +69,7 @@
       <th scope="col">Source Description</th>
       <th scope="col">Type</th>
       <th scope="col">cloudExternalID<br>cloudDisplayName</th>
+      <th scope="col">Tags</th>
       <th scope="col">ID</th>
       <th scope="col">Schema Count</th>
       <th scope="col">Last Agg Date</th>
@@ -88,6 +89,7 @@
       <td>{{ s.cloudExternalID }}
         <br>{{s.cloudDisplayName}}
       </td>
+      <td>{{s.labels}}</td>
       <td>
         <a  style="color: blue;" class="page-link" href="javascript:void(0);" (click)="viewJson(s)">{{ s.id }}</a>
       </td>
@@ -104,6 +106,7 @@
             <a class="dropdown-item" (click)="viewJsonProvisioningPolicy(s)">View-ProvisioningPolicy</a>
             <a class="dropdown-item" (click)="editJsonProvisioningPolicy(s)">Edit-ProvisioningPolicy</a>
             <a class="dropdown-item" (click)="testConnection(s)">Test Souce</a>
+            <a class="dropdown-item" (click)="addSourceTag(s)">Update Tags</a>
           </div>
         </div>
       </td>
@@ -113,4 +116,45 @@
 </table>
 
 <br>
+</div>
+
+<div bsModal #addTagModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="dialog-child-name">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 id="dialog-child-name" class="modal-title pull-left font-weight-bold">
+          Add Tag for Reporting
+        </h5>
+        <!--<button type="button" class="btn close pull-right" aria-label="Close" (click)="hideResetSourceBothConfirmModal()">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      -->
+      </div>
+      <div class="modal-body" *ngIf="tagSource">
+          <div class="form-group row mb-2">
+            <div class="col-sm-12 text-start">
+                <span class="fw-bold">Name:</span>&nbsp;{{tagSource.name}}<br>
+                <span class="fw-bold">Type:</span>&nbsp;{{tagSource.type}}<br>
+                <span class="fw-bold">newTagName:<input type="text" class="form-control col-sm-4 mt-2" id="rule-name" [(ngModel)]="newTagName" autocomplete="off"></span><br>
+               
+            </div>
+            <div class="col-sm-4 text-start">
+              <button type="button" class="btn btn-success btn-sm" (click)="addNewTag()">
+                Add Tag
+              </button>
+            </div>
+            <div class="col-sm-4 text-start">
+              <button type="button" class="btn btn-warning btn-sm" (click)="removeAllTag()">
+                Remove All Tags
+              </button>
+            </div>
+            <div class="col-sm-4 text-start">
+              <button type="button" class="btn btn-primary btn-sm" (click)="cancelTag()">
+                Cancel
+              </button>
+            </div>
+          </div>
+      </div>
+    </div>
+  </div>
 </div>

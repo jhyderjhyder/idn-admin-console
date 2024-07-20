@@ -9,6 +9,7 @@ import { SimpleQueryCondition } from '../model/simple-query-condition';
 import { IdentityAttribute } from '../model/identity-attribute';
 import { JsonFormatOptions } from '../model/json-format-options';
 import { prettyPrintJson } from 'pretty-print-json';
+import { PageResults } from '../model/page-results';
 
 @Component({
   selector: 'app-access-request-approval-forward',
@@ -28,6 +29,7 @@ export class AccessRequestApprovalForwardComponent implements OnInit {
   identityInfo: IdentityAttribute;
   pendingApprovalsRaw: object[];
   rawObject: boolean;
+  page: PageResults;
 
   public modalRef: BsModalRef;
 
@@ -46,6 +48,8 @@ export class AccessRequestApprovalForwardComponent implements OnInit {
   }
 
   reset(clearMsg: boolean) {
+    this.page = new PageResults();
+    this.page.limit = 200;
     this.rawObject = false;
     const elem = document.getElementById('jsonRaw');
     elem.innerHTML = '';
@@ -64,33 +68,59 @@ export class AccessRequestApprovalForwardComponent implements OnInit {
     }
   }
 
+  /**
+   * Copy these three functions to any
+   * page you want to have paggination
+   */
+  //Get the next page
+  getNextPage() {
+    this.page.nextPage;
+    this.getAllAccessRequestApprovalsPending();
+  }
+  //Get the previous page
+  getPrevPage() {
+    this.page.prevPage;
+    this.getAllAccessRequestApprovalsPending();
+  }
+  //Pick the page Number you want
+  getOnePage(input) {
+    this.page.getPageByNumber(input - 1);
+    this.getAllAccessRequestApprovalsPending();
+  }
+
   getAllAccessRequestApprovalsPending() {
     this.loading = true;
-    this.idnService.getAccessRequestApprovalsPending().subscribe(results => {
-      this.pendingApprovals = [];
-      this.pendingApprovalsRaw = [];
-      for (const each of results) {
-        this.pendingApprovalsRaw.push(each);
-        const pendingApproval = new AccessRequestApprovalsPending();
-        pendingApproval.id = each.id;
-        pendingApproval.name = each.name;
-        pendingApproval.requestedObjectName = each.requestedObject.name;
-        pendingApproval.requestedObjectType = each.requestedObject.type;
-        pendingApproval.requestType = each.requestType;
-        pendingApproval.requester = each.requester.name;
-        pendingApproval.requestedFor = each.requestedFor.name;
-        pendingApproval.owner = each.owner.name;
-        pendingApproval.requestCreated = each.requestCreated;
-        pendingApproval.created = each.created;
+    this.idnService
+      .getAccessRequestApprovalsPending(this.page)
+      .subscribe(response => {
+        const results = response.body;
+        const headers = response.headers;
 
-        if (each.sodViolationContext && each.sodViolationContext.state) {
-          pendingApproval.sodViolationState = each.sodViolationContext.state;
+        this.page.xTotalCount = headers.get('X-Total-Count');
+        this.pendingApprovals = [];
+        this.pendingApprovalsRaw = [];
+        for (const each of results) {
+          this.pendingApprovalsRaw.push(each);
+          const pendingApproval = new AccessRequestApprovalsPending();
+          pendingApproval.id = each.id;
+          pendingApproval.name = each.name;
+          pendingApproval.requestedObjectName = each.requestedObject.name;
+          pendingApproval.requestedObjectType = each.requestedObject.type;
+          pendingApproval.requestType = each.requestType;
+          pendingApproval.requester = each.requester.name;
+          pendingApproval.requestedFor = each.requestedFor.name;
+          pendingApproval.owner = each.owner.name;
+          pendingApproval.requestCreated = each.requestCreated;
+          pendingApproval.created = each.created;
+
+          if (each.sodViolationContext && each.sodViolationContext.state) {
+            pendingApproval.sodViolationState = each.sodViolationContext.state;
+          }
+
+          this.pendingApprovals.push(pendingApproval);
         }
-
-        this.pendingApprovals.push(pendingApproval);
-      }
-      this.loading = false;
-    });
+        this.loading = false;
+      });
   }
 
   checkForwardApproval() {

@@ -7,6 +7,7 @@ import { MessageService } from '../service/message.service';
 import { WorkItem } from '../model/work-item';
 import { SimpleQueryCondition } from '../model/simple-query-condition';
 import { IdentityAttribute } from '../model/identity-attribute';
+import { PageResults } from '../model/page-results';
 
 @Component({
   selector: 'app-work-items-forward',
@@ -25,6 +26,7 @@ export class WorkItemsForwardComponent implements OnInit {
   invalidMessage: string[];
   identityInfo: IdentityAttribute;
   rawObject: string;
+  page: PageResults;
 
   public modalRef: BsModalRef;
 
@@ -44,6 +46,8 @@ export class WorkItemsForwardComponent implements OnInit {
   }
 
   reset(clearMsg: boolean) {
+    this.page = new PageResults();
+    this.page.limit = 200;
     this.pendingWorkItems = null;
     this.workItemToForward = null;
     this.newOwner = null;
@@ -59,9 +63,33 @@ export class WorkItemsForwardComponent implements OnInit {
     }
   }
 
+  /**
+   * Copy these three functions to any
+   * page you want to have paggination
+   */
+  //Get the next page
+  getNextPage() {
+    this.page.nextPage;
+    this.getAllPendingWorkItems();
+  }
+  //Get the previous page
+  getPrevPage() {
+    this.page.prevPage;
+    this.getAllPendingWorkItems();
+  }
+  //Pick the page Number you want
+  getOnePage(input) {
+    this.page.getPageByNumber(input - 1);
+    this.getAllPendingWorkItems();
+  }
+
   getAllPendingWorkItems() {
     this.loading = true;
-    this.idnService.getWorkItemsPending().subscribe(results => {
+    this.idnService.getWorkItemsPending(this.page).subscribe(response => {
+      const results = response.body;
+      const headers = response.headers;
+
+      this.page.xTotalCount = headers.get('X-Total-Count');
       this.pendingWorkItems = [];
       for (const each of results) {
         const pendingWorkItem = new WorkItem();

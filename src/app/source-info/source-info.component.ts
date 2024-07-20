@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import { BsModalRef } from 'ngx-bootstrap/modal';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { BsModalRef, ModalDirective } from 'ngx-bootstrap/modal';
 import { Source } from '../model/source';
 import { IDNService } from '../service/idn.service';
 import { MessageService } from '../service/message.service';
@@ -25,18 +25,26 @@ export class SourceInfoComponent implements OnInit {
   rawObject: string;
   rawObjectId: string;
   rawProvisioningId: string;
+  tagSource: Source;
+  newTagName: string;
 
   zip: JSZip = new JSZip();
 
   invalidMessage: string[];
 
   public modalRef: BsModalRef;
+  @ViewChild('addTagModal', { static: false })
+  addTagModal: ModalDirective;
 
   constructor(
     private idnService: IDNService,
     private messageService: MessageService,
     private authenticationService: AuthenticationService
   ) {}
+
+  hideResetSourceBothConfirmModal() {
+    this.addTagModal.hide();
+  }
 
   ngOnInit() {
     this.reset(true);
@@ -83,7 +91,15 @@ export class SourceInfoComponent implements OnInit {
 
         const source = new Source();
         source.name = each.name;
+        //source.labels = each.labels;
         source.id = each.id;
+        this.idnService.getTags('SOURCE', source.id).subscribe(myTag => {
+          if (myTag != null) {
+            source.labels = myTag.tags;
+          } else {
+            source.labels = ['none'];
+          }
+        });
         source.cloudExternalID = each.connectorAttributes.cloudExternalId;
         source.cloudDisplayName = each.connectorAttributes.cloudDisplayName;
         if (source.cloudDisplayName == source.name) {
@@ -167,6 +183,38 @@ export class SourceInfoComponent implements OnInit {
         elem.innerHTML = html;
       }
     }
+  }
+
+  addSourceTag(input: Source) {
+    this.tagSource = input;
+    this.addTagModal.show();
+  }
+  addNewTag() {
+    //addTag(type:string, id:string, name:string, tag:string):
+    console.log(this.newTagName);
+    this.idnService
+      .addTag('SOURCE', this.tagSource.id, this.tagSource.name, this.newTagName)
+      .subscribe(searchResult => {
+        console.log(searchResult);
+        this.addTagModal.hide();
+        this.ngOnInit();
+      });
+  }
+
+  removeAllTag() {
+    //addTag(type:string, id:string, name:string, tag:string):
+    console.log(this.newTagName);
+    this.idnService
+      .deleteTag('SOURCE', this.tagSource.id)
+      .subscribe(searchResult => {
+        console.log(searchResult);
+        this.addTagModal.hide();
+        this.ngOnInit();
+      });
+  }
+
+  cancelTag() {
+    this.addTagModal.hide();
   }
 
   clearJsonRaw() {

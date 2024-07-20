@@ -1553,11 +1553,17 @@ Supported API's
     );
   }
 
-  getAccessRequestApprovalsPending(): Observable<any> {
+  getAccessRequestApprovalsPending(page: PageResults): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/access-request-approvals/pending?sorters=-created`;
+    const url =
+      `https://${currentUser.tenant}.api.${currentUser.domain}/v3/access-request-approvals/pending?sorters=-created` +
+      '&limit=' +
+      page.limit +
+      '&offset=' +
+      page.offset +
+      '&count=true';
 
-    return this.http.get(url, this.httpOptions);
+    return this.http.get(url, { observe: 'response' });
   }
 
   forwardAccessRequestApproval(
@@ -1576,6 +1582,72 @@ Supported API's
     return this.http.post(url, payload);
   }
 
+  addTag(type: string, id: string, name: string, tag: string): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/tagged-objects`;
+
+    const payload = {
+      objectRef: {
+        type: `${type}`,
+        id: `${id}`,
+        name: `${name}`,
+      },
+      tags: [`${tag}`],
+    };
+    const myHttpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+      }),
+    };
+
+    return this.http.post(url, payload, myHttpOptions);
+  }
+
+  deleteTag(type: string, id: string): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/tagged-objects/${type}/${id}`;
+    const myHttpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+      }),
+    };
+
+    return this.http.delete(url, myHttpOptions);
+  }
+
+  getTags(type: string, value: string): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/tagged-objects/${type}/${value}`;
+
+    return this.http.get(url, this.httpOptions).pipe(
+      catchError(error => {
+        if (error.status === 429) {
+          this.sleep(2000);
+          return this.getTags(type, value);
+        } else {
+          catchError(this.handleError(`getTags`));
+        }
+      })
+    );
+  }
+
+  getRoleDetails(value: string): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/roles/${value}`;
+
+    return this.http.get(url, this.httpOptions).pipe(
+      catchError(error => {
+        if (error.status === 429) {
+          this.sleep(2000);
+          return this.getRoleDetails(value);
+        } else {
+          catchError(this.handleError(`getTags`));
+        }
+      })
+    );
+  }
+
   getWorkItemsStatus(filters): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
     let filteredURL = '';
@@ -1590,11 +1662,17 @@ Supported API's
     return this.http.get(url, this.httpOptions);
   }
 
-  getWorkItemsPending(): Observable<any> {
+  getWorkItemsPending(page: PageResults): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/work-items?sorters=-created`;
+    const url =
+      `https://${currentUser.tenant}.api.${currentUser.domain}/v3/work-items?sorters=-created` +
+      '&limit=' +
+      page.limit +
+      '&offset=' +
+      page.offset +
+      '&count=true';
 
-    return this.http.get(url, this.httpOptions);
+    return this.http.get(url, { observe: 'response' });
   }
 
   getWorkItemsCompleted(): Observable<any> {

@@ -82,6 +82,14 @@ export class SystemMonitorSourceComponent implements OnInit {
           }
         );
 
+        this.idnService.getTags('SOURCE', source.id).subscribe(myTag => {
+          if (myTag != null) {
+            source.labels = myTag.tags;
+          } else {
+            source.labels = ['none'];
+          }
+        });
+
         this.testConnection(source);
         this.loadedCount = this.sources.length;
       }
@@ -134,6 +142,7 @@ export class SystemMonitorSourceComponent implements OnInit {
       headers: [
         'name',
         'type',
+        'labels',
         'testConnectionStatus',
         'health',
         'lastAggregationDate',

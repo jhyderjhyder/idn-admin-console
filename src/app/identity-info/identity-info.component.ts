@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, ViewChild } from '@angular/core';
 import { IDNService } from '../service/idn.service';
 import { MessageService } from '../service/message.service';
 import { SimpleQueryCondition } from '../model/simple-query-condition';
@@ -13,6 +13,8 @@ import { WorkItem } from '../model/work-item';
 import { IdentityActions } from '../model/IdentityActions';
 import { AccountActivities } from '../model/accountactivities';
 import { RevokeRole, RevokeRoleItem } from '../model/revokeRole';
+import { ModalDirective } from 'ngx-bootstrap/modal';
+import { Entitlement } from '../model/entitlement';
 
 @Component({
   selector: 'app-identity-info',
@@ -20,6 +22,11 @@ import { RevokeRole, RevokeRoleItem } from '../model/revokeRole';
   styleUrls: ['./identity-info.component.css'],
 })
 export class IdentityInfoComponent implements OnInit {
+  roleDetailsEnt: Array<EntitlementSimple>;
+
+  userComment: string;
+  tempRevoke: Entitlement;
+  tempRevokeType: string;
   loading: boolean;
   allOwnersFetched: boolean;
   errorMessage: string;
@@ -58,7 +65,14 @@ export class IdentityInfoComponent implements OnInit {
     private messageService: MessageService
   ) {}
 
+  @ViewChild('revokeRequest', { static: false })
+  revokeRequest: ModalDirective;
+
+  @ViewChild('roleDetailsModal', { static: false })
+  roleDetailsModal: ModalDirective;
+
   ngOnInit() {
+    this.tempRevoke = new Entitlement();
     this.page = new PageResults();
     this.selectedFilterTypes = 'name';
     this.filterTypes = Array<string>();
@@ -612,11 +626,52 @@ export class IdentityInfoComponent implements OnInit {
   }
 
   revokeRole(id) {
-    this.revoke(id, 'ROLE');
+    this.tempRevoke = id;
+    this.tempRevokeType = 'ROLE';
+    this.revokeRequest.show();
+    //this.revoke(id, 'ROLE');
   }
 
   revokeEntitlement(id) {
-    this.revoke(id, 'ENTITLEMENT');
+    this.tempRevoke = id;
+    this.tempRevokeType = 'ENTITLEMENT';
+
+    console.log(id);
+    this.revokeRequest.show();
+  }
+
+  cancelRevoke() {
+    this.tempRevoke = null;
+    this.tempRevokeType = null;
+    this.revokeRequest.hide();
+  }
+
+  cancelRoleDetails() {
+    this.tempRevoke = null;
+    this.tempRevokeType = null;
+    this.roleDetailsModal.hide();
+  }
+  roleDetails(item) {
+    console.log(item);
+    this.roleDetailsModal.show();
+    this.idnService.getRoleDetails(item.id).subscribe(data => {
+      this.roleDetailsEnt = new Array();
+      for (const each of data.entitlements) {
+        const es = new EntitlementSimple();
+        es.id = each.id;
+        es.displayName = each.name;
+        let found = 'false';
+        //roleDetailsEnt: Array<EntitlementSimple>;
+        for (const master of this.identityInfo.entitlementArray) {
+          const data = master as EntitlementSimple;
+          if (data.id == es.id) {
+            found = 'true';
+          }
+        }
+        es.attribute = found;
+        this.roleDetailsEnt.push(es);
+      }
+    });
   }
 
   revoke(id, type) {
@@ -627,7 +682,10 @@ export class IdentityInfoComponent implements OnInit {
     r.requestedFor = people;
     const item = new RevokeRoleItem();
     item.id = id;
-    item.comment = 'Admin Tool Revoke Request';
+    if (this.userComment == null) {
+      this.userComment = '';
+    }
+    item.comment = 'Admin Tool:' + this.userComment;
     item.type = type;
     const items = new Array();
     items.push(item);
