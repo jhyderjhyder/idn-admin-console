@@ -756,6 +756,15 @@ Supported API's
       .pipe(catchError(this.handleError(`searchEntitlements`)));
   }
 
+  getEntitlement(input: string): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/entitlements/${input}`;
+
+    return this.http
+      .get(url, this.httpOptions)
+      .pipe(catchError(this.handleError(`getEntitlement`)));
+  }
+
   //Used for the reports of roles containing entitlements
   rolesContainingOneEntitlement(idNumber): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;

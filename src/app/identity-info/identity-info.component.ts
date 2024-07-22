@@ -652,6 +652,7 @@ export class IdentityInfoComponent implements OnInit {
     this.roleDetailsModal.hide();
   }
   roleDetails(item) {
+    this.roleDetailsEnt = null;
     console.log(item);
     this.roleDetailsModal.show();
     this.idnService.getRoleDetails(item.id).subscribe(data => {
@@ -669,6 +670,11 @@ export class IdentityInfoComponent implements OnInit {
           }
         }
         es.attribute = found;
+        this.roleDetailsEnt.push(es);
+      }
+      if (this.roleDetailsEnt.length == 0) {
+        const es = new EntitlementSimple();
+        es.displayName = 'No Direct Entitlements';
         this.roleDetailsEnt.push(es);
       }
     });
@@ -707,6 +713,12 @@ export class IdentityInfoComponent implements OnInit {
         }
       );
     }
+  }
+
+  getEntitlementDetails(input) {
+    this.idnService.getEntitlement(input).subscribe(data => {
+      window.alert(data.source.name);
+    });
   }
 
   saveInCsv() {
