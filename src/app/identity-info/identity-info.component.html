@@ -557,7 +557,7 @@
           <td><b>Attribute</b></td>
           <td><b>DisplayName</b></td>
           <td><b>Description</b></td>
-          <td><b>Request</b></td>
+          <td><b>Actions</b></td>
         </tr>
       </thead>
       <tbody>
@@ -568,7 +568,7 @@
           <td>{{item.attribute}}</td>
           <td>{{item.displayName}}</td>
           <td>{{item.description}}</td>
-          <td><button type="button" class="btn btn-primary"(click)="revokeEntitlement(item)">Revoke</button></td>
+          <td><button type="button" class="btn btn-danger"(click)="revokeEntitlement(item)">Revoke</button></td>
         </tr>
       </tbody>
     </table>
@@ -592,10 +592,12 @@
         <tr *ngFor="let item of identityInfo.roleArray; let i =index" >
           <td>{{i+1}}</td>
           <td>{{item.name}}</td>
-          <td><button type="button" class="btn btn-primary"(click)="revokeRole(item)">Revoke
-            </button>&nbsp;&nbsp;
+          <td>
             <button type="button" class="btn btn-primary"(click)="roleDetails(item)">Details
+            </button>&nbsp;&nbsp;
+            <button type="button" class="btn btn-danger"(click)="revokeRole(item)">Revoke
             </button>
+           
           </td>
         </tr>
       </tbody>
@@ -859,14 +861,19 @@
           Entitlements in Role
         </h5>
       </div>
+      <div class="modal-body" *ngIf="!roleDetailsEnt">Proccessing Please wait</div>
       <div class="modal-body" *ngIf="roleDetailsEnt" >
           <div class="form-group row mb-2" >
             <table class="table table-striped table-bordered">
               <tr><td>id</td><td>DisplayName</td><td>Found</td></tr>
               <tr *ngFor="let ent of roleDetailsEnt ; let i =index">
-                <td>{{ent.id}}</td>
+                <td><button type="button" class="btn btn-info btn-sm" (click)="getEntitlementDetails(ent.id)">
+                  {{ent.id}}
+                </button>
+                  </td>
                 <td>{{ent.displayName}}</td>
-                <td>{{ent.attribute}}</td>
+                <td *ngIf="ent.attribute=='true'">{{ent.attribute}}</td>
+                <td bgcolor="red" *ngIf="ent.attribute!='true'">{{ent.attribute}}</td>
               </tr>
             </table>
 

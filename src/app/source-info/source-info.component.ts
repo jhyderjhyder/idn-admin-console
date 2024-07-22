@@ -27,6 +27,7 @@ export class SourceInfoComponent implements OnInit {
   rawProvisioningId: string;
   tagSource: Source;
   newTagName: string;
+  clearButton: boolean;
 
   zip: JSZip = new JSZip();
 
@@ -56,6 +57,7 @@ export class SourceInfoComponent implements OnInit {
   }
 
   reset(clearMsg: boolean) {
+    this.clearButton = false;
     this.sources = null;
     this.loading = false;
     this.exporting = false;
@@ -146,6 +148,7 @@ export class SourceInfoComponent implements OnInit {
       if (each.id == input.id) {
         this.rawObject = JSON.stringify(each, null, 4);
         this.rawObjectId = input.id;
+        this.clearButton = true;
       }
     }
   }
@@ -164,6 +167,7 @@ export class SourceInfoComponent implements OnInit {
 
         this.rawObjectId = input.id;
         this.rawProvisioningId = 'Working on it';
+        this.clearButton = true;
       }
     }
   }
@@ -181,6 +185,7 @@ export class SourceInfoComponent implements OnInit {
         const html = prettyPrintJson.toHtml(each, options);
         const elem = document.getElementById('jsonRaw');
         elem.innerHTML = html;
+        this.clearButton = true;
       }
     }
   }
@@ -220,6 +225,9 @@ export class SourceInfoComponent implements OnInit {
   clearJsonRaw() {
     const elem = document.getElementById('jsonRaw');
     elem.innerHTML = null;
+    this.rawObjectId = null;
+    this.rawObject = null;
+    this.clearButton = false;
   }
 
   testConnection(input: Source) {
@@ -245,6 +253,7 @@ export class SourceInfoComponent implements OnInit {
   }
 
   viewJsonProvisioningPolicy(input: Source) {
+    this.clearButton = true;
     for (const each of this.allSources) {
       if (each.id == input.id) {
         //this.rawObject = JSON.stringify(each, null, 4);
