@@ -22,8 +22,8 @@
       </button>
     </div>
     <div class="col-sm-1 text-end">
-      <button type="button" [disabled]="loading" (click)="clearJsonRaw()" class="btn btn-primary btn-sm">
-        Clear Raw
+      <button type="button" [disabled]="!clearButton" (click)="clearJsonRaw()" class="btn btn-primary btn-sm">
+        Clear
       </button>
     </div>
     <div class="col-sm-1 text-end">
