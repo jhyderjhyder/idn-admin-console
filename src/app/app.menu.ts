@@ -73,6 +73,8 @@ export const codeMenu = [
   new MenuLink('/identity-transform-management', 'Transforms', null),
   new MenuLink('/rule-cloud-management', 'Cloud Rules', null),
   new MenuLink('/rule-connector-management', 'Connector Rules', null),
+  new MenuLink(null, null, true),
+  new MenuLink('/raw-object', 'Object Viewer', null),
 ];
 export const accessRequestMenu = [
   new MenuLink('/access-request-status', 'Approval Status', null),
