@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { PageResults } from '../model/page-results';
-import { IdnObject } from '../model/IDNobject';
+import { IdnObject } from '../model/idn-object';
 import { IDNService } from '../service/idn.service';
 
 
