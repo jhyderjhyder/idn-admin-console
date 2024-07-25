@@ -24,7 +24,9 @@ export class ReportFailuresComponent implements OnInit {
       'success',
       'created:[now-3d TO now] AND status:"Complete"'
     );
-    this.getData('created:[now-3d TO now] AND status:"incomplete"');
+    this.getData(
+      'created:[now-3d TO now] AND (status:"incomplete" OR status:"failure")'
+    );
   }
 
   saveInCsv() {
@@ -35,6 +37,7 @@ export class ReportFailuresComponent implements OnInit {
       showLabels: true,
       useHeader: true,
       headers: [
+        'status',
         'id',
         'trackingNumber',
         'created',
@@ -80,6 +83,7 @@ export class ReportFailuresComponent implements OnInit {
         } else {
           this.accessRequestCount++;
         }
+        rf.status = searchResult[i].status;
         rf.id = searchResult[i].id;
         rf.trackingNumber = searchResult[i].trackingNumber;
         rf.created = searchResult[i].created;

@@ -1890,7 +1890,7 @@ Supported API's
       .pipe(catchError(this.handleError(`getPersonId`)));
   }
 
-  getGeneralObject(page: PageResults, objectPath:string ): Observable<any> {
+  getGeneralObject(page: PageResults, objectPath: string): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
     const url =
       `https://${currentUser.tenant}.api.${currentUser.domain}/${objectPath}?sorters=-created` +
@@ -1903,10 +1903,13 @@ Supported API's
     return this.http.get(url, { observe: 'response' });
   }
 
-  saveGeneralObject(rawFormData, primaryKeySource, objectPath:string): Observable<any> {
+  saveGeneralObject(
+    rawFormData,
+    primaryKeySource,
+    objectPath: string
+  ): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url =
-      `https://${currentUser.tenant}.api.${currentUser.domain}/${objectPath}/${primaryKeySource}`;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/${objectPath}/${primaryKeySource}`;
 
     const myHttpOptions = {
       headers: new HttpHeaders({}),

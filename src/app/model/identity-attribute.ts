@@ -1,4 +1,6 @@
+import { Account } from './account';
 import { AccountActivities } from './accountactivities';
+import { EntitlementSimple } from './entitlement-simple';
 
 export class IdentityAttribute {
   displayName: string;
@@ -19,16 +21,16 @@ export class IdentityAttribute {
   identityProfile: string;
   accountCount: number;
   accountSourceNames: string;
-  accountArray: Array<{}>;
+  accountArray: Array<Account>;
   appCount: number;
   appNames: string;
   accessCount: number;
   entitlementCount: number;
   entitlementNames: string;
-  entitlementArray: Array<{}>;
+  entitlementArray: Array<EntitlementSimple>;
   roleCount: number;
   roleNames: string;
-  roleArray: Array<{}>;
+  roleArray: Array<Basic>;
   accessProfileCount: number;
   accessProfileNames: string;
   accessProfileArray: Array<{}>;

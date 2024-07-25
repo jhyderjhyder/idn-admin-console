@@ -393,6 +393,10 @@ export class IdentityInfoComponent implements OnInit {
 
         this.identityInfo.accountArray.push(data);
       }
+      //Sort by sourceName
+      this.identityInfo.accountArray.sort((a, b) =>
+        a.sourceName.localeCompare(b.sourceName)
+      );
     }
     //All Identity Attributes into simple name value array
     if (identity[0].attributes) {
@@ -427,6 +431,7 @@ export class IdentityInfoComponent implements OnInit {
       this.identityInfo.roleArray = identity[0].access.filter(
         each => each.type === 'ROLE'
       );
+      this.identityInfo.roleArray.sort((a, b) => a.name.localeCompare(b.name));
     }
 
     if (identity[0].accessProfileCount) {
@@ -470,6 +475,12 @@ export class IdentityInfoComponent implements OnInit {
 
         this.identityInfo.entitlementArray.push(data);
       }
+      this.identityInfo.entitlementArray.sort((a, b) =>
+        a.attribute.localeCompare(b.attribute)
+      );
+      this.identityInfo.entitlementArray.sort((a, b) =>
+        a.sourceName.localeCompare(b.sourceName)
+      );
     }
 
     if (identity[0].tagsCount) {

@@ -7,4 +7,5 @@ export class ReportFailures {
   created: string;
   id: string;
   trackingNumber: boolean;
+  status: string;
 }

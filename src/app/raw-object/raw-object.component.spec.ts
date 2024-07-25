@@ -8,9 +8,8 @@ describe('RawObjectComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ RawObjectComponent ]
-    })
-    .compileComponents();
+      declarations: [RawObjectComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(RawObjectComponent);
     component = fixture.componentInstance;
