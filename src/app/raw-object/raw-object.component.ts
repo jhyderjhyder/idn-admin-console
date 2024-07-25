@@ -3,13 +3,12 @@ import { PageResults } from '../model/page-results';
 import { IdnObject } from '../model/idn-object';
 import { IDNService } from '../service/idn.service';
 
-
 @Component({
   selector: 'app-raw-object',
   templateUrl: './raw-object.component.html',
-  styleUrls: ['./raw-object.component.css']
+  styleUrls: ['./raw-object.component.css'],
 })
-export class RawObjectComponent implements OnInit{
+export class RawObjectComponent implements OnInit {
   loading: boolean;
   filterTypes: Array<string>;
   selectedFilterTypes: string;
@@ -18,29 +17,25 @@ export class RawObjectComponent implements OnInit{
   page: PageResults;
   IdnObjects: IdnObject[];
 
-  constructor(
-    private idnService: IDNService
-  ) {}
+  constructor(private idnService: IDNService) {}
   ngOnInit(): void {
-    this.rawObject =null;
+    this.rawObject = null;
     this.filterTypes = new Array();
-    this.filterTypes.push("v3/access-profiles");
-    this.filterTypes.push("v3/access-request-approvals");
-    this.filterTypes.push("v3/account-activities");
-    this.filterTypes.push("v3/brandings");
-    this.filterTypes.push("v3/campaign-filters");
-    this.filterTypes.push("v3/campaigns");
-    this.filterTypes.push("v3/auth-org/network-config");
-    this.filterTypes.push("v3/identity-profiles");
-    this.filterTypes.push("v3/sod-policies");
-    this.filterTypes.push("v3/service-desk-integrations");
+    this.filterTypes.push('v3/access-profiles');
+    this.filterTypes.push('v3/access-request-approvals');
+    this.filterTypes.push('v3/account-activities');
+    this.filterTypes.push('v3/brandings');
+    this.filterTypes.push('v3/campaign-filters');
+    this.filterTypes.push('v3/campaigns');
+    this.filterTypes.push('v3/auth-org/network-config');
+    this.filterTypes.push('v3/identity-profiles');
+    this.filterTypes.push('v3/sod-policies');
+    this.filterTypes.push('v3/service-desk-integrations');
 
-    this.filterTypes.push("beta/roles");
-    
-    
+    this.filterTypes.push('beta/roles');
+
     this.page = new PageResults();
     this.page.limit = 200;
-
   }
 
   getRawDetails(input) {
@@ -51,18 +46,18 @@ export class RawObjectComponent implements OnInit{
     this.rawObjectID = this.IdnObjects[input].id;
   }
 
-  clear(){
+  clear() {
     this.rawObject = null;
-    this.rawObjectID =null;
+    this.rawObjectID = null;
   }
 
-  submit(){
+  submit() {
     this.rawObject = null;
-    console.log("proccesing:" + this.selectedFilterTypes);
+    console.log('proccesing:' + this.selectedFilterTypes);
     this.getAllObjects();
   }
 
-   /**
+  /**
    * Copy these three functions to any
    * page you want to have paggination
    */
@@ -82,38 +77,43 @@ export class RawObjectComponent implements OnInit{
     this.getAllObjects();
   }
 
-  save(){
+  save() {
     //saveGeneralObject(rawFormData, primaryKeySource, objectPath:string):
-    this.idnService.saveGeneralObject(this.rawObject, this.rawObjectID, this.selectedFilterTypes).subscribe(response => {
-      console.log(response);
-    });
+    this.idnService
+      .saveGeneralObject(
+        this.rawObject,
+        this.rawObjectID,
+        this.selectedFilterTypes
+      )
+      .subscribe(response => {
+        console.log(response);
+      });
   }
 
   getAllObjects() {
     this.loading = true;
     this.rawObjectID = null;
     this.rawObject = null;
-    this.idnService.getGeneralObject(this.page, this.selectedFilterTypes).subscribe(response => {
-      const results = response.body;
-      const headers = response.headers;
+    this.idnService
+      .getGeneralObject(this.page, this.selectedFilterTypes)
+      .subscribe(response => {
+        const results = response.body;
+        const headers = response.headers;
 
-      this.page.xTotalCount = headers.get('X-Total-Count');
-      this.IdnObjects = [];
-      for (const each of results) {
-        const idn = new IdnObject();
-        idn.rawObject = each;
-        idn.id = each.id;
+        this.page.xTotalCount = headers.get('X-Total-Count');
+        this.IdnObjects = [];
+        for (const each of results) {
+          const idn = new IdnObject();
+          idn.rawObject = each;
+          idn.id = each.id;
 
-        if (each.name) {
-          idn.displayName = each.name;
-        } 
+          if (each.name) {
+            idn.displayName = each.name;
+          }
 
-        
-
-        this.IdnObjects.push(idn);
-      }
-      this.loading = false;
-    });
+          this.IdnObjects.push(idn);
+        }
+        this.loading = false;
+      });
   }
-
 }
