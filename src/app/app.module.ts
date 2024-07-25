@@ -59,6 +59,7 @@ import { AccountReportComponent } from './account-report/account-report.componen
 import { RoleContainsEntComponent } from './role-contains-ent/role-contains-ent.component';
 import { ReportFailuresComponent } from './report-failures/report-failures.component';
 import { ReportTaskStatusComponent } from './report-task-status/report-task-status.component';
+import { RawObjectComponent } from './raw-object/raw-object.component';
 
 @NgModule({
   declarations: [
@@ -105,6 +106,7 @@ import { ReportTaskStatusComponent } from './report-task-status/report-task-stat
     RoleContainsEntComponent,
     ReportFailuresComponent,
     ReportTaskStatusComponent,
+    RawObjectComponent,
   ],
   imports: [
     BrowserModule,

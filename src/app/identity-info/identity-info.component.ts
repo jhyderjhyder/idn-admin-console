@@ -15,6 +15,7 @@ import { AccountActivities } from '../model/accountactivities';
 import { RevokeRole, RevokeRoleItem } from '../model/revokeRole';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { Entitlement } from '../model/entitlement';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-identity-info',
@@ -62,7 +63,8 @@ export class IdentityInfoComponent implements OnInit {
   constructor(
     private idnService: IDNService,
     private authenticationService: AuthenticationService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private activateRoute: ActivatedRoute
   ) {}
 
   @ViewChild('revokeRequest', { static: false })
@@ -78,6 +80,19 @@ export class IdentityInfoComponent implements OnInit {
     this.filterTypes = Array<string>();
     this.initFilterTypes();
     this.reset(true);
+    this.activateRoute.queryParams.subscribe(params => {
+      const field = params['field'];
+      if (field != null) {
+        console.log(field);
+        this.filterTypes.push(field);
+        this.selectedFilterTypes = field;
+      }
+      const searchData = params['searchData'];
+      if (searchData != null) {
+        this.accountName = searchData;
+        this.submit();
+      }
+    });
   }
 
   initFilterTypes() {

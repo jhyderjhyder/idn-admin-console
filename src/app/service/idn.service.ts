@@ -1890,6 +1890,32 @@ Supported API's
       .pipe(catchError(this.handleError(`getPersonId`)));
   }
 
+  getGeneralObject(page: PageResults, objectPath:string ): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    const url =
+      `https://${currentUser.tenant}.api.${currentUser.domain}/${objectPath}?sorters=-created` +
+      '&limit=' +
+      page.limit +
+      '&offset=' +
+      page.offset +
+      '&count=true';
+
+    return this.http.get(url, { observe: 'response' });
+  }
+
+  saveGeneralObject(rawFormData, primaryKeySource, objectPath:string): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    const url =
+      `https://${currentUser.tenant}.api.${currentUser.domain}/${objectPath}/${primaryKeySource}`;
+
+    const myHttpOptions = {
+      headers: new HttpHeaders({}),
+      'Content-Type': 'application/json',
+    };
+    // const data = JSON.parse(rawFormData);
+    return this.http.put(url, rawFormData, myHttpOptions);
+  }
+
   private logError(error: string) {
     this.messageService.addError(`${error}`);
   }
