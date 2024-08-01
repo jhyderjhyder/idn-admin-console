@@ -369,6 +369,27 @@ Supported API's
     );
   }
 
+  getAllSourcesPaged(page: PageResults): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    const url =
+      `https://${currentUser.tenant}.api.${currentUser.domain}/v3/sources?sorters=name&count=true&limit=` +
+      page.limit +
+      '&offset=' +
+      page.offset;
+
+    return this.http.get(url, { observe: 'response' }).pipe(
+      catchError(error => {
+        if (error.status === 429) {
+          console.warn('Rate limited. Retrying in 2 seconds...');
+          this.sleep(2000);
+          return this.getAllSourcesPaged(page);
+        } else {
+          catchError(this.handleError(`getAllSourcesPaged`));
+        }
+      })
+    );
+  }
+
   getAllVAClusters(): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
     const url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/managed-clusters`;
@@ -400,9 +421,17 @@ Supported API's
     const currentUser = this.authenticationService.currentUserValue;
     const url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/sources/${sourceId}/connector/test-configuration`;
 
-    return this.http
-      .post(url, this.httpOptions)
-      .pipe(catchError(this.hideError(`getSourceTest`)));
+    return this.http.post(url, this.httpOptions).pipe(
+      catchError(error => {
+        if (error.status === 429) {
+          console.warn('Rate limited. Retrying in 2 seconds...');
+          this.sleep(1000);
+          return this.getSourceTest(sourceId);
+        } else {
+          catchError(this.handleError(`getSourceTest`));
+        }
+      })
+    );
   }
 
   getSourceV3Api(cloudExternalID: string): Observable<any> {
@@ -1529,7 +1558,7 @@ Supported API's
         if (error.status === 429) {
           this.logError('Rate limited. Retrying in 2 seconds...');
           this.sleep(2000);
-          return this.getAllSources();
+          return this.getAccessRequestStatusPaged(filters, page, false);
         } else {
           page.limit = 200;
           return this.getAccessRequestStatusPaged(filters, page, false);
@@ -1946,7 +1975,7 @@ Supported API's
       return of(result as T);
     };
   }
-
+  /*
   private hideError<T>(result?: T) {
     return (error: any): Observable<T> => {
       // TODO: send the error to remote logging infrastructure
@@ -1965,6 +1994,7 @@ Supported API's
       return of(result as T);
     };
   }
+    */
   /**
    * Method to pause the request when we get 429 errors
    * @param ms
