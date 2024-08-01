@@ -8,6 +8,7 @@ import * as JSZip from 'jszip';
 import { saveAs } from 'file-saver';
 import { prettyPrintJson } from 'pretty-print-json';
 import { JsonFormatOptions } from '../model/json-format-options';
+import { PageResults } from '../model/page-results';
 
 @Component({
   selector: 'app-source-info',
@@ -15,6 +16,7 @@ import { JsonFormatOptions } from '../model/json-format-options';
   styleUrls: ['./source-info.component.css'],
 })
 export class SourceInfoComponent implements OnInit {
+  hidePageOption: boolean;
   sources: Source[];
   searchText: string;
   loading: boolean;
@@ -28,6 +30,7 @@ export class SourceInfoComponent implements OnInit {
   tagSource: Source;
   newTagName: string;
   clearButton: boolean;
+  page: PageResults;
 
   zip: JSZip = new JSZip();
 
@@ -48,15 +51,19 @@ export class SourceInfoComponent implements OnInit {
   }
 
   ngOnInit() {
+    this.hidePageOption = false;
+    this.page = new PageResults();
+    this.page.limit = 100;
     this.reset(true);
+
     this.search();
+  }
+
+  reset(clearMsg: boolean) {
     this.rawObject = null;
     this.rawObjectId = null;
     this.rawProvisioningId = null;
     this.searchText = null;
-  }
-
-  reset(clearMsg: boolean) {
     this.clearButton = false;
     this.sources = null;
     this.loading = false;
@@ -72,10 +79,54 @@ export class SourceInfoComponent implements OnInit {
     document.getElementById('jsonRaw').innerHTML = '';
   }
 
+  /**
+   * Copy these three functions to any
+   * page you want to have paggination
+   */
+  //Get the next page
+  getNextPage() {
+    this.page.nextPage;
+    this.search();
+  }
+  //Get the previous page
+  getPrevPage() {
+    this.page.prevPage;
+    this.search();
+  }
+  //Pick the page Number you want
+  getOnePage(input) {
+    this.page.getPageByNumber(input - 1);
+    this.search();
+  }
+
   search() {
+    this.sources = [];
+    this.searchShared();
+  }
+
+  searchAll() {
+    this.sources = [];
+    this.hidePageOption = true;
+    this.getOnePage(1);
+    while (this.page.hasMorePages) {
+      this.loading = true;
+      this.loadedCount = 0;
+      this.sourceCount = this.page.limit;
+      this.getNextPage();
+    }
+  }
+
+  sort() {
+    this.allSources.sort((a, b) => a.name.localeCompare(b.name));
+  }
+
+  searchShared() {
     this.loading = true;
-    this.idnService.getAllSources().subscribe(async allSources => {
-      this.sources = [];
+    this.idnService.getAllSourcesPaged(this.page).subscribe(async response => {
+      const allSources = response.body;
+      const headers = response.headers;
+      this.page.xTotalCount = headers.get('X-Total-Count');
+
       this.sourceCount = allSources.length;
       this.allSources = allSources;
 
