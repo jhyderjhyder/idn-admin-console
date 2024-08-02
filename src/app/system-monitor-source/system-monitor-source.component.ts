@@ -3,6 +3,7 @@ import { IDNService } from '../service/idn.service';
 import { Source } from '../model/source';
 import { AuthenticationService } from '../service/authentication-service.service';
 import { AngularCsv } from 'angular-csv-ext/dist/Angular-csv';
+import { PageResults } from '../model/page-results';
 
 @Component({
   selector: 'app-system-monitor-source',
@@ -10,6 +11,7 @@ import { AngularCsv } from 'angular-csv-ext/dist/Angular-csv';
   styleUrls: ['./system-monitor-source.component.css'],
 })
 export class SystemMonitorSourceComponent implements OnInit {
+  hidePageOption: boolean;
   loading: boolean;
   exporting: boolean;
   block: boolean;
@@ -21,6 +23,8 @@ export class SystemMonitorSourceComponent implements OnInit {
   unknown: number;
   allSources: any;
   searchText: string;
+  page: PageResults;
+  pageOptions: readonly number[] = [10, 50, 100, 200, 250];
 
   constructor(
     private idnService: IDNService,
@@ -28,17 +32,58 @@ export class SystemMonitorSourceComponent implements OnInit {
   ) {}
   ngOnInit() {
     console.log('Started Monitor');
+    this.page = new PageResults();
+    this.hidePageOption = false;
+    this.page.limit = 10;
     this.search();
   }
 
+  /**
+   * Copy these three functions to any
+   * page you want to have paggination
+   */
+  //Get the next page
+  getNextPage() {
+    this.page.nextPage;
+    this.search();
+  }
+  //Get the previous page
+  getPrevPage() {
+    this.page.prevPage;
+    this.search();
+  }
+  //Pick the page Number you want
+  getOnePage(input) {
+    this.page.getPageByNumber(input - 1);
+    this.search();
+  }
+
+  searchNoClear() {
+    this.sources = [];
+    this.hidePageOption = true;
+    this.getOnePage(1);
+    while (this.page.hasMorePages) {
+      this.getNextPage();
+    }
+    this.allSources.sort((a, b) => a.name.localeCompare(b.name));
+  }
+
   search() {
+    this.sources = [];
+    this.searchPage();
+  }
+
+  searchPage() {
     this.loading = true;
     this.block = true;
     this.success = 0;
     this.failure = 0;
     this.unknown = 0;
-    this.idnService.getAllSources().subscribe(async allSources => {
-      this.sources = [];
+    this.idnService.getAllSourcesPaged(this.page).subscribe(async response => {
+      const allSources = response.body;
+      const headers = response.headers;
+      this.page.xTotalCount = headers.get('X-Total-Count');
+
       this.sourceCount = allSources.length;
       this.allSources = allSources;
 

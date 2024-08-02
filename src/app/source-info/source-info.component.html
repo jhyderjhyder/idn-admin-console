@@ -1,8 +1,31 @@
 <div>
 <form name="form" #f="ngForm" novalidate contactRequired>
 
+  <!--Start pagination Information Just change hte ngIf -->
+<div class="row" *ngIf="sources && !hidePageOption">
+  <div class="col-sm-2 text-start">
+    Total Records Found:
+    {{page.xTotalCount}}
+  </div>
+  <div class="col-sm-2 text-start">
+    Page:
+    {{page.currentPage}} of {{page.totalPages}}
+  </div>
+  <nav aria-label="Page navigation">
+    <ul class="pagination">
+      <li *ngIf="page.showPreviousButton" class="page-item"><a class="page-link" href="javascript:void(0);" (click)="getPrevPage()">Previous</a></li>
+        <li class="page-item" *ngFor="let item of page.paggination(); let i =index">
+          <a class="page-link" href="javascript:void(0);" (click)="getOnePage(item)">{{item}}</a>
+      </li>
+      <li *ngIf="page.hasMorePages" class="page-item"><a class="page-link" href="javascript:void(0);" (click)="getNextPage()">Next</a></li>
+    </ul>
+  </nav>
+</div>
+<!--End of Pagination Info-->
+  <div class="row">
+  </div>
   <div class="form-group row align-items-center mb-3">
-    <div class="col-md-8">
+    <div class="col-md-6">
       <div class="input-group"> 
       <span class="input-group-text bg-white border-end-0">
         <i class="fa fa-search"></i>
@@ -13,7 +36,7 @@
   </div>
     <div class="col-sm-1 text-end">
       <button type="button" [disabled]="loading || exporting" (click)="exportAllSources()" class="btn btn-primary btn-sm">
-        {{ exporting ? 'Wait...' : 'Export All' }}
+        {{ exporting ? 'Wait...' : 'Export' }}
       </button>
     </div>
     <div class="col-sm-1 text-end">
@@ -24,6 +47,11 @@
     <div class="col-sm-1 text-end">
       <button type="button" [disabled]="!clearButton" (click)="clearJsonRaw()" class="btn btn-primary btn-sm">
         Clear
+      </button>
+    </div>
+    <div class="col-sm-1 text-end">
+      <button type="button" (click)="searchAll()" class="btn btn-warning btn-sm">
+        All
       </button>
     </div>
     <div class="col-sm-1 text-end">
@@ -57,7 +85,7 @@
 </div>
 <div class="form-group row" *ngIf="!loading && sources">
   <div class="col-sm-10 text-start">
-    <span class="fw-bold">Total: {{ sourceCount }} </span>
+    <span class="fw-bold">Total: {{ sources.length }} </span>
   </div>
 </div>
 <br>
