@@ -29,6 +29,7 @@ export class AccessRequestStatusComponent implements OnInit {
   page: PageResults;
   lineNumber;
   rawObject: string;
+  oneRequest: AccessRequestStatus;
 
   constructor(
     private idnService: IDNService,
@@ -40,11 +41,14 @@ export class AccessRequestStatusComponent implements OnInit {
     this.reset();
     this.getAllAccessRequestStatus();
     this.rawObject = null;
+    this.oneRequest = null;
     const elem = document.getElementById('jsonRaw');
     elem.innerHTML = '';
   }
   pickData(input) {
     this.lineNumber = input;
+    this.oneRequest = null;
+    this.oneRequest = this.accessRequestStatuses[input];
   }
   getRawDetails(input) {
     this.lineNumber = input;

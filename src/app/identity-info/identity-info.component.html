@@ -688,7 +688,12 @@
             <td class="col-1">{{ a.accessName }}</td>
             <td class="col-2">{{ a.accessType }}</td>
             <td class="col-2">{{ a.requestType }}</td>
-            <td class="col-1">{{ a.state }}</td>
+            <td class="col-1">
+              <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-id="{{i}}"
+          data-bs-target="#accessRequestDetails" (click)="pickData(i)">
+          {{ a.state }}
+        </button>
+            </td>
             <td class="col-1">{{ a.sodViolationState }}</td>
             <td class="col-1">{{ a.created | date:'yyyy-MM-dd hh:mm:ss aa' }}</td>
             <td class="col-2">{{ a.requester }}</td>
@@ -702,18 +707,38 @@
   <!--End of the requests Details-->
 
   <div class="tab-pane fade" id="workitems" role="tabpanel" aria-labelledby="workitems-tab">
+    <button *ngIf="rawWorkItem" type="button" (click)="clearProvisionDetails()" class="btn btn-primary btn-sm">
+      Clear
+    </button>
+    <div class="row" *ngIf="rawWorkItem" >
+      <div class="col-sm-12">
+        <textarea id="userUpdatedObject" placeholder style="min-height:600px; min-width: 100%;">{{rawWorkItem}}</textarea>
+      </div>
+    </div>
     <p></p>
+
     <table class="table table-striped table-bordered">
       <thead class="table-secondary text-center align-middle">
         <tr>
           <th scope="col" class="col-1">#</th>
+          <th scope="col" class="col-1">Created</th>
+          <th scope="col" class="col-1">Name</th>
+          <th scope="col" class="col-1">State</th>
 
         </tr>
       </thead>
       <tbody class="text-center align-middle" *ngIf="workItemsStatuses && !loading" >
         <tr
           *ngFor="let w of workItemsStatuses ; let i =index" >
-          <td clas="col-1">{{i+1}}</td>
+          <td clas="col-1">
+            <button type="button" class="btn btn-primary"
+             (click)="showRawWorkItem(i)">
+            {{1+i}}
+            </button>
+          </td>
+          <td clas="col-1">{{w.created}}</td>
+          <td clas="col-1">{{w.description}}</td>
+          <td clas="col-1">{{w.state}}</td>
 
         </tr>
       </tbody>
@@ -852,6 +877,57 @@
   </div>
 </div>
 <!--Revoke Model END-->
+
+<!-- The Modal for request details-->
+<div class="modal" id="accessRequestDetails">
+  <div class="modal-dialog">
+    <div class="modal-content">
+
+      <!-- Modal Header -->
+      <div class="modal-header" *ngIf="oneRequest!=null">
+        <h5 id="dialog-child-name" class="modal-title pull-left font-weight-bold">{{oneRequest.state}} :Approval Details</h5>
+      </div>
+
+      <!-- Modal body -->
+      <div class="modal-body">
+        <div class="text-start" *ngIf="oneRequest!=null && accessRequestStatuses && !loading">
+          <h6>Phases</h6>
+            <div *ngFor="let item of oneRequest.accessRequestPhases; let x = index">
+                <b>{{item.name}}:</b> {{item.state}}
+            </div>
+          <hr>
+          <h6 class="text-start">Approval Status</h6>
+          <table class="table table-striped table-bordered">
+            <thead class="table-secondary align-middle">
+            <tr>
+              <td>Approval</td>
+              <td>State</td>
+              <td>Original</td>
+              <td>Current</td>
+            </tr>
+          </thead>
+          <tbody class="text-center align-middle">
+            <tr *ngFor="let item of oneRequest.approvalDetails; let x = index">
+                <td class="col-1">{{item.scheme}}</td>
+                <td class="col-1">{{item.status}}</td>
+                <td class="col-1">{{item.originalOwner.name}}</td>
+                <td *ngIf="item.currentOwner" class="col-1">{{item.currentOwner.name}}</td>
+                <td *ngIf="!item.currentOwner" class="col-1">----</td>
+            </tr>
+          </tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- Modal footer -->
+      <div class="modal-footer">
+        <button type="button" class="btn btn-success btn-sm" data-bs-dismiss="modal">Close</button>
+      </div>
+
+    </div>
+  </div>
+  </div>
+<!-- End Modal for request details-->
 
 <div bsModal #roleDetailsModal="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="dialog-child-name">
   <div class="modal-dialog modal-dialog-centered modal-lg">

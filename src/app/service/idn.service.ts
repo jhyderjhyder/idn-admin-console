@@ -898,7 +898,6 @@ Supported API's
       .pipe(catchError(this.handleError(`searchActivities`)));
   }
 
-  
   searchAttributeSync(filterString): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
     const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/search/?count=true`;

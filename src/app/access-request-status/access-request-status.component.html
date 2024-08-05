@@ -94,7 +94,7 @@
             [(ngModel)]="requestedFor" (keyup.enter)="getRequestedForUser()" autocomplete="off" placeholder="Search via Account Name">
         </div>
         <div class="col-md-2">
-          <button type="button" [disabled]="loading" (click)="getRequestedForUser()" class="btn btn-primary btn-sm">
+          <button type="button" (click)="getRequestedForUser()" class="btn btn-primary btn-sm">
             Search
           </button>
         </div>
@@ -182,33 +182,38 @@
     <div class="modal-content">
 
       <!-- Modal Header -->
-      <div class="modal-header">
-        <h5 id="dialog-child-name" class="modal-title pull-left font-weight-bold">Approval Details</h5>
+      <div class="modal-header" *ngIf="oneRequest!=null">
+        <h5 id="dialog-child-name" class="modal-title pull-left font-weight-bold">{{oneRequest.state}} :Approval Details</h5>
       </div>
 
       <!-- Modal body -->
       <div class="modal-body">
-        <div class="text-start" *ngIf="accessRequestStatuses && !loading">
+        <div class="text-start" *ngIf="oneRequest!=null && accessRequestStatuses && !loading">
           <h6>Phases</h6>
-          <hr>
-          <div *ngFor="let i = index; let a of accessRequestStatuses">
-            <div *ngFor="let item of a.accessRequestPhases; let x = index">
-              <div *ngIf="i == lineNumber">
+            <div *ngFor="let item of oneRequest.accessRequestPhases; let x = index">
                 <b>{{item.name}}:</b> {{item.state}}
-              </div>
             </div>
-          </div>
           <hr>
           <h6 class="text-start">Approval Status</h6>
-          <hr>
-          <div *ngFor="let i = index; let a of accessRequestStatuses">
-            <div *ngFor="let item of a.approvalDetails; let x = index">
-              <p *ngIf="i == lineNumber"><b>Approval:</b> {{item.scheme}}</p>
-              <p *ngIf="i == lineNumber"><b>State:</b> {{item.status}}</p>
-              <p *ngIf="i == lineNumber"><b>originalOwner:</b> {{item.originalOwner.name}}</p>
-              <p *ngIf="i == lineNumber && item.currentOwner!=null"><b>currentOwner:</b> {{item.currentOwner.name}}</p>
-            </div>
-          </div>
+          <table class="table table-striped table-bordered">
+            <thead class="table-secondary align-middle">
+            <tr>
+              <td>Approval</td>
+              <td>State</td>
+              <td>Original</td>
+              <td>Current</td>
+            </tr>
+          </thead>
+          <tbody class="text-center align-middle">
+            <tr *ngFor="let item of oneRequest.approvalDetails; let x = index">
+                <td class="col-1">{{item.scheme}}</td>
+                <td class="col-1">{{item.status}}</td>
+                <td class="col-1">{{item.originalOwner.name}}</td>
+                <td *ngIf="item.currentOwner" class="col-1">{{item.currentOwner.name}}</td>
+                <td *ngIf="!item.currentOwner" class="col-1">----</td>
+            </tr>
+          </tbody>
+          </table>
         </div>
       </div>
 

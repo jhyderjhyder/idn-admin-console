@@ -29,8 +29,10 @@ export class ReportFailuresComponent implements OnInit {
     );
   }
 
-  attributeFailures(){
-    this.getSyncData('type:provisioning AND status:FAILED and created:[now-3d TO now] and attributes.interface: Attribute Sync')
+  attributeFailures() {
+    this.getSyncData(
+      'type:provisioning AND status:FAILED and created:[now-3d TO now] and attributes.interface: Attribute Sync'
+    );
   }
 
   saveInCsv() {
@@ -104,7 +106,6 @@ export class ReportFailuresComponent implements OnInit {
     });
   }
 
-
   getSyncData(queryString) {
     this.errors = new Array();
     this.accessRequestCount = 0;
@@ -129,7 +130,11 @@ export class ReportFailuresComponent implements OnInit {
         rf.errors = searchResult[i].errors;
         rf.identityName = searchResult[i].displayName;
         if (searchResult[i].processingDetails != null) {
-          rf.firstError = "attempts:" + searchResult[i].processingDetails.retryCount  + ":" + searchResult[i].processingDetails.message;
+          rf.firstError =
+            'attempts:' +
+            searchResult[i].processingDetails.retryCount +
+            ':' +
+            searchResult[i].processingDetails.message;
         } else {
           rf.firstError = '';
         }
