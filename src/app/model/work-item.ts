@@ -11,5 +11,5 @@ export class WorkItem {
   remediationItems: string;
   approvalItems: string;
   ownerDisplayName: string;
-  rawObject: object;
+  rawObject: string;
 }

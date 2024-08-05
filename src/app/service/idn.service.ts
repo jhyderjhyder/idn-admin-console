@@ -898,6 +898,22 @@ Supported API's
       .pipe(catchError(this.handleError(`searchActivities`)));
   }
 
+  searchAttributeSync(filterString): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/search/?count=true`;
+
+    const payload = {
+      query: {
+        query: filterString,
+      },
+      sort: ['-modified'],
+    };
+
+    return this.http
+      .post(url, payload, { observe: 'response' })
+      .pipe(catchError(this.handleError(`searchActivities`)));
+  }
+
   /**
    * This is used on the identity page that pulls back all attributes that can be used
    * for searching and finding a user

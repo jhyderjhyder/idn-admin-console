@@ -29,6 +29,12 @@ export class ReportFailuresComponent implements OnInit {
     );
   }
 
+  attributeFailures() {
+    this.getSyncData(
+      'type:provisioning AND status:FAILED and created:[now-3d TO now] and attributes.interface: Attribute Sync'
+    );
+  }
+
   saveInCsv() {
     const options = {
       fieldSeparator: ',',
@@ -68,11 +74,11 @@ export class ReportFailuresComponent implements OnInit {
   }
 
   getData(queryString) {
+    this.errors = new Array();
     this.accessRequestCount = 0;
     this.refreshCount = 0;
     this.idnService.searchActivites(queryString).subscribe(response => {
       const searchResult = response.body;
-      this.errors = new Array();
       const headers = response.headers;
       this.totalFailures = headers.get('X-Total-Count');
       for (let i = 0; i < searchResult.length; i++) {
@@ -92,6 +98,43 @@ export class ReportFailuresComponent implements OnInit {
         rf.identityName = searchResult[i].recipient.name;
         if (searchResult[i].errors != null) {
           rf.firstError = searchResult[i].errors[0];
+        } else {
+          rf.firstError = '';
+        }
+        this.errors.push(rf);
+      }
+    });
+  }
+
+  getSyncData(queryString) {
+    this.errors = new Array();
+    this.accessRequestCount = 0;
+    this.refreshCount = 0;
+    this.idnService.searchAttributeSync(queryString).subscribe(response => {
+      const searchResult = response.body;
+      const headers = response.headers;
+      this.totalFailures = headers.get('X-Total-Count');
+      for (let i = 0; i < searchResult.length; i++) {
+        const rf = new ReportFailures();
+        rf.action = searchResult[i].action;
+        if (rf.action == 'Identity Refresh') {
+          this.refreshCount++;
+        } else {
+          this.accessRequestCount++;
+        }
+        rf.status = searchResult[i].status;
+        rf.id = searchResult[i].id;
+        rf.trackingNumber = searchResult[i].id;
+        rf.created = searchResult[i].created;
+        rf.sources = searchResult[i].sources;
+        rf.errors = searchResult[i].errors;
+        rf.identityName = searchResult[i].displayName;
+        if (searchResult[i].processingDetails != null) {
+          rf.firstError =
+            'attempts:' +
+            searchResult[i].processingDetails.retryCount +
+            ':' +
+            searchResult[i].processingDetails.message;
         } else {
           rf.firstError = '';
         }

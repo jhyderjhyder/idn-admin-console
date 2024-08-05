@@ -23,6 +23,7 @@ import { ActivatedRoute } from '@angular/router';
   styleUrls: ['./identity-info.component.css'],
 })
 export class IdentityInfoComponent implements OnInit {
+  oneRequest: AccessRequestStatus;
   roleDetailsEnt: Array<EntitlementSimple>;
 
   userComment: string;
@@ -35,6 +36,7 @@ export class IdentityInfoComponent implements OnInit {
   validToSubmit: boolean;
 
   rawActivities: string;
+  rawWorkItem: string;
 
   //newsearch options
   accountName: string;
@@ -155,7 +157,13 @@ export class IdentityInfoComponent implements OnInit {
     this.submit();
   }
 
+  pickData(input) {
+    this.oneRequest = null;
+    this.oneRequest = this.accessRequestStatuses[input];
+    console.table(this.oneRequest);
+  }
   reset(clearMsg: boolean) {
+    this.oneRequest = null;
     this.loading = false;
     this.allOwnersFetched = false;
     this.invalidMessage = [];
@@ -191,6 +199,10 @@ export class IdentityInfoComponent implements OnInit {
     this.rawActivities = this.identityInfo.activities[input].raw;
   }
 
+  showRawWorkItem(input) {
+    this.rawWorkItem = this.workItemsStatuses[input].rawObject;
+  }
+
   showRawAccessRequest(input) {
     const jsonText = JSON.stringify(
       this.accessRequestStatuses[input].raw,
@@ -205,6 +217,7 @@ export class IdentityInfoComponent implements OnInit {
 
   clearProvisionDetails() {
     this.rawActivities = null;
+    this.rawWorkItem = null;
   }
 
   getProvisionActions() {
@@ -562,6 +575,8 @@ export class IdentityInfoComponent implements OnInit {
         accessRequestStatus.created = each.created;
         accessRequestStatus.requester = each.requester.name;
         accessRequestStatus.requestedFor = each.requestedFor.name;
+        accessRequestStatus.approvalDetails = each.approvalDetails;
+        accessRequestStatus.accessRequestPhases = each.accessRequestPhases;
         accessRequestStatus.raw = each;
 
         if (each.requesterComment && each.requesterComment.comment) {
@@ -590,6 +605,8 @@ export class IdentityInfoComponent implements OnInit {
         workItemsStatus.description = each.description;
         workItemsStatus.state = each.state;
         workItemsStatus.type = each.type;
+        workItemsStatus.rawObject = JSON.stringify(each, null, 4);
+        
 
         if (each.remediationItems && each.remediationItems.length) {
           workItemsStatus.remediationItems = each.remediationItems.length;
