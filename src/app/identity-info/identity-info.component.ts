@@ -576,6 +576,7 @@ export class IdentityInfoComponent implements OnInit {
         accessRequestStatus.requester = each.requester.name;
         accessRequestStatus.requestedFor = each.requestedFor.name;
         accessRequestStatus.approvalDetails = each.approvalDetails;
+        accessRequestStatus.accessRequestPhases = each.accessRequestPhases;
         accessRequestStatus.raw = each;
 
         if (each.requesterComment && each.requesterComment.comment) {
@@ -605,6 +606,7 @@ export class IdentityInfoComponent implements OnInit {
         workItemsStatus.state = each.state;
         workItemsStatus.type = each.type;
         workItemsStatus.rawObject = JSON.stringify(each, null, 4);
+        
 
         if (each.remediationItems && each.remediationItems.length) {
           workItemsStatus.remediationItems = each.remediationItems.length;
