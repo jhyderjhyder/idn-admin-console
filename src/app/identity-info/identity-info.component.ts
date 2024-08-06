@@ -85,7 +85,6 @@ export class IdentityInfoComponent implements OnInit {
     this.activateRoute.queryParams.subscribe(params => {
       const field = params['field'];
       if (field != null) {
-        console.log(field);
         this.filterTypes.push(field);
         this.selectedFilterTypes = field;
       }
@@ -226,7 +225,6 @@ export class IdentityInfoComponent implements OnInit {
     this.identityInfo.activities = new Array<AccountActivities>();
     const queryString =
       'recipient.name:"' + this.identityInfo.displayName + '"';
-    console.log(queryString);
 
     this.idnService.searchActivites(queryString).subscribe(response => {
       const searchResult = response.body;
@@ -397,7 +395,6 @@ export class IdentityInfoComponent implements OnInit {
             accounts[i].entitlementAttributes != null &&
             accounts[i].entitlementAttributes.assignedGroups != null
           ) {
-            console.log(accounts[i].entitlementAttributes.assignedGroups);
             this.identityInfo.orgPermission =
               accounts[i].entitlementAttributes.assignedGroups;
           }
@@ -596,8 +593,8 @@ export class IdentityInfoComponent implements OnInit {
 
   getAllWorkItemsStatus() {
     const filters = '&ownerId=' + this.identityInfo.id;
+    this.workItemsStatuses = [];
     this.idnService.getWorkItemsStatus(filters).subscribe(results => {
-      this.workItemsStatuses = [];
       for (const each of results) {
         const workItemsStatus = new WorkItem();
         workItemsStatus.id = each.id;
@@ -606,7 +603,6 @@ export class IdentityInfoComponent implements OnInit {
         workItemsStatus.state = each.state;
         workItemsStatus.type = each.type;
         workItemsStatus.rawObject = JSON.stringify(each, null, 4);
-        
 
         if (each.remediationItems && each.remediationItems.length) {
           workItemsStatus.remediationItems = each.remediationItems.length;
@@ -656,6 +652,36 @@ export class IdentityInfoComponent implements OnInit {
       }
       this.loading = false;
     });
+
+    //Get approvals
+    this.idnService
+      .getAccessRequestApprovalsPendingUser(this.identityInfo.id)
+      .subscribe(results => {
+        for (const each of results) {
+          const workItemsStatus = new WorkItem();
+          workItemsStatus.type = 'Approval';
+          workItemsStatus.description = 'approval:';
+          if (each.requestedObject != null) {
+            workItemsStatus.description =
+              workItemsStatus.description + each.requestedObject.name + ':';
+          }
+          workItemsStatus.description = workItemsStatus.description + each.name;
+          workItemsStatus.id = each.id;
+          workItemsStatus.created = each.created;
+          workItemsStatus.rawObject = JSON.stringify(each, null, 4);
+          if (
+            each.sodViolationContext != null &&
+            each.sodViolationContext.violationCheckResult != null
+          ) {
+            workItemsStatus.state =
+              each.sodViolationContext.violationCheckResult.clientMetadata.workflowCaseId;
+          } else {
+            workItemsStatus.state = 'Approvals';
+          }
+          this.workItemsStatuses.push(workItemsStatus);
+        }
+      });
+    //getAccessRequestApprovalsPendingUser
   }
 
   getManagerInfo() {
@@ -678,7 +704,6 @@ export class IdentityInfoComponent implements OnInit {
   revokeEntitlement(id) {
     this.tempRevoke = id;
     this.tempRevokeType = 'ENTITLEMENT';
-
     console.log(id);
     this.revokeRequest.show();
   }
@@ -696,7 +721,6 @@ export class IdentityInfoComponent implements OnInit {
   }
   roleDetails(item) {
     this.roleDetailsEnt = null;
-    console.log(item);
     this.roleDetailsModal.show();
     this.idnService.getRoleDetails(item.id).subscribe(data => {
       this.roleDetailsEnt = new Array();
@@ -739,7 +763,6 @@ export class IdentityInfoComponent implements OnInit {
     const items = new Array();
     items.push(item);
     r.requestedItems = items;
-    console.log(r);
     this.idnService.revokeRole(r).subscribe(data => {
       window.alert('submited:' + data);
     });
