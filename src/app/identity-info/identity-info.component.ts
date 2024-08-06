@@ -595,7 +595,6 @@ export class IdentityInfoComponent implements OnInit {
     const filters = '&ownerId=' + this.identityInfo.id;
     this.workItemsStatuses = [];
     this.idnService.getWorkItemsStatus(filters).subscribe(results => {
-      
       for (const each of results) {
         const workItemsStatus = new WorkItem();
         workItemsStatus.id = each.id;
@@ -604,7 +603,6 @@ export class IdentityInfoComponent implements OnInit {
         workItemsStatus.state = each.state;
         workItemsStatus.type = each.type;
         workItemsStatus.rawObject = JSON.stringify(each, null, 4);
-        
 
         if (each.remediationItems && each.remediationItems.length) {
           workItemsStatus.remediationItems = each.remediationItems.length;
@@ -655,30 +653,35 @@ export class IdentityInfoComponent implements OnInit {
       this.loading = false;
     });
 
-   //Get approvals
-    this.idnService.getAccessRequestApprovalsPendingUser(this.identityInfo.id).subscribe(results => {
-      for (const each of results) {
-        const workItemsStatus = new WorkItem();
-        workItemsStatus.description = "approval:"
-        if (each.requestedObject!=null){
-          workItemsStatus.description = workItemsStatus.description + each.requestedObject.name + ":";
+    //Get approvals
+    this.idnService
+      .getAccessRequestApprovalsPendingUser(this.identityInfo.id)
+      .subscribe(results => {
+        for (const each of results) {
+          const workItemsStatus = new WorkItem();
+          workItemsStatus.type = 'Approval';
+          workItemsStatus.description = 'approval:';
+          if (each.requestedObject != null) {
+            workItemsStatus.description =
+              workItemsStatus.description + each.requestedObject.name + ':';
+          }
+          workItemsStatus.description = workItemsStatus.description + each.name;
+          workItemsStatus.id = each.id;
+          workItemsStatus.created = each.created;
+          workItemsStatus.rawObject = JSON.stringify(each, null, 4);
+          if (
+            each.sodViolationContext != null &&
+            each.sodViolationContext.violationCheckResult != null
+          ) {
+            workItemsStatus.state =
+              each.sodViolationContext.violationCheckResult.clientMetadata.workflowCaseId;
+          } else {
+            workItemsStatus.state = 'Approvals';
+          }
+          this.workItemsStatuses.push(workItemsStatus);
         }
-        workItemsStatus.description = workItemsStatus.description + each.name;
-        workItemsStatus.id = each.id;
-        workItemsStatus.created = each.created;
-        workItemsStatus.rawObject = JSON.stringify(each, null, 4);
-        if (each.sodViolationContext!=null && each.sodViolationContext.violationCheckResult!=null){
-          workItemsStatus.state = "workflowCaseId:" + each.sodViolationContext.violationCheckResult.clientMetadata.workflowCaseId;
-        }else{
-          workItemsStatus.state = "Approvals";
-        }
-        this.workItemsStatuses.push(workItemsStatus);
-      }
-
-    });
+      });
     //getAccessRequestApprovalsPendingUser
-
-
   }
 
   getManagerInfo() {

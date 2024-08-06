@@ -1622,8 +1622,7 @@ Supported API's
 
   getAccessRequestApprovalsPendingUser(ownerid: String): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url =
-      `https://${currentUser.tenant}.api.${currentUser.domain}/v3/access-request-approvals/pending?sorters=-created&owner-id=${ownerid}`;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/access-request-approvals/pending?sorters=-created&owner-id=${ownerid}`;
 
     return this.http.get(url);
   }
