@@ -22,7 +22,7 @@ export class RawObjectComponent implements OnInit {
     this.rawObject = null;
     this.filterTypes = new Array();
     this.filterTypes.push('v3/access-profiles');
-    this.filterTypes.push('v3/access-request-approvals');
+    this.filterTypes.push('v3/access-request-config');
     this.filterTypes.push('v3/account-activities');
     this.filterTypes.push('v3/brandings');
     this.filterTypes.push('v3/campaign-filters');
@@ -102,15 +102,22 @@ export class RawObjectComponent implements OnInit {
 
         this.page.xTotalCount = headers.get('X-Total-Count');
         this.IdnObjects = [];
-        for (const each of results) {
-          const idn = new IdnObject();
-          idn.rawObject = each;
-          idn.id = each.id;
+        if (Array.isArray(results)) {
+          for (const each of results) {
+            const idn = new IdnObject();
+            idn.rawObject = each;
+            idn.id = each.id;
 
-          if (each.name) {
-            idn.displayName = each.name;
+            if (each.name) {
+              idn.displayName = each.name;
+            }
+
+            this.IdnObjects.push(idn);
           }
-
+        } else {
+          const idn = new IdnObject();
+          idn.rawObject = results;
+          idn.id = 'Single Entry';
           this.IdnObjects.push(idn);
         }
         this.loading = false;

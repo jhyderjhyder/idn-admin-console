@@ -29,7 +29,7 @@ export class AccountReportComponent implements OnInit {
     this.query();
   }
 
-    /**
+  /**
    * Copy these three functions to any
    * page you want to have paggination
    */
@@ -56,7 +56,6 @@ export class AccountReportComponent implements OnInit {
   query() {
     this.sources = [];
     this.idnService.getAllSourcesPaged(this.page).subscribe(async response => {
-
       const allSources = response.body;
       const headers = response.headers;
       this.page.xTotalCount = headers.get('X-Total-Count');
@@ -64,8 +63,6 @@ export class AccountReportComponent implements OnInit {
       this.sourceCount = allSources.length;
       this.allSources = allSources;
 
-
-      
       this.sourceCount = allSources.length;
       this.allSources = allSources;
 
