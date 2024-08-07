@@ -24,7 +24,15 @@
         <input class="form-control py-2 border-start-0 border" type="text" name="search" [(ngModel)]="searchText" autocomplete="off" 
         placeholder="Sources or Errors">
   </div> 
-
+<div class="col-sm-1">
+  <div class="col-sm-2">
+    <label for="pageOptions">
+      <select id="pageOptions" [(ngModel)]="pageSize" (ngModelChange)="search()">
+        <option *ngFor="let item of pageOptions">{{item}}</option>
+      </select>
+    </label>
+</div>
+</div>
   <div class="col-sm-1 text-end">
     <button type="button" (click)="attributeFailures()" class="btn btn-primary btn-sm">
   Attribute Sync
@@ -35,7 +43,28 @@
   CSV Extract
     </button> 
   </div>
+  <div class="col-sm-1 text-end">
+    <button type="button" (click)="summery()" class="btn btn-primary btn-sm">
+  Totals
+    </button> 
+  </div>
 </div>
+
+<table  *ngIf="totals" class="table table-striped table-bordered table-layout:fixed">
+  <thead class="table-secondary text-center align-middle">
+    <tr>
+      <th scope="col">Source</th>
+      <th scope="col">#</th>
+    </tr>
+  </thead>
+  <tbody class="text-center align-middle" *ngIf="totals">
+    <tr *ngFor="let t of totals | keyvalue">
+      <td>{{ t.key }}</td>
+      <td>{{ t.value }}</td>
+      </tr>
+    </tbody>
+  </table>
+
 <table class="table table-striped table-bordered table-layout:fixed">
     <thead class="table-secondary text-center align-middle">
       <tr>
