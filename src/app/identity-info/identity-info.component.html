@@ -97,11 +97,11 @@
 <div class="row" *ngIf="!loading && identityList">
   <div class="col-sm-2 text-start">
     Total Records Found:
-    {{page.xTotalCount}}
+    {{page.xTotalCount |number:'2.0-1'}}
   </div>
   <div class="col-sm-2 text-start">
     Page:
-    {{page.currentPage}} of {{page.totalPages}}
+    {{page.currentPage}} of {{page.totalPages |number}}
   </div>
   <nav aria-label="Page navigation">
     <ul class="pagination">

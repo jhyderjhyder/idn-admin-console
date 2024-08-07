@@ -3,6 +3,7 @@ import { IDNService } from '../service/idn.service';
 import { AccountTotals } from '../model/accountTotals';
 import { AngularCsv } from 'angular-csv-ext/dist/Angular-csv';
 import { AuthenticationService } from '../service/authentication-service.service';
+import { PageResults } from '../model/page-results';
 
 @Component({
   selector: 'app-account-report',
@@ -13,6 +14,7 @@ export class AccountReportComponent implements OnInit {
   sources: AccountTotals[];
   allSources: any;
   sourceCount: number;
+  page: PageResults;
 
   constructor(
     private idnService: IDNService,
@@ -20,8 +22,30 @@ export class AccountReportComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.page = new PageResults();
+    this.page.limit = 250;
     this.sources = [];
     //this.getStatus();
+    this.query();
+  }
+
+  /**
+   * Copy these three functions to any
+   * page you want to have paggination
+   */
+  //Get the next page
+  getNextPage() {
+    this.page.nextPage;
+    this.query();
+  }
+  //Get the previous page
+  getPrevPage() {
+    this.page.prevPage;
+    this.query();
+  }
+  //Pick the page Number you want
+  getOnePage(input) {
+    this.page.getPageByNumber(input - 1);
     this.query();
   }
 
@@ -30,8 +54,15 @@ export class AccountReportComponent implements OnInit {
   }
 
   query() {
-    this.idnService.getAllSources().subscribe(async allSources => {
-      this.sources = [];
+    this.sources = [];
+    this.idnService.getAllSourcesPaged(this.page).subscribe(async response => {
+      const allSources = response.body;
+      const headers = response.headers;
+      this.page.xTotalCount = headers.get('X-Total-Count');
+
+      this.sourceCount = allSources.length;
+      this.allSources = allSources;
+
       this.sourceCount = allSources.length;
       this.allSources = allSources;
 
