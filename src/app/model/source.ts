@@ -30,5 +30,6 @@ export class Source {
   schemaCount: string;
   testConnectionStatus: string;
   testConnectionDetails: string;
+  cluster: string;
   labels: string[];
 }
