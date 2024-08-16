@@ -102,6 +102,10 @@ export class SystemMonitorSourceComponent implements OnInit {
         const source = new Source();
         source.id = each.id;
         source.cloudExternalID = each.connectorAttributes.cloudExternalId;
+        if (each.cluster) {
+          source.cluster = each.cluster.name;
+        }
+
         source.name = each.name;
         source.description = each.description;
         if (each.description.length > 10) {

@@ -86,6 +86,7 @@
       <tr>
         <th scope="col">#</th>
         <th scope="col">Source Name</th>
+        <th scope="col">Cluster</th>
         <th scope="col">Status</th>
         <th scope="col">ErrorDetails</th>
         <th scope="col">Last Agg Date</th>
@@ -101,6 +102,9 @@
         </td>
         <td>
           {{ s.name }}
+        </td>
+        <td>
+          {{ s.cluster }}
         </td>
         <td>
           {{ s.testConnectionStatus }}
