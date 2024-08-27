@@ -38,6 +38,18 @@ export class SystemMonitorSourceComponent implements OnInit {
     this.search();
   }
 
+  shortdate(input){
+    try{
+      var d = new Date(input);
+      var f = d.getMonth() + "/" + d.getDay() + "/" + d.getFullYear();
+      return f;
+
+    }catch{
+
+    }
+    return input;
+  }
+
   /**
    * Copy these three functions to any
    * page you want to have paggination
@@ -113,6 +125,7 @@ export class SystemMonitorSourceComponent implements OnInit {
         }
 
         source.type = each.type;
+        source.created = each.created;
         source.authoritative = each.authoritative;
 
         if (source.authoritative) {
@@ -194,6 +207,7 @@ export class SystemMonitorSourceComponent implements OnInit {
         'labels',
         'testConnectionStatus',
         'health',
+        'created',
         'lastAggregationDate',
         'testConnectionDetails',
       ],
