@@ -31,5 +31,6 @@ export class Source {
   testConnectionStatus: string;
   testConnectionDetails: string;
   cluster: string;
+  created: string;
   labels: string[];
 }

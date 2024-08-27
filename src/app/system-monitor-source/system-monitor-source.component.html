@@ -89,7 +89,8 @@
         <th scope="col">Cluster</th>
         <th scope="col">Status</th>
         <th scope="col">ErrorDetails</th>
-        <th scope="col">Last Agg Date</th>
+        <th scope="col">Created</th>
+        <th scope="col">Last Agg</th>
         <th scope="col">Healthy</th>
         <th scope="col">Type</th>
         <th scope="col">Tags</th>
@@ -111,6 +112,9 @@
         </td>
         <td>
           {{ s.testConnectionDetails }}
+        </td>
+        <td>
+          {{ s.created | date: 'yyyy/MM/dd' }}
         </td>
         <td>
           {{ s.lastAggregationDate | date: 'yyyy/MM/dd' }}
