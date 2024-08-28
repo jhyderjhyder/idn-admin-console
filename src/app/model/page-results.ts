@@ -52,7 +52,7 @@ export class PageResults {
 
   public get nextPage() {
     if (this._currentPage <= this.totalPages) this._currentPage++;
-    this.offset = this.offset + this.limit;
+    this.offset = Number(this.offset) + Number(this.limit);
     return this.offset;
   }
   public get prevPage() {
