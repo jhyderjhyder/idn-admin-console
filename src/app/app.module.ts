@@ -60,6 +60,7 @@ import { RoleContainsEntComponent } from './role-contains-ent/role-contains-ent.
 import { ReportFailuresComponent } from './report-failures/report-failures.component';
 import { ReportTaskStatusComponent } from './report-task-status/report-task-status.component';
 import { RawObjectComponent } from './raw-object/raw-object.component';
+import { FastTagComponent } from './fast-tag/fast-tag.component';
 
 @NgModule({
   declarations: [
@@ -107,6 +108,7 @@ import { RawObjectComponent } from './raw-object/raw-object.component';
     ReportFailuresComponent,
     ReportTaskStatusComponent,
     RawObjectComponent,
+    FastTagComponent,
   ],
   imports: [
     BrowserModule,

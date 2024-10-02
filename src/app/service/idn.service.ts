@@ -1665,6 +1665,26 @@ Supported API's
     return this.http.post(url, payload, myHttpOptions);
   }
 
+  getSourceByName(name: string): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    const params = '?filters=name eq "' + name + '"' + '&count=true';
+    const url =
+      `https://${currentUser.tenant}.api.${currentUser.domain}/v3/sources` +
+      params;
+    console.log(url);
+    return this.http.get(url, this.httpOptions);
+  }
+
+  getRoleByName(name: string): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    const params = '?filters=name eq "' + name + '"' + '&count=true';
+    const url =
+      `https://${currentUser.tenant}.api.${currentUser.domain}/v3/roles` +
+      params;
+    console.log(url);
+    return this.http.get(url, this.httpOptions);
+  }
+
   deleteTag(type: string, id: string): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
     const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/tagged-objects/${type}/${id}`;
