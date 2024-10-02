@@ -45,6 +45,7 @@ import { RoleContainsEntComponent } from './role-contains-ent/role-contains-ent.
 import { ReportFailuresComponent } from './report-failures/report-failures.component';
 import { ReportTaskStatusComponent } from './report-task-status/report-task-status.component';
 import { RawObjectComponent } from './raw-object/raw-object.component';
+import { FastTagComponent } from './fast-tag/fast-tag.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/identity-info', pathMatch: 'full' },
@@ -242,6 +243,11 @@ const routes: Routes = [
   {
     path: 'raw-object',
     component: RawObjectComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'fast-tag',
+    component: FastTagComponent,
     canActivate: [AuthGuard],
   },
   { path: 'login', component: LoginComponent },

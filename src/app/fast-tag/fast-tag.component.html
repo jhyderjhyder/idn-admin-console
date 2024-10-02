@@ -1,0 +1,59 @@
+<p>Fast Tag Objects</p>
+
+<div class="row">
+    <div class="col-sm-2">ID Number</div>
+    <div class="col-sm-4">
+     {{idAttribute}}
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-2">CurrentTags</div>
+    <div class="col-sm-4">
+     {{currentTags}}
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-sm-2">Object Name</div>
+    <div class="col-sm-4">
+        <input id="objectName" class="form-control py-2 border-start-0 border" type="text" [(ngModel)]="objectName" (keyup.enter)="submit()" placeholder="Enter Value">
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-sm-2">Object Type</div>
+    <div class="col-sm-4">
+        <label for="filterTypes">
+            <select id="filterTypes" [(ngModel)]="selectedObjectType">
+            <option *ngFor="let item of filterTypes">{{item.name}}</option>
+            </select>
+        </label>
+        </div>
+</div>
+
+<div class="row">
+    <div class="col-sm-2">Tag</div>
+    <div class="col-sm-4">
+        <input id="tagName" class="form-control py-2 border-start-0 border" type="text" [(ngModel)]="tagName" placeholder="Enter Value">
+    </div>
+</div>
+<div class="row">
+  <div  *ngIf="idAttribute" class="col-sm-2 text-start">
+    <button type="button" (click)="submit()" class="btn btn-primary btn-sm">
+      Add
+    </button>
+  </div>
+
+  <div  *ngIf="idAttribute" class="col-sm-2 text-start">
+    <button type="button" (click)="removeAllTag()" class="btn btn-primary btn-sm">
+      Remove
+    </button>
+  </div>
+
+
+  <div class="col-sm-2 text-start">
+    <button type="button" (click)="read()" class="btn btn-primary btn-sm">
+      Read Tags
+    </button>
+  </div>
+</div>

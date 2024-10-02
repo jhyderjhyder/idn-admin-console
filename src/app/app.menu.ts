@@ -97,6 +97,7 @@ export const systemMenu = [
   new MenuLink('/misc-org-time-update', 'Set Org Time', null),
   new MenuLink('/misc-org-stats', 'Org Statistics', null),
   new MenuLink('/reassignments', 'Out of Office', null),
+  new MenuLink('/fast-tag', 'Fast Tag', null),
 ];
 export const aboutMenu = [
   new MenuLink('/release-history', 'Release History', null),
