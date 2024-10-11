@@ -38,15 +38,12 @@ export class SystemMonitorSourceComponent implements OnInit {
     this.search();
   }
 
-  shortdate(input){
-    try{
-      var d = new Date(input);
-      var f = d.getMonth() + "/" + d.getDay() + "/" + d.getFullYear();
+  shortdate(input) {
+    try {
+      const d = new Date(input);
+      const f = d.getMonth() + '/' + d.getDay() + '/' + d.getFullYear();
       return f;
-
-    }catch{
-
-    }
+    } catch {}
     return input;
   }
 

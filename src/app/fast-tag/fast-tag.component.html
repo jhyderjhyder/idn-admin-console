@@ -24,36 +24,48 @@
     <div class="col-sm-2">Object Type</div>
     <div class="col-sm-4">
         <label for="filterTypes">
-            <select id="filterTypes" [(ngModel)]="selectedObjectType">
-            <option *ngFor="let item of filterTypes">{{item.name}}</option>
+           <select id="filterTypes" [(ngModel)]="selectedObjectType" (click)="changePicker()">
+            <option *ngFor="let item of filterTypes" value="{{item.name +',' + item.value}}">{{item.name}}</option>
             </select>
+            
         </label>
         </div>
 </div>
 
-<div class="row">
+<div *ngIf="!showDate" class="row">
     <div class="col-sm-2">Tag</div>
     <div class="col-sm-4">
         <input id="tagName" class="form-control py-2 border-start-0 border" type="text" [(ngModel)]="tagName" placeholder="Enter Value">
+
     </div>
 </div>
+<div *ngIf="showDate"class="row">
+    <div class="col-sm-2">Date Picker</div>
+    <div class="col-sm-4">
+        <ngb-datepicker data-date-format="mm/dd/yyyy" [(ngModel)]="date">
+</ngb-datepicker>
+    </div>
+</div>
+
 <div class="row">
+<div class="col-sm-2 text-start">
+    <button type="button" (click)="read()" class="btn btn-success btn-sm">
+      Read Tags
+    </button>
+  </div>
+
   <div  *ngIf="idAttribute" class="col-sm-2 text-start">
-    <button type="button" (click)="submit()" class="btn btn-primary btn-sm">
+    <button type="button" (click)="submit()" class="btn btn-warning btn-sm">
       Add
     </button>
   </div>
 
   <div  *ngIf="idAttribute" class="col-sm-2 text-start">
-    <button type="button" (click)="removeAllTag()" class="btn btn-primary btn-sm">
+    <button type="button" (click)="removeAllTag()" class="btn btn-danger btn-sm">
       Remove
     </button>
   </div>
 
 
-  <div class="col-sm-2 text-start">
-    <button type="button" (click)="read()" class="btn btn-primary btn-sm">
-      Read Tags
-    </button>
-  </div>
+
 </div>
