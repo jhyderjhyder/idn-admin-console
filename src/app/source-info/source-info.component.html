@@ -31,12 +31,12 @@
     <span class="input-group-text bg-white border-end-0">
       <i class="fa fa-search"></i>
     </span>
-    <input class="form-control py-2 border-start-0 border" type="text" name="appNameSearch" [(ngModel)]="appSearchText" autocomplete="off" 
+    <input (keydown.enter)="search()" class="form-control py-2 border-start-0 border" type="text" name="appNameSearch" [(ngModel)]="appSearchText" autocomplete="off" 
       placeholder="API contains Filter">
   </div>
 </div>
   <div class="col-sm-1 text-end">
-    <button type="button" (click)="search()" class="btn btn-primary btn-sm">Search
+    <button type="button" (click)="search()"  class="btn btn-primary btn-sm">Search
     </button>
   </div>
     <div class="col-sm-1 text-end">
@@ -147,6 +147,7 @@
             <a class="dropdown-item" (click)="editJsonProvisioningPolicy(s)">Edit-ProvisioningPolicy</a>
             <a class="dropdown-item" (click)="testConnection(s)">Test Souce</a>
             <a class="dropdown-item" (click)="addSourceTag(s)">Update Tags</a>
+            <a class="dropdown-item" (click)="viewSchedule(s)">View Schedules</a>
           </div>
         </div>
       </td>
@@ -187,6 +188,39 @@
               <button type="button" class="btn btn-warning btn-sm" (click)="removeAllTag()">
                 Remove All Tags
               </button>
+            </div>
+            <div class="col-sm-4 text-start">
+              <button type="button" class="btn btn-primary btn-sm" (click)="cancelTag()">
+                Cancel
+              </button>
+            </div>
+          </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+<div bsModal #showSchedule="bs-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="dialog-child-name">
+  <div class="modal-dialog modal-dialog-centered modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 id="dialog-child-name" class="modal-title pull-left font-weight-bold">
+          Show Schedule
+        </h5>
+      </div>
+      <div class="modal-body" >
+          <div class="form-group row mb-2">
+            <div *ngIf="schedules">
+              <div *ngFor="let i =index; let s of schedules" class="col-sm-12 text-start">
+                  <span class="fw-bold">Type:</span>&nbsp;{{s.type}}<br>
+                  <span class="fw-bold">CronExpression:</span>&nbsp;{{s.cronExpression}}<br>
+              </div>
+            </div>
+            <div *ngIf="!schedules">
+              <div class="col-sm-12 text-start">
+                <span class="fw-bold">None Defined</span>
+              </div>
             </div>
             <div class="col-sm-4 text-start">
               <button type="button" class="btn btn-primary btn-sm" (click)="cancelTag()">

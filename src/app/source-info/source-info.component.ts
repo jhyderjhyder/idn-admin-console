@@ -32,14 +32,15 @@ export class SourceInfoComponent implements OnInit {
   newTagName: string;
   clearButton: boolean;
   page: PageResults;
+  schedules: object[];
 
   zip: JSZip = new JSZip();
 
   invalidMessage: string[];
 
   public modalRef: BsModalRef;
-  @ViewChild('addTagModal', { static: false })
-  addTagModal: ModalDirective;
+  @ViewChild('addTagModal', { static: false }) addTagModal: ModalDirective;
+  @ViewChild('showSchedule', { static: false }) showSchedule: ModalDirective;
 
   constructor(
     private idnService: IDNService,
@@ -247,6 +248,19 @@ export class SourceInfoComponent implements OnInit {
     this.tagSource = input;
     this.addTagModal.show();
   }
+
+  viewSchedule(input: Source) {
+    this.tagSource = input;
+    this.schedules = null;
+    this.idnService.getSchedules(input.id).subscribe(result => {
+      this.schedules = result;
+      if (this.schedules.length == 0) {
+        this.schedules = null;
+      }
+    });
+    this.showSchedule.show();
+  }
+
   addNewTag() {
     //addTag(type:string, id:string, name:string, tag:string):
     console.log(this.newTagName);
@@ -273,6 +287,7 @@ export class SourceInfoComponent implements OnInit {
 
   cancelTag() {
     this.addTagModal.hide();
+    this.showSchedule.hide();
   }
 
   clearJsonRaw() {
