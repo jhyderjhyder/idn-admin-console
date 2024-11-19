@@ -15,6 +15,7 @@ export class AccountReportComponent implements OnInit {
   allSources: any;
   sourceCount: number;
   page: PageResults;
+  queryString: string;
 
   constructor(
     private idnService: IDNService,
@@ -26,7 +27,7 @@ export class AccountReportComponent implements OnInit {
     this.page.limit = 250;
     this.sources = [];
     //this.getStatus();
-    this.query();
+    //this.query();
   }
 
   /**
@@ -55,7 +56,7 @@ export class AccountReportComponent implements OnInit {
 
   query() {
     this.sources = [];
-    this.idnService.getAllSourcesPaged(this.page, null).subscribe(async response => {
+    this.idnService.getAllSourcesPaged(this.page, this.queryString).subscribe(async response => {
       const allSources = response.body;
       const headers = response.headers;
       this.page.xTotalCount = headers.get('X-Total-Count');

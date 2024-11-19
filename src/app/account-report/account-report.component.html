@@ -19,12 +19,29 @@
   </nav>
 </div>
 <!--End of Pagination Info-->
-
+<div class="row">
+  <div class="col-md-3">
+    <div class="input-group"> 
+    <span class="input-group-text bg-white border-end-0">
+      <i class="fa fa-search"></i>
+    </span>
+    <input class="form-control py-2 border-start-0 border" type="text" name="queryString" [(ngModel)]="queryString" autocomplete="off" 
+      placeholder="API contains Filter">
+  </div>
+</div>
+  <div class="col-sm-1 text-end">
+    <button type="button" (click)="query()" class="btn btn-primary btn-sm">Search
+    </button>
+  </div>
+  <div class="col-sm-1 text-end">
+    <button type="button" (click)="saveInCsv()" class="btn btn-primary btn-sm">
+      CSV
+    </button>
+  </div>
+</div>
 <p>Sources: {{sources.length}}</p>
 
-<button type="button" (click)="saveInCsv()" class="btn btn-primary btn-sm">
-    CSV
-  </button>
+
 
 <table class="table table-striped table-bordered">
     <thead class="table-secondary text-center align-middle">

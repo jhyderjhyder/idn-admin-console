@@ -47,28 +47,45 @@ export class AccountSearchComponent implements OnInit {
     this.filterTypes = new Array<BasicAttributes>();
     this.addFilterTypes();
     this.loading = false;
+    
   }
   /*
 Populate the dropdown of sources you
 can pick from
 */
   getApplicationNames() {
+    var pr = new PageResults();
+    pr.limit = 50;
     this.filterApplications = new Array<BasicAttributes>();
     const all = new BasicAttributes();
     all.name = 'ALL';
     all.value = '';
     this.filterApplications.push(all);
-
-    this.idnService.getAllSources().subscribe(response => {
-      const searchResult = response;
-      for (let i = 0; i < searchResult.length; i++) {
-        const app = searchResult[i];
-        const basic = new BasicAttributes();
-        basic.name = app['name'];
-        basic.value = app['id'];
-        this.filterApplications.push(basic);
-      }
+    this.idnService.getAllSourcesPaged(pr, null).subscribe(response => {
+      const headers = response.headers;
+      pr.xTotalCount = headers.get('X-Total-Count');
     });
+    var max = 1;
+     while (pr.hasMorePages && max<10) {
+      max++;
+      this.idnService.getAllSourcesPaged(pr, null).subscribe(response => {
+        const searchResult = response.body;
+        for (let i = 0; i < searchResult.length; i++) {
+          const app = searchResult[i];
+          const basic = new BasicAttributes();
+          basic.name = app['name'];
+          basic.value = app['id'];
+          this.addSorted(basic);
+        }
+      });
+      pr.nextPage;
+  }
+  
+  }
+
+  addSorted(basic: BasicAttributes){
+    this.filterApplications.push(basic);
+    this.filterApplications.sort((a, b) => a.name.localeCompare(b.name));
   }
 
   getOwnerDetails(identityID) {
