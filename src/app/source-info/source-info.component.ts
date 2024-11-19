@@ -55,9 +55,8 @@ export class SourceInfoComponent implements OnInit {
     this.hidePageOption = false;
     this.page = new PageResults();
     this.page.limit = 100;
-    
-    this.reset(true);
 
+    this.reset(true);
   }
 
   reset(clearMsg: boolean) {
@@ -104,18 +103,16 @@ export class SourceInfoComponent implements OnInit {
     this.sources = [];
     this.searchShared();
   }
-    
 
   searchAll() {
     this.sources = [];
     this.hidePageOption = true;
     this.getNextPage();
-   // this.getOnePage(1);
+    // this.getOnePage(1);
     while (this.page.hasMorePages) {
       this.loading = true;
       this.loadedCount = 0;
       this.sourceCount = this.page.limit;
-     
     }
   }
 
@@ -125,72 +122,74 @@ export class SourceInfoComponent implements OnInit {
 
   searchShared() {
     this.loading = true;
-    this.idnService.getAllSourcesPaged(this.page, this.appSearchText).subscribe( response => {
-      const allSources = response.body;
-      const headers = response.headers;
-      this.page.xTotalCount = headers.get('X-Total-Count');
+    this.idnService
+      .getAllSourcesPaged(this.page, this.appSearchText)
+      .subscribe(response => {
+        const allSources = response.body;
+        const headers = response.headers;
+        this.page.xTotalCount = headers.get('X-Total-Count');
 
-      this.sourceCount = allSources.length;
-      this.allSources = allSources;
+        this.sourceCount = allSources.length;
+        this.allSources = allSources;
 
-      //Sort it alphabetically
-      allSources.sort((a, b) => a.name.localeCompare(b.name));
+        //Sort it alphabetically
+        allSources.sort((a, b) => a.name.localeCompare(b.name));
 
-      let index = 0;
-      for (const each of allSources) {
-        if (index > 0 && index % 10 == 0) {
-          // After processing every batch (10 sources), wait for 1 second before calling another API to avoid 429
-          // Too Many Requests Error
-          //await this.sleep(1000);
-        }
-        index++;
-
-        const source = new Source();
-        source.name = each.name;
-        //source.labels = each.labels;
-        source.id = each.id;
-        this.idnService.getTags('SOURCE', source.id).subscribe(myTag => {
-          if (myTag != null) {
-            source.labels = myTag.tags;
-          } else {
-            source.labels = ['none'];
+        let index = 0;
+        for (const each of allSources) {
+          if (index > 0 && index % 10 == 0) {
+            // After processing every batch (10 sources), wait for 1 second before calling another API to avoid 429
+            // Too Many Requests Error
+            //await this.sleep(1000);
           }
-        });
-        source.cloudExternalID = each.connectorAttributes.cloudExternalId;
-        source.cloudDisplayName = each.connectorAttributes.cloudDisplayName;
-        if (source.cloudDisplayName == source.name) {
-          source.cloudDisplayName = '';
-        }
+          index++;
 
-        source.description = each.description;
-        if (each.description.length > 10) {
-          source.description = each.description.slice(0, 10) + '...';
-        }
-
-        source.type = each.type;
-        source.authoritative = each.authoritative;
-
-        if (source.authoritative) {
-          source.name = source.name + ' (Authoritative)';
-        }
-
-        this.idnService.getSourceV3Api(source.id).subscribe(
-          searchResult => {
-            source.schemaCount = searchResult.schemas.length;
-            source.lastAggregationDate =
-              searchResult.connectorAttributes.lastAggregationDate_account;
-            source.internalName = searchResult.healthy;
-          },
-          err => {
-            this.messageService.handleIDNError(err);
+          const source = new Source();
+          source.name = each.name;
+          //source.labels = each.labels;
+          source.id = each.id;
+          this.idnService.getTags('SOURCE', source.id).subscribe(myTag => {
+            if (myTag != null) {
+              source.labels = myTag.tags;
+            } else {
+              source.labels = ['none'];
+            }
+          });
+          source.cloudExternalID = each.connectorAttributes.cloudExternalId;
+          source.cloudDisplayName = each.connectorAttributes.cloudDisplayName;
+          if (source.cloudDisplayName == source.name) {
+            source.cloudDisplayName = '';
           }
-        );
 
-        this.sources.push(source);
-        this.loadedCount = this.sources.length;
-      }
-      this.loading = false;
-    });
+          source.description = each.description;
+          if (each.description.length > 10) {
+            source.description = each.description.slice(0, 10) + '...';
+          }
+
+          source.type = each.type;
+          source.authoritative = each.authoritative;
+
+          if (source.authoritative) {
+            source.name = source.name + ' (Authoritative)';
+          }
+
+          this.idnService.getSourceV3Api(source.id).subscribe(
+            searchResult => {
+              source.schemaCount = searchResult.schemas.length;
+              source.lastAggregationDate =
+                searchResult.connectorAttributes.lastAggregationDate_account;
+              source.internalName = searchResult.healthy;
+            },
+            err => {
+              this.messageService.handleIDNError(err);
+            }
+          );
+
+          this.sources.push(source);
+          this.loadedCount = this.sources.length;
+        }
+        this.loading = false;
+      });
   }
 
   sleep(ms) {

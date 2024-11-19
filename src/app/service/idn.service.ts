@@ -369,12 +369,10 @@ Supported API's
     );
   }
 
-
-
-  getAllSourcesPaged(page: PageResults, preFilter:string): Observable<any> {
+  getAllSourcesPaged(page: PageResults, preFilter: string): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    var filter = "";
-    if (preFilter){
+    let filter = '';
+    if (preFilter) {
       filter = '&filters=(name co "' + preFilter + '")';
     }
     console.log(filter);
@@ -382,7 +380,8 @@ Supported API's
       `https://${currentUser.tenant}.api.${currentUser.domain}/v3/sources?sorters=name&count=true&limit=` +
       page.limit +
       '&offset=' +
-      page.offset + filter;
+      page.offset +
+      filter;
     console.log(url);
     return this.http.get(url, { observe: 'response' }).pipe(
       catchError(error => {

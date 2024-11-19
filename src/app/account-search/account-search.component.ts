@@ -47,14 +47,13 @@ export class AccountSearchComponent implements OnInit {
     this.filterTypes = new Array<BasicAttributes>();
     this.addFilterTypes();
     this.loading = false;
-    
   }
   /*
 Populate the dropdown of sources you
 can pick from
 */
   getApplicationNames() {
-    var pr = new PageResults();
+    const pr = new PageResults();
     pr.limit = 50;
     this.filterApplications = new Array<BasicAttributes>();
     const all = new BasicAttributes();
@@ -65,8 +64,8 @@ can pick from
       const headers = response.headers;
       pr.xTotalCount = headers.get('X-Total-Count');
     });
-    var max = 1;
-     while (pr.hasMorePages && max<10) {
+    let max = 1;
+    while (pr.hasMorePages && max < 10) {
       max++;
       this.idnService.getAllSourcesPaged(pr, null).subscribe(response => {
         const searchResult = response.body;
@@ -79,11 +78,10 @@ can pick from
         }
       });
       pr.nextPage;
-  }
-  
+    }
   }
 
-  addSorted(basic: BasicAttributes){
+  addSorted(basic: BasicAttributes) {
     this.filterApplications.push(basic);
     this.filterApplications.sort((a, b) => a.name.localeCompare(b.name));
   }
