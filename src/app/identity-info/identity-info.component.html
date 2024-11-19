@@ -379,6 +379,10 @@
 
   <div class="tab-pane fade" id="ownership" role="tabpanel" aria-labelledby="ownership-tab">
     <p></p>
+    <button class="btn btn-secondary btn-sm" type="button" *ngIf="identityInfo" [disabled]="loading" (click)="refreshIdentity()">
+      Create Entitlement Owner Certification
+    </button>
+    <p></p>
     <!--Sources Page-->
     <div class="accordion" id="accordionExample">
       <div class="accordion-item">

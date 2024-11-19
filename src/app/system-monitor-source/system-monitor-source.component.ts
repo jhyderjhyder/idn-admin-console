@@ -88,7 +88,7 @@ export class SystemMonitorSourceComponent implements OnInit {
     this.success = 0;
     this.failure = 0;
     this.unknown = 0;
-    this.idnService.getAllSourcesPaged(this.page).subscribe(async response => {
+    this.idnService.getAllSourcesPaged(this.page, null).subscribe(async response => {
       const allSources = response.body;
       const headers = response.headers;
       this.page.xTotalCount = headers.get('X-Total-Count');

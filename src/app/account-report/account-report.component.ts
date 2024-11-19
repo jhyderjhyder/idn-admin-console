@@ -55,7 +55,7 @@ export class AccountReportComponent implements OnInit {
 
   query() {
     this.sources = [];
-    this.idnService.getAllSourcesPaged(this.page).subscribe(async response => {
+    this.idnService.getAllSourcesPaged(this.page, null).subscribe(async response => {
       const allSources = response.body;
       const headers = response.headers;
       this.page.xTotalCount = headers.get('X-Total-Count');

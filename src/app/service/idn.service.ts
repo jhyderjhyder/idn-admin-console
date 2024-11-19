@@ -369,20 +369,27 @@ Supported API's
     );
   }
 
-  getAllSourcesPaged(page: PageResults): Observable<any> {
+
+
+  getAllSourcesPaged(page: PageResults, preFilter:string): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
+    var filter = "";
+    if (preFilter){
+      filter = '&filters=(name co "' + preFilter + '")';
+    }
+    console.log(filter);
     const url =
       `https://${currentUser.tenant}.api.${currentUser.domain}/v3/sources?sorters=name&count=true&limit=` +
       page.limit +
       '&offset=' +
-      page.offset;
-
+      page.offset + filter;
+    console.log(url);
     return this.http.get(url, { observe: 'response' }).pipe(
       catchError(error => {
         if (error.status === 429) {
           console.warn('Rate limited. Retrying in 2 seconds...');
           this.sleep(2000);
-          return this.getAllSourcesPaged(page);
+          return this.getAllSourcesPaged(page, preFilter);
         } else {
           catchError(this.handleError(`getAllSourcesPaged`));
         }

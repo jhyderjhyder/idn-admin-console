@@ -19,6 +19,7 @@ export class SourceInfoComponent implements OnInit {
   hidePageOption: boolean;
   sources: Source[];
   searchText: string;
+  appSearchText: string;
   loading: boolean;
   exporting: boolean;
   loadedCount: number;
@@ -54,9 +55,9 @@ export class SourceInfoComponent implements OnInit {
     this.hidePageOption = false;
     this.page = new PageResults();
     this.page.limit = 100;
+    
     this.reset(true);
 
-    this.search();
   }
 
   reset(clearMsg: boolean) {
@@ -103,16 +104,18 @@ export class SourceInfoComponent implements OnInit {
     this.sources = [];
     this.searchShared();
   }
+    
 
   searchAll() {
     this.sources = [];
     this.hidePageOption = true;
-    this.getOnePage(1);
+    this.getNextPage();
+   // this.getOnePage(1);
     while (this.page.hasMorePages) {
       this.loading = true;
       this.loadedCount = 0;
       this.sourceCount = this.page.limit;
-      this.getNextPage();
+     
     }
   }
 
@@ -122,7 +125,7 @@ export class SourceInfoComponent implements OnInit {
 
   searchShared() {
     this.loading = true;
-    this.idnService.getAllSourcesPaged(this.page).subscribe(async response => {
+    this.idnService.getAllSourcesPaged(this.page, this.appSearchText).subscribe( response => {
       const allSources = response.body;
       const headers = response.headers;
       this.page.xTotalCount = headers.get('X-Total-Count');
@@ -138,7 +141,7 @@ export class SourceInfoComponent implements OnInit {
         if (index > 0 && index % 10 == 0) {
           // After processing every batch (10 sources), wait for 1 second before calling another API to avoid 429
           // Too Many Requests Error
-          await this.sleep(1000);
+          //await this.sleep(1000);
         }
         index++;
 
