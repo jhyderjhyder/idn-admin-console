@@ -19,6 +19,7 @@ export class SourceInfoComponent implements OnInit {
   hidePageOption: boolean;
   sources: Source[];
   searchText: string;
+  appSearchText: string;
   loading: boolean;
   exporting: boolean;
   loadedCount: number;
@@ -31,14 +32,15 @@ export class SourceInfoComponent implements OnInit {
   newTagName: string;
   clearButton: boolean;
   page: PageResults;
+  schedules: object[];
 
   zip: JSZip = new JSZip();
 
   invalidMessage: string[];
 
   public modalRef: BsModalRef;
-  @ViewChild('addTagModal', { static: false })
-  addTagModal: ModalDirective;
+  @ViewChild('addTagModal', { static: false }) addTagModal: ModalDirective;
+  @ViewChild('showSchedule', { static: false }) showSchedule: ModalDirective;
 
   constructor(
     private idnService: IDNService,
@@ -54,9 +56,8 @@ export class SourceInfoComponent implements OnInit {
     this.hidePageOption = false;
     this.page = new PageResults();
     this.page.limit = 100;
-    this.reset(true);
 
-    this.search();
+    this.reset(true);
   }
 
   reset(clearMsg: boolean) {
@@ -107,12 +108,12 @@ export class SourceInfoComponent implements OnInit {
   searchAll() {
     this.sources = [];
     this.hidePageOption = true;
-    this.getOnePage(1);
+    this.getNextPage();
+    // this.getOnePage(1);
     while (this.page.hasMorePages) {
       this.loading = true;
       this.loadedCount = 0;
       this.sourceCount = this.page.limit;
-      this.getNextPage();
     }
   }
 
@@ -122,72 +123,74 @@ export class SourceInfoComponent implements OnInit {
 
   searchShared() {
     this.loading = true;
-    this.idnService.getAllSourcesPaged(this.page).subscribe(async response => {
-      const allSources = response.body;
-      const headers = response.headers;
-      this.page.xTotalCount = headers.get('X-Total-Count');
+    this.idnService
+      .getAllSourcesPaged(this.page, this.appSearchText)
+      .subscribe(response => {
+        const allSources = response.body;
+        const headers = response.headers;
+        this.page.xTotalCount = headers.get('X-Total-Count');
 
-      this.sourceCount = allSources.length;
-      this.allSources = allSources;
+        this.sourceCount = allSources.length;
+        this.allSources = allSources;
 
-      //Sort it alphabetically
-      allSources.sort((a, b) => a.name.localeCompare(b.name));
+        //Sort it alphabetically
+        allSources.sort((a, b) => a.name.localeCompare(b.name));
 
-      let index = 0;
-      for (const each of allSources) {
-        if (index > 0 && index % 10 == 0) {
-          // After processing every batch (10 sources), wait for 1 second before calling another API to avoid 429
-          // Too Many Requests Error
-          await this.sleep(1000);
-        }
-        index++;
-
-        const source = new Source();
-        source.name = each.name;
-        //source.labels = each.labels;
-        source.id = each.id;
-        this.idnService.getTags('SOURCE', source.id).subscribe(myTag => {
-          if (myTag != null) {
-            source.labels = myTag.tags;
-          } else {
-            source.labels = ['none'];
+        let index = 0;
+        for (const each of allSources) {
+          if (index > 0 && index % 10 == 0) {
+            // After processing every batch (10 sources), wait for 1 second before calling another API to avoid 429
+            // Too Many Requests Error
+            //await this.sleep(1000);
           }
-        });
-        source.cloudExternalID = each.connectorAttributes.cloudExternalId;
-        source.cloudDisplayName = each.connectorAttributes.cloudDisplayName;
-        if (source.cloudDisplayName == source.name) {
-          source.cloudDisplayName = '';
-        }
+          index++;
 
-        source.description = each.description;
-        if (each.description.length > 10) {
-          source.description = each.description.slice(0, 10) + '...';
-        }
-
-        source.type = each.type;
-        source.authoritative = each.authoritative;
-
-        if (source.authoritative) {
-          source.name = source.name + ' (Authoritative)';
-        }
-
-        this.idnService.getSourceV3Api(source.id).subscribe(
-          searchResult => {
-            source.schemaCount = searchResult.schemas.length;
-            source.lastAggregationDate =
-              searchResult.connectorAttributes.lastAggregationDate_account;
-            source.internalName = searchResult.healthy;
-          },
-          err => {
-            this.messageService.handleIDNError(err);
+          const source = new Source();
+          source.name = each.name;
+          //source.labels = each.labels;
+          source.id = each.id;
+          this.idnService.getTags('SOURCE', source.id).subscribe(myTag => {
+            if (myTag != null) {
+              source.labels = myTag.tags;
+            } else {
+              source.labels = ['none'];
+            }
+          });
+          source.cloudExternalID = each.connectorAttributes.cloudExternalId;
+          source.cloudDisplayName = each.connectorAttributes.cloudDisplayName;
+          if (source.cloudDisplayName == source.name) {
+            source.cloudDisplayName = '';
           }
-        );
 
-        this.sources.push(source);
-        this.loadedCount = this.sources.length;
-      }
-      this.loading = false;
-    });
+          source.description = each.description;
+          if (each.description.length > 10) {
+            source.description = each.description.slice(0, 10) + '...';
+          }
+
+          source.type = each.type;
+          source.authoritative = each.authoritative;
+
+          if (source.authoritative) {
+            source.name = source.name + ' (Authoritative)';
+          }
+
+          this.idnService.getSourceV3Api(source.id).subscribe(
+            searchResult => {
+              source.schemaCount = searchResult.schemas.length;
+              source.lastAggregationDate =
+                searchResult.connectorAttributes.lastAggregationDate_account;
+              source.internalName = searchResult.healthy;
+            },
+            err => {
+              this.messageService.handleIDNError(err);
+            }
+          );
+
+          this.sources.push(source);
+          this.loadedCount = this.sources.length;
+        }
+        this.loading = false;
+      });
   }
 
   sleep(ms) {
@@ -245,6 +248,19 @@ export class SourceInfoComponent implements OnInit {
     this.tagSource = input;
     this.addTagModal.show();
   }
+
+  viewSchedule(input: Source) {
+    this.tagSource = input;
+    this.schedules = null;
+    this.idnService.getSchedules(input.id).subscribe(result => {
+      this.schedules = result;
+      if (this.schedules.length == 0) {
+        this.schedules = null;
+      }
+    });
+    this.showSchedule.show();
+  }
+
   addNewTag() {
     //addTag(type:string, id:string, name:string, tag:string):
     console.log(this.newTagName);
@@ -271,6 +287,7 @@ export class SourceInfoComponent implements OnInit {
 
   cancelTag() {
     this.addTagModal.hide();
+    this.showSchedule.hide();
   }
 
   clearJsonRaw() {

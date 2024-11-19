@@ -38,15 +38,12 @@ export class SystemMonitorSourceComponent implements OnInit {
     this.search();
   }
 
-  shortdate(input){
-    try{
-      var d = new Date(input);
-      var f = d.getMonth() + "/" + d.getDay() + "/" + d.getFullYear();
+  shortdate(input) {
+    try {
+      const d = new Date(input);
+      const f = d.getMonth() + '/' + d.getDay() + '/' + d.getFullYear();
       return f;
-
-    }catch{
-
-    }
+    } catch {}
     return input;
   }
 
@@ -91,73 +88,75 @@ export class SystemMonitorSourceComponent implements OnInit {
     this.success = 0;
     this.failure = 0;
     this.unknown = 0;
-    this.idnService.getAllSourcesPaged(this.page).subscribe(async response => {
-      const allSources = response.body;
-      const headers = response.headers;
-      this.page.xTotalCount = headers.get('X-Total-Count');
+    this.idnService
+      .getAllSourcesPaged(this.page, null)
+      .subscribe(async response => {
+        const allSources = response.body;
+        const headers = response.headers;
+        this.page.xTotalCount = headers.get('X-Total-Count');
 
-      this.sourceCount = allSources.length;
-      this.allSources = allSources;
+        this.sourceCount = allSources.length;
+        this.allSources = allSources;
 
-      //Sort it alphabetically
-      allSources.sort((a, b) => a.name.localeCompare(b.name));
+        //Sort it alphabetically
+        allSources.sort((a, b) => a.name.localeCompare(b.name));
 
-      let index = 0;
-      for (const each of allSources) {
-        if (index > 0 && index % 5 == 0) {
-          // After processing every batch (10 sources), wait for 1 second before calling another API to avoid 429
-          // Too Many Requests Error
-          await this.sleep(1000);
-        }
-        index++;
-
-        const source = new Source();
-        source.id = each.id;
-        source.cloudExternalID = each.connectorAttributes.cloudExternalId;
-        if (each.cluster) {
-          source.cluster = each.cluster.name;
-        }
-
-        source.name = each.name;
-        source.description = each.description;
-        if (each.description.length > 10) {
-          source.description = each.description.slice(0, 10) + '...';
-        }
-
-        source.type = each.type;
-        source.created = each.created;
-        source.authoritative = each.authoritative;
-
-        if (source.authoritative) {
-          source.name = source.name + ' (Authoritative)';
-        }
-
-        this.idnService.getSourceV3Api(source.id).subscribe(
-          searchResult => {
-            source.schemaCount = searchResult.schemas.length;
-            source.lastAggregationDate =
-              searchResult.connectorAttributes.lastAggregationDate_account;
-            source.health = searchResult.healthy;
-          },
-          err => {
-            console.log(err);
+        let index = 0;
+        for (const each of allSources) {
+          if (index > 0 && index % 5 == 0) {
+            // After processing every batch (10 sources), wait for 1 second before calling another API to avoid 429
+            // Too Many Requests Error
+            await this.sleep(1000);
           }
-        );
+          index++;
 
-        this.idnService.getTags('SOURCE', source.id).subscribe(myTag => {
-          if (myTag != null) {
-            source.labels = myTag.tags;
-          } else {
-            source.labels = ['none'];
+          const source = new Source();
+          source.id = each.id;
+          source.cloudExternalID = each.connectorAttributes.cloudExternalId;
+          if (each.cluster) {
+            source.cluster = each.cluster.name;
           }
-        });
 
-        this.testConnection(source);
-        this.loadedCount = this.sources.length;
-      }
-      this.loading = false;
-      this.block = false;
-    });
+          source.name = each.name;
+          source.description = each.description;
+          if (each.description.length > 10) {
+            source.description = each.description.slice(0, 10) + '...';
+          }
+
+          source.type = each.type;
+          source.created = each.created;
+          source.authoritative = each.authoritative;
+
+          if (source.authoritative) {
+            source.name = source.name + ' (Authoritative)';
+          }
+
+          this.idnService.getSourceV3Api(source.id).subscribe(
+            searchResult => {
+              source.schemaCount = searchResult.schemas.length;
+              source.lastAggregationDate =
+                searchResult.connectorAttributes.lastAggregationDate_account;
+              source.health = searchResult.healthy;
+            },
+            err => {
+              console.log(err);
+            }
+          );
+
+          this.idnService.getTags('SOURCE', source.id).subscribe(myTag => {
+            if (myTag != null) {
+              source.labels = myTag.tags;
+            } else {
+              source.labels = ['none'];
+            }
+          });
+
+          this.testConnection(source);
+          this.loadedCount = this.sources.length;
+        }
+        this.loading = false;
+        this.block = false;
+      });
   }
 
   sleep(ms) {
