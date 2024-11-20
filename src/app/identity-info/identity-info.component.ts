@@ -240,6 +240,17 @@ export class IdentityInfoComponent implements OnInit {
         ac.modified = searchResult[i].modified;
         ac.status = searchResult[i].status;
         ac.source = searchResult[i].sources;
+        var accReq = searchResult[i].accountRequests
+        //Section to find the snow ticket and show details
+        var snowTicket = null;
+        if (accReq){
+          for (let a = 0; a < accReq.length; a++){
+            const arItem = accReq[a];
+            if (arItem.results || arItem.result.ticketId){
+              snowTicket = arItem.result.ticketId;
+            }
+          }
+        }
         const items = searchResult[i].expansionItems;
         if (items) {
           for (let ii = 0; ii < items.length; ii++) {
@@ -260,14 +271,21 @@ export class IdentityInfoComponent implements OnInit {
               if (trigger === 'Identity Refresh') {
                 ia.trigger = 'System';
               }
+              
             }
+            
 
             if (item.attributeRequest) {
+             
               if (item.attributeRequest.op) {
-                ia.op = item.attributeRequest.op;
+                if (snowTicket!=null){
+                  ia.op = item.attributeRequest.op + "  (" + snowTicket + ")";
+                }else{
+                  ia.op = item.attributeRequest.op;
+                }
               }
               if (item.attributeRequest.value) {
-                ia.value = item.attributeRequest.value;
+                  ia.value = item.attributeRequest.value;
               }
               if (item.attributeRequest.name) {
                 ia.name = item.attributeRequest.name;
@@ -277,6 +295,10 @@ export class IdentityInfoComponent implements OnInit {
               if (item.source.name) {
                 ia.source = item.source.name;
               }
+            }
+            if (item.result){
+              ia.source = ia.source +":" +  item.result.ticketId; 
+              console.log("found result");
             }
             this.identityActions.push(ia);
           }
