@@ -25,6 +25,7 @@ import { ActivatedRoute } from '@angular/router';
 export class IdentityInfoComponent implements OnInit {
   oneRequest: AccessRequestStatus;
   roleDetailsEnt: Array<EntitlementSimple>;
+  roleDetailsEntCount: number;
 
   userComment: string;
   tempRevoke: Entitlement;
@@ -159,7 +160,6 @@ export class IdentityInfoComponent implements OnInit {
   pickData(input) {
     this.oneRequest = null;
     this.oneRequest = this.accessRequestStatuses[input];
-    console.table(this.oneRequest);
   }
   reset(clearMsg: boolean) {
     this.oneRequest = null;
@@ -240,13 +240,13 @@ export class IdentityInfoComponent implements OnInit {
         ac.modified = searchResult[i].modified;
         ac.status = searchResult[i].status;
         ac.source = searchResult[i].sources;
-        var accReq = searchResult[i].accountRequests
+        const accReq = searchResult[i].accountRequests;
         //Section to find the snow ticket and show details
-        var snowTicket = null;
-        if (accReq){
-          for (let a = 0; a < accReq.length; a++){
+        let snowTicket = null;
+        if (accReq) {
+          for (let a = 0; a < accReq.length; a++) {
             const arItem = accReq[a];
-            if (arItem.results || arItem.result.ticketId){
+            if (arItem.results || arItem.result.ticketId) {
               snowTicket = arItem.result.ticketId;
             }
           }
@@ -271,21 +271,18 @@ export class IdentityInfoComponent implements OnInit {
               if (trigger === 'Identity Refresh') {
                 ia.trigger = 'System';
               }
-              
             }
-            
 
             if (item.attributeRequest) {
-             
               if (item.attributeRequest.op) {
-                if (snowTicket!=null){
-                  ia.op = item.attributeRequest.op + "  (" + snowTicket + ")";
-                }else{
+                if (snowTicket != null) {
+                  ia.op = item.attributeRequest.op + '  (' + snowTicket + ')';
+                } else {
                   ia.op = item.attributeRequest.op;
                 }
               }
               if (item.attributeRequest.value) {
-                  ia.value = item.attributeRequest.value;
+                ia.value = item.attributeRequest.value;
               }
               if (item.attributeRequest.name) {
                 ia.name = item.attributeRequest.name;
@@ -296,9 +293,8 @@ export class IdentityInfoComponent implements OnInit {
                 ia.source = item.source.name;
               }
             }
-            if (item.result){
-              ia.source = ia.source +":" +  item.result.ticketId; 
-              console.log("found result");
+            if (item.result) {
+              ia.source = ia.source + ':' + item.result.ticketId;
             }
             this.identityActions.push(ia);
           }
@@ -767,6 +763,71 @@ export class IdentityInfoComponent implements OnInit {
         this.roleDetailsEnt.push(es);
       }
     });
+  }
+
+  async totalRoleAccess(): Promise<any> {
+    this.roleDetailsEnt = new Array();
+    this.roleDetailsEntCount = 0;
+    const roleDetailsFull = new Array();
+    this.roleDetailsModal.show();
+    //for (const each of data.entitlements) {
+    for (const item of this.identityInfo.roleArray) {
+      this.roleDetailsEntCount++;
+      await this.idnService.getRoleDetails(item.id).subscribe(data => {
+        for (const each of data.entitlements) {
+          const es = new EntitlementSimple();
+          es.id = each.id;
+          es.displayName = item.name + ':' + each.name;
+          let found = 'false';
+          //roleDetailsEnt: Array<EntitlementSimple>;
+          for (const master of this.identityInfo.entitlementArray) {
+            const data = master as EntitlementSimple;
+            if (data.id == es.id) {
+              found = 'true';
+            }
+          }
+          es.attribute = found;
+          roleDetailsFull.push(es);
+        }
+      });
+      this.roleDetailsEnt = roleDetailsFull;
+    }
+  }
+
+  async orphanAccess(): Promise<any> {
+    this.roleDetailsEnt = new Array();
+    this.roleDetailsEntCount = 0;
+    for (const oneEnt of this.identityInfo.entitlementArray) {
+      const es = new EntitlementSimple();
+      es.sourceName = oneEnt.sourceName;
+      es.id = oneEnt.id;
+      es.displayName = oneEnt.displayName;
+      this.roleDetailsEnt.push(es);
+    }
+
+    //for (const each of data.entitlements) {
+    for (const item of this.identityInfo.roleArray) {
+      await this.idnService.getRoleDetails(item.id).subscribe(data => {
+        for (const each of data.entitlements) {
+          const es = new EntitlementSimple();
+          es.id = each.id;
+          es.displayName = item.name + ':' + each.name;
+          //roleDetailsEnt: Array<EntitlementSimple>;
+          let index = 0;
+          for (const master of this.identityInfo.entitlementArray) {
+            index++;
+            const data = master as EntitlementSimple;
+            if (data.id == es.id) {
+              //console.log("remove:" + es.displayName + ":" + es.id);
+              this.roleDetailsEnt.splice(index - 1, 1);
+            }
+          }
+        }
+        this.roleDetailsEntCount++;
+      });
+      this.roleDetailsModal.show();
+      //this.roleDetailsEnt = roleDetailsFull;
+    }
   }
 
   revoke(id, type) {

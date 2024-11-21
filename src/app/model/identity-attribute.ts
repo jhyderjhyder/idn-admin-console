@@ -1,5 +1,6 @@
 import { Account } from './account';
 import { AccountActivities } from './accountactivities';
+import { BasicAttributes2 } from './basic-attributes';
 import { EntitlementSimple } from './entitlement-simple';
 
 export class IdentityAttribute {
@@ -30,7 +31,7 @@ export class IdentityAttribute {
   entitlementArray: Array<EntitlementSimple>;
   roleCount: number;
   roleNames: string;
-  roleArray: Array<Basic>;
+  roleArray: Array<BasicAttributes2>;
   accessProfileCount: number;
   accessProfileNames: string;
   accessProfileArray: Array<{}>;
