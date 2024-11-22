@@ -765,6 +765,7 @@ export class IdentityInfoComponent implements OnInit {
     });
   }
 
+
   async totalRoleAccess(): Promise<any> {
     this.roleDetailsEnt = new Array();
     this.roleDetailsEntCount = 0;
@@ -790,10 +791,38 @@ export class IdentityInfoComponent implements OnInit {
           roleDetailsFull.push(es);
         }
       });
+      console.log("Procs")
       this.roleDetailsEnt = roleDetailsFull;
     }
   }
 
+   processOneOprhanRole(item){
+     this.idnService.getRoleDetails(item.id).subscribe(data => {
+      for (const each of data.entitlements) {
+        const es = new EntitlementSimple();
+        es.id = each.id;
+        es.displayName = item.name + ':' + each.name;
+        //roleDetailsEnt: Array<EntitlementSimple>;
+        let index = 0;
+        for (const master of this.identityInfo.entitlementArray) {
+          index++;
+          const data = master as EntitlementSimple;
+          if (data.id == es.id) {
+            //console.log("remove:" + es.displayName + ":" + es.id);
+            this.roleDetailsEnt.splice(index - 1, 1);
+          }
+        }
+      }
+      
+      this.roleDetailsEntCount++;
+    });
+    return item.name;
+  }
+/**
+ * Having some trouble with the system running the request in
+ * order.  I think I have something to learn about
+ * making a call run in the correct order.  
+ */
   async orphanAccess(): Promise<any> {
     this.roleDetailsEnt = new Array();
     this.roleDetailsEntCount = 0;
@@ -807,27 +836,16 @@ export class IdentityInfoComponent implements OnInit {
 
     //for (const each of data.entitlements) {
     for (const item of this.identityInfo.roleArray) {
-      await this.idnService.getRoleDetails(item.id).subscribe(data => {
-        for (const each of data.entitlements) {
-          const es = new EntitlementSimple();
-          es.id = each.id;
-          es.displayName = item.name + ':' + each.name;
-          //roleDetailsEnt: Array<EntitlementSimple>;
-          let index = 0;
-          for (const master of this.identityInfo.entitlementArray) {
-            index++;
-            const data = master as EntitlementSimple;
-            if (data.id == es.id) {
-              //console.log("remove:" + es.displayName + ":" + es.id);
-              this.roleDetailsEnt.splice(index - 1, 1);
-            }
-          }
-        }
-        this.roleDetailsEntCount++;
-      });
-      this.roleDetailsModal.show();
+      var test = await this.processOneOprhanRole(item);
+      console.log(test);
+      await this.sleep (1000);
+       this.roleDetailsModal.show();
       //this.roleDetailsEnt = roleDetailsFull;
     }
+  }
+
+  sleep(ms){
+    return new Promise(resolve => setTimeout(resolve, ms));
   }
 
   revoke(id, type) {

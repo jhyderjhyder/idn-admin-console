@@ -1751,7 +1751,7 @@ Supported API's
           this.sleep(2000);
           return this.getRoleDetails(value);
         } else {
-          catchError(this.handleError(`getTags`));
+          catchError(this.handleError(`getRoleDetails`));
         }
       })
     );
