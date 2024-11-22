@@ -963,7 +963,21 @@
       <div class="modal-body" *ngIf="!roleDetailsEnt">Proccessing Please wait</div>
       <div class="modal-body" *ngIf="roleDetailsEnt && roleDetailsEnt.length!=0" >
           <div class="form-group row mb-2" >
-            <span>Processed {{roleDetailsEntCount}}</span>
+            <div class="row">
+              <div class="col-sm-2">
+                <span>Processed {{roleDetailsEntCount}}</span>
+              </div>
+              <div class="col-sm-2">
+                <button type="button" class="btn btn-primary btn-sm" (click)="roleDetailsCSV()">
+                  Download
+                </button>
+              </div>
+              <div class="col-sm-2">
+                <button type="button" class="btn btn-primary btn-sm" (click)="cleanFalse()">
+                  Remove Matching
+                </button>
+              </div>
+          </div>
             <table class="table table-striped table-bordered">
               <tr><td>#</td><td>id</td><td>DisplayName</td><td>Found</td></tr>
               <tr *ngFor="let ent of roleDetailsEnt ; let i =index">
@@ -983,9 +997,7 @@
               <button type="button" class="btn btn-primary btn-sm" (click)="cancelRoleDetails()">
                 Cancel
               </button>
-              <button type="button" class="btn btn-primary btn-sm" (click)="roleDetailsCSV()">
-                Download
-              </button>
+
               
             </div>
           </div>

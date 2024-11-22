@@ -797,17 +797,12 @@ export class IdentityInfoComponent implements OnInit {
   async processOneOprhanRole(item) : Promise<any>{
      this.idnService.getRoleDetails(item.id).subscribe(data => {
       for (const each of data.entitlements) {
-        const es = new EntitlementSimple();
-        es.id = each.id;
-        es.displayName = item.name + ':' + each.name;
-        //roleDetailsEnt: Array<EntitlementSimple>;
-        let index = 0;
-        for (const master of this.identityInfo.entitlementArray) {
-          index++;
-          const data = master as EntitlementSimple;
-          if (data.id == es.id) {
-            //console.log("remove:" + es.displayName + ":" + es.id);
-            this.roleDetailsEnt.splice(index - 1, 1);
+     
+        for (let i = 0; i < this.roleDetailsEnt.length; i++) {
+          if (this.roleDetailsEnt[i].id ==each.id) {
+            this.roleDetailsEnt[i].attribute="true";
+            console.log("remove:" + this.roleDetailsEnt[i].displayName);
+            //this.roleDetailsEnt.splice(index - 1, 1);
           }
         }
       }
@@ -816,6 +811,7 @@ export class IdentityInfoComponent implements OnInit {
     });
     return item.name;
   }
+
 /**
  * Having some trouble with the system running the request in
  * order.  I think I have something to learn about
@@ -829,6 +825,7 @@ export class IdentityInfoComponent implements OnInit {
       es.sourceName = oneEnt.sourceName;
       es.id = oneEnt.id;
       es.displayName = oneEnt.displayName;
+      es.attribute = "false";
       this.roleDetailsEnt.push(es);
     }
 
@@ -840,6 +837,16 @@ export class IdentityInfoComponent implements OnInit {
        this.roleDetailsModal.show();
       //this.roleDetailsEnt = roleDetailsFull;
     }
+  }
+
+  cleanFalse(){
+    var roleDetailsClean = new Array();
+    for (const item of this.roleDetailsEnt){
+      if (item!=null && item.attribute===("false")){
+        roleDetailsClean.push(item);
+      }
+    }
+    this.roleDetailsEnt = roleDetailsClean;
   }
 
   sleep(ms){
