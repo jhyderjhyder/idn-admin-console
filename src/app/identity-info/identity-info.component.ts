@@ -246,8 +246,11 @@ export class IdentityInfoComponent implements OnInit {
         if (accReq) {
           for (let a = 0; a < accReq.length; a++) {
             const arItem = accReq[a];
-            if (arItem.results || arItem.result.ticketId) {
-              snowTicket = arItem.result.ticketId;
+            if (arItem.result) {
+              if (arItem.result.ticketId){
+                snowTicket = arItem.result.ticketId;
+              }
+              
             }
           }
         }
@@ -737,11 +740,10 @@ export class IdentityInfoComponent implements OnInit {
     this.tempRevokeType = null;
     this.roleDetailsModal.hide();
   }
-  roleDetails(item) {
-    this.roleDetailsEnt = null;
-    this.roleDetailsModal.show();
+  roleDetailsSub(item, showEmpty:boolean) {
+   
     this.idnService.getRoleDetails(item.id).subscribe(data => {
-      this.roleDetailsEnt = new Array();
+     
       for (const each of data.entitlements) {
         const es = new EntitlementSimple();
         es.id = each.id;
@@ -757,12 +759,23 @@ export class IdentityInfoComponent implements OnInit {
         es.attribute = found;
         this.roleDetailsEnt.push(es);
       }
-      if (this.roleDetailsEnt.length == 0) {
+      if (this.roleDetailsEnt.length == 0 && showEmpty) {
         const es = new EntitlementSimple();
         es.displayName = 'No Direct Entitlements';
         this.roleDetailsEnt.push(es);
       }
     });
+  }
+
+  async roleDetails(item) : Promise<any> {
+    this.roleDetailsModal.show();
+    this.roleDetailsEntCount=0;
+    this.roleDetailsEnt = new Array();
+    this.roleDetailsModal.show();
+    var test = await this.roleDetailsSub(item, true);
+    console.log(test);
+    this.roleDetailsEntCount++;
+
   }
 
 
@@ -774,29 +787,14 @@ export class IdentityInfoComponent implements OnInit {
     //for (const each of data.entitlements) {
     for (const item of this.identityInfo.roleArray) {
       this.roleDetailsEntCount++;
-      await this.idnService.getRoleDetails(item.id).subscribe(data => {
-        for (const each of data.entitlements) {
-          const es = new EntitlementSimple();
-          es.id = each.id;
-          es.displayName = item.name + ':' + each.name;
-          let found = 'false';
-          //roleDetailsEnt: Array<EntitlementSimple>;
-          for (const master of this.identityInfo.entitlementArray) {
-            const data = master as EntitlementSimple;
-            if (data.id == es.id) {
-              found = 'true';
-            }
-          }
-          es.attribute = found;
-          roleDetailsFull.push(es);
-        }
-      });
-      console.log("Procs")
+      var test = await this.roleDetailsSub(item, false);
+      console.log("Procs" + test);
+      await this.sleep (1000);
       this.roleDetailsEnt = roleDetailsFull;
     }
   }
 
-   processOneOprhanRole(item){
+  async processOneOprhanRole(item) : Promise<any>{
      this.idnService.getRoleDetails(item.id).subscribe(data => {
       for (const each of data.entitlements) {
         const es = new EntitlementSimple();
@@ -1054,4 +1052,39 @@ export class IdentityInfoComponent implements OnInit {
 
     new AngularCsv(arr, fileName, options);
   }
+
+  roleDetailsCSV() {
+    const options = {
+      fieldSeparator: ',',
+      quoteStrings: '"',
+      decimalseparator: '.',
+      showLabels: true,
+      useHeader: true,
+      headers: ['id', 'displayName', 'attribute'],
+      nullToEmptyString: true,
+    };
+
+    const currentUser = this.authenticationService.currentUserValue;
+    const fileName = `${currentUser.tenant}-${this.identityInfo.name}-rolesDetails`;
+   
+    new AngularCsv(this.roleDetailsEnt, fileName, options);
+  }
+
+  roleDetailsEntitlements() {
+    const options = {
+      fieldSeparator: ',',
+      quoteStrings: '"',
+      decimalseparator: '.',
+      showLabels: true,
+      useHeader: true,
+      nullToEmptyString: true,
+    };
+
+    const currentUser = this.authenticationService.currentUserValue;
+    const fileName = `${currentUser.tenant}-${this.identityInfo.name}-entDetails`;
+   
+    new AngularCsv(this.identityInfo.entitlementArray, fileName, options);
+  }
+
+  //
 }
