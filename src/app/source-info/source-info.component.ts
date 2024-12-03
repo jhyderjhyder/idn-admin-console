@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { BsModalRef, ModalDirective } from 'ngx-bootstrap/modal';
 import { Source } from '../model/source';
+import { AggResults } from '../model/AggResults';
 import { IDNService } from '../service/idn.service';
 import { MessageService } from '../service/message.service';
 import { AuthenticationService } from '../service/authentication-service.service';
@@ -9,6 +10,7 @@ import { saveAs } from 'file-saver';
 import { prettyPrintJson } from 'pretty-print-json';
 import { JsonFormatOptions } from '../model/json-format-options';
 import { PageResults } from '../model/page-results';
+import { AngularCsv } from 'angular-csv-ext/dist/Angular-csv';
 
 @Component({
   selector: 'app-source-info',
@@ -404,5 +406,81 @@ export class SourceInfoComponent implements OnInit {
       saveAs(content, zipFileName);
     });
     this.exporting = false;
+  }
+
+  taskResultDetails(source) {
+    let targetName = 'aggResult';
+    this.idnService.getTaskAggDetails(source.id).subscribe(response => {
+      const taskDetails = new Array<AggResults>();
+      for (const each of response) {
+        const a = new AggResults();
+        a.id = each.id;
+        a.created = new Date(each.created);
+        a.launched = new Date(each.launched);
+        a.completed = new Date(each.completed);
+        a.type = each.type;
+        if (each.target) {
+          a.target = each.target.name;
+          targetName = each.target.name;
+        }
+        a.completionStatus = each.compleationStatus;
+        if (each.attributes != null) {
+          a.total = each.attributes.total;
+          a.optimizedAggregation = each.attributes.optimizedAggregation;
+          a.optimized = each.attributes.optimized;
+          a.updated = each.attributes.updated;
+        }
+
+        if (each.uniqueName) {
+          const test = each.uniqueName;
+          a.type = test;
+          if (test.includes('Account')) {
+            a.type = 'Account';
+          }
+          if (test.includes('Group Aggregation')) {
+            a.type = 'Entitlement';
+          }
+        }
+        try {
+          const seconds = (a.completed.getTime() - a.launched.getTime()) / 1000;
+          //https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/EPSILON
+          a.runTime = Math.round((seconds + Number.EPSILON) * 100) / 100;
+        } catch (error) {
+          a.runTime = -1;
+          console.log(error);
+        }
+
+        taskDetails.push(a);
+      }
+
+      const options = {
+        fieldSeparator: ',',
+        quoteStrings: '"',
+        decimalseparator: '.',
+        showLabels: true,
+        useHeader: true,
+        headers: [
+          'id',
+          'type',
+          'created',
+          'launched',
+          'completed',
+          'target',
+          'completionStatus',
+          'total',
+          'optimized',
+          'updated',
+          'runTime',
+        ],
+        nullToEmptyString: true,
+      };
+
+      const currentUser = this.authenticationService.currentUserValue;
+      const fileName = `${currentUser.tenant}-${targetName}`;
+
+      new AngularCsv(taskDetails, fileName, options);
+
+      return 'processed all';
+    });
   }
 }
