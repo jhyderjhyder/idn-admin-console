@@ -247,10 +247,9 @@ export class IdentityInfoComponent implements OnInit {
           for (let a = 0; a < accReq.length; a++) {
             const arItem = accReq[a];
             if (arItem.result) {
-              if (arItem.result.ticketId){
+              if (arItem.result.ticketId) {
                 snowTicket = arItem.result.ticketId;
               }
-              
             }
           }
         }
@@ -740,10 +739,8 @@ export class IdentityInfoComponent implements OnInit {
     this.tempRevokeType = null;
     this.roleDetailsModal.hide();
   }
-  roleDetailsSub(item, showEmpty:boolean) {
-   
+  roleDetailsSub(item, showEmpty: boolean) {
     this.idnService.getRoleDetails(item.id).subscribe(data => {
-     
       for (const each of data.entitlements) {
         const es = new EntitlementSimple();
         es.id = each.id;
@@ -767,17 +764,15 @@ export class IdentityInfoComponent implements OnInit {
     });
   }
 
-  async roleDetails(item) : Promise<any> {
+  async roleDetails(item): Promise<any> {
     this.roleDetailsModal.show();
-    this.roleDetailsEntCount=0;
+    this.roleDetailsEntCount = 0;
     this.roleDetailsEnt = new Array();
     this.roleDetailsModal.show();
-    var test = await this.roleDetailsSub(item, true);
+    const test = await this.roleDetailsSub(item, true);
     console.log(test);
     this.roleDetailsEntCount++;
-
   }
-
 
   async totalRoleAccess(): Promise<any> {
     this.roleDetailsEnt = new Array();
@@ -787,36 +782,35 @@ export class IdentityInfoComponent implements OnInit {
     //for (const each of data.entitlements) {
     for (const item of this.identityInfo.roleArray) {
       this.roleDetailsEntCount++;
-      var test = await this.roleDetailsSub(item, false);
-      console.log("Procs" + test);
-      await this.sleep (1000);
+      const test = await this.roleDetailsSub(item, false);
+      console.log('Procs' + test);
+      await this.sleep(1000);
       this.roleDetailsEnt = roleDetailsFull;
     }
   }
 
-  async processOneOprhanRole(item) : Promise<any>{
-     this.idnService.getRoleDetails(item.id).subscribe(data => {
+  async processOneOprhanRole(item): Promise<any> {
+    this.idnService.getRoleDetails(item.id).subscribe(data => {
       for (const each of data.entitlements) {
-     
         for (let i = 0; i < this.roleDetailsEnt.length; i++) {
-          if (this.roleDetailsEnt[i].id ==each.id) {
-            this.roleDetailsEnt[i].attribute="true";
-            console.log("remove:" + this.roleDetailsEnt[i].displayName);
+          if (this.roleDetailsEnt[i].id == each.id) {
+            this.roleDetailsEnt[i].attribute = 'true';
+            console.log('remove:' + this.roleDetailsEnt[i].displayName);
             //this.roleDetailsEnt.splice(index - 1, 1);
           }
         }
       }
-      
+
       this.roleDetailsEntCount++;
     });
     return item.name;
   }
 
-/**
- * Having some trouble with the system running the request in
- * order.  I think I have something to learn about
- * making a call run in the correct order.  
- */
+  /**
+   * Having some trouble with the system running the request in
+   * order.  I think I have something to learn about
+   * making a call run in the correct order.
+   */
   async orphanAccess(): Promise<any> {
     this.roleDetailsEnt = new Array();
     this.roleDetailsEntCount = 0;
@@ -825,31 +819,31 @@ export class IdentityInfoComponent implements OnInit {
       es.sourceName = oneEnt.sourceName;
       es.id = oneEnt.id;
       es.displayName = oneEnt.displayName;
-      es.attribute = "false";
+      es.attribute = 'false';
       this.roleDetailsEnt.push(es);
     }
 
     //for (const each of data.entitlements) {
     for (const item of this.identityInfo.roleArray) {
-      var test = await this.processOneOprhanRole(item);
+      const test = await this.processOneOprhanRole(item);
       console.log(test);
-      await this.sleep (1000);
-       this.roleDetailsModal.show();
+      await this.sleep(1000);
+      this.roleDetailsModal.show();
       //this.roleDetailsEnt = roleDetailsFull;
     }
   }
 
-  cleanFalse(){
-    var roleDetailsClean = new Array();
-    for (const item of this.roleDetailsEnt){
-      if (item!=null && item.attribute===("false")){
+  cleanFalse() {
+    const roleDetailsClean = new Array();
+    for (const item of this.roleDetailsEnt) {
+      if (item != null && item.attribute === 'false') {
         roleDetailsClean.push(item);
       }
     }
     this.roleDetailsEnt = roleDetailsClean;
   }
 
-  sleep(ms){
+  sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
 
@@ -1073,7 +1067,7 @@ export class IdentityInfoComponent implements OnInit {
 
     const currentUser = this.authenticationService.currentUserValue;
     const fileName = `${currentUser.tenant}-${this.identityInfo.name}-rolesDetails`;
-   
+
     new AngularCsv(this.roleDetailsEnt, fileName, options);
   }
 
@@ -1089,7 +1083,7 @@ export class IdentityInfoComponent implements OnInit {
 
     const currentUser = this.authenticationService.currentUserValue;
     const fileName = `${currentUser.tenant}-${this.identityInfo.name}-entDetails`;
-   
+
     new AngularCsv(this.identityInfo.entitlementArray, fileName, options);
   }
 

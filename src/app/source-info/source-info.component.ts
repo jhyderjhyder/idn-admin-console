@@ -418,17 +418,25 @@ export class SourceInfoComponent implements OnInit {
         a.created = new Date(each.created);
         a.launched = new Date(each.launched);
         a.completed = new Date(each.completed);
+        a.completionStatus = each.completionStatus;
         a.type = each.type;
         if (each.target) {
           a.target = each.target.name;
           targetName = each.target.name;
         }
-        a.completionStatus = each.compleationStatus;
+
         if (each.attributes != null) {
           a.total = each.attributes.total;
           a.optimizedAggregation = each.attributes.optimizedAggregation;
           a.optimized = each.attributes.optimized;
           a.updated = each.attributes.updated;
+        }
+        if (each.messages != null && each.messages.length != 0) {
+          for (const msg of each.messages) {
+            if (msg.key != null) {
+              a.message = a.message + ' ' + msg.key;
+            }
+          }
         }
 
         if (each.uniqueName) {
@@ -442,11 +450,12 @@ export class SourceInfoComponent implements OnInit {
           }
         }
         try {
-          const seconds = (a.completed.getTime() - a.launched.getTime()) / 1000;
+          const seconds =
+            (a.completed.getTime() - a.launched.getTime()) / 1000 / 60;
           //https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Number/EPSILON
-          a.runTime = Math.round((seconds + Number.EPSILON) * 100) / 100;
+          a.runTimeMinuets = Math.round((seconds + Number.EPSILON) * 100) / 100;
         } catch (error) {
-          a.runTime = -1;
+          a.runTimeMinuets = -1;
           console.log(error);
         }
 
@@ -462,15 +471,16 @@ export class SourceInfoComponent implements OnInit {
         headers: [
           'id',
           'type',
+          'completionStatus',
           'created',
           'launched',
           'completed',
           'target',
-          'completionStatus',
           'total',
           'optimized',
           'updated',
-          'runTime',
+          'runTimeMinuets',
+          'message',
         ],
         nullToEmptyString: true,
       };

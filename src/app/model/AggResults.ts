@@ -10,5 +10,6 @@ export class AggResults {
   optimizedAggregation: string;
   optimized: string;
   updated: string;
-  runTime: number;
+  runTimeMinuets: number;
+  message: string;
 }
