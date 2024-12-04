@@ -462,6 +462,23 @@ Supported API's
     */
   }
 
+  getTaskAggDetails(sourceId: string): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/task-status?count=true&filters=sourceId eq"${sourceId}"&sorters=-created`;
+
+    return this.http.get(url).pipe(
+      catchError(error => {
+        if (error.status === 429) {
+          console.warn('Rate limited. Retrying in 2 seconds...');
+          this.sleep(2000);
+          return this.getTaskAggDetails(sourceId);
+        } else {
+          catchError(this.handleError(`getSourceV3Api`));
+        }
+      })
+    );
+  }
+
   getTaskStatus(compleationStatus: string): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
     let url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/task-status?count=true&filters=completionStatus eq"${compleationStatus}"&sorters=-created`;
@@ -1751,7 +1768,7 @@ Supported API's
           this.sleep(2000);
           return this.getRoleDetails(value);
         } else {
-          catchError(this.handleError(`getTags`));
+          catchError(this.handleError(`getRoleDetails`));
         }
       })
     );

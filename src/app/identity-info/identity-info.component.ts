@@ -25,6 +25,7 @@ import { ActivatedRoute } from '@angular/router';
 export class IdentityInfoComponent implements OnInit {
   oneRequest: AccessRequestStatus;
   roleDetailsEnt: Array<EntitlementSimple>;
+  roleDetailsEntCount: number;
 
   userComment: string;
   tempRevoke: Entitlement;
@@ -159,7 +160,6 @@ export class IdentityInfoComponent implements OnInit {
   pickData(input) {
     this.oneRequest = null;
     this.oneRequest = this.accessRequestStatuses[input];
-    console.table(this.oneRequest);
   }
   reset(clearMsg: boolean) {
     this.oneRequest = null;
@@ -240,6 +240,19 @@ export class IdentityInfoComponent implements OnInit {
         ac.modified = searchResult[i].modified;
         ac.status = searchResult[i].status;
         ac.source = searchResult[i].sources;
+        const accReq = searchResult[i].accountRequests;
+        //Section to find the snow ticket and show details
+        let snowTicket = null;
+        if (accReq) {
+          for (let a = 0; a < accReq.length; a++) {
+            const arItem = accReq[a];
+            if (arItem.result) {
+              if (arItem.result.ticketId) {
+                snowTicket = arItem.result.ticketId;
+              }
+            }
+          }
+        }
         const items = searchResult[i].expansionItems;
         if (items) {
           for (let ii = 0; ii < items.length; ii++) {
@@ -264,7 +277,11 @@ export class IdentityInfoComponent implements OnInit {
 
             if (item.attributeRequest) {
               if (item.attributeRequest.op) {
-                ia.op = item.attributeRequest.op;
+                if (snowTicket != null) {
+                  ia.op = item.attributeRequest.op + '  (' + snowTicket + ')';
+                } else {
+                  ia.op = item.attributeRequest.op;
+                }
               }
               if (item.attributeRequest.value) {
                 ia.value = item.attributeRequest.value;
@@ -277,6 +294,9 @@ export class IdentityInfoComponent implements OnInit {
               if (item.source.name) {
                 ia.source = item.source.name;
               }
+            }
+            if (item.result) {
+              ia.source = ia.source + ':' + item.result.ticketId;
             }
             this.identityActions.push(ia);
           }
@@ -719,11 +739,8 @@ export class IdentityInfoComponent implements OnInit {
     this.tempRevokeType = null;
     this.roleDetailsModal.hide();
   }
-  roleDetails(item) {
-    this.roleDetailsEnt = null;
-    this.roleDetailsModal.show();
+  roleDetailsSub(item, showEmpty: boolean) {
     this.idnService.getRoleDetails(item.id).subscribe(data => {
-      this.roleDetailsEnt = new Array();
       for (const each of data.entitlements) {
         const es = new EntitlementSimple();
         es.id = each.id;
@@ -739,12 +756,95 @@ export class IdentityInfoComponent implements OnInit {
         es.attribute = found;
         this.roleDetailsEnt.push(es);
       }
-      if (this.roleDetailsEnt.length == 0) {
+      if (this.roleDetailsEnt.length == 0 && showEmpty) {
         const es = new EntitlementSimple();
         es.displayName = 'No Direct Entitlements';
         this.roleDetailsEnt.push(es);
       }
     });
+  }
+
+  async roleDetails(item): Promise<any> {
+    this.roleDetailsModal.show();
+    this.roleDetailsEntCount = 0;
+    this.roleDetailsEnt = new Array();
+    this.roleDetailsModal.show();
+    const test = await this.roleDetailsSub(item, true);
+    console.log(test);
+    this.roleDetailsEntCount++;
+  }
+
+  async totalRoleAccess(): Promise<any> {
+    this.roleDetailsEnt = new Array();
+    this.roleDetailsEntCount = 0;
+    const roleDetailsFull = new Array();
+    this.roleDetailsModal.show();
+    //for (const each of data.entitlements) {
+    for (const item of this.identityInfo.roleArray) {
+      this.roleDetailsEntCount++;
+      const test = await this.roleDetailsSub(item, false);
+      console.log('Procs' + test);
+      await this.sleep(1000);
+      this.roleDetailsEnt = roleDetailsFull;
+    }
+  }
+
+  async processOneOprhanRole(item): Promise<any> {
+    this.idnService.getRoleDetails(item.id).subscribe(data => {
+      for (const each of data.entitlements) {
+        for (let i = 0; i < this.roleDetailsEnt.length; i++) {
+          if (this.roleDetailsEnt[i].id == each.id) {
+            this.roleDetailsEnt[i].attribute = 'true';
+            console.log('remove:' + this.roleDetailsEnt[i].displayName);
+            //this.roleDetailsEnt.splice(index - 1, 1);
+          }
+        }
+      }
+
+      this.roleDetailsEntCount++;
+    });
+    return item.name;
+  }
+
+  /**
+   * Having some trouble with the system running the request in
+   * order.  I think I have something to learn about
+   * making a call run in the correct order.
+   */
+  async orphanAccess(): Promise<any> {
+    this.roleDetailsEnt = new Array();
+    this.roleDetailsEntCount = 0;
+    for (const oneEnt of this.identityInfo.entitlementArray) {
+      const es = new EntitlementSimple();
+      es.sourceName = oneEnt.sourceName;
+      es.id = oneEnt.id;
+      es.displayName = oneEnt.displayName;
+      es.attribute = 'false';
+      this.roleDetailsEnt.push(es);
+    }
+
+    //for (const each of data.entitlements) {
+    for (const item of this.identityInfo.roleArray) {
+      const test = await this.processOneOprhanRole(item);
+      console.log(test);
+      await this.sleep(1000);
+      this.roleDetailsModal.show();
+      //this.roleDetailsEnt = roleDetailsFull;
+    }
+  }
+
+  cleanFalse() {
+    const roleDetailsClean = new Array();
+    for (const item of this.roleDetailsEnt) {
+      if (item != null && item.attribute === 'false') {
+        roleDetailsClean.push(item);
+      }
+    }
+    this.roleDetailsEnt = roleDetailsClean;
+  }
+
+  sleep(ms) {
+    return new Promise(resolve => setTimeout(resolve, ms));
   }
 
   revoke(id, type) {
@@ -953,4 +1053,39 @@ export class IdentityInfoComponent implements OnInit {
 
     new AngularCsv(arr, fileName, options);
   }
+
+  roleDetailsCSV() {
+    const options = {
+      fieldSeparator: ',',
+      quoteStrings: '"',
+      decimalseparator: '.',
+      showLabels: true,
+      useHeader: true,
+      headers: ['id', 'displayName', 'attribute'],
+      nullToEmptyString: true,
+    };
+
+    const currentUser = this.authenticationService.currentUserValue;
+    const fileName = `${currentUser.tenant}-${this.identityInfo.name}-rolesDetails`;
+
+    new AngularCsv(this.roleDetailsEnt, fileName, options);
+  }
+
+  roleDetailsEntitlements() {
+    const options = {
+      fieldSeparator: ',',
+      quoteStrings: '"',
+      decimalseparator: '.',
+      showLabels: true,
+      useHeader: true,
+      nullToEmptyString: true,
+    };
+
+    const currentUser = this.authenticationService.currentUserValue;
+    const fileName = `${currentUser.tenant}-${this.identityInfo.name}-entDetails`;
+
+    new AngularCsv(this.identityInfo.entitlementArray, fileName, options);
+  }
+
+  //
 }
