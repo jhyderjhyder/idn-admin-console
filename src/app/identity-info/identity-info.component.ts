@@ -777,7 +777,6 @@ export class IdentityInfoComponent implements OnInit {
   async totalRoleAccess(): Promise<any> {
     this.roleDetailsEnt = new Array();
     this.roleDetailsEntCount = 0;
-    const roleDetailsFull = new Array();
     this.roleDetailsModal.show();
     //for (const each of data.entitlements) {
     for (const item of this.identityInfo.roleArray) {
@@ -785,7 +784,6 @@ export class IdentityInfoComponent implements OnInit {
       const test = await this.roleDetailsSub(item, false);
       console.log('Procs' + test);
       await this.sleep(1000);
-      this.roleDetailsEnt = roleDetailsFull;
     }
   }
 
