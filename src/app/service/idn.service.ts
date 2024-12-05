@@ -1931,11 +1931,27 @@ Supported API's
     return this.http.delete(url, myHttpOptions);
   }
 
-  getAllEntitlementsPaged(filters: string, page: PageResults): Observable<any> {
+  getAllEntitlementsPaged(
+    filters: string,
+    appName: string,
+    page: PageResults
+  ): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
     let params = '?count=true';
-    if (filters != null) {
-      params = '?filters=name sw "' + filters + '"' + '&count=true';
+    if (filters != null || appName != null) {
+      let fil = null;
+      if (filters != null) {
+        fil = 'name sw "' + filters + '"';
+      }
+      if (appName != null) {
+        if (fil != null) {
+          fil = fil + ' and ';
+        } else {
+          fil = '';
+        }
+        fil = fil + 'source.id eq "' + appName + '"';
+      }
+      params = '?filters=' + fil + '&count=true';
     }
     const url =
       `https://${currentUser.tenant}.api.${currentUser.domain}/beta/entitlements` +

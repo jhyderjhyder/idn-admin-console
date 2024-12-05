@@ -4,6 +4,7 @@
   </div>
 </div>
 
+<pre id=jsonRaw class=json-container style="background-color: black;"></pre>
 
 <div>
   <!--Start pagination Information Just change hte ngIf -->
@@ -29,8 +30,15 @@
 <!--End of Pagination Info-->
 
 <div class="row">
-  <div class="form-group col-sm-6" *ngIf="!loading">
+  <div class="form-group col-sm-3" *ngIf="!loading">
       <input class="form-control py-2 border-start-0 border" type="text" name="search" [(ngModel)]="searchText" autocomplete="off" (keyup.enter)="submit()" placeholder="Search via Entitlement Name (Starts With)">
+  </div>
+  <div class="form-group col-sm-6" *ngIf="!loading">
+    <label for="filterTypes">
+      <select id="filterApplications" [(ngModel)]="sourceName">
+        <option *ngFor="let item of filterApplications">{{item.name}}</option>
+      </select>
+    </label>  
   </div>
   <div class="col-sm-1 text-end">
     <button type="button" (click)="submit()" class="btn btn-primary btn-sm">
@@ -40,6 +48,11 @@
   <div class="col-sm-1 text-end">
     <button type="button" [disabled]="loading" (click)="ngOnInit()" class="btn btn-primary btn-sm">
       Refresh
+    </button>
+  </div>
+  <div class="col-sm-1 text-end">
+    <button type="button" [disabled]="loading" (click)="saveInCsv()" class="btn btn-primary btn-sm">
+      CSV
     </button>
   </div>
 </div>
@@ -173,7 +186,11 @@
         <td *ngIf="bulkAction">
           <input type="checkbox" [(ngModel)]="e.selected">
         </td>
-        <td>{{ page.offset+1+i}} </td>
+        <td>     
+          <button type="button" class="btn btn-primary btn-sm" (click)="viewJson(e.id)">
+              {{ page.offset+1+i}} 
+          </button>
+         </td>
         <td>{{ e.sourceName }}</td>
         <td>{{ e.attribute }}</td>
         <td>{{ e.value }}</td>
