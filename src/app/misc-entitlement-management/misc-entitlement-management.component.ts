@@ -421,7 +421,7 @@ export class EntitlementManagementComponent implements OnInit {
     this.filterApplications = new Array<BasicAttributes>();
     const all = new BasicAttributes();
     all.name = 'ALL';
-    all.value = '';
+    all.value = null;
     this.filterApplications.push(all);
     this.idnService.getAllSourcesPaged(pr, null).subscribe(response => {
       const headers = response.headers;
