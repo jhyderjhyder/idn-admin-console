@@ -1573,6 +1573,9 @@ Supported API's
    */
   getAccessRequestStatusPaged(
     filters,
+    reqID,
+    filterGt,
+    filterLt,
     page: PageResults,
     count
   ): Observable<any> {
@@ -1581,10 +1584,18 @@ Supported API's
     if (filters != null) {
       filteredURL = filteredURL + '&requested-for=' + filters;
     }
+    let filterString = '';
+    if (reqID != null) {
+      filterString = `&filters=accessRequestId eq "${reqID}"`;
+    }
+    if (filterGt != null && filterLt != null) {
+      filterString = `&filters=created gt ${filterGt} and created lt ${filterLt}`;
+    }
 
     const url =
-      `https://${currentUser.tenant}.api.${currentUser.domain}/beta/access-request-status?sorters=-created` +
+      `https://${currentUser.tenant}.api.${currentUser.domain}/v3/access-request-status?sorters=-created` +
       filteredURL +
+      filterString +
       '&limit=' +
       page.limit +
       '&offset=' +
@@ -1597,10 +1608,24 @@ Supported API's
         if (error.status === 429) {
           this.logError('Rate limited. Retrying in 2 seconds...');
           this.sleep(2000);
-          return this.getAccessRequestStatusPaged(filters, page, false);
+          return this.getAccessRequestStatusPaged(
+            filters,
+            reqID,
+            filterGt,
+            filterLt,
+            page,
+            false
+          );
         } else {
           page.limit = 200;
-          return this.getAccessRequestStatusPaged(filters, page, false);
+          return this.getAccessRequestStatusPaged(
+            filters,
+            reqID,
+            filterGt,
+            filterLt,
+            page,
+            false
+          );
         }
       })
     );
