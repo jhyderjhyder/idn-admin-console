@@ -13,17 +13,41 @@ import { Workflow } from '../model/workflow';
 export class WorkflowsComponent implements OnInit {
   page: PageResults;
   loading: boolean;
-  rawObjectID: String;
-  rawObject: String;
+  rawObjectID: string;
+  rawObject: string;
+  unformatedRawObject: object;
+  rawObjectName: string;
   workflows: Array<Workflow>;
   executions: Array<object>;
-  type: String;
+  type: string;
+  executionsID: string;
+  searchText: string;
 
   constructor(private idnService: IDNService) {}
   ngOnInit(): void {
     this.page = new PageResults();
     this.page.limit = 200;
     this.getAllWorkflows();
+  }
+
+  /**
+   * Copy these three functions to any
+   * page you want to have paggination
+   */
+  //Get the next page
+  getNextPage() {
+    this.page.nextPage;
+    this.getAllExecutions(this.executionsID);
+  }
+  //Get the previous page
+  getPrevPage() {
+    this.page.prevPage;
+    this.getAllExecutions(this.executionsID);
+  }
+  //Pick the page Number you want
+  getOnePage(input) {
+    this.page.getPageByNumber(input - 1);
+    this.getAllExecutions(input - 1);
   }
 
   getAllWorkflows() {
@@ -44,7 +68,7 @@ export class WorkflowsComponent implements OnInit {
         for (const each of results) {
           const w = new Workflow();
           w.id = each.id;
-          w.name = each.name;
+          w.name = each.name.trim();
           w.description = each.description;
           w.created = each.created;
           w.modified = each.modified;
@@ -61,6 +85,7 @@ export class WorkflowsComponent implements OnInit {
       }
       this.loading = false;
       this.workflows.sort((a, b) => a.name.localeCompare(b.name));
+      //this.workflows = details;
     });
 
     //this.workflows.sort();
@@ -74,6 +99,7 @@ export class WorkflowsComponent implements OnInit {
   }
 
   getAllExecutions(id) {
+    this.executionsID = id;
     this.type = 'executions';
     this.loading = true;
     this.rawObjectID = null;
@@ -102,6 +128,7 @@ export class WorkflowsComponent implements OnInit {
     this.loading = true;
     this.rawObjectID = null;
     this.rawObject = null;
+    this.unformatedRawObject = null;
     this.idnService.getWorkflowExecutionsDetails(id).subscribe(response => {
       const results = response.body;
       const options: JsonFormatOptions = new JsonFormatOptions();
@@ -111,6 +138,8 @@ export class WorkflowsComponent implements OnInit {
       //const obj = JSON.stringify(results, null, 4);
       const html = prettyPrintJson.toHtml(results, options);
       this.rawObject = results;
+      this.unformatedRawObject = results;
+      this.rawObjectName = id;
       const elem = document.getElementById('jsonRaw');
       elem.innerHTML = html;
 
@@ -118,14 +147,19 @@ export class WorkflowsComponent implements OnInit {
     });
     //this.workflows.sort();
   }
+
   download() {
-    const json = JSON.stringify(this.rawObject, null, 4);
+    const json = JSON.stringify(this.unformatedRawObject, null, 4);
     //const json = this.rawObject;
     const blob = new Blob([json], { type: 'application/json' });
     const url = window.URL.createObjectURL(blob);
     const a = document.createElement('a');
     a.href = url;
-    a.download = 'Workflowdetails.json';
+    let value = this.rawObjectName;
+    if (value == null) {
+      value = 'empty';
+    }
+    a.download = this.type + '_' + value + '.json';
     a.click();
     window.URL.revokeObjectURL(url);
   }
@@ -138,9 +172,16 @@ export class WorkflowsComponent implements OnInit {
     const options: JsonFormatOptions = new JsonFormatOptions();
     options.lineNumbers = false;
     options.quoteKeys = true;
-
-    const html = prettyPrintJson.toHtml(this.workflows[id], options);
-    this.rawObject = JSON.stringify(this.workflows[id], null, 4);
+    let object = null;
+    for (const w of this.workflows) {
+      if (w.id === id) {
+        object = w;
+      }
+    }
+    const html = prettyPrintJson.toHtml(object, options);
+    this.rawObject = JSON.stringify(object, null, 4);
+    this.rawObjectName = object.name;
+    this.unformatedRawObject = object;
     const elem = document.getElementById('jsonRaw');
     elem.innerHTML = html;
     //this.workflows.sort();
