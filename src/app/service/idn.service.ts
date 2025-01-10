@@ -2061,6 +2061,39 @@ Supported API's
     return this.http.get(url, { observe: 'response' });
   }
 
+  getWorkflows(page: PageResults): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    const url =
+      `https://${currentUser.tenant}.api.${currentUser.domain}/v3/workflows?sorters=name` +
+      '&limit=' +
+      page.limit +
+      '&offset=' +
+      page.offset +
+      '&count=true';
+
+    return this.http.get(url, { observe: 'response' });
+  }
+
+  getWorkflowExecutions(page: PageResults, workflow: String): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    const url =
+      `https://${currentUser.tenant}.api.${currentUser.domain}/v3/workflows/${workflow}/executions?` +
+      'limit=' +
+      page.limit +
+      '&offset=' +
+      page.offset +
+      '&count=true';
+
+    return this.http.get(url, { observe: 'response' });
+  }
+
+  getWorkflowExecutionsDetails(workflow: String): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/workflow-executions/${workflow}/history`;
+
+    return this.http.get(url, { observe: 'response' });
+  }
+
   saveGeneralObject(
     rawFormData,
     primaryKeySource,

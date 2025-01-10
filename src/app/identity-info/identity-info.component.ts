@@ -505,7 +505,7 @@ export class IdentityInfoComponent implements OnInit {
 
         this.identityInfo.entitlementArray.push(data);
       }
- 
+
       this.identityInfo.entitlementArray.sort((a, b) =>
         a.displayName.localeCompare(b.displayName)
       );
@@ -515,7 +515,6 @@ export class IdentityInfoComponent implements OnInit {
       this.identityInfo.entitlementArray.sort((a, b) =>
         a.sourceName.localeCompare(b.sourceName)
       );
-
     }
 
     if (identity[0].tagsCount) {

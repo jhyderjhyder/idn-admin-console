@@ -78,13 +78,12 @@ export class IdentityCompareComponent implements OnInit {
         this.masterLoading = false;
         this.delta = structuredClone(this.masterDetails);
         this.valueDisplayed = 'All of [' + this.valueMasterUser + '] Access';
-        
+
         this.delta.sort((a, b) =>
           a.applicationName.localeCompare(b.applicationName)
         );
         for (let i = 0; i < this.delta.length; i++) {
           this.delta[i].simpleName.sort();
-
         }
       }
     });
@@ -103,9 +102,7 @@ export class IdentityCompareComponent implements OnInit {
         }
         this.cloneLoading = false;
       }
-    
     });
-  
   }
 
   compare() {
@@ -126,7 +123,6 @@ export class IdentityCompareComponent implements OnInit {
     this.delta.sort((a, b) =>
       a.applicationName.localeCompare(b.applicationName)
     );
-
 
     /*
     this.delta.forEach( function (value){

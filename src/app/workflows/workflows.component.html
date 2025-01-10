@@ -1,0 +1,104 @@
+<p></p>
+<div class="row">
+<div class="col-sm-2 text-end">
+    <button type="button" (click)="getAllWorkflows()" class="btn btn-primary btn-sm">
+    Show Workflows
+    </button>
+</div>
+
+<div *ngIf="rawObject" class="col-sm-1 text-end">
+    <button type="button" (click)="clear()" class="btn btn-primary btn-sm">
+    Clear/Cancel
+    </button>
+</div>
+<div *ngIf="rawObject" class="col-sm-1 text-end">
+    <button type="button" (click)="download()" class="btn btn-primary btn-sm">
+    Download
+    </button>
+</div>
+</div>
+<p></p>
+<!--Start of list workflows-->
+<div *ngIf="type=='workflows'">
+
+    <table class="table table-striped table-bordered">
+        <thead class="table-secondary align-middle">
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">id</th>
+                <th scope="col">WorkflowName</th>
+                <th scope="col">Description</th>
+                <th scope="col">Enabled</th>
+                <th scope="col">Run/Fail</th>
+                <th scope="col">Trigger</th>
+                <th scope="col">Actions</th>
+                
+            </tr>
+          </thead>
+          <tbody>
+
+            <tr *ngFor="let item of workflows; let i =index" >
+                <td scope="col">{{i}}</td>
+                <td scope="col">{{item.id}}</td>
+                <td scope="col">{{item.name}}</td>
+                <td scope="col">{{item.description}}</td>
+                <td scope="col">{{item.enabled}}</td>
+                <td scope="col">{{item.executionCount}}/{{item.failureCount}}</td>
+                <td scope="col">{{item.type}}</td>
+                <td scope="col">
+                    <div class="btn-group" role="group">
+                        <button id="btnGroupDrop1" type="button" class="btn btn-primary btn-sm dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                          Select
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+                          <a class="dropdown-item" (click)="getAllExecutions(item.id)">View Executions</a>
+                          <a class="dropdown-item" (click)="showWorkflowDetails(i)">View Workflow</a>
+
+                          
+
+                        </div>
+                      </div>
+                </td>
+            </tr>
+            </tbody>
+    </table>
+
+</div>
+
+
+<!--Start of Executions-->
+
+<div *ngIf="type=='executions'">
+
+    <table class="table table-striped table-bordered">
+        <thead class="table-secondary align-middle">
+            <tr>
+                <th scope="col">#</th>
+                <th scope="col">ID</th>
+                <th scope="col">requestId</th>
+                <th scope="col">Start</th>
+                <th scope="col">End</th>
+                <th scope="col">Status</th>
+                
+            </tr>
+          </thead>
+          <tbody>
+
+            <tr *ngFor="let execution of executions; let i =index" >
+                <td scope="col">{{i}}</td>
+                <td scope="col">
+                    <a  style="color: blue;" class="page-link" href="javascript:void(0);" 
+                    (click)="getAllExecutionDetails(execution.id)">{{execution.id }}</a>
+                </td>
+                <td scope="col">{{execution.requestId}}</td>
+                <td scope="col">{{execution.startTime}}</td>
+                <td scope="col">{{execution.closeTime}}</td>
+                <td scope="col">{{execution.status}}</td>
+            </tr>
+            </tbody>
+    </table>
+
+</div>
+
+<pre id=jsonRaw class=json-container style="background-color: black;"></pre>
+<!--View the raw Object-->
