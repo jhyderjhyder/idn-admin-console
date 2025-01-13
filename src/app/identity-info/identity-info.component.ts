@@ -765,7 +765,11 @@ export class IdentityInfoComponent implements OnInit {
         es.displayName = 'No Direct Entitlements';
         this.roleDetailsEnt.push(es);
       }
+      this.roleDetailsEnt.sort((a, b) =>
+        a.displayName.localeCompare(b.displayName)
+      );
     });
+    
   }
 
   async roleDetails(item): Promise<any> {
