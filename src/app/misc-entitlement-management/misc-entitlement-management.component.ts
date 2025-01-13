@@ -6,6 +6,10 @@ import { PageResults } from '../model/page-results';
 import { BsModalRef, ModalDirective } from 'ngx-bootstrap/modal';
 import { SimpleQueryCondition } from '../model/simple-query-condition';
 import { SourceOwner } from '../model/source-owner';
+import { BasicAttributes } from '../model/basic-attributes';
+import { prettyPrintJson } from 'pretty-print-json';
+import { JsonFormatOptions } from '../model/json-format-options';
+import { AngularCsv } from 'angular-csv-ext/dist/Angular-csv';
 
 @Component({
   selector: 'app-entitlement-management',
@@ -21,6 +25,7 @@ export class EntitlementManagementComponent implements OnInit {
   atLeastOneSelected: boolean;
   errorInvokeApi: boolean;
   searchText: string;
+  sourceName: string;
   loading: boolean;
   invalidMessage: string[];
   validToSubmit: boolean;
@@ -32,6 +37,7 @@ export class EntitlementManagementComponent implements OnInit {
   path: string;
   value: boolean;
   selectedEntitlements: Entitlement[];
+  filterApplications: Array<BasicAttributes>;
 
   public modalRef: BsModalRef;
 
@@ -47,11 +53,12 @@ export class EntitlementManagementComponent implements OnInit {
     this.setupPage();
     this.reset(true);
     this.getAllEntitlements();
+    this.getApplicationNames();
   }
 
   setupPage() {
     this.page = new PageResults();
-    this.page.limit = 25;
+    this.page.limit = 100;
   }
 
   /*
@@ -405,14 +412,61 @@ export class EntitlementManagementComponent implements OnInit {
     }
   }
 
+  /**
+   * Get all the application names and id numbers
+   */
+  getApplicationNames() {
+    const pr = new PageResults();
+    pr.limit = 50;
+    this.filterApplications = new Array<BasicAttributes>();
+    const all = new BasicAttributes();
+    all.name = 'ALL';
+    all.value = null;
+    this.filterApplications.push(all);
+    this.idnService.getAllSourcesPaged(pr, null).subscribe(response => {
+      const headers = response.headers;
+      pr.xTotalCount = headers.get('X-Total-Count');
+    });
+    let max = 1;
+    while (pr.hasMorePages && max < 10) {
+      max++;
+      this.idnService.getAllSourcesPaged(pr, null).subscribe(response => {
+        const searchResult = response.body;
+        for (let i = 0; i < searchResult.length; i++) {
+          const app = searchResult[i];
+          const basic = new BasicAttributes();
+          basic.name = app['name'];
+          basic.value = app['id'];
+          this.addSorted(basic);
+        }
+      });
+      pr.nextPage;
+    }
+  }
+  addSorted(basic: BasicAttributes) {
+    this.filterApplications.push(basic);
+    this.filterApplications.sort((a, b) => a.name.localeCompare(b.name));
+  }
+
   getAllEntitlements() {
     this.loading = true;
     this.entitlementsList = [];
     this.entitlementsListToShow = [];
     this.bulkAction = null;
 
+    let sourceID = null;
+    if (this.sourceName) {
+      //Loop the array of application names looking for the ID# of the source
+      for (let i = 0; i < this.filterApplications.length; i++) {
+        const b = this.filterApplications[i];
+        if (b.name == this.sourceName) {
+          sourceID = b.value;
+        }
+      }
+    }
+
     this.idnService
-      .getAllEntitlementsPaged(this.searchText, this.page)
+      .getAllEntitlementsPaged(this.searchText, sourceID, this.page)
       .subscribe(async response => {
         const searchResult = response.body;
         const headers = response.headers;
@@ -420,6 +474,7 @@ export class EntitlementManagementComponent implements OnInit {
 
         for (const each of searchResult) {
           const entitlement = new Entitlement();
+          entitlement.raw = each;
           entitlement.id = each.id;
           entitlement.attribute = each.attribute;
           entitlement.value = each.value;
@@ -464,5 +519,43 @@ export class EntitlementManagementComponent implements OnInit {
 
   sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms));
+  }
+  viewJson(id) {
+    for (const each of this.entitlementsList) {
+      if (each.id == id) {
+        const options: JsonFormatOptions = new JsonFormatOptions();
+        options.lineNumbers = false;
+        options.quoteKeys = true;
+
+        //https://github.com/center-key/pretty-print-json
+        // var nice = JSON.stringify(each.raw, null, 4);
+        const html = prettyPrintJson.toHtml(each.raw, options);
+        const elem = document.getElementById('jsonRaw');
+        elem.innerHTML = html;
+      }
+    }
+  }
+
+  saveInCsv() {
+    const options = {
+      fieldSeparator: ',',
+      quoteStrings: '"',
+      decimalseparator: '.',
+      showLabels: true,
+      useHeader: true,
+      headers: [
+        'id',
+        'value',
+        'name',
+        'attribute',
+        'sourceName',
+        'description',
+      ],
+      nullToEmptyString: true,
+    };
+
+    //const fileName = `rolesContaining-${this.entName}`;
+
+    new AngularCsv(this.entitlementsList, 'entitlementList', options);
   }
 }

@@ -7,6 +7,7 @@ import { Source } from '../model/source';
 import { AggregationTask } from '../model/aggregation-task';
 import { IDNService } from '../service/idn.service';
 import { MessageService } from '../service/message.service';
+import { PageResults } from '../model/page-results';
 
 @Component({
   selector: 'app-source-aggregation-run',
@@ -27,6 +28,8 @@ export class AggregateSourceComponent implements OnInit {
   uploadError: string;
   uploadFilePath: string;
   submitted = false;
+  appSearchText: string;
+  page: PageResults;
 
   public modalRef: BsModalRef;
 
@@ -40,7 +43,6 @@ export class AggregateSourceComponent implements OnInit {
 
   ngOnInit() {
     this.reset(true);
-    this.search();
   }
 
   reset(clearMsg: boolean) {
@@ -59,43 +61,52 @@ export class AggregateSourceComponent implements OnInit {
 
   search() {
     this.loading = true;
-    this.idnService.getAllSources().subscribe(async allSources => {
-      this.sources = [];
+    this.page = new PageResults();
+    this.page.limit = 250;
+    this.idnService
+      .getAllSourcesPaged(this.page, this.appSearchText)
+      .subscribe(async response => {
+        const allSources = response.body;
+        const headers = response.headers;
+        this.page.xTotalCount = headers.get('X-Total-Count');
 
-      this.sourceCount = allSources.length;
+        this.sourceCount = allSources.length;
+        this.sources = [];
 
-      //Sort it alphabetically
-      allSources.sort((a, b) => a.name.localeCompare(b.name));
+        this.sourceCount = allSources.length;
 
-      let index = 0;
-      for (const each of allSources) {
-        if (index > 0 && index % 10 == 0) {
-          // After processing every batch (10 sources), wait for 1 second before calling another API to avoid 429
-          // Too Many Requests Error
-          await this.sleep(1000);
+        //Sort it alphabetically
+        allSources.sort((a, b) => a.name.localeCompare(b.name));
+
+        let index = 0;
+        for (const each of allSources) {
+          if (index > 0 && index % 10 == 0) {
+            // After processing every batch (10 sources), wait for 1 second before calling another API to avoid 429
+            // Too Many Requests Error
+            await this.sleep(1000);
+          }
+          index++;
+
+          const source = new Source();
+          source.id = each.id;
+          source.cloudExternalID = each.id;
+          source.name = each.name;
+          source.description = each.description;
+          source.type = each.type;
+          const aggTaskPollingStatus = this.idnService.getAggTaskPolling(
+            source.cloudExternalID
+          );
+          if (aggTaskPollingStatus && aggTaskPollingStatus.completed) {
+            source.aggTask = new AggregationTask();
+            source.aggTask.id = aggTaskPollingStatus.taskId;
+            this.pollAggTaskStatus(source);
+          }
+
+          this.sources.push(source);
+          this.loadedCount = this.sources.length;
         }
-        index++;
-
-        const source = new Source();
-        source.id = each.id;
-        source.cloudExternalID = each.id;
-        source.name = each.name;
-        source.description = each.description;
-        source.type = each.type;
-        const aggTaskPollingStatus = this.idnService.getAggTaskPolling(
-          source.cloudExternalID
-        );
-        if (aggTaskPollingStatus && aggTaskPollingStatus.completed) {
-          source.aggTask = new AggregationTask();
-          source.aggTask.id = aggTaskPollingStatus.taskId;
-          this.pollAggTaskStatus(source);
-        }
-
-        this.sources.push(source);
-        this.loadedCount = this.sources.length;
-      }
-      this.loading = false;
-    });
+        this.loading = false;
+      });
   }
 
   changeOnSelectAll() {

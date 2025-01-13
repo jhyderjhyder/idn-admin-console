@@ -27,7 +27,6 @@ export class RoleContainsEntComponent implements OnInit {
     this.getApplicationNames();
     this.sourceName = 'ALL';
     this.max = false;
-    
   }
 
   submit() {

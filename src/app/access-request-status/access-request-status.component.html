@@ -59,6 +59,11 @@
       Refresh/Close
     </button>
   </div>
+  <div class="col-sm-1 text-end">
+    <button type="button" [disabled]="!clearButton" (click)="clearJsonRaw()" class="btn btn-primary btn-sm">
+      Clear
+    </button>
+  </div>
 </div>
 <p></p>
 <div class="row ">
@@ -71,28 +76,31 @@
 <form name="form" #f="ngForm" novalidate contactRequired>
   <div class="border border-primary">
     <div class="form-group align-items-center mb-3 ">
-      <br>
-      <div class="row">
-        <div class="col-md-3">Current Page Record Search</div>
-        <div class=" col-md-7">
-          <div class="input-group ">
-            <span class="input-group-text bg-white border-end-0">
-              <i class="fa fa-search"></i>
-            </span>
-            <input class="form-control py-2 border-start-0 border" type="text" name="search" [(ngModel)]="searchText"
-              autocomplete="off"
-              placeholder="Access Name, Access Type, Request Type, Request State, Requester Name or Requested For Name to filter the result.">
-          </div>
-        </div>
-      </div>
-      <br>
       <!--Custom searches Currently only for Person -->
       <div class="row">
-        <div class="col-md-3">Requested For List Only</div>
-        <div class=" col-md-7">
+        <div class=" col-md-3">
+          Identity Name
           <input class="form-control py-2 border-start-0 border" type="text" name="requestedFor"
-            [(ngModel)]="requestedFor" (keyup.enter)="getRequestedForUser()" autocomplete="off" placeholder="Search via Account Name">
+            [(ngModel)]="requestedFor" (keyup.enter)="getRequestedForUser()" autocomplete="off" placeholder="Full Account Name">
         </div>
+
+        <div class=" col-md-3">
+          Full Request ID
+          <input class="form-control py-2 border-start-0 border" type="text" name="searchReqID"
+            [(ngModel)]="searchReqID" (keyup.enter)="getRequestedForUser()" autocomplete="off" placeholder="requestNumber">
+        </div>
+
+        <div class=" col-md-2">
+          Greater (both needed)
+          <input class="form-control py-2 border-start-0 border" type="text" name="searchGt"
+            [(ngModel)]="searchGt" (keyup.enter)="getRequestedForUser()" autocomplete="off" placeholder="yyyy-MM-dd">
+        </div>
+        <div class=" col-md-2">
+          Less (both needed)
+          <input class="form-control py-2 border-start-0 border" type="text" name="searchLt"
+            [(ngModel)]="searchLt" (keyup.enter)="getRequestedForUser()" autocomplete="off" placeholder="yyyy-MM-dd">
+        </div>
+
         <div class="col-md-2">
           <button type="button" (click)="getRequestedForUser()" class="btn btn-primary btn-sm">
             Search

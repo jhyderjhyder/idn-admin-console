@@ -25,6 +25,7 @@ export class IdentityCompareComponent implements OnInit {
 
   masterDetails: Array<SimpleCompare>;
   cloneDetails: Array<SimpleCompare>;
+
   delta: Array<SimpleCompare>;
   deltaString: Array<DeltaRemoved>;
 
@@ -77,6 +78,13 @@ export class IdentityCompareComponent implements OnInit {
         this.masterLoading = false;
         this.delta = structuredClone(this.masterDetails);
         this.valueDisplayed = 'All of [' + this.valueMasterUser + '] Access';
+
+        this.delta.sort((a, b) =>
+          a.applicationName.localeCompare(b.applicationName)
+        );
+        for (let i = 0; i < this.delta.length; i++) {
+          this.delta[i].simpleName.sort();
+        }
       }
     });
 
@@ -111,6 +119,11 @@ export class IdentityCompareComponent implements OnInit {
       }
     }
     this.valueDisplayed = 'Access You might want to request';
+
+    this.delta.sort((a, b) =>
+      a.applicationName.localeCompare(b.applicationName)
+    );
+
     /*
     this.delta.forEach( function (value){
       console.log(value);

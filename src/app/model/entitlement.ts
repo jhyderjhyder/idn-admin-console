@@ -18,4 +18,5 @@ export class Entitlement {
   currentOwnerAccountName: string;
   currentOwnerDisplayName: string;
   displayName: string;
+  raw: object;
 }

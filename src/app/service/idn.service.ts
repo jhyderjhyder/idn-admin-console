@@ -1573,6 +1573,9 @@ Supported API's
    */
   getAccessRequestStatusPaged(
     filters,
+    reqID,
+    filterGt,
+    filterLt,
     page: PageResults,
     count
   ): Observable<any> {
@@ -1581,10 +1584,18 @@ Supported API's
     if (filters != null) {
       filteredURL = filteredURL + '&requested-for=' + filters;
     }
+    let filterString = '';
+    if (reqID != null) {
+      filterString = `&filters=accessRequestId eq "${reqID}"`;
+    }
+    if (filterGt != null && filterLt != null) {
+      filterString = `&filters=created gt ${filterGt} and created lt ${filterLt}`;
+    }
 
     const url =
-      `https://${currentUser.tenant}.api.${currentUser.domain}/beta/access-request-status?sorters=-created` +
+      `https://${currentUser.tenant}.api.${currentUser.domain}/v3/access-request-status?sorters=-created` +
       filteredURL +
+      filterString +
       '&limit=' +
       page.limit +
       '&offset=' +
@@ -1597,10 +1608,24 @@ Supported API's
         if (error.status === 429) {
           this.logError('Rate limited. Retrying in 2 seconds...');
           this.sleep(2000);
-          return this.getAccessRequestStatusPaged(filters, page, false);
+          return this.getAccessRequestStatusPaged(
+            filters,
+            reqID,
+            filterGt,
+            filterLt,
+            page,
+            false
+          );
         } else {
           page.limit = 200;
-          return this.getAccessRequestStatusPaged(filters, page, false);
+          return this.getAccessRequestStatusPaged(
+            filters,
+            reqID,
+            filterGt,
+            filterLt,
+            page,
+            false
+          );
         }
       })
     );
@@ -1931,11 +1956,27 @@ Supported API's
     return this.http.delete(url, myHttpOptions);
   }
 
-  getAllEntitlementsPaged(filters: string, page: PageResults): Observable<any> {
+  getAllEntitlementsPaged(
+    filters: string,
+    appName: string,
+    page: PageResults
+  ): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
     let params = '?count=true';
-    if (filters != null) {
-      params = '?filters=name sw "' + filters + '"' + '&count=true';
+    if (filters != null || appName != null) {
+      let fil = null;
+      if (filters != null) {
+        fil = 'name sw "' + filters + '"';
+      }
+      if (appName != null) {
+        if (fil != null) {
+          fil = fil + ' and ';
+        } else {
+          fil = '';
+        }
+        fil = fil + 'source.id eq "' + appName + '"';
+      }
+      params = '?filters=' + fil + '&count=true';
     }
     const url =
       `https://${currentUser.tenant}.api.${currentUser.domain}/beta/entitlements` +
@@ -2016,6 +2057,39 @@ Supported API's
       '&offset=' +
       page.offset +
       '&count=true';
+
+    return this.http.get(url, { observe: 'response' });
+  }
+
+  getWorkflows(page: PageResults): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    const url =
+      `https://${currentUser.tenant}.api.${currentUser.domain}/v3/workflows?sorters=name` +
+      '&limit=' +
+      page.limit +
+      '&offset=' +
+      page.offset +
+      '&count=true';
+
+    return this.http.get(url, { observe: 'response' });
+  }
+
+  getWorkflowExecutions(page: PageResults, workflow: String): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    const url =
+      `https://${currentUser.tenant}.api.${currentUser.domain}/v3/workflows/${workflow}/executions?` +
+      'limit=' +
+      page.limit +
+      '&offset=' +
+      page.offset +
+      '&count=true';
+
+    return this.http.get(url, { observe: 'response' });
+  }
+
+  getWorkflowExecutionsDetails(workflow: String): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/workflow-executions/${workflow}/history`;
 
     return this.http.get(url, { observe: 'response' });
   }

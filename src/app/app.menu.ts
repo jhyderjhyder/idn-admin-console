@@ -75,6 +75,7 @@ export const codeMenu = [
   new MenuLink('/rule-connector-management', 'Connector Rules', null),
   new MenuLink(null, null, true),
   new MenuLink('/raw-object', 'Object Viewer', null),
+  new MenuLink('/workflows', 'Workflows', null),
 ];
 export const accessRequestMenu = [
   new MenuLink('/access-request-status', 'Approval Status', null),

@@ -30,6 +30,10 @@ export class AccessRequestStatusComponent implements OnInit {
   lineNumber;
   rawObject: string;
   oneRequest: AccessRequestStatus;
+  clearButton: boolean;
+  searchReqID: string;
+  searchGt: string;
+  searchLt: string;
 
   constructor(
     private idnService: IDNService,
@@ -37,6 +41,12 @@ export class AccessRequestStatusComponent implements OnInit {
     private messageService: MessageService
   ) {}
 
+  clearJsonRaw() {
+    const elem = document.getElementById('jsonRaw');
+    elem.innerHTML = null;
+    this.rawObject = null;
+    this.clearButton = false;
+  }
   ngOnInit() {
     this.reset();
     this.getAllAccessRequestStatus();
@@ -44,6 +54,7 @@ export class AccessRequestStatusComponent implements OnInit {
     this.oneRequest = null;
     const elem = document.getElementById('jsonRaw');
     elem.innerHTML = '';
+    this.clearButton = false;
   }
   pickData(input) {
     this.lineNumber = input;
@@ -68,6 +79,7 @@ export class AccessRequestStatusComponent implements OnInit {
     const elem = document.getElementById('jsonRaw');
     this.rawObject = prettyPrintJson.toHtml(html);
     elem.innerHTML = html;
+    this.clearButton = true;
   }
 
   /**
@@ -106,8 +118,7 @@ export class AccessRequestStatusComponent implements OnInit {
         }
       });
     } else {
-      this.messageService.setError('Identity value cannot be null');
-      return;
+      this.getAllAccessRequestStatus();
     }
   }
 
@@ -137,7 +148,14 @@ export class AccessRequestStatusComponent implements OnInit {
     });
 
     this.idnService
-      .getAccessRequestStatusPaged(this.filters, this.page, true)
+      .getAccessRequestStatusPaged(
+        this.filters,
+        this.searchReqID,
+        this.searchGt,
+        this.searchLt,
+        this.page,
+        true
+      )
       .subscribe(response => {
         console.log(response.states);
         const results = response.body;

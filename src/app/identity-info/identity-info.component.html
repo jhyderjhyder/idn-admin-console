@@ -963,6 +963,7 @@
       <div class="modal-body" *ngIf="!roleDetailsEnt">Proccessing Please wait</div>
       <div class="modal-body" *ngIf="roleDetailsEnt && roleDetailsEnt.length!=0" >
           <div class="form-group row mb-2" >
+      
             <div class="row">
               <div class="col-sm-2">
                 <span>Processed {{roleDetailsEntCount}}</span>
@@ -977,10 +978,15 @@
                   Remove Matching
                 </button>
               </div>
+              <div class="col-sm-5">
+                <input class="form-control py-2 border-start-0 border" type="text" name="search" [(ngModel)]="searchText2" autocomplete="off" placeholder="Filter by Entitlement DisplayName">
+              </div>
           </div>
+
+         
             <table class="table table-striped table-bordered">
               <tr><td>#</td><td>id</td><td>DisplayName</td><td>Found</td></tr>
-              <tr *ngFor="let ent of roleDetailsEnt ; let i =index">
+              <tr *ngFor="let ent of (roleDetailsEnt | filter:searchText2:['displayName']); let i =index">
                 <td>{{i+1}}</td>
                 <td><button type="button" class="btn btn-info btn-sm" (click)="getEntitlementDetails(ent.id)">
                   {{ent.id}}

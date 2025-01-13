@@ -46,6 +46,7 @@ import { ReportFailuresComponent } from './report-failures/report-failures.compo
 import { ReportTaskStatusComponent } from './report-task-status/report-task-status.component';
 import { RawObjectComponent } from './raw-object/raw-object.component';
 import { FastTagComponent } from './fast-tag/fast-tag.component';
+import { WorkflowsComponent } from './workflows/workflows.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/identity-info', pathMatch: 'full' },
@@ -248,6 +249,11 @@ const routes: Routes = [
   {
     path: 'fast-tag',
     component: FastTagComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'workflows',
+    component: WorkflowsComponent,
     canActivate: [AuthGuard],
   },
   { path: 'login', component: LoginComponent },
