@@ -264,6 +264,10 @@ export class IdentityInfoComponent implements OnInit {
             if (searchResult[i].created) {
               ia.created = searchResult[i].created;
             }
+            //Created is the date of the access request.  Modified is what we want if access requested
+            if (searchResult[i].modified) {
+              ia.created = searchResult[i].modified;
+            }
             if (searchResult[i].action) {
               const trigger = searchResult[i].action.toString();
               ia.trigger = trigger;
