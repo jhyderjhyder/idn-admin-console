@@ -16,6 +16,10 @@ import { RevokeRole, RevokeRoleItem } from '../model/revokeRole';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { Entitlement } from '../model/entitlement';
 import { ActivatedRoute } from '@angular/router';
+import {
+  AccessRequestAudit,
+  AccessRequestAuditAccount,
+} from '../model/AccessRequestAudit';
 
 @Component({
   selector: 'app-identity-info',
@@ -38,6 +42,7 @@ export class IdentityInfoComponent implements OnInit {
 
   rawActivities: string;
   rawWorkItem: string;
+  auditDetails: AccessRequestAudit;
 
   //newsearch options
   accountName: string;
@@ -76,7 +81,11 @@ export class IdentityInfoComponent implements OnInit {
   @ViewChild('roleDetailsModal', { static: false })
   roleDetailsModal: ModalDirective;
 
+  @ViewChild('auditDetailsModal', { static: false })
+  auditDetailsModal: ModalDirective;
+
   ngOnInit() {
+    this.auditDetails = new AccessRequestAudit();
     this.tempRevoke = new Entitlement();
     this.page = new PageResults();
     this.selectedFilterTypes = 'name';
@@ -603,6 +612,7 @@ export class IdentityInfoComponent implements OnInit {
         accessRequestStatus.approvalDetails = each.approvalDetails;
         accessRequestStatus.accessRequestPhases = each.accessRequestPhases;
         accessRequestStatus.raw = each;
+        accessRequestStatus.id = each.accessRequestId;
 
         if (each.requesterComment && each.requesterComment.comment) {
           accessRequestStatus.requesterComment = each.requesterComment.comment;
@@ -742,6 +752,60 @@ export class IdentityInfoComponent implements OnInit {
     this.revokeRequest.hide();
   }
 
+  showRawAudit(input, modal: boolean) {
+    this.auditDetails = new AccessRequestAudit();
+    this.auditDetails.applications = [];
+    const ticket = this.accessRequestStatuses[input].id;
+    this.auditDetails.id = ticket;
+    console.log(ticket);
+    this.idnService.searchIdentityRequestAudit(ticket).subscribe(data => {
+      const jsonText = JSON.stringify(data, null, 4);
+      if (modal == false) {
+        this.rawAccessRequest = jsonText;
+      } else {
+        const raw = data[0];
+        this.auditDetails.status = raw.status;
+        this.auditDetails.created = raw.created;
+        this.auditDetails.modified = raw.modified;
+        this.auditDetails.requester = raw.requester.name;
+        this.auditDetails.recipient = raw.recipient.name;
+
+        this.auditDetails.sources = raw.sources;
+
+        for (let i = 0; i < raw.accountRequests.length; i++) {
+          const reg = raw.accountRequests[i];
+          const account = new AccessRequestAuditAccount();
+          account.accountId = reg.accountId;
+          account.op = reg.op;
+          account.source = reg.source.name;
+          account.status = reg.result.status;
+          account.attributeRequest = [];
+          if (reg.result) {
+            if (reg.result.errors) {
+              account.status = reg.result.status;
+              account.errors = reg.result.errors;
+            }
+          }
+          for (let a = 0; a < reg.attributeRequests.length; a++) {
+            const ar = reg.attributeRequests[a];
+            account.attributeRequest.push(
+              ar.name + ':' + ar.value + ':' + ar.op
+            );
+          }
+
+          this.auditDetails.applications.push(account);
+        }
+
+        this.auditDetailsModal.show();
+      }
+    });
+  }
+  cancelAuditDetails() {
+    this.tempRevoke = null;
+    this.tempRevokeType = null;
+    this.auditDetailsModal.hide();
+  }
+
   cancelRoleDetails() {
     this.tempRevoke = null;
     this.tempRevokeType = null;
@@ -773,7 +837,6 @@ export class IdentityInfoComponent implements OnInit {
         a.displayName.localeCompare(b.displayName)
       );
     });
-    
   }
 
   async roleDetails(item): Promise<any> {
@@ -1095,6 +1158,22 @@ export class IdentityInfoComponent implements OnInit {
     const fileName = `${currentUser.tenant}-${this.identityInfo.name}-entDetails`;
 
     new AngularCsv(this.identityInfo.entitlementArray, fileName, options);
+  }
+
+  auditToCsv() {
+    const options = {
+      fieldSeparator: ',',
+      quoteStrings: '"',
+      decimalseparator: '.',
+      showLabels: true,
+      useHeader: true,
+      nullToEmptyString: true,
+    };
+
+    const currentUser = this.authenticationService.currentUserValue;
+    const fileName = `${currentUser.tenant}-${this.identityInfo.name}-audit-${this.auditDetails.id}`;
+
+    new AngularCsv(this.auditDetails.applications, fileName, options);
   }
 
   //

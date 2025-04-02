@@ -774,6 +774,31 @@ Supported API's
     );
   }
 
+  searchIdentityRequestAudit(requestNumber: String): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/search/`;
+
+    const payload = {
+      query: {
+        query: `trackingNumber:\"${requestNumber}\"`,
+      },
+      indices: ['accountactivities'],
+      sort: ['modified'],
+    };
+
+    return this.http.post(url, payload, this.httpOptions).pipe(
+      catchError(error => {
+        if (error.status === 429) {
+          console.warn('Rate limited. Retrying in 2 seconds...');
+          this.sleep(2000);
+          return this.searchIdentityRequestAudit(requestNumber);
+        } else {
+          catchError(this.handleError(`searchAccounts`));
+        }
+      })
+    );
+  }
+
   revokeRole(query: RevokeRole): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
     const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/access-requests/`;
