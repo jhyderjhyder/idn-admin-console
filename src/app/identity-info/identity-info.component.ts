@@ -796,6 +796,9 @@ export class IdentityInfoComponent implements OnInit {
             this.auditDetails.applications.push(account);
           }
       }
+      if (raw.errors){
+        this.auditDetails.errors;
+      }
 
         this.auditDetailsModal.show();
       }
