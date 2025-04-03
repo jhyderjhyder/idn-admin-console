@@ -772,29 +772,30 @@ export class IdentityInfoComponent implements OnInit {
 
         this.auditDetails.sources = raw.sources;
 
-        for (let i = 0; i < raw.accountRequests.length; i++) {
-          const reg = raw.accountRequests[i];
-          const account = new AccessRequestAuditAccount();
-          account.accountId = reg.accountId;
-          account.op = reg.op;
-          account.source = reg.source.name;
-          account.status = reg.result.status;
-          account.attributeRequest = [];
-          if (reg.result) {
-            if (reg.result.errors) {
-              account.status = reg.result.status;
-              account.errors = reg.result.errors;
+        if(raw.accountRequests){
+          for (let i = 0; i < raw.accountRequests.length; i++) {
+            const reg = raw.accountRequests[i];
+            const account = new AccessRequestAuditAccount();
+            account.accountId = reg.accountId;
+            account.op = reg.op;
+            account.source = reg.source.name;
+            account.status = reg.result.status;
+            account.attributeRequest = [];
+            if (reg.result) {
+              if (reg.result.errors) {
+                account.status = reg.result.status;
+                account.errors = reg.result.errors;
+              }
             }
+            for (let a = 0; a < reg.attributeRequests.length; a++) {
+              const ar = reg.attributeRequests[a];
+              account.attributeRequest.push(
+                ar.name + ':' + ar.value + ':' + ar.op
+              );
+            }
+            this.auditDetails.applications.push(account);
           }
-          for (let a = 0; a < reg.attributeRequests.length; a++) {
-            const ar = reg.attributeRequests[a];
-            account.attributeRequest.push(
-              ar.name + ':' + ar.value + ':' + ar.op
-            );
-          }
-
-          this.auditDetails.applications.push(account);
-        }
+      }
 
         this.auditDetailsModal.show();
       }
