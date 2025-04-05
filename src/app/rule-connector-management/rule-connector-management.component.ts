@@ -32,6 +32,7 @@ export class ImportRuleComponent implements OnInit {
   convertXMLResult: string;
   allRules: Rule[];
   showAllRules: boolean;
+  javaCode: string;
 
   public modalRef: BsModalRef;
 
@@ -51,6 +52,12 @@ export class ImportRuleComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    if (localStorage.getItem('javaCode') != null) {
+      this.javaCode = localStorage.getItem('javaCode');
+    } else {
+      this.javaCode = null;
+    }
+
     this.showAllRules = true;
     this.reset(true);
     this.getConnectorRules();
@@ -60,6 +67,8 @@ export class ImportRuleComponent implements OnInit {
     const elem = document.getElementById('jsonRaw');
     elem.innerHTML = '';
     this.showAllRules = true;
+    localStorage.removeItem('javaCode');
+    this.ngOnInit();
   }
 
   reset(clearMsg: boolean) {
@@ -457,11 +466,12 @@ export class ImportRuleComponent implements OnInit {
   showCode(selectedRule: Rule) {
     this.idnService.getConnectorRuleById(selectedRule.id).subscribe(
       result => {
-        const donwloadedRule = this.processDownloadRule(result);
-        if (donwloadedRule != null) {
-          const elem = document.getElementById('jsonRaw');
-          elem.innerHTML = donwloadedRule.script;
+        const downloadedRule = this.processDownloadRule(result);
+        if (downloadedRule != null) {
+          this.javaCode = downloadedRule.script;
           this.showAllRules = false;
+          localStorage.setItem('javaCode', this.javaCode);
+          location.reload();
         }
       },
       err => this.messageService.handleIDNError(err)

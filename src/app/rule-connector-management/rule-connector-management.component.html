@@ -33,6 +33,12 @@
     <input #importRuleFile type="file" accept=".xml" (change)="processFileForImportRule($event)" class="btn btn-primary btn-sm">
     &nbsp;&nbsp;
     <button (click)="clearFileForImportRule()" class="btn btn-primary btn-sm">Clear File</button>
+
+
+    <button type="button" (click)="clearCode()" class="btn btn-primary btn-sm">
+      Close Rule
+    </button>
+
   </div>
   <div class="col-sm-2 text-end">
     <button type="button" [disabled]="ruleToImport === null" (click)="showImportRuleConfirmModal()" class="btn btn-primary btn-sm">
@@ -51,25 +57,13 @@
   </div>
 </div>
 <!--HTML view code-->
-<div class="form-group row  mb-3" *ngIf="!showAllRules">
-  <div class="col-sm-2 text-end">
-    <button type="button" (click)="clearCode()" class="btn btn-primary btn-sm">
-      Close Rule
-    </button>
-  </div>
-</div>
-<pre class="prettyprint" > <code id="jsonRaw" class="language-java">
-</code></pre>
-<div class="form-group row  mb-3" *ngIf="!showAllRules">
-  <div class="col-sm-2 text-end">
-    <button type="button" (click)="clearCode()" class="btn btn-primary btn-sm">
-      Close Rule
-    </button>
-  </div>
-  
-</div>
 
-<table *ngIf="showAllRules" class="table table-striped table-bordered">
+<pre *ngIf="javaCode" class="prettyprint"><code id="jsonRaw" class="language-java">
+{{javaCode}}
+</code></pre>
+
+
+<table *ngIf="!javaCode" class="table table-striped table-bordered">
   <thead class="table-secondary text-center align-middle">
     <tr>
       <th scope="col">Id</th>
