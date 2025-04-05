@@ -7,7 +7,7 @@ export class AccessRequestAudit {
   recipient: string;
   applications: Array<AccessRequestAuditAccount>;
   id: string;
-  errors:string;
+  errors: string;
 }
 
 export class AccessRequestAuditAccount {
@@ -16,5 +16,6 @@ export class AccessRequestAuditAccount {
   status: string;
   accountId: string;
   op: string;
-  attributeRequest: Array<String>;
+  name: string;
+  value: string;
 }

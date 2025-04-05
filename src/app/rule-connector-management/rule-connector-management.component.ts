@@ -31,6 +31,7 @@ export class ImportRuleComponent implements OnInit {
   buttonClicked: string;
   convertXMLResult: string;
   allRules: Rule[];
+  showAllRules: boolean;
 
   public modalRef: BsModalRef;
 
@@ -50,8 +51,15 @@ export class ImportRuleComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.showAllRules = true;
     this.reset(true);
     this.getConnectorRules();
+  }
+
+  clearCode() {
+    const elem = document.getElementById('jsonRaw');
+    elem.innerHTML = '';
+    this.showAllRules = true;
   }
 
   reset(clearMsg: boolean) {
@@ -444,6 +452,21 @@ export class ImportRuleComponent implements OnInit {
     } else {
       return blob;
     }
+  }
+
+  showCode(selectedRule: Rule) {
+    this.idnService.getConnectorRuleById(selectedRule.id).subscribe(
+      result => {
+        const donwloadedRule = this.processDownloadRule(result);
+        if (donwloadedRule != null) {
+          const elem = document.getElementById('jsonRaw');
+          elem.innerHTML = donwloadedRule.script;
+          this.showAllRules = false;
+        }
+      },
+      err => this.messageService.handleIDNError(err)
+    );
+    console.log(selectedRule.description);
   }
 
   prepareRuleAttributes(attributes) {

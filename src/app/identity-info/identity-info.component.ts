@@ -84,6 +84,9 @@ export class IdentityInfoComponent implements OnInit {
   @ViewChild('auditDetailsModal', { static: false })
   auditDetailsModal: ModalDirective;
 
+  @ViewChild('accessRequestDetails', { static: false })
+  accessRequestDetails: ModalDirective;
+
   ngOnInit() {
     this.auditDetails = new AccessRequestAudit();
     this.tempRevoke = new Entitlement();
@@ -169,6 +172,7 @@ export class IdentityInfoComponent implements OnInit {
   pickData(input) {
     this.oneRequest = null;
     this.oneRequest = this.accessRequestStatuses[input];
+    this.accessRequestDetails.show();
   }
   reset(clearMsg: boolean) {
     this.oneRequest = null;
@@ -771,8 +775,9 @@ export class IdentityInfoComponent implements OnInit {
         this.auditDetails.recipient = raw.recipient.name;
 
         this.auditDetails.sources = raw.sources;
+        this.auditDetails.errors = raw.errors;
 
-        if(raw.accountRequests){
+        if (raw.accountRequests) {
           for (let i = 0; i < raw.accountRequests.length; i++) {
             const reg = raw.accountRequests[i];
             const account = new AccessRequestAuditAccount();
@@ -780,7 +785,6 @@ export class IdentityInfoComponent implements OnInit {
             account.op = reg.op;
             account.source = reg.source.name;
             account.status = reg.result.status;
-            account.attributeRequest = [];
             if (reg.result) {
               if (reg.result.errors) {
                 account.status = reg.result.status;
@@ -789,16 +793,25 @@ export class IdentityInfoComponent implements OnInit {
             }
             for (let a = 0; a < reg.attributeRequests.length; a++) {
               const ar = reg.attributeRequests[a];
-              account.attributeRequest.push(
-                ar.name + ':' + ar.value + ':' + ar.op
-              );
+              account.name = ar.name;
+              account.value = ar.value;
+              account.op = ar.op;
+              //account.errors = "";
+              if (ar.result) {
+                if (ar.result.status != null) {
+                  account.errors = ar.result.status + ':';
+                }
+                if (ar.result.errors) {
+                  account.errors = account.errors + ar.result.errors;
+                }
+              }
+              this.auditDetails.applications.push(account);
             }
-            this.auditDetails.applications.push(account);
           }
-      }
-      if (raw.errors){
-        this.auditDetails.errors;
-      }
+        }
+        if (raw.errors) {
+          this.auditDetails.errors;
+        }
 
         this.auditDetailsModal.show();
       }
@@ -808,6 +821,7 @@ export class IdentityInfoComponent implements OnInit {
     this.tempRevoke = null;
     this.tempRevokeType = null;
     this.auditDetailsModal.hide();
+    this.accessRequestDetails.hide();
   }
 
   cancelRoleDetails() {
