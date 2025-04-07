@@ -776,6 +776,7 @@ export class IdentityInfoComponent implements OnInit {
 
         this.auditDetails.sources = raw.sources;
         this.auditDetails.errors = raw.errors;
+        this.auditDetails.warnings = raw.warnings;
 
         if (raw.accountRequests) {
           for (let i = 0; i < raw.accountRequests.length; i++) {
@@ -824,7 +825,7 @@ export class IdentityInfoComponent implements OnInit {
     audit.accountId = account.accountId;
     audit.op = account.op;
     audit.source = account.source;
-    audit.source = account.status;
+    audit.status = account.status;
     audit.errors = account.errors;
     return audit;
   }
