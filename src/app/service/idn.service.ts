@@ -2163,9 +2163,9 @@ Supported API's
     };
   }
 
-  failuresBySource(idNumber): Observable<any> {
+  failuresBySource(idNumber, limit): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/search/?count=true&limit=50&offset=0`;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/search/?count=true&limit=${limit}&offset=0`;
 
     const payload = {
       query: {

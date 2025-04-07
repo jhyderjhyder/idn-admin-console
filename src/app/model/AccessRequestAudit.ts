@@ -33,4 +33,6 @@ export class AccessRequestAuditAccountFull {
   recipient: string;
   created: string;
   modified: string;
+  pk:string;
+  trackingNumber:string;
 }
