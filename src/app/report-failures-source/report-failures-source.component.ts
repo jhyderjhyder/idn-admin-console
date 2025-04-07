@@ -8,27 +8,24 @@ import { AngularCsv } from 'angular-csv-ext/dist/Angular-csv';
 @Component({
   selector: 'app-report-failures-source',
   templateUrl: './report-failures-source.component.html',
-  styleUrls: ['./report-failures-source.component.css']
+  styleUrls: ['./report-failures-source.component.css'],
 })
-export class ReportFailuresSourceComponent implements OnInit{
+export class ReportFailuresSourceComponent implements OnInit {
+  filterApplications: Array<BasicAttributes>;
+  filterBasic: Array<BasicAttributes>;
+  loading: boolean;
+  sourceName: string;
+  auditDetails: Array<AccessRequestAuditAccountFull>;
 
-filterApplications: Array<BasicAttributes>;
-filterBasic: Array<BasicAttributes>;
-loading: boolean;
-sourceName: string;
-auditDetails: Array<AccessRequestAuditAccountFull>;
+  constructor(private idnService: IDNService) {}
 
- constructor(
-    private idnService: IDNService
-  ) {}
-
-ngOnInit() {
-  this.auditDetails = [];
-  if (this.filterApplications == null) {
-    this.loading = true;
-    this.getApplicationNames();
+  ngOnInit() {
+    this.auditDetails = [];
+    if (this.filterApplications == null) {
+      this.loading = true;
+      this.getApplicationNames();
+    }
   }
-}
 
   /*
 Populate the dropdown of sources you
@@ -67,65 +64,63 @@ can pick from
     this.filterApplications.push(basic);
     this.filterApplications.sort((a, b) => a.name.localeCompare(b.name));
   }
-  
-  submit(){
+
+  submit() {
     this.auditDetails = [];
 
-    console.log(this.sourceName)
+    console.log(this.sourceName);
     this.idnService.failuresBySource(this.sourceName).subscribe(data => {
       console.log(data.length);
       for (let sr = 0; sr < data.length; sr++) {
         const raw = data[sr];
 
-         if (raw.accountRequests) {
-                  for (let i = 0; i < raw.accountRequests.length; i++) {
-                    const reg = raw.accountRequests[i];
-                    const account = new AccessRequestAuditAccountFull();
-                    account.accountId = reg.accountId;
-                    account.op = reg.op;
-                    account.source = reg.source.name;
-                    account.status = reg.result.status;
-                    account.created = raw.created;
-                    account.modified = raw.modified;
-                    if (raw.requester){
-                      account.requester = raw.requester.name;
-                    }
-                    if (raw.recipient){
-                      account.recipient = raw.recipient.name;
-                    }
-                    if (reg.result) {
-                      if (reg.result.errors) {
-                        account.status = reg.result.status;
-                        account.errors = reg.result.errors;
-                      }
-                    }
-                    if (account.source==this.sourceName){
-                      //console.log("Our Application:" + account.source);
-                      for (let a = 0; a < reg.attributeRequests.length; a++) {
-                        const audit = this.cloneAuditDetails(account);
-                        const ar = reg.attributeRequests[a];
-                        audit.name = ar.name;
-                        audit.value = ar.value;
-                        audit.op = ar.op;
-                        //account.errors = "";
-                        if (ar.result) {
-                          if (ar.result.status != null) {
-                            audit.errors = ar.result.status + ':';
-                          }
-                          if (ar.result.errors) {
-                            audit.errors = account.errors + ar.result.errors;
-                          }
-                        }
-                          this.auditDetails.push(audit);
-                    }
-                  }else{
-                    //console.log("Not our application");
+        if (raw.accountRequests) {
+          for (let i = 0; i < raw.accountRequests.length; i++) {
+            const reg = raw.accountRequests[i];
+            const account = new AccessRequestAuditAccountFull();
+            account.accountId = reg.accountId;
+            account.op = reg.op;
+            account.source = reg.source.name;
+            account.status = reg.result.status;
+            account.created = raw.created;
+            account.modified = raw.modified;
+            if (raw.requester) {
+              account.requester = raw.requester.name;
+            }
+            if (raw.recipient) {
+              account.recipient = raw.recipient.name;
+            }
+            if (reg.result) {
+              if (reg.result.errors) {
+                account.status = reg.result.status;
+                account.errors = reg.result.errors;
+              }
+            }
+            if (account.source == this.sourceName) {
+              //console.log("Our Application:" + account.source);
+              for (let a = 0; a < reg.attributeRequests.length; a++) {
+                const audit = this.cloneAuditDetails(account);
+                const ar = reg.attributeRequests[a];
+                audit.name = ar.name;
+                audit.value = ar.value;
+                audit.op = ar.op;
+                //account.errors = "";
+                if (ar.result) {
+                  if (ar.result.status != null) {
+                    audit.errors = ar.result.status + ':';
+                  }
+                  if (ar.result.errors) {
+                    audit.errors = account.errors + ar.result.errors;
                   }
                 }
+                this.auditDetails.push(audit);
               }
+            } else {
+              //console.log("Not our application");
+            }
+          }
+        }
       }
- 
-
     });
   }
 
@@ -139,22 +134,22 @@ can pick from
     audit.created = account.created;
     audit.modified = account.modified;
     audit.recipient = account.recipient;
-    audit.requester = account.requester
+    audit.requester = account.requester;
     return audit;
   }
 
-   download() {
-      const options = {
-        fieldSeparator: ',',
-        quoteStrings: '"',
-        decimalseparator: '.',
-        showLabels: true,
-        useHeader: true,
-        nullToEmptyString: true,
-      };
-  
-      const fileName = `${this.sourceName}-provisioning`;
-  
-      new AngularCsv(this.auditDetails, fileName, options);
-    }
+  download() {
+    const options = {
+      fieldSeparator: ',',
+      quoteStrings: '"',
+      decimalseparator: '.',
+      showLabels: true,
+      useHeader: true,
+      nullToEmptyString: true,
+    };
+
+    const fileName = `${this.sourceName}-provisioning`;
+
+    new AngularCsv(this.auditDetails, fileName, options);
+  }
 }

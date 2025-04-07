@@ -2172,7 +2172,7 @@ Supported API's
         query: `sources= "${idNumber}" AND _exists_:errors`,
       },
       indices: ['accountactivities'],
-      sort: ["-modified"]
+      sort: ['-modified'],
     };
 
     return this.http
