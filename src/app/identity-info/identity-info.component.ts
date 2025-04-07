@@ -792,20 +792,21 @@ export class IdentityInfoComponent implements OnInit {
               }
             }
             for (let a = 0; a < reg.attributeRequests.length; a++) {
+              const audit = this.cloneAuditDetails(account);
               const ar = reg.attributeRequests[a];
-              account.name = ar.name;
-              account.value = ar.value;
-              account.op = ar.op;
+              audit.name = ar.name;
+              audit.value = ar.value;
+              audit.op = ar.op;
               //account.errors = "";
               if (ar.result) {
                 if (ar.result.status != null) {
-                  account.errors = ar.result.status + ':';
+                  audit.errors = ar.result.status + ':';
                 }
                 if (ar.result.errors) {
-                  account.errors = account.errors + ar.result.errors;
+                  audit.errors = account.errors + ar.result.errors;
                 }
               }
-              this.auditDetails.applications.push(account);
+              this.auditDetails.applications.push(audit);
             }
           }
         }
@@ -817,6 +818,17 @@ export class IdentityInfoComponent implements OnInit {
       }
     });
   }
+
+  private cloneAuditDetails(account: AccessRequestAuditAccount) {
+    const audit = new AccessRequestAuditAccount();
+    audit.accountId = account.accountId;
+    audit.op = account.op;
+    audit.source = account.source;
+    audit.source = account.status;
+    audit.errors = account.errors;
+    return audit;
+  }
+
   cancelAuditDetails() {
     this.tempRevoke = null;
     this.tempRevokeType = null;
