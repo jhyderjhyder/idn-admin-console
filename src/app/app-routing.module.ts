@@ -43,6 +43,7 @@ import { SystemMonitorSourceComponent } from './system-monitor-source/system-mon
 import { AccountReportComponent } from './account-report/account-report.component';
 import { RoleContainsEntComponent } from './role-contains-ent/role-contains-ent.component';
 import { ReportFailuresComponent } from './report-failures/report-failures.component';
+import { ReportFailuresSourceComponent} from './report-failures-source/report-failures-source.component'
 import { ReportTaskStatusComponent } from './report-task-status/report-task-status.component';
 import { RawObjectComponent } from './raw-object/raw-object.component';
 import { FastTagComponent } from './fast-tag/fast-tag.component';
@@ -68,6 +69,11 @@ const routes: Routes = [
   {
     path: 'report-failures',
     component: ReportFailuresComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'report-failures-source',
+    component: ReportFailuresSourceComponent,
     canActivate: [AuthGuard],
   },
   {

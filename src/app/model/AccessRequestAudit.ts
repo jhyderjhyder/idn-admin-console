@@ -20,3 +20,18 @@ export class AccessRequestAuditAccount {
   name: string;
   value: string;
 }
+
+export class AccessRequestAuditAccountFull {
+  source: string;
+  errors: string;
+  status: string;
+  accountId: string;
+  op: string;
+  name: string;
+  value: string;
+  requester: string;
+  recipient: string;
+  created: string;
+  modified: string;
+
+}

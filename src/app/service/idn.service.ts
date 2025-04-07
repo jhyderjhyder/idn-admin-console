@@ -2162,6 +2162,23 @@ Supported API's
       return of(result as T);
     };
   }
+
+  failuresBySource(idNumber): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/search/?count=true&limit=50&offset=0`;
+
+    const payload = {
+      query: {
+        query: `sources= "${idNumber}" AND _exists_:errors`,
+      },
+      indices: ['accountactivities'],
+      sort: ["-modified"]
+    };
+
+    return this.http
+      .post(url, payload, this.httpOptions)
+      .pipe(catchError(this.handleError(`searchEntitlements`)));
+  }
   /*
   private hideError<T>(result?: T) {
     return (error: any): Observable<T> => {
