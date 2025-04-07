@@ -1207,5 +1207,20 @@ export class IdentityInfoComponent implements OnInit {
     new AngularCsv(this.auditDetails.applications, fileName, options);
   }
 
-  //
+  provisioningActions() {
+    const options = {
+      fieldSeparator: ',',
+      quoteStrings: '"',
+      decimalseparator: '.',
+      showLabels: true,
+      useHeader: true,
+      nullToEmptyString: true,
+    };
+
+    const currentUser = this.authenticationService.currentUserValue;
+    const fileName = `${currentUser.tenant}-${this.identityInfo.name}-provisioning`;
+
+    new AngularCsv(this.identityActions, fileName, options);
+  }
+  //identityActions
 }

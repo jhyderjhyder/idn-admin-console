@@ -835,6 +835,9 @@
 <div class="row" *ngIf="identityActions" >
   <p><b>Optional Filter for Provisioning Actions</b>
   <input class="form-control py-2 border-start-0 border" type="text" name="search" [(ngModel)]="searchText" autocomplete="off" placeholder="Type Name Value or Source to filter results">
+  <button class="btn btn-secondary btn-sm" type="button"  (click)="provisioningActions()">
+    Download
+  </button>
 </p>
   <table class="table table-striped table-bordered">
   <thead class="table-secondary text-center align-middle">

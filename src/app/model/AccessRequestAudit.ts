@@ -8,7 +8,7 @@ export class AccessRequestAudit {
   applications: Array<AccessRequestAuditAccount>;
   id: string;
   errors: string;
-  warnings:string;
+  warnings: string;
 }
 
 export class AccessRequestAuditAccount {
