@@ -22,7 +22,7 @@ export class ReportFailuresSourceComponent implements OnInit {
   constructor(private idnService: IDNService) {}
 
   ngOnInit() {
-    this.limit = 250;
+    this.limit = 200;
     this.auditDetails = [];
     if (this.filterApplications == null) {
       this.loading = true;
@@ -36,7 +36,7 @@ can pick from
 */
   getApplicationNames() {
     const pr = new PageResults();
-    pr.limit = 50;
+    pr.limit = 200;
     this.filterApplications = new Array<BasicAttributes>();
     const all = new BasicAttributes();
     all.name = 'Loading';
@@ -82,7 +82,6 @@ can pick from
 
           if (raw.accountRequests) {
             for (let i = 0; i < raw.accountRequests.length; i++) {
-              let hasError = false;
               const reg = raw.accountRequests[i];
               const account = new AccessRequestAuditAccountFull();
               account.pk = sr.toString() + ':' + i.toString();
@@ -103,11 +102,10 @@ can pick from
                 if (reg.result.errors) {
                   account.status = reg.result.status;
                   account.errors = reg.result.errors;
-                  hasError = true;
                 }
               }
-              if (account.source == this.sourceName) {
-                //console.log("Our Application:" + account.source);
+              if (account.source === this.sourceName) {
+                console.log('Our Application:' + account.source);
                 for (let a = 0; a < reg.attributeRequests.length; a++) {
                   const audit = this.cloneAuditDetails(account);
                   const ar = reg.attributeRequests[a];
@@ -121,16 +119,17 @@ can pick from
                     }
                     if (ar.result.errors) {
                       audit.errors = ar.result.errors;
-                      this.auditDetails.push(audit);
                     }
+                  }
+                  if (account.errors || audit.errors) {
+                    this.auditDetails.push(audit);
                   }
                 }
               } else {
                 //console.log("Not our application");
               }
-              if (hasError == true) {
-                this.errorCount++;
-              }
+
+              this.errorCount++;
             }
           }
         }
