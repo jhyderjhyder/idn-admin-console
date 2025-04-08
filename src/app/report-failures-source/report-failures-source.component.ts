@@ -116,10 +116,10 @@ can pick from
                   //account.errors = "";
                   if (ar.result) {
                     if (ar.result.status != null) {
-                      audit.errors = ar.result.status + ':';
+                      audit.errors = audit.errors + ar.result.status + ':';
                     }
                     if (ar.result.errors) {
-                      audit.errors = ar.result.errors;
+                      audit.errors = audit.errors + ar.result.errors;
                     }
                   }
                   if (account.errors || audit.errors) {
