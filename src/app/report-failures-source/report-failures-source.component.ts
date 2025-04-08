@@ -112,6 +112,7 @@ can pick from
                   audit.name = ar.name;
                   audit.value = ar.value;
                   audit.op = ar.op;
+                  audit.errors = account.errors;
                   //account.errors = "";
                   if (ar.result) {
                     if (ar.result.status != null) {
