@@ -16,8 +16,8 @@ export class ReportFailuresSourceComponent implements OnInit {
   loading: boolean;
   sourceName: string;
   auditDetails: Array<AccessRequestAuditAccountFull>;
-  limit:number;
-  errorCount:number;
+  limit: number;
+  errorCount: number;
 
   constructor(private idnService: IDNService) {}
 
@@ -73,68 +73,68 @@ can pick from
     this.errorCount = 0;
 
     console.log(this.sourceName);
-    this.idnService.failuresBySource(this.sourceName, this.limit).subscribe(data => {
-      console.log(data.length);
-      for (let sr = 0; sr < data.length; sr++) {
-        const raw = data[sr];
+    this.idnService
+      .failuresBySource(this.sourceName, this.limit)
+      .subscribe(data => {
+        console.log(data.length);
+        for (let sr = 0; sr < data.length; sr++) {
+          const raw = data[sr];
 
-        if (raw.accountRequests) {
-          for (let i = 0; i < raw.accountRequests.length; i++) {
-            let hasError = false;
-            const reg = raw.accountRequests[i];
-            const account = new AccessRequestAuditAccountFull();
-            account.pk = i.toString();
-            account.accountId = reg.accountId;
-            account.op = reg.op;
-            account.source = reg.source.name;
-            account.status = reg.result.status;
-            account.created = raw.created;
-            account.modified = raw.modified;
-            account.trackingNumber = raw.trackingNumber;
-            if (raw.requester) {
-              account.requester = raw.requester.name;
-            }
-            if (raw.recipient) {
-              account.recipient = raw.recipient.name;
-            }
-            if (reg.result) {
-              if (reg.result.errors) {
-                account.status = reg.result.status;
-                account.errors = reg.result.errors;
-                hasError = true;
-
+          if (raw.accountRequests) {
+            for (let i = 0; i < raw.accountRequests.length; i++) {
+              let hasError = false;
+              const reg = raw.accountRequests[i];
+              const account = new AccessRequestAuditAccountFull();
+              account.pk = sr.toString() + ':' + i.toString();
+              account.accountId = reg.accountId;
+              account.op = reg.op;
+              account.source = reg.source.name;
+              account.status = reg.result.status;
+              account.created = raw.created;
+              account.modified = raw.modified;
+              account.trackingNumber = raw.trackingNumber;
+              if (raw.requester) {
+                account.requester = raw.requester.name;
               }
-            }
-            if (account.source == this.sourceName) {
-              //console.log("Our Application:" + account.source);
-              for (let a = 0; a < reg.attributeRequests.length; a++) {
-                const audit = this.cloneAuditDetails(account);
-                const ar = reg.attributeRequests[a];
-                audit.name = ar.name;
-                audit.value = ar.value;
-                audit.op = ar.op;
-                //account.errors = "";
-                if (ar.result) {
-                  if (ar.result.status != null) {
-                    audit.errors = ar.result.status + ':';
-                  }
-                  if (ar.result.errors) {
-                    audit.errors =  ar.result.errors;
-                    this.auditDetails.push(audit);
+              if (raw.recipient) {
+                account.recipient = raw.recipient.name;
+              }
+              if (reg.result) {
+                if (reg.result.errors) {
+                  account.status = reg.result.status;
+                  account.errors = reg.result.errors;
+                  hasError = true;
+                }
+              }
+              if (account.source == this.sourceName) {
+                //console.log("Our Application:" + account.source);
+                for (let a = 0; a < reg.attributeRequests.length; a++) {
+                  const audit = this.cloneAuditDetails(account);
+                  const ar = reg.attributeRequests[a];
+                  audit.name = ar.name;
+                  audit.value = ar.value;
+                  audit.op = ar.op;
+                  //account.errors = "";
+                  if (ar.result) {
+                    if (ar.result.status != null) {
+                      audit.errors = ar.result.status + ':';
+                    }
+                    if (ar.result.errors) {
+                      audit.errors = ar.result.errors;
+                      this.auditDetails.push(audit);
+                    }
                   }
                 }
-                
+              } else {
+                //console.log("Not our application");
               }
-            } else {
-              //console.log("Not our application");
-            }
-            if (hasError==true){
-              this.errorCount++;
+              if (hasError == true) {
+                this.errorCount++;
+              }
             }
           }
         }
-      }
-    });
+      });
   }
 
   private cloneAuditDetails(account: AccessRequestAuditAccountFull) {
@@ -161,11 +161,27 @@ can pick from
       showLabels: true,
       useHeader: true,
       nullToEmptyString: true,
-      headers: ["pk", "trackingNumber", "created", "modified", "requester", "recipient", "source", "status", "accountId", "op", "name", "value", "errors"]
+      headers: [
+        'pk',
+        'trackingNumber',
+        'created',
+        'modified',
+        'requester',
+        'recipient',
+        'source',
+        'status',
+        'accountId',
+        'op',
+        'name',
+        'value',
+        'errors',
+      ],
     };
     for (let i = 0; i < this.auditDetails.length; i++) {
-      if (this.auditDetails[i].errors){
-        this.auditDetails[i].errors = this.auditDetails[i].errors.toString().replace(/["]/g, "'");
+      if (this.auditDetails[i].errors) {
+        this.auditDetails[i].errors = this.auditDetails[i].errors
+          .toString()
+          .replace(/["]/g, "'");
       }
     }
 
