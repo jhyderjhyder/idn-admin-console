@@ -178,6 +178,7 @@ can pick from
         'name',
         'value',
         'errors',
+        'errors1'
       ],
     };
 
