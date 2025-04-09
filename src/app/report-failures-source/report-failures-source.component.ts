@@ -105,7 +105,7 @@ can pick from
                 }
               }
               if (raw.errors){
-                account.errors1 = raw.errors;
+                account.errors1 = "Audit:" + raw.errors;
               }
               if (account.source === this.sourceName) {
                 console.log('Our Application:' + account.source);
@@ -122,6 +122,13 @@ can pick from
                         audit.errors = ar.result.status + ':';
                       }
                       audit.errors = audit.errors + ar.result.errors;
+                    }else{
+                      //Error not on the attribute pull from the request object
+                      if (reg.result){
+                        if (reg.result.errors){
+                          audit.errors = "AccountRequest:" + reg.result.errors;
+                        }
+                      }
                     }
                   }
                   if (audit.errors1 || audit.errors) {
