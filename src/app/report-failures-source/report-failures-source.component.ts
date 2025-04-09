@@ -104,6 +104,9 @@ can pick from
                   account.errors = reg.result.errors;
                 }
               }
+              if (raw.errors){
+                account.errors1 = raw.errors;
+              }
               if (account.source === this.sourceName) {
                 console.log('Our Application:' + account.source);
                 for (let a = 0; a < reg.attributeRequests.length; a++) {
@@ -112,17 +115,16 @@ can pick from
                   audit.name = ar.name;
                   audit.value = ar.value;
                   audit.op = ar.op;
-                  audit.errors = account.errors;
                   //account.errors = "";
                   if (ar.result) {
-                    if (ar.result.status != null) {
-                      audit.errors = audit.errors + ar.result.status + ':';
-                    }
                     if (ar.result.errors) {
+                      if (ar.result.status != null) {
+                        audit.errors = ar.result.status + ':';
+                      }
                       audit.errors = audit.errors + ar.result.errors;
                     }
                   }
-                  if (account.errors || audit.errors) {
+                  if (audit.errors1 || audit.errors) {
                     this.auditDetails.push(audit);
                   }
                 }
@@ -150,6 +152,7 @@ can pick from
     audit.requester = account.requester;
     audit.pk = account.pk;
     audit.trackingNumber = account.trackingNumber;
+    audit.errors1 = account.errors1
     return audit;
   }
 
@@ -177,11 +180,18 @@ can pick from
         'errors',
       ],
     };
+
+    //Remove double quotes and make single
     for (let i = 0; i < this.auditDetails.length; i++) {
       if (this.auditDetails[i].errors) {
         this.auditDetails[i].errors = this.auditDetails[i].errors
           .toString()
           .replace(/["]/g, "'");
+      }
+      if (this.auditDetails[1].errors1){
+        this.auditDetails[i].errors1 = this.auditDetails[i].errors1
+        .toString()
+        .replace(/["]/g, "'");
       }
     }
 

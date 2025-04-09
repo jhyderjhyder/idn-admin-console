@@ -24,6 +24,7 @@ export class AccessRequestAuditAccount {
 export class AccessRequestAuditAccountFull {
   source: string;
   errors: string;
+  errors1: string;
   status: string;
   accountId: string;
   op: string;
