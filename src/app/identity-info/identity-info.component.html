@@ -689,6 +689,7 @@
             <th scope="col" class="col-2">Access Type</th>
             <th scope="col" class="col-2">Request Type</th>
             <th scope="col" class="col-1">Request State</th>
+            <th scope="col" class="col-1">More<br>Info</th>
             <th scope="col" class="col-1">SOD Violation</th>
             <th scope="col" class="col-1">Created</th>
             <th scope="col" class="col-2">Requester</th>
@@ -700,20 +701,28 @@
           <tr
             *ngFor="let a of accessRequestStatuses ; let i =index" >
             <td clas="col-1">
-              <button type="button" class="btn btn-primary"
-              data-bs-target="#work-items-status" (click)="showRawAccessRequest(i)">
-              {{1+i}}
-              </button>
-
+              {{i+1}}
             </td>
-            <td class="col-1">{{ a.accessName }}</td>
-            <td class="col-2">{{ a.accessType }}</td>
+            <td class="col-1">{{ a.accessName }}
+            </td>
+            <td class="col-2">{{ a.accessType }}<br>
+            </td>
             <td class="col-2">{{ a.requestType }}</td>
             <td class="col-1">
-              <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-id="{{i}}"
-          data-bs-target="#accessRequestDetails" (click)="pickData(i)">
-          {{ a.state }}
-        </button>
+              {{ a.state }}
+            </td>
+            <td>
+              <div class="btn-group" role="group">
+                <button id="btnGroupDrop1" type="button" class="btn btn-primary btn-sm dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                  Details
+                </button>
+                <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+                  <a class="dropdown-item" (click)="pickData(i)">Approvers</a>
+                  <a class="dropdown-item" (click)="showRawAudit(i, true)">Audit</a>
+                  <a class="dropdown-item" (click)="showRawAccessRequest(i)">Access Request Raw</a>
+                  <a class="dropdown-item" (click)="showRawAudit(i, false)">Audit Raw</a>
+                </div>
+              </div>
             </td>
             <td class="col-1">{{ a.sodViolationState }}</td>
             <td class="col-1">{{ a.created | date:'yyyy-MM-dd hh:mm:ss aa' }}</td>
@@ -826,6 +835,9 @@
 <div class="row" *ngIf="identityActions" >
   <p><b>Optional Filter for Provisioning Actions</b>
   <input class="form-control py-2 border-start-0 border" type="text" name="search" [(ngModel)]="searchText" autocomplete="off" placeholder="Type Name Value or Source to filter results">
+  <button class="btn btn-secondary btn-sm" type="button"  (click)="provisioningActions()">
+    Download
+  </button>
 </p>
   <table class="table table-striped table-bordered">
   <thead class="table-secondary text-center align-middle">
@@ -902,7 +914,7 @@
 <!--Revoke Model END-->
 
 <!-- The Modal for request details-->
-<div class="modal" id="accessRequestDetails">
+<div bsModal #accessRequestDetails="bs-modal" class="modal fade" tabindex="-1" data-backdrop="static" role="dialog" aria-labelledby="dialog-child-name">
   <div class="modal-dialog">
     <div class="modal-content">
 
@@ -943,9 +955,9 @@
       </div>
 
       <!-- Modal footer -->
-      <div class="modal-footer">
-        <button type="button" class="btn btn-success btn-sm" data-bs-dismiss="modal">Close</button>
-      </div>
+      <button type="button" class="btn btn-primary btn-sm" (click)="cancelAuditDetails()">
+        Close
+      </button>
 
     </div>
   </div>
@@ -984,18 +996,22 @@
           </div>
 
          
-            <table class="table table-striped table-bordered">
-              <tr><td>#</td><td>id</td><td>DisplayName</td><td>Found</td></tr>
-              <tr *ngFor="let ent of (roleDetailsEnt | filter:searchText2:['displayName']); let i =index">
-                <td>{{i+1}}</td>
-                <td><button type="button" class="btn btn-info btn-sm" (click)="getEntitlementDetails(ent.id)">
-                  {{ent.id}}
-                </button>
-                  </td>
-                <td>{{ent.displayName}}</td>
-                <td *ngIf="ent.attribute=='true'">{{ent.attribute}}</td>
-                <td bgcolor="red" *ngIf="ent.attribute!='true'">{{ent.attribute}}</td>
-              </tr>
+            <table class="table table-striped table-bordered table-hover">
+              <thead>
+                <tr><td>#</td><td>id</td><td>DisplayName</td><td>Found</td></tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let ent of (roleDetailsEnt | filter:searchText2:['displayName']); let i =index">
+                  <td>{{i+1}}</td>
+                  <td><button type="button" class="btn btn-info btn-sm" (click)="getEntitlementDetails(ent.id)">
+                    {{ent.id}}
+                  </button>
+                    </td>
+                  <td>{{ent.displayName}}</td>
+                  <td *ngIf="ent.attribute=='true'">{{ent.attribute}}</td>
+                  <td bgcolor="red" *ngIf="ent.attribute!='true'">{{ent.attribute}}</td>
+                </tr>
+              </tbody>
             </table>
 
             
@@ -1011,3 +1027,70 @@
     </div>
   </div>
 </div>
+<!--End of role details-->
+
+<div bsModal #auditDetailsModal="bs-modal" class="modal fade" tabindex="-1" data-backdrop="static" role="dialog" aria-labelledby="dialog-child-name">
+  <div class="modal-dialog modal-dialog-centered modal-xl">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 id="dialog-child-name" class="modal-title pull-left font-weight-bold">
+          <div style="background-color: green;" class="modal-body" *ngIf="auditDetails.status==='Complete'">{{auditDetails.recipient}} Audit Details: {{auditDetails.status}}</div>
+          <div style="background-color: red;" class="modal-body" *ngIf="auditDetails.status!='Complete'"> {{auditDetails.recipient}} Audit Details: {{auditDetails.status}}</div>
+          
+        </h5>
+      </div>
+      <div class="modal-body">
+      <table class="table table-striped table-bordered">
+        <tr>
+          <td>Created: {{auditDetails.created}}</td>
+          <td>Modified: {{auditDetails.modified}}</td>
+          <td>Requester: {{auditDetails.requester}}</td>
+        </tr>
+        <tr>
+          <td>Errors</td>
+          <td colspan="2">{{auditDetails.errors}}</td>
+        </tr>
+        <tr>
+          <td>Warnings</td>
+          <td colspan="2">{{auditDetails.warnings}}</td>
+        </tr>
+      </table>
+      <table class="table table-bordered table-hover">
+        <thead>
+        <tr>
+          <td>Source</td>
+          <td>status</td>
+          <td>accountId</td>
+          <td>op</td>
+          <td>Name</td>
+          <td>value</td>
+          <td>Details</td>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let item of auditDetails.applications; let i =index" >
+          <td>{{ item.source}} </td>
+          <td>{{ item.status}} </td>
+          <td>{{ item.accountId}} </td>
+          <td>{{ item.op}} </td>
+          <td>{{ item.name}} </td>
+          <td>{{ item.value}}</td>
+          <td>{{ item.errors}}</td>
+        </tr>
+      </tbody>
+        </table>
+      
+      <div class="col-sm-4 text-start">
+        <button type="button" class="btn btn-primary btn-sm" (click)="auditToCsv()">
+          Download Details
+        </button>
+      </div>
+         
+      </div>
+         <!-- Modal footer -->
+         <button type="button" class="btn btn-primary btn-sm" (click)="cancelAuditDetails()">
+          Close
+        </button>
+          </div>
+      </div>
+    </div>

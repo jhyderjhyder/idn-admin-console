@@ -145,7 +145,7 @@ API's to sunset #16
   updateAggregationSchedules(source: Source, enable: boolean): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
     let encodedCronExp = this.codec.encodeValue(source.accountAggCronExp);
-    encodedCronExp = encodedCronExp.replace('?', '%3F');
+    encodedCronExp = encodedCronExp.replace(/'?'/g, '%3F');
     const url = `https://${currentUser.tenant}.api.${currentUser.domain}/cc/api/source/scheduleAggregation/${source.cloudExternalID}?enable=${enable}&cronExp=${encodedCronExp}`;
 
     const myHttpOptions = {
@@ -160,7 +160,7 @@ API's to sunset #16
   ): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
     let encodedCronExp = this.codec.encodeValue(source.entAggCronExp);
-    encodedCronExp = encodedCronExp.replace('?', '%3F');
+    encodedCronExp = encodedCronExp.replace(/'?'/g, '%3F');
     const url = `https://${currentUser.tenant}.
                   api.${currentUser.domain}/cc/api/source/scheduleEntitlementAggregation/
                   ${source.cloudExternalID}?enable=${enable}&cronExp=${encodedCronExp}`;
@@ -535,9 +535,12 @@ Supported API's
     );
   }
 
-  getSourceV3ProvisioningPolicy(v3ApplicationID: string): Observable<any> {
+  getSourceV3ProvisioningPolicy(
+    v3ApplicationID: string,
+    type: string
+  ): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/sources/${v3ApplicationID}/provisioning-policies`;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/sources/${v3ApplicationID}/${type}`;
     return this.http.get(url);
   }
 
@@ -767,6 +770,31 @@ Supported API's
           console.warn('Rate limited. Retrying in 2 seconds...');
           this.sleep(2000);
           return this.searchAccounts(query);
+        } else {
+          catchError(this.handleError(`searchAccounts`));
+        }
+      })
+    );
+  }
+
+  searchIdentityRequestAudit(requestNumber: String): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/search/`;
+
+    const payload = {
+      query: {
+        query: `trackingNumber:\"${requestNumber}\"`,
+      },
+      indices: ['accountactivities'],
+      sort: ['modified'],
+    };
+
+    return this.http.post(url, payload, this.httpOptions).pipe(
+      catchError(error => {
+        if (error.status === 429) {
+          console.warn('Rate limited. Retrying in 2 seconds...');
+          this.sleep(2000);
+          return this.searchIdentityRequestAudit(requestNumber);
         } else {
           catchError(this.handleError(`searchAccounts`));
         }
@@ -2136,6 +2164,23 @@ Supported API's
       // const the app keep running by returning an empty result.
       return of(result as T);
     };
+  }
+
+  failuresBySource(idNumber, limit): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/search/?count=true&limit=${limit}&offset=0`;
+
+    const payload = {
+      query: {
+        query: `sources= "${idNumber}" AND _exists_:errors`,
+      },
+      indices: ['accountactivities'],
+      sort: ['-modified'],
+    };
+
+    return this.http
+      .post(url, payload, this.httpOptions)
+      .pipe(catchError(this.handleError(`searchEntitlements`)));
   }
   /*
   private hideError<T>(result?: T) {

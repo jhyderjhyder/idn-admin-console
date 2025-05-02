@@ -212,14 +212,16 @@ export class SourceInfoComponent implements OnInit {
   editJsonProvisioningPolicy(input: Source) {
     for (const each of this.allSources) {
       if (each.id == input.id) {
-        this.idnService.getSourceV3ProvisioningPolicy(each.id).subscribe(
-          searchResult => {
-            this.rawObject = JSON.stringify(searchResult, null, 4);
-          },
-          err => {
-            this.messageService.handleIDNError(err);
-          }
-        );
+        this.idnService
+          .getSourceV3ProvisioningPolicy(each.id, 'provisioning-policies')
+          .subscribe(
+            searchResult => {
+              this.rawObject = JSON.stringify(searchResult, null, 4);
+            },
+            err => {
+              this.messageService.handleIDNError(err);
+            }
+          );
 
         this.rawObjectId = input.id;
         this.rawProvisioningId = 'Working on it';
@@ -322,7 +324,11 @@ export class SourceInfoComponent implements OnInit {
     }
   }
 
-  viewJsonProvisioningPolicy(input: Source) {
+  viewJsonProvisioningPolicy(input: Source, type: string) {
+    let objectType = 'provisioning-policies';
+    if (type === 'schemas') {
+      objectType = 'schemas';
+    }
     this.clearButton = true;
     for (const each of this.allSources) {
       if (each.id == input.id) {
@@ -333,17 +339,19 @@ export class SourceInfoComponent implements OnInit {
         options.quoteKeys = true;
         options.trailingComma = false;
 
-        this.idnService.getSourceV3ProvisioningPolicy(each.id).subscribe(
-          searchResult => {
-            //https://github.com/center-key/pretty-print-json
-            const html = prettyPrintJson.toHtml(searchResult, options);
-            const elem = document.getElementById('jsonRaw');
-            elem.innerHTML = html;
-          },
-          err => {
-            this.messageService.handleIDNError(err);
-          }
-        );
+        this.idnService
+          .getSourceV3ProvisioningPolicy(each.id, objectType)
+          .subscribe(
+            searchResult => {
+              //https://github.com/center-key/pretty-print-json
+              const html = prettyPrintJson.toHtml(searchResult, options);
+              const elem = document.getElementById('jsonRaw');
+              elem.innerHTML = html;
+            },
+            err => {
+              this.messageService.handleIDNError(err);
+            }
+          );
       }
     }
   }

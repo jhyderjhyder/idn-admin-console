@@ -1,0 +1,63 @@
+<p>List of Processed Actions : {{errorCount}}</p>
+
+<div class="row">
+    <div class="col-sm-2">Source Id#</div>
+    <div class="col-sm-4">
+
+        <label for="filterTypes">
+            <select id="filterApplications" [(ngModel)]="sourceName">
+              <option *ngFor="let item of filterApplications">{{item.name}}</option>
+            </select>
+          </label>
+        <!--input id="sourceName" class="form-control py-2 border-start-0 border" type="text" [(ngModel)]="sourceName" placeholder="Copy ID number" -->
+    </div>
+      <div class="col-sm-2 text-start">
+          <button type="button" (click)="submit()" class="btn btn-primary btn-sm">
+            Submit
+          </button>
+        </div>
+        <div class="col-sm-2 text-start">
+          <button type="button" (click)="download()" class="btn btn-primary btn-sm">
+            Download
+          </button>
+        </div>
+</div>
+
+<table class="table table-bordered table-hover">
+    <thead>
+    <tr>
+      <td>PK</td>
+      <td>Tracking</td>
+      <td>Created</td>
+      <td>Modified</td>
+      <td>Requester</td>
+      <td>Recipient</td>
+      <td>Source</td>
+      <td>status</td>
+      <td>accountId</td>
+      <td>op</td>
+      <td>Name</td>
+      <td>value</td>
+      <td>Details</td>
+      <td>Request Error</td>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let item of auditDetails; let i =index" >
+      <td>{{item.pk}}</td>
+      <td>{{item.trackingNumber}}</td>
+      <td> {{item.created}}</td>
+      <td>{{item.modified}}</td>
+      <td>{{item.requester}}</td>
+      <td>{{item.recipient}}</td>
+      <td>{{ item.source}} </td>
+      <td>{{ item.status}} </td>
+      <td>{{ item.accountId}} </td>
+      <td>{{ item.op}} </td>
+      <td>{{ item.name}} </td>
+      <td>{{ item.value}}</td>
+      <td>{{ item.errors}}</td>
+      <td>{{ item.errors1}}</td>
+    </tr>
+  </tbody>
+    </table>

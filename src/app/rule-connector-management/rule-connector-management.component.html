@@ -1,5 +1,6 @@
 
-<form name="form" #f="ngForm" novalidate contactRequired>
+
+<form  name="form" #f="ngForm" novalidate contactRequired>
   <div class="form-group row align-items-center  mb-3">
     <div class="col-md-10">
       <div class="input-group">
@@ -32,6 +33,12 @@
     <input #importRuleFile type="file" accept=".xml" (change)="processFileForImportRule($event)" class="btn btn-primary btn-sm">
     &nbsp;&nbsp;
     <button (click)="clearFileForImportRule()" class="btn btn-primary btn-sm">Clear File</button>
+
+
+    <button type="button" (click)="clearCode()" class="btn btn-primary btn-sm">
+      Close Rule
+    </button>
+
   </div>
   <div class="col-sm-2 text-end">
     <button type="button" [disabled]="ruleToImport === null" (click)="showImportRuleConfirmModal()" class="btn btn-primary btn-sm">
@@ -49,7 +56,14 @@
     <span class="fw-bold">Click 'Select' button in Actions column and select 'Download', 'Update', or 'Delete' to download, update, or delete a rule</span>
   </div>
 </div>
-<table class="table table-striped table-bordered">
+<!--HTML view code-->
+
+<pre *ngIf="javaCode" class="prettyprint"><code id="jsonRaw" class="language-java">
+{{javaCode}}
+</code></pre>
+
+
+<table *ngIf="!javaCode" class="table table-striped table-bordered">
   <thead class="table-secondary text-center align-middle">
     <tr>
       <th scope="col">Id</th>
@@ -75,9 +89,11 @@
             Select
           </button>
           <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+            <a class="dropdown-item" (click)="showCode(r)">View</a>
             <a class="dropdown-item" name="downloadRule" (click)="downloadRule(r.id, $event)">Download</a>
             <a class="dropdown-item" (click)="showUpdateRuleConfirmModal(r)">Update</a>
             <a class="dropdown-item" (click)="showDeleteRuleConfirmModal(r)">Delete</a>
+            
           </div>
         </div>
       </td>

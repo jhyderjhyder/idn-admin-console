@@ -31,6 +31,8 @@ export class ImportRuleComponent implements OnInit {
   buttonClicked: string;
   convertXMLResult: string;
   allRules: Rule[];
+  showAllRules: boolean;
+  javaCode: string;
 
   public modalRef: BsModalRef;
 
@@ -50,8 +52,23 @@ export class ImportRuleComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    if (localStorage.getItem('javaCode') != null) {
+      this.javaCode = localStorage.getItem('javaCode');
+    } else {
+      this.javaCode = null;
+    }
+
+    this.showAllRules = true;
     this.reset(true);
     this.getConnectorRules();
+  }
+
+  clearCode() {
+    const elem = document.getElementById('jsonRaw');
+    elem.innerHTML = '';
+    this.showAllRules = true;
+    localStorage.removeItem('javaCode');
+    this.ngOnInit();
   }
 
   reset(clearMsg: boolean) {
@@ -427,14 +444,14 @@ export class ImportRuleComponent implements OnInit {
     let re = /&#xD;/gi;
     xml = xml.replace(re, '');
 
-    re = /&amp;/gi;
-    xml = xml.replace(re, '&');
-
     re = /&gt;/gi;
     xml = xml.replace(re, '>');
 
     re = /&lt;/gi;
     xml = xml.replace(re, '<');
+
+    re = /&amp;/gi;
+    xml = xml.replace(re, '&');
 
     const blob = new Blob([xml], { type: 'application/xml' });
 
@@ -444,6 +461,22 @@ export class ImportRuleComponent implements OnInit {
     } else {
       return blob;
     }
+  }
+
+  showCode(selectedRule: Rule) {
+    this.idnService.getConnectorRuleById(selectedRule.id).subscribe(
+      result => {
+        const downloadedRule = this.processDownloadRule(result);
+        if (downloadedRule != null) {
+          this.javaCode = downloadedRule.script;
+          this.showAllRules = false;
+          localStorage.setItem('javaCode', this.javaCode);
+          location.reload();
+        }
+      },
+      err => this.messageService.handleIDNError(err)
+    );
+    console.log(selectedRule.description);
   }
 
   prepareRuleAttributes(attributes) {

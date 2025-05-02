@@ -141,14 +141,21 @@
             Select
           </button>
           <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-            <a class="dropdown-item" (click)="editJson(s)">Edit</a>
-            <a class="dropdown-item" (click)="viewJson(s)">View</a>
-            <a class="dropdown-item" (click)="viewJsonProvisioningPolicy(s)">View-ProvisioningPolicy</a>
+            <a class="dropdown-item" (click)="editJson(s)">Edit-Source</a>
             <a class="dropdown-item" (click)="editJsonProvisioningPolicy(s)">Edit-ProvisioningPolicy</a>
-            <a class="dropdown-item" (click)="testConnection(s)">Test Souce</a>
-            <a class="dropdown-item" (click)="addSourceTag(s)">Update Tags</a>
+            <div class="dropdown-divider">View</div>
+
+            <a class="dropdown-item" (click)="viewJson(s)">View-Source</a>
+            <a class="dropdown-item" (click)="viewJsonProvisioningPolicy(s, 'policy')">View-ProvisioningPolicy</a>
+            <a class="dropdown-item" (click)="viewJsonProvisioningPolicy(s, 'schemas')">View-Schemas</a>
             <a class="dropdown-item" (click)="viewSchedule(s)">View Schedules</a>
+            <div class="dropdown-divider"></div>
+
+            <a class="dropdown-item" (click)="addSourceTag(s)">Update Tags</a>
             <a class="dropdown-item" (click)="taskResultDetails(s)">Download Task Results</a>
+            
+            <div class="dropdown-divider"></div>
+            <a class="dropdown-item" (click)="testConnection(s)">Test Source</a>
           </div>
         </div>
       </td>

@@ -62,6 +62,7 @@ import { ReportTaskStatusComponent } from './report-task-status/report-task-stat
 import { RawObjectComponent } from './raw-object/raw-object.component';
 import { FastTagComponent } from './fast-tag/fast-tag.component';
 import { WorkflowsComponent } from './workflows/workflows.component';
+import { ReportFailuresSourceComponent } from './report-failures-source/report-failures-source.component';
 
 @NgModule({
   declarations: [
@@ -111,6 +112,7 @@ import { WorkflowsComponent } from './workflows/workflows.component';
     RawObjectComponent,
     FastTagComponent,
     WorkflowsComponent,
+    ReportFailuresSourceComponent,
   ],
   imports: [
     BrowserModule,
