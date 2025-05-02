@@ -145,7 +145,7 @@ API's to sunset #16
   updateAggregationSchedules(source: Source, enable: boolean): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
     let encodedCronExp = this.codec.encodeValue(source.accountAggCronExp);
-    encodedCronExp = encodedCronExp.replace('?', '%3F');
+    encodedCronExp = encodedCronExp.replace(/'?'/g, '%3F');
     const url = `https://${currentUser.tenant}.api.${currentUser.domain}/cc/api/source/scheduleAggregation/${source.cloudExternalID}?enable=${enable}&cronExp=${encodedCronExp}`;
 
     const myHttpOptions = {
@@ -160,7 +160,7 @@ API's to sunset #16
   ): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
     let encodedCronExp = this.codec.encodeValue(source.entAggCronExp);
-    encodedCronExp = encodedCronExp.replace('?', '%3F');
+    encodedCronExp = encodedCronExp.replace(/'?'/g, '%3F');
     const url = `https://${currentUser.tenant}.
                   api.${currentUser.domain}/cc/api/source/scheduleEntitlementAggregation/
                   ${source.cloudExternalID}?enable=${enable}&cronExp=${encodedCronExp}`;

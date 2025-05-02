@@ -444,14 +444,14 @@ export class ImportRuleComponent implements OnInit {
     let re = /&#xD;/gi;
     xml = xml.replace(re, '');
 
-    re = /&amp;/gi;
-    xml = xml.replace(re, '&');
-
     re = /&gt;/gi;
     xml = xml.replace(re, '>');
 
     re = /&lt;/gi;
     xml = xml.replace(re, '<');
+
+    re = /&amp;/gi;
+    xml = xml.replace(re, '&');
 
     const blob = new Blob([xml], { type: 'application/xml' });
 
