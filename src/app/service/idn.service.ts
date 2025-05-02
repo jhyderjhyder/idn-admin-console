@@ -535,9 +535,12 @@ Supported API's
     );
   }
 
-  getSourceV3ProvisioningPolicy(v3ApplicationID: string): Observable<any> {
+  getSourceV3ProvisioningPolicy(
+    v3ApplicationID: string,
+    type: string
+  ): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/sources/${v3ApplicationID}/provisioning-policies`;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/sources/${v3ApplicationID}/${type}`;
     return this.http.get(url);
   }
 

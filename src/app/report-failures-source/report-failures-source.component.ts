@@ -104,8 +104,8 @@ can pick from
                   account.errors = reg.result.errors;
                 }
               }
-              if (raw.errors){
-                account.errors1 = "Audit:" + raw.errors;
+              if (raw.errors) {
+                account.errors1 = 'Audit:' + raw.errors;
               }
               if (account.source === this.sourceName) {
                 console.log('Our Application:' + account.source);
@@ -122,11 +122,11 @@ can pick from
                         audit.errors = ar.result.status + ':';
                       }
                       audit.errors = audit.errors + ar.result.errors;
-                    }else{
+                    } else {
                       //Error not on the attribute pull from the request object
-                      if (reg.result){
-                        if (reg.result.errors){
-                          audit.errors = "AccountRequest:" + reg.result.errors;
+                      if (reg.result) {
+                        if (reg.result.errors) {
+                          audit.errors = 'AccountRequest:' + reg.result.errors;
                         }
                       }
                     }
@@ -159,7 +159,7 @@ can pick from
     audit.requester = account.requester;
     audit.pk = account.pk;
     audit.trackingNumber = account.trackingNumber;
-    audit.errors1 = account.errors1
+    audit.errors1 = account.errors1;
     return audit;
   }
 
@@ -185,7 +185,7 @@ can pick from
         'name',
         'value',
         'errors',
-        'errors1'
+        'errors1',
       ],
     };
 
@@ -196,10 +196,10 @@ can pick from
           .toString()
           .replace(/["]/g, "'");
       }
-      if (this.auditDetails[1].errors1){
+      if (this.auditDetails[1].errors1) {
         this.auditDetails[i].errors1 = this.auditDetails[i].errors1
-        .toString()
-        .replace(/["]/g, "'");
+          .toString()
+          .replace(/["]/g, "'");
       }
     }
 
