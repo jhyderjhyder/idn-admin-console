@@ -193,6 +193,12 @@ API's to sunset #16
     return this.http.post(url, payload, this.httpOptions);
   }
 
+  syncSingleIdentity(identityId: string): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/identities/${identityId}/synchronize-attributes`;
+    return this.http.post(url, this.httpOptions);
+  }
+
   getV2IdentityID(alias: string): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
     const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v2/identities/${alias}`;
@@ -539,8 +545,8 @@ Supported API's
     v3ApplicationID: string,
     type: string
   ): Observable<any> {
-    var apiVersion = 'v3';
-    if (type=='attribute-sync-config'){
+    let apiVersion = 'v3';
+    if (type == 'attribute-sync-config') {
       apiVersion = 'beta';
     }
     const currentUser = this.authenticationService.currentUserValue;

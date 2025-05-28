@@ -329,7 +329,7 @@ export class SourceInfoComponent implements OnInit {
     if (type === 'schemas') {
       objectType = 'schemas';
     }
-    if (type === 'attribute-sync-config'){
+    if (type === 'attribute-sync-config') {
       objectType = 'attribute-sync-config';
     }
     this.clearButton = true;

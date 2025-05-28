@@ -976,7 +976,20 @@ export class IdentityInfoComponent implements OnInit {
     if (this.identityInfo.name && this.identityInfo.name.trim() != '') {
       this.idnService.refreshSingleIdentity(this.identityInfo.name).subscribe(
         () => {
-          this.messageService.add(`Triggered Identity Refresh`);
+          this.messageService.add(`Triggered Background Identity Refresh`);
+        },
+        err => {
+          this.messageService.handleIDNError(err);
+        }
+      );
+    }
+  }
+
+  syncIdentity() {
+    if (this.identityInfo.name && this.identityInfo.id.trim() != '') {
+      this.idnService.syncSingleIdentity(this.identityInfo.id).subscribe(
+        () => {
+          this.messageService.add(`Triggered Background Identity Sync`);
         },
         err => {
           this.messageService.handleIDNError(err);

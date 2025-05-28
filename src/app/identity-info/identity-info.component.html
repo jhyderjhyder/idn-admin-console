@@ -87,6 +87,11 @@
     </button>
   </div>
   <div class="col-sm-1 text-start">
+    <button class="btn btn-secondary btn-sm" type="button" *ngIf="identityInfo" [disabled]="loading" (click)="syncIdentity()">
+      Attribute Sync
+    </button>
+  </div>
+  <div class="col-sm-1 text-start">
     <button class="btn btn-secondary btn-sm" type="button" *ngIf="identityInfo" [disabled]="loading" (click)="saveInCsv()">
       Download Report
     </button>
