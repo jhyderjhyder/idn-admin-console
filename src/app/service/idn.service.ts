@@ -539,8 +539,12 @@ Supported API's
     v3ApplicationID: string,
     type: string
   ): Observable<any> {
+    var apiVersion = 'v3';
+    if (type=='attribute-sync-config'){
+      apiVersion = 'beta';
+    }
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/sources/${v3ApplicationID}/${type}`;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/${apiVersion}/sources/${v3ApplicationID}/${type}`;
     return this.http.get(url);
   }
 

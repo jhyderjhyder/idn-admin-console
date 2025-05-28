@@ -329,6 +329,9 @@ export class SourceInfoComponent implements OnInit {
     if (type === 'schemas') {
       objectType = 'schemas';
     }
+    if (type === 'attribute-sync-config'){
+      objectType = 'attribute-sync-config';
+    }
     this.clearButton = true;
     for (const each of this.allSources) {
       if (each.id == input.id) {
