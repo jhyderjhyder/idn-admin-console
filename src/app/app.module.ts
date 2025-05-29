@@ -63,6 +63,7 @@ import { RawObjectComponent } from './raw-object/raw-object.component';
 import { FastTagComponent } from './fast-tag/fast-tag.component';
 import { WorkflowsComponent } from './workflows/workflows.component';
 import { ReportFailuresSourceComponent } from './report-failures-source/report-failures-source.component';
+import { ReportAttributesyncEventsComponent } from './report-attributesync-events/report-attributesync-events.component';
 
 @NgModule({
   declarations: [
@@ -113,6 +114,7 @@ import { ReportFailuresSourceComponent } from './report-failures-source/report-f
     FastTagComponent,
     WorkflowsComponent,
     ReportFailuresSourceComponent,
+    ReportAttributesyncEventsComponent,
   ],
   imports: [
     BrowserModule,

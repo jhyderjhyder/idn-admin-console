@@ -2176,18 +2176,26 @@ Supported API's
     };
   }
 
-  failuresBySource(idNumber, limit): Observable<any> {
+  failuresBySource(idNumber, limit, syncQuery): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
     const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/search/?count=true&limit=${limit}&offset=0`;
 
-    const payload = {
+    let payload = {
       query: {
         query: `sources= "${idNumber}" AND _exists_:errors`,
       },
       indices: ['accountactivities'],
       sort: ['-modified'],
     };
-
+    if (syncQuery == true) {
+      payload = {
+        query: {
+          query: `attributes.interface.exact:/Attribute Syn.+/ AND (attributes.sourceName:\"${idNumber}\")`,
+        },
+        indices: ['events'],
+        sort: ['-created'],
+      };
+    }
     return this.http
       .post(url, payload, this.httpOptions)
       .pipe(catchError(this.handleError(`searchEntitlements`)));
