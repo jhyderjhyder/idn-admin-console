@@ -2126,7 +2126,7 @@ Supported API's
       page.offset +
       '&count=true';
     if (failedOnly == true) {
-      url = url + '&filters status eq "Failed"';
+      url = url + '&filters=status eq "Failed"';
     }
 
     return this.http.get(url, { observe: 'response' });
