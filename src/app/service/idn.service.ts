@@ -2112,15 +2112,22 @@ Supported API's
     return this.http.get(url, { observe: 'response' });
   }
 
-  getWorkflowExecutions(page: PageResults, workflow: String): Observable<any> {
+  getWorkflowExecutions(
+    page: PageResults,
+    workflow: String,
+    failedOnly: boolean
+  ): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url =
+    let url =
       `https://${currentUser.tenant}.api.${currentUser.domain}/v3/workflows/${workflow}/executions?` +
       'limit=' +
       page.limit +
       '&offset=' +
       page.offset +
       '&count=true';
+    if (failedOnly == true) {
+      url = url + '&filter status eq "Failed"';
+    }
 
     return this.http.get(url, { observe: 'response' });
   }

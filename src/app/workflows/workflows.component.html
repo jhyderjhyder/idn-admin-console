@@ -76,7 +76,8 @@
                           Select
                         </button>
                         <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
-                          <a class="dropdown-item" (click)="getAllExecutions(item.id)">View Executions</a>
+                          <a class="dropdown-item" (click)="getAllExecutions(item.id, false)">View Executions</a>
+                          <a class="dropdown-item" (click)="getAllExecutions(item.id, true)">View Only Faild Executions</a>
                           <a class="dropdown-item" (click)="showWorkflowDetails(item.id)">View Workflow</a>
 
                           
