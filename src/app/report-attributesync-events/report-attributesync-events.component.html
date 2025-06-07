@@ -1,0 +1,62 @@
+<p>report-attributesync-events works!</p>
+<p>List of Processed Actions : {{errorCount}}</p>
+
+<div class="row">
+    <div class="col-sm-2">Source Id#</div>
+    <div class="col-sm-4">
+
+        <label for="filterTypes">
+            <select id="filterApplications" [(ngModel)]="sourceName">
+              <option *ngFor="let item of filterApplications">{{item.name}}</option>
+            </select>
+          </label>
+        <!--input id="sourceName" class="form-control py-2 border-start-0 border" type="text" [(ngModel)]="sourceName" placeholder="Copy ID number" -->
+    </div>
+      <div class="col-sm-2 text-start">
+          <button type="button" (click)="submit()" class="btn btn-primary btn-sm">
+            Submit
+          </button>
+        </div>
+        <div class="col-sm-2 text-start">
+          <button type="button" (click)="download()" class="btn btn-primary btn-sm">
+            Download
+          </button>
+        </div>
+</div>
+
+<table class="table table-bordered table-hover">
+    <thead>
+    <tr>
+      <td>id</td>
+      <td>created</td>
+      <td>technicalName</td>
+      <td>target</td>
+      <td>name</td>
+      <td>action</td>
+      <td>provisioningResult</td>
+      <td>accountName</td>
+      <td>attributeValue</td>
+      <td>operation</td>
+      <td>attributeName</td>
+      <td>previousValue</td>
+      <td>Request Error</td>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let item of auditDetails; let i =index" >
+      <td>{{ item.id}}</td>
+      <td>{{ item.created}}</td>
+      <td>{{ item.technicalName}}</td>
+      <td>{{ item.target}}</td>
+      <td>{{ item.name}}</td>
+      <td>{{ item.action}} </td>
+      <td>{{ item.provisioningResult}} </td>
+      <td>{{ item.accountName}} </td>
+      <td>{{ item.attributeValue}} </td>
+      <td>{{ item.operation}} </td>
+      <td>{{ item.attributeName}}</td>
+      <td>{{ item.previousValue}}</td>
+      <td>{{ item.errors}}</td>
+    </tr>
+  </tbody>
+    </table>

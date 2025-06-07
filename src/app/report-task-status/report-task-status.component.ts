@@ -20,6 +20,7 @@ export class ReportTaskStatusComponent implements OnInit {
     this.filterOption.push('ERROR');
     this.filterOption.push('SUCCESS');
     this.filterOption.push('RUNNING');
+    this.filterOption.push('WARNING');
 
     this.filterType = 'ERROR';
     this.getData();

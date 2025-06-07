@@ -193,6 +193,12 @@ API's to sunset #16
     return this.http.post(url, payload, this.httpOptions);
   }
 
+  syncSingleIdentity(identityId: string): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/identities/${identityId}/synchronize-attributes`;
+    return this.http.post(url, this.httpOptions);
+  }
+
   getV2IdentityID(alias: string): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
     const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v2/identities/${alias}`;
@@ -539,8 +545,12 @@ Supported API's
     v3ApplicationID: string,
     type: string
   ): Observable<any> {
+    let apiVersion = 'v3';
+    if (type == 'attribute-sync-config') {
+      apiVersion = 'beta';
+    }
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/sources/${v3ApplicationID}/${type}`;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/${apiVersion}/sources/${v3ApplicationID}/${type}`;
     return this.http.get(url);
   }
 
@@ -2102,15 +2112,22 @@ Supported API's
     return this.http.get(url, { observe: 'response' });
   }
 
-  getWorkflowExecutions(page: PageResults, workflow: String): Observable<any> {
+  getWorkflowExecutions(
+    page: PageResults,
+    workflow: String,
+    failedOnly: boolean
+  ): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url =
+    let url =
       `https://${currentUser.tenant}.api.${currentUser.domain}/v3/workflows/${workflow}/executions?` +
       'limit=' +
       page.limit +
       '&offset=' +
       page.offset +
       '&count=true';
+    if (failedOnly == true) {
+      url = url + '&filters=status eq "Failed"';
+    }
 
     return this.http.get(url, { observe: 'response' });
   }
@@ -2166,22 +2183,48 @@ Supported API's
     };
   }
 
-  failuresBySource(idNumber, limit): Observable<any> {
+  failuresBySource(idNumber, limit, syncQuery): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
     const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/search/?count=true&limit=${limit}&offset=0`;
 
-    const payload = {
+    let payload = {
       query: {
         query: `sources= "${idNumber}" AND _exists_:errors`,
       },
       indices: ['accountactivities'],
       sort: ['-modified'],
     };
+    if (syncQuery == true) {
+      payload = {
+        query: {
+          query: `attributes.interface.exact:/Attribute Syn.+/ AND (attributes.sourceName:\"${idNumber}\")`,
+        },
+        indices: ['events'],
+        sort: ['-created'],
+      };
+    }
+    return this.http
+      .post(url, payload, this.httpOptions)
+      .pipe(catchError(this.handleError(`searchEntitlements`)));
+  }
+
+  sinkByPerson(idNumber): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/search/?count=true&offset=0`;
+
+    const payload = {
+      query: {
+        query: `attributes.interface.exact:/Attribute Syn.+/ AND (target.name:\"${idNumber}\")`,
+      },
+      indices: ['events'],
+      sort: ['-created'],
+    };
 
     return this.http
       .post(url, payload, this.httpOptions)
       .pipe(catchError(this.handleError(`searchEntitlements`)));
   }
+
   /*
   private hideError<T>(result?: T) {
     return (error: any): Observable<T> => {

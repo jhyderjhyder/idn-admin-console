@@ -90,7 +90,12 @@ export const systemMenu = [
   new MenuLink('/system-monitor', 'Monitor VA', null),
   new MenuLink('/system-monitor-source', 'Monitor Sources', null),
   new MenuLink('/report-failures', 'Provisioning Failures', null),
-  new MenuLink('/report-failures-source', 'Provisioning By Source', null),
+  new MenuLink(
+    '/report-failures-source',
+    'Provisioning Failure By Source',
+    null
+  ),
+  new MenuLink('/report-attributesync-events', 'Attribute Sync Report', null),
   new MenuLink('/report-task-status', 'Task History', null),
   new MenuLink(null, null, true),
 

@@ -22,11 +22,13 @@ export class WorkflowsComponent implements OnInit {
   type: string;
   executionsID: string;
   searchText: string;
+  faildOnly: boolean;
 
   constructor(private idnService: IDNService) {}
   ngOnInit(): void {
     this.page = new PageResults();
     this.page.limit = 200;
+    this.faildOnly = false;
     this.getAllWorkflows();
   }
 
@@ -37,17 +39,17 @@ export class WorkflowsComponent implements OnInit {
   //Get the next page
   getNextPage() {
     this.page.nextPage;
-    this.getAllExecutions(this.executionsID);
+    this.getAllExecutions(this.executionsID, this.faildOnly);
   }
   //Get the previous page
   getPrevPage() {
     this.page.prevPage;
-    this.getAllExecutions(this.executionsID);
+    this.getAllExecutions(this.executionsID, this.faildOnly);
   }
   //Pick the page Number you want
   getOnePage(input) {
     this.page.getPageByNumber(input - 1);
-    this.getAllExecutions(input - 1);
+    this.getAllExecutions(input - 1, this.faildOnly);
   }
 
   getAllWorkflows() {
@@ -98,7 +100,8 @@ export class WorkflowsComponent implements OnInit {
     elem.innerHTML = null;
   }
 
-  getAllExecutions(id) {
+  getAllExecutions(id, faildOnly) {
+    this.faildOnly = faildOnly;
     this.executionsID = id;
     this.type = 'executions';
     this.loading = true;
@@ -106,20 +109,22 @@ export class WorkflowsComponent implements OnInit {
     this.rawObject = null;
     const elem = document.getElementById('jsonRaw');
     elem.innerHTML = null;
-    this.idnService.getWorkflowExecutions(this.page, id).subscribe(response => {
-      const results = response.body;
-      const headers = response.headers;
+    this.idnService
+      .getWorkflowExecutions(this.page, id, faildOnly)
+      .subscribe(response => {
+        const results = response.body;
+        const headers = response.headers;
 
-      this.page.xTotalCount = headers.get('X-Total-Count');
-      this.executions = new Array();
-      if (Array.isArray(results)) {
-        for (const each of results) {
-          //TODO cleanup the object
-          this.executions.push(each);
+        this.page.xTotalCount = headers.get('X-Total-Count');
+        this.executions = new Array();
+        if (Array.isArray(results)) {
+          for (const each of results) {
+            //TODO cleanup the object
+            this.executions.push(each);
+          }
         }
-      }
-      this.loading = false;
-    });
+        this.loading = false;
+      });
     //this.workflows.sort();
   }
 
