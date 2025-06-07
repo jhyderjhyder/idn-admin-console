@@ -5,12 +5,19 @@
 </div>
 
 <div class="form-group row mb-3" *ngIf="!loading">
-  <div class="col-sm-10 text-start">
+  <div class="col-sm-9 text-start">
     <span class="fw-bold">Enter Identity's Account Name (like *) and click the 'Search' button . 
       Or select another option to search based on firstname, lastname, identitficationNumber, email or phone.
        
       Click on the Manager's name (if exists) to get their details. 
       Click on 'Download' to save the report after Search</span>
+  </div>
+  <div class="col-sm-1 row">
+    <span class="text-bg-light">Data</span>
+    <span *ngIf="!provisioningData" class="badge rounded-pill text-bg-dark">Provisioning</span>
+    <span *ngIf="provisioningData" class="badge rounded-pill text-bg-success">Provisioning</span>
+    <span *ngIf="!syncData" class="badge rounded-pill text-bg-dark">Sync Data</span>
+    <span *ngIf="syncData" class="badge rounded-pill text-bg-success">Sync Data</span>
   </div>
   <!--
   <div class="col-sm-2 text-start">
@@ -42,6 +49,7 @@
   <div class="col-sm-4 text-start">Search Text</div>
   <div class="col-sm-2 text-center">On</div>
   <div class="col-sm-2 text-end">Actions</div>
+  
 </div>
 
 
@@ -851,24 +859,24 @@
       <th scope="col" class="col-1">Date</th>
       <th scope="col" class="col-1">Trigger</th>
       <th scope="col" class="col-2">Source</th>
-      <th scope="col" class="col-2">Operation</th>
+      <th scope="col" class="col-1">Operation</th>
       <th scope="col" class="col-2">Name</th>
-      <th scope="col" class="col-2">Value</th>
+      <th scope="col" class="col-3">Value</th>
 
     </tr>
   </thead>
   <tbody class="text-center align-middle" *ngIf="identityActions && !loading " >
     <tr
       *ngFor="let action of identityActions | filter:searchText:['name', 'value', 'source']; let i =index" >
-      <td class="col-sm-1">
+      <td class="col-1">
         {{1+i}}
       </td>
       <td class="col-1">{{ action.created | date:'yyyy-MM-dd' }}</td>
       <td class="col-1">{{ action.trigger }}</td>
       <td class="col-2">{{ action.source }}</td>
-      <td class="col-2">{{ action.op }}</td>
+      <td class="col-1">{{ action.op }}</td>
       <td class="col-2">{{ action.name }}</td>
-      <td class="col-2">{{ action.value }}</td>
+      <td style="word-break:break-all;" class="col-3">{{ action.value }}</td>
     </tr>
   </tbody>
 </table>

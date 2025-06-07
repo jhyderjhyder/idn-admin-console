@@ -68,6 +68,10 @@ export class IdentityInfoComponent implements OnInit {
   searchText2: string;
   rawAccessRequest: string;
 
+  //Visualization
+  provisioningData: boolean;
+  syncData: boolean;
+
   constructor(
     private idnService: IDNService,
     private authenticationService: AuthenticationService,
@@ -93,7 +97,11 @@ export class IdentityInfoComponent implements OnInit {
     this.page = new PageResults();
     this.selectedFilterTypes = 'name';
     this.filterTypes = Array<string>();
-    this.initFilterTypes();
+    if (localStorage.getItem('identityAttributes') == null) {
+      this.initFilterTypes();
+    } else {
+      this.filterTypes = JSON.parse(localStorage.getItem('identityAttributes'));
+    }
     this.reset(true);
     this.activateRoute.queryParams.subscribe(params => {
       const field = params['field'];
@@ -131,6 +139,10 @@ export class IdentityInfoComponent implements OnInit {
       for (let i = 0; i < names.length; i++) {
         this.filterTypes.push(names[i]);
       }
+      localStorage.setItem(
+        'identityAttributes',
+        JSON.stringify(this.filterTypes)
+      );
     });
     /*
     This is optional but you can pass a set of attributes
@@ -177,6 +189,8 @@ export class IdentityInfoComponent implements OnInit {
   reset(clearMsg: boolean) {
     this.oneRequest = null;
     this.loading = false;
+    this.provisioningData = false;
+    this.syncData = false;
     this.allOwnersFetched = false;
     this.invalidMessage = [];
     this.identityInfo = null;
@@ -230,6 +244,26 @@ export class IdentityInfoComponent implements OnInit {
   clearProvisionDetails() {
     this.rawActivities = null;
     this.rawWorkItem = null;
+  }
+
+  getSyncData() {
+    this.idnService
+      .sinkByPerson(this.identityInfo.name)
+      .subscribe(searchResult => {
+        for (let i = 0; i < searchResult.length; i++) {
+          const ia = new IdentityActions();
+          const rawData = searchResult[i];
+          ia.trigger = 'SYNC';
+          ia.created = rawData.created;
+          //attributeName
+          ia.name = rawData.attributes.attributeName;
+          ia.value = rawData.attributes.attributeValue;
+          ia.op = rawData.attributes.operation;
+          ia.source = rawData.attributes.sourceName;
+          this.identityActions.push(ia);
+        }
+        this.syncData = true;
+      });
   }
 
   getProvisionActions() {
@@ -325,10 +359,14 @@ export class IdentityInfoComponent implements OnInit {
 
         this.identityInfo.activities.push(ac);
       }
+      this.provisioningData = true;
+      this.getSyncData();
     });
   }
 
   submit() {
+    this.provisioningData = false;
+    this.syncData = false;
     this.identityInfo = null;
     this.messageService.clearError();
     this.validToSubmit = true;

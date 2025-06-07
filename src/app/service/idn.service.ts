@@ -2207,6 +2207,24 @@ Supported API's
       .post(url, payload, this.httpOptions)
       .pipe(catchError(this.handleError(`searchEntitlements`)));
   }
+
+  sinkByPerson(idNumber): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/search/?count=true&offset=0`;
+
+    const payload = {
+      query: {
+        query: `attributes.interface.exact:/Attribute Syn.+/ AND (target.name:\"${idNumber}\")`,
+      },
+      indices: ['events'],
+      sort: ['-created'],
+    };
+
+    return this.http
+      .post(url, payload, this.httpOptions)
+      .pipe(catchError(this.handleError(`searchEntitlements`)));
+  }
+
   /*
   private hideError<T>(result?: T) {
     return (error: any): Observable<T> => {
