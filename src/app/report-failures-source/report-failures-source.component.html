@@ -1,3 +1,8 @@
+<div class="col-sm-1 text-start" *ngIf="loading">
+  <div class="spinner-border" role="status">
+    <span class="sr-only">Loading...</span>
+  </div>
+</div>
 <p>List of Processed Actions : {{errorCount}}</p>
 
 <div class="row">
@@ -19,6 +24,11 @@
         <div class="col-sm-2 text-start">
           <button type="button" (click)="download()" class="btn btn-primary btn-sm">
             Download
+          </button>
+        </div>
+        <div class="col-sm-1 text-start">
+          <button type="button" (click)="reloadApplications()" class="btn btn-primary btn-sm">
+            reloadApps
           </button>
         </div>
 </div>

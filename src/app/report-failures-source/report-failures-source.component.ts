@@ -24,43 +24,67 @@ export class ReportFailuresSourceComponent implements OnInit {
   ngOnInit() {
     this.limit = 200;
     this.auditDetails = [];
+    this.loading = false;
     if (this.filterApplications == null) {
-      this.loading = true;
       this.getApplicationNames();
     }
+  }
+
+  reloadApplications() {
+    localStorage.removeItem('applicationLookup');
+    this.getApplicationNames();
   }
 
   /*
 Populate the dropdown of sources you
 can pick from
 */
-  getApplicationNames() {
+  async getApplicationNames() {
     const pr = new PageResults();
-    pr.limit = 200;
+    pr.limit = 1;
     this.filterApplications = new Array<BasicAttributes>();
     const all = new BasicAttributes();
     all.name = 'Loading';
     all.value = '';
     this.filterApplications.push(all);
-    this.idnService.getAllSourcesPaged(pr, null).subscribe(response => {
+    this.idnService.getAllSourcesPaged(pr, null).subscribe(async response => {
       const headers = response.headers;
       pr.xTotalCount = headers.get('X-Total-Count');
+
+      if (localStorage.getItem('applicationLookup') != null) {
+        this.filterApplications = JSON.parse(
+          localStorage.getItem('applicationLookup')
+        );
+      }
+      console.log(this.filterApplications.length + ':' + pr.xTotalCount);
+      if (this.filterApplications.length >= pr.xTotalCount) {
+        console.log('No reload required lets rock');
+      } else {
+        console.log('loading applications');
+        let max = 0;
+        pr.limit = 50;
+
+        await new Promise(resolve => {
+          while (pr.totalPages >= max && max < 10) {
+            console.log('Start while:' + max);
+            this.idnService.getAllSourcesPaged(pr, null).subscribe(response => {
+              const searchResult = response.body;
+              for (let i = 0; i < searchResult.length; i++) {
+                const app = searchResult[i];
+                const basic = new BasicAttributes();
+                basic.name = app['name'];
+                basic.value = app['id'];
+                this.addSorted(basic);
+              }
+            });
+
+            max++;
+            pr.nextPage;
+            resolve;
+          }
+        });
+      }
     });
-    let max = 1;
-    while (pr.hasMorePages && max < 10) {
-      max++;
-      this.idnService.getAllSourcesPaged(pr, null).subscribe(response => {
-        const searchResult = response.body;
-        for (let i = 0; i < searchResult.length; i++) {
-          const app = searchResult[i];
-          const basic = new BasicAttributes();
-          basic.name = app['name'];
-          basic.value = app['id'];
-          this.addSorted(basic);
-        }
-      });
-      pr.nextPage;
-    }
   }
 
   addSorted(basic: BasicAttributes) {
@@ -71,7 +95,7 @@ can pick from
   submit() {
     this.auditDetails = [];
     this.errorCount = 0;
-
+    this.loading = true;
     console.log(this.sourceName);
     this.idnService
       .failuresBySource(this.sourceName, this.limit, false)
@@ -109,30 +133,33 @@ can pick from
               }
               if (account.source === this.sourceName) {
                 console.log('Our Application:' + account.source);
-                for (let a = 0; a < reg.attributeRequests.length; a++) {
-                  const audit = this.cloneAuditDetails(account);
-                  const ar = reg.attributeRequests[a];
-                  audit.name = ar.name;
-                  audit.value = ar.value;
-                  audit.op = ar.op;
-                  //account.errors = "";
-                  if (ar.result) {
-                    if (ar.result.errors) {
-                      if (ar.result.status != null) {
-                        audit.errors = ar.result.status + ':';
-                      }
-                      audit.errors = audit.errors + ar.result.errors;
-                    } else {
-                      //Error not on the attribute pull from the request object
-                      if (reg.result) {
-                        if (reg.result.errors) {
-                          audit.errors = 'AccountRequest:' + reg.result.errors;
+                if (reg.attributeRequests) {
+                  for (let a = 0; a < reg.attributeRequests.length; a++) {
+                    const audit = this.cloneAuditDetails(account);
+                    const ar = reg.attributeRequests[a];
+                    audit.name = ar.name;
+                    audit.value = ar.value;
+                    audit.op = ar.op;
+                    //account.errors = "";
+                    if (ar.result) {
+                      if (ar.result.errors) {
+                        if (ar.result.status != null) {
+                          audit.errors = ar.result.status + ':';
+                        }
+                        audit.errors = audit.errors + ar.result.errors;
+                      } else {
+                        //Error not on the attribute pull from the request object
+                        if (reg.result) {
+                          if (reg.result.errors) {
+                            audit.errors =
+                              'AccountRequest:' + reg.result.errors;
+                          }
                         }
                       }
                     }
-                  }
-                  if (audit.errors1 || audit.errors) {
-                    this.auditDetails.push(audit);
+                    if (audit.errors1 || audit.errors) {
+                      this.auditDetails.push(audit);
+                    }
                   }
                 }
               } else {
@@ -143,6 +170,7 @@ can pick from
             }
           }
         }
+        this.loading = false;
       });
   }
 

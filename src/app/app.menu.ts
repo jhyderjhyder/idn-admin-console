@@ -53,9 +53,6 @@ export const accessMenu = [
 export const accountsMenu = [
   new MenuLink('/account-search', 'Search Details', null),
   new MenuLink('/multiple-accounts-report', 'Multiple Report', null),
-  new MenuLink(null, null, true),
-
-  new MenuLink('/account-report', 'Totals Report', null),
 ];
 
 export const sourceMenu = [
@@ -89,15 +86,6 @@ export const workitemMenu = [
 export const systemMenu = [
   new MenuLink('/system-monitor', 'Monitor VA', null),
   new MenuLink('/system-monitor-source', 'Monitor Sources', null),
-  new MenuLink('/report-failures', 'Provisioning Failures', null),
-  new MenuLink(
-    '/report-failures-source',
-    'Provisioning Failure By Source',
-    null
-  ),
-  new MenuLink('/report-attributesync-events', 'Attribute Sync Report', null),
-  new MenuLink('/report-task-status', 'Task History', null),
-  new MenuLink(null, null, true),
 
   new MenuLink('/identity-admin-management', 'Manage Admins', null),
   new MenuLink('/misc-manage-pat', 'Manage PAT', null),
@@ -106,7 +94,23 @@ export const systemMenu = [
   new MenuLink('/reassignments', 'Out of Office', null),
   new MenuLink('/fast-tag', 'Fast Tag', null),
 ];
-export const aboutMenu = [
+
+export const reports = [
+  new MenuLink('/account-report', 'Account Totals Report', null),
+  new MenuLink(null, null, true),
+  new MenuLink('/report-failures', 'Newest Provisioning/Sync Failures', null),
+  new MenuLink(
+    '/report-failures-source',
+    'Provisioning Failure By Source',
+    null
+  ),
+  new MenuLink(
+    '/report-attributesync-events',
+    'Attribute Sync Report By Source',
+    null
+  ),
+  new MenuLink('/report-task-status', 'Task History', null),
+  new MenuLink(null, null, true),
   new MenuLink('/release-history', 'Release History', null),
   new MenuLink('/credits', 'Credits', null),
 ];
@@ -120,5 +124,5 @@ export const Menu = [
   new MainMenu('AccessRequests', accessRequestMenu),
   new MainMenu('WorkItems', workitemMenu),
   new MainMenu('System', systemMenu),
-  new MainMenu('About', aboutMenu),
+  new MainMenu('Reports', reports),
 ];
