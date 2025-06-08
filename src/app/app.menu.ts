@@ -109,6 +109,7 @@ export const reports = [
     'Attribute Sync Report By Source',
     null
   ),
+  new MenuLink('/report-most-active', 'Total Activity By Source', null),
   new MenuLink('/report-task-status', 'Task History', null),
   new MenuLink(null, null, true),
   new MenuLink('/release-history', 'Release History', null),

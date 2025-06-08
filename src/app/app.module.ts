@@ -64,6 +64,7 @@ import { FastTagComponent } from './fast-tag/fast-tag.component';
 import { WorkflowsComponent } from './workflows/workflows.component';
 import { ReportFailuresSourceComponent } from './report-failures-source/report-failures-source.component';
 import { ReportAttributesyncEventsComponent } from './report-attributesync-events/report-attributesync-events.component';
+import { ReportMostActiveComponent } from './report-most-active/report-most-active.component';
 
 @NgModule({
   declarations: [
@@ -115,6 +116,7 @@ import { ReportAttributesyncEventsComponent } from './report-attributesync-event
     WorkflowsComponent,
     ReportFailuresSourceComponent,
     ReportAttributesyncEventsComponent,
+    ReportMostActiveComponent,
   ],
   imports: [
     BrowserModule,
