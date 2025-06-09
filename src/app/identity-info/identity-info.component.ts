@@ -264,6 +264,10 @@ export class IdentityInfoComponent implements OnInit {
           this.identityActions.push(ia);
         }
         this.syncData = true;
+        this.identityActions.sort((a, b) =>
+          new Date(b.created).getTime()-new Date(a.created).getTime());
+   
+
       });
   }
 
