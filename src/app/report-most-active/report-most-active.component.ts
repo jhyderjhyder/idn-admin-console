@@ -3,6 +3,7 @@ import { BasicAttributes } from '../model/basic-attributes';
 import { PageResults } from '../model/page-results';
 import { IDNService } from '../service/idn.service';
 import { AccessRequestAuditAccountFull } from '../model/AccessRequestAudit';
+import { ActivityReport } from '../model/ActivityReport';
 import { AngularCsv } from 'angular-csv-ext/dist/Angular-csv';
 
 @Component({
@@ -15,6 +16,7 @@ export class ReportMostActiveComponent implements OnInit {
   filterBasic: Array<BasicAttributes>;
   loading: boolean;
   sourceName: string;
+  activeDetails: Map<String, ActivityReport>;
   auditDetails: Array<AccessRequestAuditAccountFull>;
   limit: number;
   errorCount: number;
@@ -98,6 +100,14 @@ can pick from
     this.auditDetails = [];
     this.errorCount = 0;
     this.loading = true;
+    this.activeDetails = new Map();
+    for (let a = 0; a < this.filterApplications.length; a++) {
+      const app = this.filterApplications[a];
+      const report = new ActivityReport();
+      report.appName = app.name;
+      this.activeDetails.set(app.name, report);
+    }
+
     console.log(this.sourceName);
     for (let a = 0; a < this.filterApplications.length; a++) {
       const app = this.filterApplications[a];
@@ -108,8 +118,21 @@ can pick from
         n.pk = app.name;
         console.log(app.name);
         n.value = headers.get('X-Total-Count');
+        this.activeDetails.get(app.name).provision =
+          headers.get('X-Total-Count');
         this.auditDetails.push(n);
       });
+      this.idnService.syncCountBySource(app.name, 1).subscribe(data => {
+        console.log(app.value + ':' + data.length);
+        const headers = data.headers;
+        const n = new AccessRequestAuditAccountFull();
+        n.pk = app.name;
+        console.log(app.name);
+        n.value = headers.get('X-Total-Count');
+        this.activeDetails.get(app.name).sync = headers.get('X-Total-Count');
+        //this.auditDetails.push(n);
+      });
+
       this.loading = false;
     }
   }
@@ -122,11 +145,16 @@ can pick from
       showLabels: true,
       useHeader: true,
       nullToEmptyString: true,
-      headers: ['pk', 'name', 'value'],
+      headers: ['appName', 'sync', 'provision'],
     };
 
     const fileName = `mostActiveToday`;
 
-    new AngularCsv(this.auditDetails, fileName, options);
+    const download = [];
+    for (const key of this.activeDetails.keys()) {
+      download.push(this.activeDetails.get(key));
+    }
+
+    new AngularCsv(download, fileName, options);
   }
 }

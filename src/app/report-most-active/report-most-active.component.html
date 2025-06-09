@@ -36,11 +36,11 @@
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let item of auditDetails; let i =index" >
+      <tr *ngFor="let item of activeDetails |keyvalue; let i =index" >
         <td>{{i}}</td>
-        <td>{{item.pk}}</td>
-        <td>{{ item.name}} </td>
-        <td>{{ item.value}}</td>
+        <td>{{item.key}}</td>
+        <td>{{ item.value.sync}} </td>
+        <td>{{ item.value.provision}}</td>
       </tr>
     </tbody>
       </table>
