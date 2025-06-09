@@ -249,7 +249,8 @@ export class IdentityInfoComponent implements OnInit {
   getSyncData() {
     this.idnService
       .sinkByPerson(this.identityInfo.name)
-      .subscribe(searchResult => {
+      .subscribe(response => {
+        const searchResult = response.body;
         for (let i = 0; i < searchResult.length; i++) {
           const ia = new IdentityActions();
           const rawData = searchResult[i];
