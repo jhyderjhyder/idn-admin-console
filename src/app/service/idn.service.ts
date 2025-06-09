@@ -2214,7 +2214,7 @@ Supported API's
 
     const payload = {
       query: {
-        query: `type:provisioning AND created:[now-24h TO now] AND attributes.cloudAppName:"${idNumber}"`,
+        query: `type:provisioning AND created:[now-24h TO now] AND attributes.cloudAppName:"${idNumber}" AND NOT attributes.interface:"Attribute Sync"`,
       },
       indices: ['events'],
     };
@@ -2268,10 +2268,32 @@ Supported API's
       indices: ['events'],
       sort: ['-created'],
     };
-
+/*
+return this.http.post(url, payload, { observe: 'response' }).pipe(
+      catchError(error => {
+        if (error.status === 429) {
+          console.warn('Rate limited. Retrying in 2 seconds...');
+          this.sleep(2000);
+          return this.provisioningCountBySource(idNumber, limit);
+        } else {
+          catchError(this.handleError(`provisioningCountBySource`));
+        }
+      })
+    );
+    */
     return this.http
-      .post(url, payload, this.httpOptions)
-      .pipe(catchError(this.handleError(`sinkByPerson`)));
+      .post(url, payload, { observe: 'response' })
+      .pipe(
+      catchError(error => {
+        if (error.status === 429) {
+          console.warn('Rate limited. Retrying in 1 seconds...');
+          this.sleep(1000);
+          return this.sinkByPerson(idNumber);
+        } else {
+          catchError(this.handleError(`Cant pull Person Sync data`));
+        }
+      })
+    );
   }
 
   /*

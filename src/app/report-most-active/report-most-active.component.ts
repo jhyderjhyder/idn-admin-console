@@ -69,7 +69,7 @@ can pick from
         pr.limit = 50;
 
         await new Promise(resolve => {
-          while (pr.totalPages >= max && max < 10) {
+          while (pr.totalPages >= max && max < 100) {
             console.log('Start while:' + max);
             this.idnService.getAllSourcesPaged(pr, null).subscribe(response => {
               const searchResult = response.body;
