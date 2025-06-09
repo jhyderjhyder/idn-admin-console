@@ -109,6 +109,7 @@ can pick from
     }
 
     console.log(this.sourceName);
+    //Total Provisioning
     for (let a = 0; a < this.filterApplications.length; a++) {
       const app = this.filterApplications[a];
       this.idnService.provisioningCountBySource(app.name, 1).subscribe(data => {
@@ -122,6 +123,19 @@ can pick from
           headers.get('X-Total-Count');
         this.auditDetails.push(n);
       });
+
+      //Failed Provisioning provisioningCountBySourceFailures
+      this.idnService.provisioningCountBySource(app.name, 1).subscribe(data => {
+        console.log(app.value + ':' + data.length);
+        const headers = data.headers;
+        const n = new AccessRequestAuditAccountFull();
+        n.pk = app.name;
+        console.log(app.name);
+        n.value = headers.get('X-Total-Count');
+        this.activeDetails.get(app.name).provisionFail =
+          headers.get('X-Total-Count');
+      });
+
       this.idnService.syncCountBySource(app.name, 1).subscribe(data => {
         console.log(app.value + ':' + data.length);
         const headers = data.headers;
@@ -145,7 +159,7 @@ can pick from
       showLabels: true,
       useHeader: true,
       nullToEmptyString: true,
-      headers: ['appName', 'sync', 'provision'],
+      headers: ['appName', 'sync', 'provision', 'provisionFail'],
     };
 
     const fileName = `mostActiveToday`;

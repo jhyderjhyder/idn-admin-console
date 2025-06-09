@@ -2232,13 +2232,37 @@ Supported API's
     );
   }
 
+  provisioningCountBySourceFailures(idNumber, limit): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/search/?count=true&limit=${limit}&offset=0`;
+
+    const payload = {
+      query: {
+        query: `type:provisioning AND created:[now-24h TO now] AND attributes.cloudAppName:"${idNumber}" AND NOT attributes.interface:"Attribute Sync AND _exists_:errors"`,
+      },
+      indices: ['events'],
+    };
+    //return this.http.get(url + filter, { observe: 'response' }).pipe(
+    return this.http.post(url, payload, { observe: 'response' }).pipe(
+      catchError(error => {
+        if (error.status === 429) {
+          console.warn('Rate limited. Retrying in 2 seconds...');
+          this.sleep(3000);
+          return this.provisioningCountBySource(idNumber, limit);
+        } else {
+          catchError(this.handleError(`provisioningCountBySource`));
+        }
+      })
+    );
+  }
+
   syncCountBySource(idNumber, limit): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
     const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/search/?count=true&limit=${limit}&offset=0`;
 
     const payload = {
       query: {
-        query: `attributes.interface.exact:/Attribute Syn.+/ AND (attributes.sourceName:\"${idNumber}\") AND created:[now-24h TO now]`,
+        query: `attributes.interface.exact:/Attribute Syn.+/ AND (attributes.sourceName.exact:"${idNumber}") AND created:[now-24h TO now]`,
       },
       indices: ['events'],
       sort: ['-created'],
@@ -2268,7 +2292,7 @@ Supported API's
       indices: ['events'],
       sort: ['-created'],
     };
-/*
+    /*
 return this.http.post(url, payload, { observe: 'response' }).pipe(
       catchError(error => {
         if (error.status === 429) {
@@ -2281,9 +2305,7 @@ return this.http.post(url, payload, { observe: 'response' }).pipe(
       })
     );
     */
-    return this.http
-      .post(url, payload, { observe: 'response' })
-      .pipe(
+    return this.http.post(url, payload, { observe: 'response' }).pipe(
       catchError(error => {
         if (error.status === 429) {
           console.warn('Rate limited. Retrying in 1 seconds...');
