@@ -104,7 +104,7 @@ can pick from
     this.filterApplications.sort((a, b) => a.name.localeCompare(b.name));
   }
 
-  submit() {
+  async submit() {
     this.auditDetails = [];
     this.errorCount = 0;
     this.loading = true;
@@ -128,20 +128,21 @@ can pick from
         indices: ['events'],
       };
 
-      this.idnService.eventCount(totalProvisioning).subscribe(data => {
-        console.log(app.value + ':' + data.length);
-        const headers = data.headers;
-        const n = new AccessRequestAuditAccountFull();
-        n.pk = app.name;
-        console.log(app.name);
-        n.value = headers.get('X-Total-Count');
-        this.activeDetails.get(app.name).provision =
-          headers.get('X-Total-Count');
-        this.auditDetails.push(n);
-        this.activeDetails.get(app.name).provisionQuery =
-          totalProvisioning.query.query;
-        this.errorCount++;
-      });
+      const tpData = await this.idnService
+        .eventCount(totalProvisioning)
+        .toPromise();
+      console.log(app.value + ':' + tpData.length);
+      let headers = tpData.headers;
+      let n = new AccessRequestAuditAccountFull();
+      n.pk = app.name;
+      console.log(app.name);
+      n.value = headers.get('X-Total-Count');
+      this.activeDetails.get(app.name).provision = headers.get('X-Total-Count');
+      this.auditDetails.push(n);
+      this.activeDetails.get(app.name).provisionQuery =
+        totalProvisioning.query.query;
+      this.errorCount++;
+      console.log(a + 'Seq:' + tpData);
 
       //Failed Provisioning provisioningCountBySourceFailures
       const failed = {
@@ -150,19 +151,17 @@ can pick from
         },
         indices: ['events'],
       };
-      this.idnService.eventCount(failed).subscribe(data => {
-        console.log(app.value + ':' + data.length);
-        const headers = data.headers;
-        const n = new AccessRequestAuditAccountFull();
-        n.pk = app.name;
-        console.log(app.name);
-        n.value = headers.get('X-Total-Count');
-        this.activeDetails.get(app.name).provisionFail =
-          headers.get('X-Total-Count');
-        this.activeDetails.get(app.name).provisionFailQuery =
-          failed.query.query;
-        this.errorCount++;
-      });
+      const faildData = await this.idnService.eventCount(failed).toPromise();
+      console.log(app.value + ':' + faildData.length);
+      headers = faildData.headers;
+      n = new AccessRequestAuditAccountFull();
+      n.pk = app.name;
+      console.log(app.name);
+      n.value = headers.get('X-Total-Count');
+      this.activeDetails.get(app.name).provisionFail =
+        headers.get('X-Total-Count');
+      this.activeDetails.get(app.name).provisionFailQuery = failed.query.query;
+      this.errorCount++;
 
       const syncCount = {
         query: {
@@ -171,18 +170,17 @@ can pick from
         indices: ['events'],
       };
 
-      this.idnService.eventCount(syncCount).subscribe(data => {
-        console.log(app.value + ':' + data.length);
-        const headers = data.headers;
-        const n = new AccessRequestAuditAccountFull();
-        n.pk = app.name;
-        console.log(app.name);
-        n.value = headers.get('X-Total-Count');
-        this.activeDetails.get(app.name).sync = headers.get('X-Total-Count');
-        this.activeDetails.get(app.name).syncQuery = syncCount.query.query;
-        this.errorCount++;
-        //this.auditDetails.push(n);
-      });
+      const syncData = await this.idnService.eventCount(syncCount).toPromise();
+      console.log(app.value + ':' + syncData.length);
+      headers = syncData.headers;
+      n = new AccessRequestAuditAccountFull();
+      n.pk = app.name;
+      console.log(app.name);
+      n.value = headers.get('X-Total-Count');
+      this.activeDetails.get(app.name).sync = headers.get('X-Total-Count');
+      this.activeDetails.get(app.name).syncQuery = syncCount.query.query;
+      this.errorCount++;
+      //this.auditDetails.push(n);
 
       this.loading = false;
     }

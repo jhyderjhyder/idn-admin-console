@@ -2208,9 +2208,6 @@ Supported API's
       .pipe(catchError(this.handleError(`searchEntitlements`)));
   }
 
-
-
-
   eventCount(payload): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
     const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/search/?count=true&limit=1&offset=0`;
@@ -2228,8 +2225,6 @@ Supported API's
       })
     );
   }
-
- 
 
   sinkByPerson(idNumber): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
