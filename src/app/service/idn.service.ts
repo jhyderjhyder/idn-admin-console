@@ -2208,78 +2208,28 @@ Supported API's
       .pipe(catchError(this.handleError(`searchEntitlements`)));
   }
 
-  provisioningCountBySource(idNumber, limit): Observable<any> {
+
+
+
+  eventCount(payload): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/search/?count=true&limit=${limit}&offset=0`;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/search/?count=true&limit=1&offset=0`;
 
-    const payload = {
-      query: {
-        query: `type:provisioning AND created:[now-24h TO now] AND attributes.cloudAppName:"${idNumber}" AND NOT attributes.interface:"Attribute Sync"`,
-      },
-      indices: ['events'],
-    };
-    //return this.http.get(url + filter, { observe: 'response' }).pipe(
-    return this.http.post(url, payload, { observe: 'response' }).pipe(
-      catchError(error => {
-        if (error.status === 429) {
-          console.warn('Rate limited. Retrying in 2 seconds...');
-          this.sleep(2000);
-          return this.provisioningCountBySource(idNumber, limit);
-        } else {
-          catchError(this.handleError(`provisioningCountBySource`));
-        }
-      })
-    );
-  }
-
-  provisioningCountBySourceFailures(idNumber, limit): Observable<any> {
-    const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/search/?count=true&limit=${limit}&offset=0`;
-
-    const payload = {
-      query: {
-        query: `type:provisioning AND created:[now-24h TO now] AND attributes.cloudAppName:"${idNumber}" AND NOT attributes.interface:"Attribute Sync AND _exists_:errors"`,
-      },
-      indices: ['events'],
-    };
     //return this.http.get(url + filter, { observe: 'response' }).pipe(
     return this.http.post(url, payload, { observe: 'response' }).pipe(
       catchError(error => {
         if (error.status === 429) {
           console.warn('Rate limited. Retrying in 2 seconds...');
           this.sleep(3000);
-          return this.provisioningCountBySource(idNumber, limit);
+          return this.eventCount(payload);
         } else {
-          catchError(this.handleError(`provisioningCountBySource`));
+          catchError(this.handleError(`eventCount`));
         }
       })
     );
   }
 
-  syncCountBySource(idNumber, limit): Observable<any> {
-    const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/search/?count=true&limit=${limit}&offset=0`;
-
-    const payload = {
-      query: {
-        query: `attributes.interface.exact:/Attribute Syn.+/ AND (attributes.sourceName.exact:"${idNumber}") AND created:[now-24h TO now]`,
-      },
-      indices: ['events'],
-      sort: ['-created'],
-    };
-    //return this.http.get(url + filter, { observe: 'response' }).pipe(
-    return this.http.post(url, payload, { observe: 'response' }).pipe(
-      catchError(error => {
-        if (error.status === 429) {
-          console.warn('Rate limited. Retrying in 2 seconds...');
-          this.sleep(2000);
-          return this.syncCountBySource(idNumber, limit);
-        } else {
-          catchError(this.handleError(`provisioningCountBySource`));
-        }
-      })
-    );
-  }
+ 
 
   sinkByPerson(idNumber): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;

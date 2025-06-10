@@ -5,8 +5,8 @@
     </div>
   </div>
 
-  <p>List of Processed Actions : {{errorCount}}</p>
-  <div *ngIf="this.filterApplications.length > totalApps">
+  <p>Processed : {{errorCount/3}} of {{filterApplications.length}}</p>
+  <div *ngIf="this.filterApplications.length >= totalApps">
   <div class="row">
       <div class="col-sm-2">Source Id#</div>
         <div class="col-sm-2 text-start">
@@ -24,6 +24,12 @@
               reloadApps
             </button>
           </div>
+                 <div class="col-sm-1 text-start">
+            <button type="button" (click)="showQueryChange()" class="btn btn-primary btn-sm">
+              showQuery
+            </button>
+          </div>
+          
   </div>
   
   <table class="table table-bordered table-hover">
@@ -36,11 +42,20 @@
         <td>Provisioning Errors</td>
       </tr>
     </thead>
-    <tbody>
+    <tbody *ngIf="showQuery">
       <tr *ngFor="let item of activeDetails |keyvalue; let i =index" >
         <td>{{i}}</td>
         <td>{{item.key}}</td>
-        <td>{{ item.value.sync}} </td>
+        <td>{{item.value.syncQuery}}</td>
+        <td>{{ item.value.provisionQuery}}</td>
+        <td>{{ item.value.provisionFailQuery}}</td>
+      </tr>
+    </tbody>
+      <tbody *ngIf="!showQuery">
+      <tr *ngFor="let item of activeDetails |keyvalue; let i =index" >
+        <td>{{i}}</td>
+        <td>{{item.key}}</td>
+        <td>{{item.value.sync}}</td>
         <td>{{ item.value.provision}}</td>
         <td>{{ item.value.provisionFail}}</td>
       </tr>

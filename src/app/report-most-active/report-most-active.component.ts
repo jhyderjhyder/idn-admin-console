@@ -21,6 +21,7 @@ export class ReportMostActiveComponent implements OnInit {
   limit: number;
   errorCount: number;
   totalApps: number = 9999;
+  showQuery: boolean;
 
   constructor(private idnService: IDNService) {}
 
@@ -30,6 +31,13 @@ export class ReportMostActiveComponent implements OnInit {
     this.loading = false;
     if (this.filterApplications == null) {
       this.getApplicationNames();
+    }
+  }
+  showQueryChange() {
+    if (this.showQuery == false) {
+      this.showQuery = true;
+    } else {
+      this.showQuery = false;
     }
   }
 
@@ -100,6 +108,7 @@ can pick from
     this.auditDetails = [];
     this.errorCount = 0;
     this.loading = true;
+    this.showQuery = false;
     this.activeDetails = new Map();
     for (let a = 0; a < this.filterApplications.length; a++) {
       const app = this.filterApplications[a];
@@ -112,7 +121,14 @@ can pick from
     //Total Provisioning
     for (let a = 0; a < this.filterApplications.length; a++) {
       const app = this.filterApplications[a];
-      this.idnService.provisioningCountBySource(app.name, 1).subscribe(data => {
+      const totalProvisioning = {
+        query: {
+          query: `type:provisioning AND created:[now-24h TO now] AND attributes.cloudAppName.exact:"${app.name}" AND NOT attributes.interface:"Attribute Sync"`,
+        },
+        indices: ['events'],
+      };
+
+      this.idnService.eventCount(totalProvisioning).subscribe(data => {
         console.log(app.value + ':' + data.length);
         const headers = data.headers;
         const n = new AccessRequestAuditAccountFull();
@@ -122,10 +138,19 @@ can pick from
         this.activeDetails.get(app.name).provision =
           headers.get('X-Total-Count');
         this.auditDetails.push(n);
+        this.activeDetails.get(app.name).provisionQuery =
+          totalProvisioning.query.query;
+        this.errorCount++;
       });
 
       //Failed Provisioning provisioningCountBySourceFailures
-      this.idnService.provisioningCountBySource(app.name, 1).subscribe(data => {
+      const failed = {
+        query: {
+          query: `type:provisioning AND created:[now-24h TO now] AND attributes.cloudAppName.exact:"${app.name}" AND NOT attributes.interface:"Attribute Sync" AND _exists_:attributes.errors`,
+        },
+        indices: ['events'],
+      };
+      this.idnService.eventCount(failed).subscribe(data => {
         console.log(app.value + ':' + data.length);
         const headers = data.headers;
         const n = new AccessRequestAuditAccountFull();
@@ -134,9 +159,19 @@ can pick from
         n.value = headers.get('X-Total-Count');
         this.activeDetails.get(app.name).provisionFail =
           headers.get('X-Total-Count');
+        this.activeDetails.get(app.name).provisionFailQuery =
+          failed.query.query;
+        this.errorCount++;
       });
 
-      this.idnService.syncCountBySource(app.name, 1).subscribe(data => {
+      const syncCount = {
+        query: {
+          query: `attributes.interface.exact:/Attribute Syn.+/ AND (attributes.sourceName.exact:"${app.name}") AND created:[now-24h TO now]`,
+        },
+        indices: ['events'],
+      };
+
+      this.idnService.eventCount(syncCount).subscribe(data => {
         console.log(app.value + ':' + data.length);
         const headers = data.headers;
         const n = new AccessRequestAuditAccountFull();
@@ -144,6 +179,8 @@ can pick from
         console.log(app.name);
         n.value = headers.get('X-Total-Count');
         this.activeDetails.get(app.name).sync = headers.get('X-Total-Count');
+        this.activeDetails.get(app.name).syncQuery = syncCount.query.query;
+        this.errorCount++;
         //this.auditDetails.push(n);
       });
 
