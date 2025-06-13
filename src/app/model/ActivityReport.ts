@@ -6,4 +6,5 @@ export class ActivityReport {
   provisionQuery: String;
   provisionFail: number;
   provisionFailQuery;
+  tags: String;
 }

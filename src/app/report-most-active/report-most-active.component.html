@@ -40,6 +40,7 @@
         <td>Sync Events</td>
         <td>Provisioning</td>
         <td>Provisioning Errors</td>
+        <td>Tags</td>
       </tr>
     </thead>
     <tbody *ngIf="showQuery">
@@ -49,6 +50,7 @@
         <td>{{item.value.syncQuery}}</td>
         <td>{{ item.value.provisionQuery}}</td>
         <td>{{ item.value.provisionFailQuery}}</td>
+        <td>{{item.value.tags}}</td>
       </tr>
     </tbody>
       <tbody *ngIf="!showQuery">
@@ -58,6 +60,7 @@
         <td>{{item.value.sync}}</td>
         <td>{{ item.value.provision}}</td>
         <td>{{ item.value.provisionFail}}</td>
+        <td>{{item.value.tags}}</td>
       </tr>
     </tbody>
       </table>

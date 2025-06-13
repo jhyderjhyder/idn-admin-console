@@ -180,6 +180,14 @@ can pick from
       this.activeDetails.get(app.name).sync = headers.get('X-Total-Count');
       this.activeDetails.get(app.name).syncQuery = syncCount.query.query;
       this.errorCount++;
+
+      this.idnService.getTags('SOURCE', app.value).subscribe(myTag => {
+        if (myTag != null) {
+          this.activeDetails.get(app.name).tags = myTag.tags;
+        } else {
+          this.activeDetails.get(app.name).tags = 'none';
+        }
+      });
       //this.auditDetails.push(n);
 
       this.loading = false;
@@ -194,7 +202,7 @@ can pick from
       showLabels: true,
       useHeader: true,
       nullToEmptyString: true,
-      headers: ['appName', 'sync', 'provision', 'provisionFail'],
+      headers: ['appName', 'sync', 'provision', 'provisionFail', 'tags'],
     };
 
     const fileName = `mostActiveToday`;
