@@ -1614,6 +1614,7 @@ Supported API's
     reqID,
     filterGt,
     filterLt,
+    searchType,
     page: PageResults,
     count
   ): Observable<any> {
@@ -1628,6 +1629,9 @@ Supported API's
     }
     if (filterGt != null && filterLt != null) {
       filterString = `&filters=created gt ${filterGt} and created lt ${filterLt}`;
+    }
+    if (searchType != null) {
+      filterString = filterString + '&request-state=' + searchType;
     }
 
     const url =
@@ -1651,6 +1655,7 @@ Supported API's
             reqID,
             filterGt,
             filterLt,
+            searchType,
             page,
             false
           );
@@ -1661,6 +1666,7 @@ Supported API's
             reqID,
             filterGt,
             filterLt,
+            searchType,
             page,
             false
           );
