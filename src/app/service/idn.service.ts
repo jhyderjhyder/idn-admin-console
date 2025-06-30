@@ -2269,6 +2269,27 @@ return this.http.post(url, payload, { observe: 'response' }).pipe(
     );
   }
 
+  changeIdentitRequestStatus(
+    accessRequestID: string,
+    state: string
+  ): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v2024/access-requests/close`;
+
+    let status = 'Completed';
+    if (state === 'Incomplete') {
+      status = 'Terminated';
+    }
+    const payload = {
+      accessRequestIds: [`${accessRequestID}`],
+      message: `Admin tool requested change of current state to ${state}`,
+      exectionStatus: `${status}`,
+      completionStatus: `${state}`,
+    };
+
+    return this.http.post(url, payload);
+  }
+
   /*
   private hideError<T>(result?: T) {
     return (error: any): Observable<T> => {

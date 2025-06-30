@@ -169,6 +169,26 @@ can pick from
         },
         indices: ['events'],
       };
+      const syncCountFailure = {
+        query: {
+          query: `attributes.interface.exact:/Attribute Syn.+/ AND (attributes.sourceName.exact:"${app.name}") AND created:[now-24h TO now]  AND _exists_:attributes.errors`,
+        },
+        indices: ['events'],
+      };
+
+      const syncDataFailure = await this.idnService
+        .eventCount(syncCountFailure)
+        .toPromise();
+      console.log(app.value + ':' + syncDataFailure.length);
+      headers = syncDataFailure.headers;
+      n = new AccessRequestAuditAccountFull();
+      n.pk = app.name;
+      console.log(app.name);
+      n.value = headers.get('X-Total-Count');
+      this.activeDetails.get(app.name).syncFailure =
+        headers.get('X-Total-Count');
+      this.activeDetails.get(app.name).syncFailQuery = syncCount.query.query;
+      this.errorCount++;
 
       const syncData = await this.idnService.eventCount(syncCount).toPromise();
       console.log(app.value + ':' + syncData.length);
@@ -202,7 +222,14 @@ can pick from
       showLabels: true,
       useHeader: true,
       nullToEmptyString: true,
-      headers: ['appName', 'sync', 'provision', 'provisionFail', 'tags'],
+      headers: [
+        'appName',
+        'sync',
+        'syncFailure',
+        'provision',
+        'provisionFail',
+        'tags',
+      ],
     };
 
     const fileName = `mostActiveToday`;

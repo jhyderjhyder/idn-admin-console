@@ -1012,6 +1012,22 @@ export class IdentityInfoComponent implements OnInit {
     });
   }
 
+  changeStatus(input, operation) {
+    const requestID = this.accessRequestStatuses[input].id;
+    this.idnService
+      .changeIdentitRequestStatus(requestID, operation)
+      .subscribe(data => {
+        window.alert(
+          'submited:' +
+            requestID +
+            '-' +
+            operation +
+            ' results:' +
+            JSON.stringify(data)
+        );
+      });
+  }
+
   refreshIdentity() {
     if (this.identityInfo.name && this.identityInfo.name.trim() != '') {
       this.idnService.refreshSingleIdentity(this.identityInfo.name).subscribe(

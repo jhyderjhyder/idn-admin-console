@@ -202,6 +202,7 @@ export class SystemMonitorSourceComponent implements OnInit {
       useHeader: true,
       headers: [
         'name',
+        'cluster',
         'type',
         'labels',
         'testConnectionStatus',
