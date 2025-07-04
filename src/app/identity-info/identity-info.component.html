@@ -734,6 +734,8 @@
                   <a class="dropdown-item" (click)="showRawAudit(i, true)">Audit</a>
                   <a class="dropdown-item" (click)="showRawAccessRequest(i)">Access Request Raw</a>
                   <a class="dropdown-item" (click)="showRawAudit(i, false)">Audit Raw</a>
+                  <a class="dropdown-item" (click)="changeStatus(i, 'Incomplete')">Set Status Incomplete</a>
+                  <a class="dropdown-item" (click)="changeStatus(i, 'Failure')">Set Status Failure</a>
                 </div>
               </div>
             </td>

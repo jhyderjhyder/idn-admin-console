@@ -24,54 +24,82 @@ export class ReportAttributesyncEventsComponent implements OnInit {
   ngOnInit() {
     this.limit = 200;
     this.auditDetails = [];
+    this.loading = false;
     if (this.filterApplications == null) {
-      this.loading = true;
       this.getApplicationNames();
     }
+  }
+
+  reloadApplications() {
+    localStorage.removeItem('applicationLookup');
+    this.getApplicationNames();
   }
 
   /*
 Populate the dropdown of sources you
 can pick from
 */
-  getApplicationNames() {
+  async getApplicationNames() {
     const pr = new PageResults();
-    pr.limit = 200;
+    pr.limit = 1;
     this.filterApplications = new Array<BasicAttributes>();
     const all = new BasicAttributes();
     all.name = 'Loading';
     all.value = '';
     this.filterApplications.push(all);
-    this.idnService.getAllSourcesPaged(pr, null).subscribe(response => {
+    this.idnService.getAllSourcesPaged(pr, null).subscribe(async response => {
       const headers = response.headers;
       pr.xTotalCount = headers.get('X-Total-Count');
+
+      if (localStorage.getItem('applicationLookup') != null) {
+        this.filterApplications = JSON.parse(
+          localStorage.getItem('applicationLookup')
+        );
+      }
+      console.log(this.filterApplications.length + ':' + pr.xTotalCount);
+      if (this.filterApplications.length >= pr.xTotalCount) {
+        console.log('No reload required lets rock');
+      } else {
+        console.log('loading applications');
+        let max = 0;
+        pr.limit = 50;
+
+        await new Promise(resolve => {
+          while (pr.totalPages >= max && max < 100) {
+            console.log('Start while:' + max);
+            this.idnService.getAllSourcesPaged(pr, null).subscribe(response => {
+              const searchResult = response.body;
+              for (let i = 0; i < searchResult.length; i++) {
+                const app = searchResult[i];
+                const basic = new BasicAttributes();
+                basic.name = app['name'];
+                basic.value = app['id'];
+                this.addSorted(basic);
+              }
+            });
+
+            max++;
+            pr.nextPage;
+            resolve;
+          }
+        });
+      }
     });
-    let max = 1;
-    while (pr.hasMorePages && max < 10) {
-      max++;
-      this.idnService.getAllSourcesPaged(pr, null).subscribe(response => {
-        const searchResult = response.body;
-        for (let i = 0; i < searchResult.length; i++) {
-          const app = searchResult[i];
-          const basic = new BasicAttributes();
-          basic.name = app['name'];
-          basic.value = app['id'];
-          this.addSorted(basic);
-        }
-      });
-      pr.nextPage;
-    }
   }
 
   addSorted(basic: BasicAttributes) {
     this.filterApplications.push(basic);
     this.filterApplications.sort((a, b) => a.name.localeCompare(b.name));
+    localStorage.setItem(
+      'applicationLookup',
+      JSON.stringify(this.filterApplications)
+    );
   }
 
   submit() {
     this.auditDetails = [];
     this.errorCount = 0;
-
+    this.loading = true;
     console.log(this.sourceName);
     this.idnService
       .failuresBySource(this.sourceName, this.limit, true)
@@ -105,6 +133,7 @@ can pick from
             this.errorCount++;
           }
         }
+        this.loading = false;
       });
   }
 

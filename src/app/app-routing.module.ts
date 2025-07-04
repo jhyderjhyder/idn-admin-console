@@ -49,6 +49,7 @@ import { RawObjectComponent } from './raw-object/raw-object.component';
 import { FastTagComponent } from './fast-tag/fast-tag.component';
 import { WorkflowsComponent } from './workflows/workflows.component';
 import { ReportAttributesyncEventsComponent } from './report-attributesync-events/report-attributesync-events.component';
+import { ReportMostActiveComponent } from './report-most-active/report-most-active.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/identity-info', pathMatch: 'full' },
@@ -266,6 +267,11 @@ const routes: Routes = [
   {
     path: 'report-attributesync-events',
     component: ReportAttributesyncEventsComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'report-most-active',
+    component: ReportMostActiveComponent,
     canActivate: [AuthGuard],
   },
   { path: 'login', component: LoginComponent },

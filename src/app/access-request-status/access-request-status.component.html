@@ -101,6 +101,12 @@
             [(ngModel)]="searchLt" (keyup.enter)="getRequestedForUser()" autocomplete="off" placeholder="yyyy-MM-dd">
         </div>
 
+        <div class=" col-md-2">
+          States
+          <input class="form-control py-2 border-start-0 border" type="text" name="searchType"
+            [(ngModel)]="searchType" (keyup.enter)="getRequestedForUser()" autocomplete="off" placeholder="CANCELLED">
+        </div>
+
         <div class="col-md-2">
           <button type="button" (click)="getRequestedForUser()" class="btn btn-primary btn-sm">
             Search

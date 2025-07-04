@@ -34,6 +34,7 @@ export class AccessRequestStatusComponent implements OnInit {
   searchReqID: string;
   searchGt: string;
   searchLt: string;
+  searchType: string;
 
   constructor(
     private idnService: IDNService,
@@ -124,7 +125,7 @@ export class AccessRequestStatusComponent implements OnInit {
 
   reset() {
     this.page = new PageResults();
-    this.page.limit = 25;
+    this.page.limit = 250;
     this.accessRequestStatuses = null;
     this.accessRequestStatusesRaw = null;
     this.searchText = null;
@@ -153,6 +154,7 @@ export class AccessRequestStatusComponent implements OnInit {
         this.searchReqID,
         this.searchGt,
         this.searchLt,
+        this.searchType,
         this.page,
         true
       )

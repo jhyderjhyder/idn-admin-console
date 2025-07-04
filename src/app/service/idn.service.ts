@@ -1614,6 +1614,7 @@ Supported API's
     reqID,
     filterGt,
     filterLt,
+    searchType,
     page: PageResults,
     count
   ): Observable<any> {
@@ -1628,6 +1629,9 @@ Supported API's
     }
     if (filterGt != null && filterLt != null) {
       filterString = `&filters=created gt ${filterGt} and created lt ${filterLt}`;
+    }
+    if (searchType != null) {
+      filterString = filterString + '&request-state=' + searchType;
     }
 
     const url =
@@ -1651,6 +1655,7 @@ Supported API's
             reqID,
             filterGt,
             filterLt,
+            searchType,
             page,
             false
           );
@@ -1661,6 +1666,7 @@ Supported API's
             reqID,
             filterGt,
             filterLt,
+            searchType,
             page,
             false
           );
@@ -2208,6 +2214,24 @@ Supported API's
       .pipe(catchError(this.handleError(`searchEntitlements`)));
   }
 
+  eventCount(payload): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/search/?count=true&limit=1&offset=0`;
+
+    //return this.http.get(url + filter, { observe: 'response' }).pipe(
+    return this.http.post(url, payload, { observe: 'response' }).pipe(
+      catchError(error => {
+        if (error.status === 429) {
+          console.warn('Rate limited. Retrying in 2 seconds...');
+          this.sleep(3000);
+          return this.eventCount(payload);
+        } else {
+          catchError(this.handleError(`eventCount`));
+        }
+      })
+    );
+  }
+
   sinkByPerson(idNumber): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
     const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/search/?count=true&offset=0`;
@@ -2219,10 +2243,51 @@ Supported API's
       indices: ['events'],
       sort: ['-created'],
     };
+    /*
+return this.http.post(url, payload, { observe: 'response' }).pipe(
+      catchError(error => {
+        if (error.status === 429) {
+          console.warn('Rate limited. Retrying in 2 seconds...');
+          this.sleep(2000);
+          return this.provisioningCountBySource(idNumber, limit);
+        } else {
+          catchError(this.handleError(`provisioningCountBySource`));
+        }
+      })
+    );
+    */
+    return this.http.post(url, payload, { observe: 'response' }).pipe(
+      catchError(error => {
+        if (error.status === 429) {
+          console.warn('Rate limited. Retrying in 1 seconds...');
+          this.sleep(1000);
+          return this.sinkByPerson(idNumber);
+        } else {
+          catchError(this.handleError(`Cant pull Person Sync data`));
+        }
+      })
+    );
+  }
 
-    return this.http
-      .post(url, payload, this.httpOptions)
-      .pipe(catchError(this.handleError(`searchEntitlements`)));
+  changeIdentitRequestStatus(
+    accessRequestID: string,
+    state: string
+  ): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v2024/access-requests/close`;
+
+    let status = 'Completed';
+    if (state === 'Incomplete') {
+      status = 'Terminated';
+    }
+    const payload = {
+      accessRequestIds: [`${accessRequestID}`],
+      message: `Admin tool requested change of current state to ${state}`,
+      exectionStatus: `${status}`,
+      completionStatus: `${state}`,
+    };
+
+    return this.http.post(url, payload);
   }
 
   /*

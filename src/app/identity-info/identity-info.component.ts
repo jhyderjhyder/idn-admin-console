@@ -247,23 +247,25 @@ export class IdentityInfoComponent implements OnInit {
   }
 
   getSyncData() {
-    this.idnService
-      .sinkByPerson(this.identityInfo.name)
-      .subscribe(searchResult => {
-        for (let i = 0; i < searchResult.length; i++) {
-          const ia = new IdentityActions();
-          const rawData = searchResult[i];
-          ia.trigger = 'SYNC';
-          ia.created = rawData.created;
-          //attributeName
-          ia.name = rawData.attributes.attributeName;
-          ia.value = rawData.attributes.attributeValue;
-          ia.op = rawData.attributes.operation;
-          ia.source = rawData.attributes.sourceName;
-          this.identityActions.push(ia);
-        }
-        this.syncData = true;
-      });
+    this.idnService.sinkByPerson(this.identityInfo.name).subscribe(response => {
+      const searchResult = response.body;
+      for (let i = 0; i < searchResult.length; i++) {
+        const ia = new IdentityActions();
+        const rawData = searchResult[i];
+        ia.trigger = 'SYNC';
+        ia.created = rawData.created;
+        //attributeName
+        ia.name = rawData.attributes.attributeName;
+        ia.value = rawData.attributes.attributeValue;
+        ia.op = rawData.attributes.operation;
+        ia.source = rawData.attributes.sourceName;
+        this.identityActions.push(ia);
+      }
+      this.syncData = true;
+      this.identityActions.sort(
+        (a, b) => new Date(b.created).getTime() - new Date(a.created).getTime()
+      );
+    });
   }
 
   getProvisionActions() {
@@ -1008,6 +1010,22 @@ export class IdentityInfoComponent implements OnInit {
     this.idnService.revokeRole(r).subscribe(data => {
       window.alert('submited:' + data);
     });
+  }
+
+  changeStatus(input, operation) {
+    const requestID = this.accessRequestStatuses[input].id;
+    this.idnService
+      .changeIdentitRequestStatus(requestID, operation)
+      .subscribe(data => {
+        window.alert(
+          'submited:' +
+            requestID +
+            '-' +
+            operation +
+            ' results:' +
+            JSON.stringify(data)
+        );
+      });
   }
 
   refreshIdentity() {
