@@ -49,9 +49,9 @@
         <td>{{i}}</td>
         <td>{{item.key}}</td>
         <td>{{item.value.syncQuery}}</td>
-         <td>{{item.value.syncFailQuery}}</td>
+        <td style="background-color: orangered;">{{item.value.syncFailQuery}}</td>
         <td>{{ item.value.provisionQuery}}</td>
-        <td>{{ item.value.provisionFailQuery}}</td>
+        <td style="background-color: orangered;">{{ item.value.provisionFailQuery}}</td>
         <td>{{item.value.tags}}</td>
       </tr>
     </tbody>
@@ -60,9 +60,9 @@
         <td>{{i}}</td>
         <td>{{item.key}}</td>
         <td>{{item.value.sync}}</td>
-        <td>{{item.value.syncFailure}}</td>
+        <td style="background-color: orangered;">{{item.value.syncFailure}}</td>
         <td>{{ item.value.provision}}</td>
-        <td>{{ item.value.provisionFail}}</td>
+        <td style="background-color: orangered;">{{ item.value.provisionFail}}</td>
         <td>{{item.value.tags}}</td>
       </tr>
     </tbody>

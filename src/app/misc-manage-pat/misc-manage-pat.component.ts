@@ -8,6 +8,7 @@ import { SimpleQueryCondition } from '../model/simple-query-condition';
 import { AngularCsv } from 'angular-csv-ext/dist/Angular-csv';
 import { AuthenticationService } from '../service/authentication-service.service';
 
+
 @Component({
   selector: 'app-misc-manage-pat',
   templateUrl: './misc-manage-pat.component.html',
@@ -146,10 +147,29 @@ export class ManagePATComponent implements OnInit {
       useHeader: true,
       nullToEmptyString: true,
     };
+    
+    var clean = [];
+    for (let each of this.pats) {
+      var noCSV = [];
+      var raw = "";
+      if (each.scope){
+        for (const item of each.scope){
+          if (raw===""){
+            raw = raw;
+          }else{
+            raw = raw + ";" + item;
+          }
+        }
+        noCSV.push(raw);
+        each.scope = noCSV;
+
+      }
+      clean.push(each);
+    }
 
     const currentUser = this.authenticationService.currentUserValue;
     const fileName = `${currentUser.tenant}-patTokens`;
 
-    new AngularCsv(this.pats, fileName, options);
+    new AngularCsv(clean, fileName, options);
   }
 }
