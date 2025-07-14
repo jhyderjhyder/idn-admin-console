@@ -30,6 +30,7 @@ export class IdentityInfoComponent implements OnInit {
   oneRequest: AccessRequestStatus;
   roleDetailsEnt: Array<EntitlementSimple>;
   roleDetailsEntCount: number;
+  roleName:String;
 
   userComment: string;
   tempRevoke: Entitlement;
@@ -911,6 +912,7 @@ export class IdentityInfoComponent implements OnInit {
   }
 
   async roleDetails(item): Promise<any> {
+    this.roleName = item.name;
     this.roleDetailsModal.show();
     this.roleDetailsEntCount = 0;
     this.roleDetailsEnt = new Array();
@@ -921,6 +923,7 @@ export class IdentityInfoComponent implements OnInit {
   }
 
   async totalRoleAccess(): Promise<any> {
+    this.roleName ="All Roles";
     this.roleDetailsEnt = new Array();
     this.roleDetailsEntCount = 0;
     this.roleDetailsModal.show();
@@ -956,6 +959,7 @@ export class IdentityInfoComponent implements OnInit {
    * making a call run in the correct order.
    */
   async orphanAccess(): Promise<any> {
+    this.roleName = "Orphan Access"
     this.roleDetailsEnt = new Array();
     this.roleDetailsEntCount = 0;
     for (const oneEnt of this.identityInfo.entitlementArray) {
@@ -1239,7 +1243,7 @@ export class IdentityInfoComponent implements OnInit {
     };
 
     const currentUser = this.authenticationService.currentUserValue;
-    const fileName = `${currentUser.tenant}-${this.identityInfo.name}-rolesDetails`;
+    const fileName = `${currentUser.tenant}-${this.identityInfo.name}-${this.roleName}-rolesDetails`;
 
     new AngularCsv(this.roleDetailsEnt, fileName, options);
   }
