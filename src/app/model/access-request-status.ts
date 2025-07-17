@@ -15,4 +15,5 @@ export class AccessRequestStatus {
   violationSize: number;
   id: string;
   raw: object;
+  workflowCaseId: string;
 }

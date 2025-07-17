@@ -659,6 +659,11 @@ export class IdentityInfoComponent implements OnInit {
         accessRequestStatus.raw = each;
         accessRequestStatus.id = each.accessRequestId;
 
+        if (each.sodViolationContext && each.sodViolationContext.violationCheckResult && each.sodViolationContext.violationCheckResult.clientMetadata){
+          accessRequestStatus.workflowCaseId = each.sodViolationContext.violationCheckResult.clientMetadata.workflowCaseId;
+        }else{
+          accessRequestStatus.workflowCaseId = "N/A"
+        }
         if (each.requesterComment && each.requesterComment.comment) {
           accessRequestStatus.requesterComment = each.requesterComment.comment;
         }
