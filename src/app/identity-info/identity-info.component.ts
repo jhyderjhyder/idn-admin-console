@@ -645,6 +645,7 @@ export class IdentityInfoComponent implements OnInit {
     const filters = '&requested-for=' + this.identityInfo.id;
     this.idnService.getAccessRequestStatus(filters).subscribe(results => {
       this.accessRequestStatuses = [];
+      var lastReq = "";
       for (const each of results) {
         const accessRequestStatus = new AccessRequestStatus();
         accessRequestStatus.accessName = each.name;
@@ -658,12 +659,22 @@ export class IdentityInfoComponent implements OnInit {
         accessRequestStatus.accessRequestPhases = each.accessRequestPhases;
         accessRequestStatus.raw = each;
         accessRequestStatus.id = each.accessRequestId;
-
+        var currentCase = "";
         if (each.sodViolationContext && each.sodViolationContext.violationCheckResult && each.sodViolationContext.violationCheckResult.clientMetadata){
-          accessRequestStatus.workflowCaseId = each.sodViolationContext.violationCheckResult.clientMetadata.workflowCaseId;
+          currentCase = each.sodViolationContext.violationCheckResult.clientMetadata.workflowCaseId;
+          if (currentCase && currentCase.length>5){
+            currentCase = currentCase.substring(0,5);
+          }
         }else{
-          accessRequestStatus.workflowCaseId = "N/A"
+          currentCase = "N/A"
         }
+        if (currentCase==lastReq){
+          accessRequestStatus.workflowCaseId = "dependent:" + currentCase;
+        }else{
+          accessRequestStatus.workflowCaseId = currentCase;
+        }
+        lastReq = currentCase;
+
         if (each.requesterComment && each.requesterComment.comment) {
           accessRequestStatus.requesterComment = each.requesterComment.comment;
         }
