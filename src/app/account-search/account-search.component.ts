@@ -52,7 +52,7 @@ export class AccountSearchComponent implements OnInit {
 Populate the dropdown of sources you
 can pick from
 */
- async getApplicationNames() {
+  async getApplicationNames() {
     const pr = new PageResults();
     pr.limit = 1;
     this.filterApplications = new Array<BasicAttributes>();
@@ -99,7 +99,6 @@ can pick from
       }
     });
   }
-  
 
   addSorted(basic: BasicAttributes) {
     this.filterApplications.push(basic);

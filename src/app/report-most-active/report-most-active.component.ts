@@ -187,7 +187,8 @@ can pick from
       n.value = headers.get('X-Total-Count');
       this.activeDetails.get(app.name).syncFailure =
         headers.get('X-Total-Count');
-      this.activeDetails.get(app.name).syncFailQuery = syncCountFailure.query.query;
+      this.activeDetails.get(app.name).syncFailQuery =
+        syncCountFailure.query.query;
       this.errorCount++;
 
       const syncData = await this.idnService.eventCount(syncCount).toPromise();

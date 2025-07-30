@@ -30,7 +30,7 @@ export class IdentityInfoComponent implements OnInit {
   oneRequest: AccessRequestStatus;
   roleDetailsEnt: Array<EntitlementSimple>;
   roleDetailsEntCount: number;
-  roleName:String;
+  roleName: String;
 
   userComment: string;
   tempRevoke: Entitlement;
@@ -645,7 +645,7 @@ export class IdentityInfoComponent implements OnInit {
     const filters = '&requested-for=' + this.identityInfo.id;
     this.idnService.getAccessRequestStatus(filters).subscribe(results => {
       this.accessRequestStatuses = [];
-      var lastReq = "";
+      let lastReq = '';
       for (const each of results) {
         const accessRequestStatus = new AccessRequestStatus();
         accessRequestStatus.accessName = each.name;
@@ -659,18 +659,24 @@ export class IdentityInfoComponent implements OnInit {
         accessRequestStatus.accessRequestPhases = each.accessRequestPhases;
         accessRequestStatus.raw = each;
         accessRequestStatus.id = each.accessRequestId;
-        var currentCase = "";
-        if (each.sodViolationContext && each.sodViolationContext.violationCheckResult && each.sodViolationContext.violationCheckResult.clientMetadata){
-          currentCase = each.sodViolationContext.violationCheckResult.clientMetadata.workflowCaseId;
-          if (currentCase && currentCase.length>5){
-            currentCase = currentCase.substring(0,5);
+        let currentCase = '';
+        if (
+          each.sodViolationContext &&
+          each.sodViolationContext.violationCheckResult &&
+          each.sodViolationContext.violationCheckResult.clientMetadata
+        ) {
+          currentCase =
+            each.sodViolationContext.violationCheckResult.clientMetadata
+              .workflowCaseId;
+          if (currentCase && currentCase.length > 5) {
+            currentCase = currentCase.substring(0, 5);
           }
-        }else{
-          currentCase = "N/A"
+        } else {
+          currentCase = 'N/A';
         }
-        if (currentCase==lastReq){
-          accessRequestStatus.workflowCaseId = "dependent:" + currentCase;
-        }else{
+        if (currentCase == lastReq) {
+          accessRequestStatus.workflowCaseId = 'dependent:' + currentCase;
+        } else {
           accessRequestStatus.workflowCaseId = currentCase;
         }
         lastReq = currentCase;
@@ -939,7 +945,7 @@ export class IdentityInfoComponent implements OnInit {
   }
 
   async totalRoleAccess(): Promise<any> {
-    this.roleName ="All Roles";
+    this.roleName = 'All Roles';
     this.roleDetailsEnt = new Array();
     this.roleDetailsEntCount = 0;
     this.roleDetailsModal.show();
@@ -975,7 +981,7 @@ export class IdentityInfoComponent implements OnInit {
    * making a call run in the correct order.
    */
   async orphanAccess(): Promise<any> {
-    this.roleName = "Orphan Access"
+    this.roleName = 'Orphan Access';
     this.roleDetailsEnt = new Array();
     this.roleDetailsEntCount = 0;
     for (const oneEnt of this.identityInfo.entitlementArray) {
