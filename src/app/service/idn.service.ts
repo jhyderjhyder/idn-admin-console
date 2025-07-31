@@ -270,6 +270,15 @@ Supported API's
       .pipe(catchError(this.handleError(`getAllIdentityProfilesv1`)));
   }
 
+  getIdentityProfilesLCS(input: String): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/identity-profiles/${input}/lifecycle-states`;
+
+    return this.http
+      .get(url, this.httpOptions)
+      .pipe(catchError(this.handleError(`getAllIdentityProfilesv1`)));
+  }
+
   searchMultipleAccounts(): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
     const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/search/aggregate`;
