@@ -137,7 +137,7 @@ export class IdentityProfileManagementComponent implements OnInit {
     if (replaceAppNames) {
       for (const each of this.filterApplications) {
         if (each.name != 'Loading') {
-          raw = raw.replace(each.value.toString(), each.name.toString());
+          raw = raw.replace(each.value.toString(), each.value.toString() + "--" + each.name.toString());
         }
       }
     }
