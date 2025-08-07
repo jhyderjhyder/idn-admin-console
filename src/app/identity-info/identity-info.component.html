@@ -962,10 +962,22 @@
                 <td class="col-1">{{item.status}}</td>
                 <td class="col-1">{{item.originalOwner.name}}</td>
                 <td *ngIf="item.currentOwner" class="col-1">{{item.currentOwner.name}}</td>
-                <td *ngIf="!item.currentOwner" class="col-1">----</td>
+                <td *ngIf="!item.currentOwner" class="col-1">      
+                  <button type="button" class="btn btn-primary btn-sm" (click)="getMembers(item.originalOwner.id)">
+                    Show Members
+                  </button>
+                </td>
             </tr>
           </tbody>
           </table>
+
+          <div *ngIf="members!=null">
+            Members
+            <ul *ngFor="let item of members;">
+              <li>{{item.email}}</li>
+            </ul>
+          </div>
+
         </div>
       </div>
 

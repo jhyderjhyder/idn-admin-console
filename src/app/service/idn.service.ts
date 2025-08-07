@@ -1836,6 +1836,27 @@ Supported API's
     );
   }
 
+  getMembership(value: string): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v2024/workgroups/${value}/members`;
+
+    const myHttpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'X-SailPoint-Experimental': 'true',
+      }),
+    };
+    return this.http.get(url, myHttpOptions).pipe(
+      catchError(error => {
+        if (error.status === 429) {
+          this.sleep(2000);
+          return this.getMembership(value);
+        } else {
+          catchError(this.handleError(`getMembership`));
+        }
+      })
+    );
+  }
   getRoleDetails(value: string): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
     const url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/roles/${value}`;
