@@ -33,6 +33,7 @@ export class IdentityProfileManagementComponent implements OnInit {
   allIdentityProfiles: any;
   lifeCycleStates: LifecycleStates[];
   rawObject: string;
+  editingLifeCycleState: LifecycleStates;
   filterApplications: Array<BasicAttributes>;
 
   zip: JSZip = new JSZip();
@@ -51,12 +52,19 @@ export class IdentityProfileManagementComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.rawObject= null;
     this.reset(true);
     this.getAllIdentityProfiles();
     if (this.filterApplications == null) {
       this.getApplicationNames();
     }
   }
+
+  clearRawObject(){
+    this.editingLifeCycleState =null;
+    this.rawObject= null;
+  }
+
 
   async getApplicationNames() {
     const pr = new PageResults();
@@ -112,6 +120,7 @@ export class IdentityProfileManagementComponent implements OnInit {
   }
 
   reset(clearMsg: boolean) {
+    this.editingLifeCycleState =null;
     this.rawObject = null;
     this.identityProfiles = null;
     this.lifeCycleStates = null;
@@ -127,6 +136,19 @@ export class IdentityProfileManagementComponent implements OnInit {
       this.errorMessage = null;
     }
   }
+  
+  saveEditedJson(){
+    this.editingLifeCycleState.raw = this.rawObject;
+    this.idnService.updateLifcycleState(this.editingLifeCycleState).subscribe({
+     
+    });
+  }
+
+  editJson(input: LifecycleStates) {
+      this.editingLifeCycleState = input;
+      this.rawObject = JSON.stringify(input.raw, null, 5);
+      this.editingLifeCycleState = input;
+    }
 
   viewJson(input: LifecycleStates, replaceAppNames: boolean) {
     const options: JsonFormatOptions = new JsonFormatOptions();

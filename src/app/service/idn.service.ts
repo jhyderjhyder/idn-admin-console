@@ -15,7 +15,7 @@ import { AuthenticationService } from '../service/authentication-service.service
 import { Role } from '../model/role';
 import { AccessProfile } from '../model/accessprofile';
 import { PAT } from '../model/pat';
-import { IdentityProfile } from '../model/identity-profile';
+import { IdentityProfile, LifecycleStates } from '../model/identity-profile';
 import { IdentityAttribute } from '../model/identity-attribute';
 import { Transform } from '../model/transform';
 import { PageResults } from '../model/page-results';
@@ -2010,6 +2010,12 @@ Supported API's
     const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/identity-profiles/${profileId}`;
 
     return this.http.get(url, this.httpOptions);
+  }
+    updateLifcycleState(ls: LifecycleStates): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/identity-profiles/${ls.profileId}/lifecycle-states/${ls.id}`;
+
+    return this.http.post(url, ls.raw, this.httpOptions);
   }
 
   getIdentityProfileLCS(profileId: string): Observable<any> {

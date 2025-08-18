@@ -38,7 +38,18 @@
       Submit
     </button>
   </div>
+    <div class="col-sm-2 text-end" *ngIf="rawObject">
+    <button type="button" (click)="clearRawObject()" class="btn btn-primary btn-sm">
+      Clear
+    </button>
+  </div>
 </div>
+
+    <div class="col-sm-2 text-end" *ngIf="rawObject">
+    <button type="button" (click)="saveEditedJson()" class="btn btn-primary btn-sm">
+      Save Changes
+    </button>
+  </div>
 
   <div class="row" *ngIf="rawObject" >
     <div class="col-sm-12">
@@ -71,6 +82,7 @@
             <div class="dropdown-divider">View</div>
             <a class="dropdown-item" (click)="viewJson(state, false)">View</a>
             <a class="dropdown-item" (click)="viewJson(state, true)">View AppNames</a>
+            <a class="dropdown-item" (click)="editJson(state)">Edit</a>
           </div>
       </td>
   </tr>
