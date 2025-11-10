@@ -7,6 +7,7 @@ import { PageResults } from '../model/page-results';
 import { BasicAttributes } from '../model/basic-attributes';
 import { AccountOnly } from '../model/AccountOnly';
 import { IdentityAttribute } from '../model/identity-attribute';
+import { AngularCsv } from 'angular-csv-ext/dist/Angular-csv';
 
 @Component({
   selector: 'app-account-search',
@@ -40,7 +41,7 @@ export class AccountSearchComponent implements OnInit {
       this.getApplicationNames();
     }
     this.page = new PageResults();
-    this.page.limit = 50;
+    this.page.limit = 250;
     this.details = null;
     this.rawObject = null;
     this.identityList = null;
@@ -75,7 +76,7 @@ can pick from
       } else {
         console.log('loading applications');
         let max = 0;
-        pr.limit = 50;
+        pr.limit = 250;
 
         await new Promise(resolve => {
           while (pr.totalPages >= max && max < 100) {
@@ -222,4 +223,29 @@ Loads the dropdown for filter types
         this.loading = false;
       });
   }
+   download() {
+      const options = {
+        fieldSeparator: ',',
+        quoteStrings: '"',
+        decimalseparator: '.',
+        showLabels: true,
+        useHeader: true,
+        nullToEmptyString: true,
+        headers: [
+        'nativeIdentity',
+        'name',
+        'systemAccount',
+        'uncorrelated',
+        'disabled',
+        'locked',
+        'manuallyCorrelated',
+        'sourceId'
+      ],
+      };
+  
+      const fileName = `accountList`;
+   
+  
+      new AngularCsv(this.identityList, fileName, options);
+    }
 }

@@ -65,6 +65,7 @@ import { WorkflowsComponent } from './workflows/workflows.component';
 import { ReportFailuresSourceComponent } from './report-failures-source/report-failures-source.component';
 import { ReportAttributesyncEventsComponent } from './report-attributesync-events/report-attributesync-events.component';
 import { ReportMostActiveComponent } from './report-most-active/report-most-active.component';
+import { ReportApprovalHistoryComponent } from './report-approval-history/report-approval-history.component';
 
 @NgModule({
   declarations: [
@@ -117,6 +118,7 @@ import { ReportMostActiveComponent } from './report-most-active/report-most-acti
     ReportFailuresSourceComponent,
     ReportAttributesyncEventsComponent,
     ReportMostActiveComponent,
+    ReportApprovalHistoryComponent,
   ],
   imports: [
     BrowserModule,

@@ -50,9 +50,15 @@ import { FastTagComponent } from './fast-tag/fast-tag.component';
 import { WorkflowsComponent } from './workflows/workflows.component';
 import { ReportAttributesyncEventsComponent } from './report-attributesync-events/report-attributesync-events.component';
 import { ReportMostActiveComponent } from './report-most-active/report-most-active.component';
+import { ReportApprovalHistoryComponent } from './report-approval-history/report-approval-history.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/identity-info', pathMatch: 'full' },
+    {
+    path: 'report-approval-history',
+    component: ReportApprovalHistoryComponent,
+    canActivate: [AuthGuard],
+  },
   {
     path: 'multiple-accounts-report',
     component: MultipleAccountsComponent,

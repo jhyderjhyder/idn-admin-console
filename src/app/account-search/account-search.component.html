@@ -30,6 +30,12 @@
               Reset
             </button>
           </div>
+          <div *ngIf="!loading && !rawObject && identityList" class="col-sm-2 text-start">
+            <button type="button" [disabled]="loading" (click)="download()" class="btn btn-primary btn-sm">
+              Download
+            </button>
+          </div>
+          
     </div>
     <div class="row">
         <div class="col-sm-2">Source Id#</div>
