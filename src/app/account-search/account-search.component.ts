@@ -232,6 +232,7 @@ Loads the dropdown for filter types
         useHeader: true,
         nullToEmptyString: true,
         headers: [
+        'sourceName',
         'nativeIdentity',
         'name',
         'systemAccount',
