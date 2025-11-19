@@ -166,7 +166,7 @@ can pick from
       ],
     };
 
-    const fileName = `mostActiveToday`;
+    const fileName = `activeAccountsInactiveIdentities`;
 
     const download = [];
     for (const key of this.activeDetails.keys()) {
