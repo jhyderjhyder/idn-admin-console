@@ -162,11 +162,7 @@ can pick from
       nullToEmptyString: true,
       headers: [
         'appName',
-        'sync',
-        'syncFailure',
-        'provision',
-        'provisionFail',
-        'tags',
+        'provision'
       ],
     };
 
