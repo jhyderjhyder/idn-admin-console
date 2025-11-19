@@ -110,6 +110,11 @@ export const reports = [
     null
   ),
   new MenuLink('/report-most-active', 'Total Activity By Source', null),
+  new MenuLink(
+    '/report-inactive-identity-with-active-accounts',
+    'Inactive Identity with Active Accounts',
+    null
+  ),
   new MenuLink('/report-task-status', 'Task History', null),
   new MenuLink('/report-approval-history', 'Approval History Details', null),
   new MenuLink(null, null, true),

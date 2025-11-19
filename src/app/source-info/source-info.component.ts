@@ -171,10 +171,10 @@ export class SourceInfoComponent implements OnInit {
 
           source.type = each.type;
           //For Saas Connectors
-            if (each.connectorClass===""){
-              source.type = each.connector;
-            }
-          
+          if (each.connectorClass === '') {
+            source.type = each.connector;
+          }
+
           source.authoritative = each.authoritative;
 
           if (source.authoritative) {

@@ -2011,7 +2011,7 @@ Supported API's
 
     return this.http.get(url, this.httpOptions);
   }
-    updateLifcycleState(ls: LifecycleStates): Observable<any> {
+  updateLifcycleState(ls: LifecycleStates): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
     const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/identity-profiles/${ls.profileId}/lifecycle-states/${ls.id}`;
 

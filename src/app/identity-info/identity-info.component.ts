@@ -40,7 +40,7 @@ export class IdentityInfoComponent implements OnInit {
   errorMessage: string;
   invalidMessage: string[];
   validToSubmit: boolean;
-  members:[];
+  members: [];
 
   rawActivities: string;
   rawWorkItem: string;
@@ -82,7 +82,6 @@ export class IdentityInfoComponent implements OnInit {
   ) {}
 
   @ViewChild('revokeRequest', { static: false })
-
   revokeRequest: ModalDirective;
 
   @ViewChild('roleDetailsModal', { static: false })
@@ -185,7 +184,7 @@ export class IdentityInfoComponent implements OnInit {
   }
 
   pickData(input) {
-    this.members =null;
+    this.members = null;
     this.oneRequest = null;
     this.oneRequest = this.accessRequestStatuses[input];
     this.accessRequestDetails.show();
@@ -249,11 +248,11 @@ export class IdentityInfoComponent implements OnInit {
     this.rawActivities = null;
     this.rawWorkItem = null;
   }
-  getMembers(input){
-     this.idnService.getMembership(input).subscribe(response => {
+  getMembers(input) {
+    this.idnService.getMembership(input).subscribe(response => {
       this.members = response;
       console.log(this.members);
-     });
+    });
   }
 
   getSyncData() {

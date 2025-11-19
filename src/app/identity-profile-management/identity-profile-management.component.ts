@@ -52,7 +52,7 @@ export class IdentityProfileManagementComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.rawObject= null;
+    this.rawObject = null;
     this.reset(true);
     this.getAllIdentityProfiles();
     if (this.filterApplications == null) {
@@ -60,11 +60,10 @@ export class IdentityProfileManagementComponent implements OnInit {
     }
   }
 
-  clearRawObject(){
-    this.editingLifeCycleState =null;
-    this.rawObject= null;
+  clearRawObject() {
+    this.editingLifeCycleState = null;
+    this.rawObject = null;
   }
-
 
   async getApplicationNames() {
     const pr = new PageResults();
@@ -120,7 +119,7 @@ export class IdentityProfileManagementComponent implements OnInit {
   }
 
   reset(clearMsg: boolean) {
-    this.editingLifeCycleState =null;
+    this.editingLifeCycleState = null;
     this.rawObject = null;
     this.identityProfiles = null;
     this.lifeCycleStates = null;
@@ -136,19 +135,19 @@ export class IdentityProfileManagementComponent implements OnInit {
       this.errorMessage = null;
     }
   }
-  
-  saveEditedJson(){
+
+  saveEditedJson() {
     this.editingLifeCycleState.raw = this.rawObject;
-    this.idnService.updateLifcycleState(this.editingLifeCycleState).subscribe({
-     
-    });
+    this.idnService
+      .updateLifcycleState(this.editingLifeCycleState)
+      .subscribe({});
   }
 
   editJson(input: LifecycleStates) {
-      this.editingLifeCycleState = input;
-      this.rawObject = JSON.stringify(input.raw, null, 5);
-      this.editingLifeCycleState = input;
-    }
+    this.editingLifeCycleState = input;
+    this.rawObject = JSON.stringify(input.raw, null, 5);
+    this.editingLifeCycleState = input;
+  }
 
   viewJson(input: LifecycleStates, replaceAppNames: boolean) {
     const options: JsonFormatOptions = new JsonFormatOptions();
@@ -159,7 +158,10 @@ export class IdentityProfileManagementComponent implements OnInit {
     if (replaceAppNames) {
       for (const each of this.filterApplications) {
         if (each.name != 'Loading') {
-          raw = raw.replace(each.value.toString(), each.value.toString() + "--" + each.name.toString());
+          raw = raw.replace(
+            each.value.toString(),
+            each.value.toString() + '--' + each.name.toString()
+          );
         }
       }
     }

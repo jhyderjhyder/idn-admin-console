@@ -51,10 +51,11 @@ import { WorkflowsComponent } from './workflows/workflows.component';
 import { ReportAttributesyncEventsComponent } from './report-attributesync-events/report-attributesync-events.component';
 import { ReportMostActiveComponent } from './report-most-active/report-most-active.component';
 import { ReportApprovalHistoryComponent } from './report-approval-history/report-approval-history.component';
+import { ReportInactiveIdentityWithActiveAccountsComponent } from './report-inactive-identity-with-active-accounts/report-inactive-identity-with-active-accounts.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/identity-info', pathMatch: 'full' },
-    {
+  {
     path: 'report-approval-history',
     component: ReportApprovalHistoryComponent,
     canActivate: [AuthGuard],
@@ -278,6 +279,11 @@ const routes: Routes = [
   {
     path: 'report-most-active',
     component: ReportMostActiveComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'report-inactive-identity-with-active-accounts',
+    component: ReportInactiveIdentityWithActiveAccountsComponent,
     canActivate: [AuthGuard],
   },
   { path: 'login', component: LoginComponent },

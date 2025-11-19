@@ -223,15 +223,15 @@ Loads the dropdown for filter types
         this.loading = false;
       });
   }
-   download() {
-      const options = {
-        fieldSeparator: ',',
-        quoteStrings: '"',
-        decimalseparator: '.',
-        showLabels: true,
-        useHeader: true,
-        nullToEmptyString: true,
-        headers: [
+  download() {
+    const options = {
+      fieldSeparator: ',',
+      quoteStrings: '"',
+      decimalseparator: '.',
+      showLabels: true,
+      useHeader: true,
+      nullToEmptyString: true,
+      headers: [
         'sourceName',
         'nativeIdentity',
         'name',
@@ -240,13 +240,12 @@ Loads the dropdown for filter types
         'disabled',
         'locked',
         'manuallyCorrelated',
-        'sourceId'
+        'sourceId',
       ],
-      };
-  
-      const fileName = `accountList`;
-   
-  
-      new AngularCsv(this.identityList, fileName, options);
-    }
+    };
+
+    const fileName = `accountList`;
+
+    new AngularCsv(this.identityList, fileName, options);
+  }
 }

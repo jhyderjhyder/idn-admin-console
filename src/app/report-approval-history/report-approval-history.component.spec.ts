@@ -8,9 +8,8 @@ describe('ReportApprovalHistoryComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [ ReportApprovalHistoryComponent ]
-    })
-    .compileComponents();
+      declarations: [ReportApprovalHistoryComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(ReportApprovalHistoryComponent);
     component = fixture.componentInstance;
