@@ -160,10 +160,7 @@ can pick from
       showLabels: true,
       useHeader: true,
       nullToEmptyString: true,
-      headers: [
-        'appName',
-        'provision'
-      ],
+      headers: ['appName', 'provision'],
     };
 
     const fileName = `activeAccountsInactiveIdentities`;

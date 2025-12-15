@@ -64,51 +64,53 @@ export class ResetSourceComponent implements OnInit {
 
   search() {
     this.loading = true;
-    this.idnService.getAllSourcesPaged(new PageResults(), this.searchText).subscribe(response => {
-      const allSources = response.body;
-      this.sources = [];
+    this.idnService
+      .getAllSourcesPaged(new PageResults(), this.searchText)
+      .subscribe(response => {
+        const allSources = response.body;
+        this.sources = [];
 
-      this.sourceCount = allSources.length;
+        this.sourceCount = allSources.length;
 
-      //Sort it alphabetically
-      //allSources.sort((a, b) => a.name.localeCompare(b.name));
+        //Sort it alphabetically
+        //allSources.sort((a, b) => a.name.localeCompare(b.name));
 
-      let index = 0;
-      for (const each of allSources) {
-        if (index > 0 && index % 10 == 0) {
-          // After processing every batch (10 sources), wait for 1 second before calling another API to avoid 429
-          // Too Many Requests Error
-          //await this.sleep(1000);
+        let index = 0;
+        for (const each of allSources) {
+          if (index > 0 && index % 10 == 0) {
+            // After processing every batch (10 sources), wait for 1 second before calling another API to avoid 429
+            // Too Many Requests Error
+            //await this.sleep(1000);
+          }
+          index++;
+
+          const source = new Source();
+          source.id = each.id;
+          source.cloudExternalID = each.id;
+          source.name = each.name;
+          source.description = each.description;
+          source.type = each.type;
+
+          this.idnService
+            .countApplicationAccounts(source.cloudExternalID, false)
+            .subscribe(response => {
+              const headers = response.headers;
+              source.accountsCount = headers.get('X-Total-Count');
+              //source.entitlementsCount = searchResult.entitlementsCount;
+            });
+
+          this.idnService
+            .countEntitlements(source.cloudExternalID)
+            .subscribe(response => {
+              const headers = response.headers;
+              source.entitlementsCount = headers.get('X-Total-Count');
+            });
+
+          this.sources.push(source);
+          this.loadedCount = this.sources.length;
         }
-        index++;
-
-        const source = new Source();
-        source.id = each.id;
-        source.cloudExternalID = each.id;
-        source.name = each.name;
-        source.description = each.description;
-        source.type = each.type;
-
-        this.idnService
-          .countApplicationAccounts(source.cloudExternalID, false)
-          .subscribe(response => {
-            const headers = response.headers;
-            source.accountsCount = headers.get('X-Total-Count');
-            //source.entitlementsCount = searchResult.entitlementsCount;
-          });
-
-        this.idnService
-          .countEntitlements(source.cloudExternalID)
-          .subscribe(response => {
-            const headers = response.headers;
-            source.entitlementsCount = headers.get('X-Total-Count');
-          });
-
-        this.sources.push(source);
-        this.loadedCount = this.sources.length;
-      }
-      this.loading = false;
-    });
+        this.loading = false;
+      });
   }
 
   sleep(ms) {
