@@ -147,9 +147,27 @@ export class ManagePATComponent implements OnInit {
       nullToEmptyString: true,
     };
 
+    const clean = [];
+    for (const each of this.pats) {
+      const noCSV = [];
+      let raw = '';
+      if (each.scope) {
+        for (const item of each.scope) {
+          if (raw === '') {
+            raw = raw;
+          } else {
+            raw = raw + ';' + item;
+          }
+        }
+        noCSV.push(raw);
+        each.scope = noCSV;
+      }
+      clean.push(each);
+    }
+
     const currentUser = this.authenticationService.currentUserValue;
     const fileName = `${currentUser.tenant}-patTokens`;
 
-    new AngularCsv(this.pats, fileName, options);
+    new AngularCsv(clean, fileName, options);
   }
 }

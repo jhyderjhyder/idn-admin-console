@@ -30,6 +30,7 @@ export class IdentityInfoComponent implements OnInit {
   oneRequest: AccessRequestStatus;
   roleDetailsEnt: Array<EntitlementSimple>;
   roleDetailsEntCount: number;
+  roleName: String;
 
   userComment: string;
   tempRevoke: Entitlement;
@@ -39,6 +40,7 @@ export class IdentityInfoComponent implements OnInit {
   errorMessage: string;
   invalidMessage: string[];
   validToSubmit: boolean;
+  members: [];
 
   rawActivities: string;
   rawWorkItem: string;
@@ -182,6 +184,7 @@ export class IdentityInfoComponent implements OnInit {
   }
 
   pickData(input) {
+    this.members = null;
     this.oneRequest = null;
     this.oneRequest = this.accessRequestStatuses[input];
     this.accessRequestDetails.show();
@@ -244,6 +247,12 @@ export class IdentityInfoComponent implements OnInit {
   clearProvisionDetails() {
     this.rawActivities = null;
     this.rawWorkItem = null;
+  }
+  getMembers(input) {
+    this.idnService.getMembership(input).subscribe(response => {
+      this.members = response;
+      console.log(this.members);
+    });
   }
 
   getSyncData() {
@@ -644,6 +653,7 @@ export class IdentityInfoComponent implements OnInit {
     const filters = '&requested-for=' + this.identityInfo.id;
     this.idnService.getAccessRequestStatus(filters).subscribe(results => {
       this.accessRequestStatuses = [];
+      let lastReq = '';
       for (const each of results) {
         const accessRequestStatus = new AccessRequestStatus();
         accessRequestStatus.accessName = each.name;
@@ -657,6 +667,27 @@ export class IdentityInfoComponent implements OnInit {
         accessRequestStatus.accessRequestPhases = each.accessRequestPhases;
         accessRequestStatus.raw = each;
         accessRequestStatus.id = each.accessRequestId;
+        let currentCase = '';
+        if (
+          each.sodViolationContext &&
+          each.sodViolationContext.violationCheckResult &&
+          each.sodViolationContext.violationCheckResult.clientMetadata
+        ) {
+          currentCase =
+            each.sodViolationContext.violationCheckResult.clientMetadata
+              .workflowCaseId;
+          if (currentCase && currentCase.length > 5) {
+            currentCase = currentCase.substring(0, 5);
+          }
+        } else {
+          currentCase = 'N/A';
+        }
+        if (currentCase == lastReq) {
+          accessRequestStatus.workflowCaseId = 'dependent:' + currentCase;
+        } else {
+          accessRequestStatus.workflowCaseId = currentCase;
+        }
+        lastReq = currentCase;
 
         if (each.requesterComment && each.requesterComment.comment) {
           accessRequestStatus.requesterComment = each.requesterComment.comment;
@@ -911,6 +942,7 @@ export class IdentityInfoComponent implements OnInit {
   }
 
   async roleDetails(item): Promise<any> {
+    this.roleName = item.name;
     this.roleDetailsModal.show();
     this.roleDetailsEntCount = 0;
     this.roleDetailsEnt = new Array();
@@ -921,6 +953,7 @@ export class IdentityInfoComponent implements OnInit {
   }
 
   async totalRoleAccess(): Promise<any> {
+    this.roleName = 'All Roles';
     this.roleDetailsEnt = new Array();
     this.roleDetailsEntCount = 0;
     this.roleDetailsModal.show();
@@ -956,6 +989,7 @@ export class IdentityInfoComponent implements OnInit {
    * making a call run in the correct order.
    */
   async orphanAccess(): Promise<any> {
+    this.roleName = 'Orphan Access';
     this.roleDetailsEnt = new Array();
     this.roleDetailsEntCount = 0;
     for (const oneEnt of this.identityInfo.entitlementArray) {
@@ -1239,7 +1273,7 @@ export class IdentityInfoComponent implements OnInit {
     };
 
     const currentUser = this.authenticationService.currentUserValue;
-    const fileName = `${currentUser.tenant}-${this.identityInfo.name}-rolesDetails`;
+    const fileName = `${currentUser.tenant}-${this.identityInfo.name}-${this.roleName}-rolesDetails`;
 
     new AngularCsv(this.roleDetailsEnt, fileName, options);
   }

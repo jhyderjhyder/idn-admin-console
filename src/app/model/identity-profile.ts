@@ -15,3 +15,18 @@ export class IdentityProfile {
   lcsId: string;
   lcsIdentityCount: string;
 }
+export class LifecycleStates {
+  id: string;
+  enabled: boolean;
+  technicalName: string;
+  identityCount: number;
+  identityState: string;
+  action: string;
+  sourceIds: [];
+  sourceIdsCount;
+  excludeSourceIds: [];
+  allSources: boolean;
+
+  raw: any;
+  profileId: string;
+}

@@ -8,10 +8,12 @@ import { AngularCsv } from 'angular-csv-ext/dist/Angular-csv';
 
 @Component({
   selector: 'app-report-most-active',
-  templateUrl: './report-most-active.component.html',
-  styleUrls: ['./report-most-active.component.css'],
+  templateUrl: './report-inactive-identity-with-active-accounts.component.html',
+  styleUrls: ['./report-inactive-identity-with-active-accounts.component.css'],
 })
-export class ReportMostActiveComponent implements OnInit {
+export class ReportInactiveIdentityWithActiveAccountsComponent
+  implements OnInit
+{
   filterApplications: Array<BasicAttributes>;
   filterBasic: Array<BasicAttributes>;
   loading: boolean;
@@ -123,17 +125,17 @@ can pick from
       const app = this.filterApplications[a];
       const totalProvisioning = {
         query: {
-          query: `type:provisioning AND created:[now-24h TO now] AND attributes.cloudAppName.exact:"${app.name}" AND NOT attributes.interface:"Attribute Sync"`,
+          query: `!attributes.cloudLifecycleState:\"Active\" AND @accounts(source.name.exact:\"${app.name}\" AND disabled:false)`,
         },
-        indices: ['events'],
+        indices: ['identities'],
       };
 
       const tpData = await this.idnService
         .eventCount(totalProvisioning)
         .toPromise();
       console.log(app.value + ':' + tpData.length);
-      let headers = tpData.headers;
-      let n = new AccessRequestAuditAccountFull();
+      const headers = tpData.headers;
+      const n = new AccessRequestAuditAccountFull();
       n.pk = app.name;
       console.log(app.name);
       n.value = headers.get('X-Total-Count');
@@ -144,71 +146,6 @@ can pick from
       this.errorCount++;
       console.log(a + 'Seq:' + tpData);
 
-      //Failed Provisioning provisioningCountBySourceFailures
-      const failed = {
-        query: {
-          query: `type:provisioning AND created:[now-24h TO now] AND attributes.cloudAppName.exact:"${app.name}" AND NOT attributes.interface:"Attribute Sync" AND _exists_:attributes.errors`,
-        },
-        indices: ['events'],
-      };
-      const faildData = await this.idnService.eventCount(failed).toPromise();
-      console.log(app.value + ':' + faildData.length);
-      headers = faildData.headers;
-      n = new AccessRequestAuditAccountFull();
-      n.pk = app.name;
-      console.log(app.name);
-      n.value = headers.get('X-Total-Count');
-      this.activeDetails.get(app.name).provisionFail =
-        headers.get('X-Total-Count');
-      this.activeDetails.get(app.name).provisionFailQuery = failed.query.query;
-      this.errorCount++;
-
-      const syncCount = {
-        query: {
-          query: `attributes.interface.exact:/Attribute Syn.+/ AND (attributes.sourceName.exact:"${app.name}") AND created:[now-24h TO now]`,
-        },
-        indices: ['events'],
-      };
-      const syncCountFailure = {
-        query: {
-          query: `attributes.interface.exact:/Attribute Syn.+/ AND (attributes.sourceName.exact:"${app.name}") AND created:[now-24h TO now]  AND _exists_:attributes.errors`,
-        },
-        indices: ['events'],
-      };
-
-      const syncDataFailure = await this.idnService
-        .eventCount(syncCountFailure)
-        .toPromise();
-      console.log(app.value + ':' + syncDataFailure.length);
-      headers = syncDataFailure.headers;
-      n = new AccessRequestAuditAccountFull();
-      n.pk = app.name;
-      console.log(app.name);
-      n.value = headers.get('X-Total-Count');
-      this.activeDetails.get(app.name).syncFailure =
-        headers.get('X-Total-Count');
-      this.activeDetails.get(app.name).syncFailQuery =
-        syncCountFailure.query.query;
-      this.errorCount++;
-
-      const syncData = await this.idnService.eventCount(syncCount).toPromise();
-      console.log(app.value + ':' + syncData.length);
-      headers = syncData.headers;
-      n = new AccessRequestAuditAccountFull();
-      n.pk = app.name;
-      console.log(app.name);
-      n.value = headers.get('X-Total-Count');
-      this.activeDetails.get(app.name).sync = headers.get('X-Total-Count');
-      this.activeDetails.get(app.name).syncQuery = syncCount.query.query;
-      this.errorCount++;
-
-      this.idnService.getTags('SOURCE', app.value).subscribe(myTag => {
-        if (myTag != null) {
-          this.activeDetails.get(app.name).tags = myTag.tags;
-        } else {
-          this.activeDetails.get(app.name).tags = 'none';
-        }
-      });
       //this.auditDetails.push(n);
 
       this.loading = false;
@@ -223,17 +160,10 @@ can pick from
       showLabels: true,
       useHeader: true,
       nullToEmptyString: true,
-      headers: [
-        'appName',
-        'sync',
-        'syncFailure',
-        'provision',
-        'provisionFail',
-        'tags',
-      ],
+      headers: ['appName', 'provision'],
     };
 
-    const fileName = `mostActiveToday`;
+    const fileName = `activeAccountsInactiveIdentities`;
 
     const download = [];
     for (const key of this.activeDetails.keys()) {

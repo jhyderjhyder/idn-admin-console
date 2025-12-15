@@ -7,6 +7,7 @@ import { PageResults } from '../model/page-results';
 import { BasicAttributes } from '../model/basic-attributes';
 import { AccountOnly } from '../model/AccountOnly';
 import { IdentityAttribute } from '../model/identity-attribute';
+import { AngularCsv } from 'angular-csv-ext/dist/Angular-csv';
 
 @Component({
   selector: 'app-account-search',
@@ -40,7 +41,7 @@ export class AccountSearchComponent implements OnInit {
       this.getApplicationNames();
     }
     this.page = new PageResults();
-    this.page.limit = 50;
+    this.page.limit = 250;
     this.details = null;
     this.rawObject = null;
     this.identityList = null;
@@ -52,33 +53,52 @@ export class AccountSearchComponent implements OnInit {
 Populate the dropdown of sources you
 can pick from
 */
-  getApplicationNames() {
+  async getApplicationNames() {
     const pr = new PageResults();
-    pr.limit = 50;
+    pr.limit = 1;
     this.filterApplications = new Array<BasicAttributes>();
     const all = new BasicAttributes();
     all.name = 'ALL';
     all.value = '';
     this.filterApplications.push(all);
-    this.idnService.getAllSourcesPaged(pr, null).subscribe(response => {
+    this.idnService.getAllSourcesPaged(pr, null).subscribe(async response => {
       const headers = response.headers;
       pr.xTotalCount = headers.get('X-Total-Count');
+
+      if (localStorage.getItem('applicationLookup') != null) {
+        this.filterApplications = JSON.parse(
+          localStorage.getItem('applicationLookup')
+        );
+      }
+      console.log(this.filterApplications.length + ':' + pr.xTotalCount);
+      if (this.filterApplications.length >= pr.xTotalCount) {
+        console.log('No reload required lets rock');
+      } else {
+        console.log('loading applications');
+        let max = 0;
+        pr.limit = 250;
+
+        await new Promise(resolve => {
+          while (pr.totalPages >= max && max < 100) {
+            console.log('Start while:' + max);
+            this.idnService.getAllSourcesPaged(pr, null).subscribe(response => {
+              const searchResult = response.body;
+              for (let i = 0; i < searchResult.length; i++) {
+                const app = searchResult[i];
+                const basic = new BasicAttributes();
+                basic.name = app['name'];
+                basic.value = app['id'];
+                this.addSorted(basic);
+              }
+            });
+
+            max++;
+            pr.nextPage;
+            resolve;
+          }
+        });
+      }
     });
-    let max = 1;
-    while (pr.hasMorePages && max < 10) {
-      max++;
-      this.idnService.getAllSourcesPaged(pr, null).subscribe(response => {
-        const searchResult = response.body;
-        for (let i = 0; i < searchResult.length; i++) {
-          const app = searchResult[i];
-          const basic = new BasicAttributes();
-          basic.name = app['name'];
-          basic.value = app['id'];
-          this.addSorted(basic);
-        }
-      });
-      pr.nextPage;
-    }
   }
 
   addSorted(basic: BasicAttributes) {
@@ -202,5 +222,30 @@ Loads the dropdown for filter types
         //console.table(this.identityList);
         this.loading = false;
       });
+  }
+  download() {
+    const options = {
+      fieldSeparator: ',',
+      quoteStrings: '"',
+      decimalseparator: '.',
+      showLabels: true,
+      useHeader: true,
+      nullToEmptyString: true,
+      headers: [
+        'sourceName',
+        'nativeIdentity',
+        'name',
+        'systemAccount',
+        'uncorrelated',
+        'disabled',
+        'locked',
+        'manuallyCorrelated',
+        'sourceId',
+      ],
+    };
+
+    const fileName = `accountList`;
+
+    new AngularCsv(this.identityList, fileName, options);
   }
 }

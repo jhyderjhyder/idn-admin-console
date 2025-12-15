@@ -4,9 +4,13 @@ import { ModalDirective } from 'ngx-bootstrap/modal';
 import { IDNService } from '../service/idn.service';
 import { MessageService } from '../service/message.service';
 import { AuthenticationService } from '../service/authentication-service.service';
-import { IdentityProfile } from '../model/identity-profile';
+import { IdentityProfile, LifecycleStates } from '../model/identity-profile';
 import * as JSZip from 'jszip';
 import { saveAs } from 'file-saver';
+import { JsonFormatOptions } from '../model/json-format-options';
+import { prettyPrintJson } from 'pretty-print-json';
+import { BasicAttributes } from '../model/basic-attributes';
+import { PageResults } from '../model/page-results';
 
 const RoleDescriptionMaxLength = 50;
 
@@ -27,6 +31,10 @@ export class IdentityProfileManagementComponent implements OnInit {
   validToSubmit: boolean;
   profileToRefresh: string;
   allIdentityProfiles: any;
+  lifeCycleStates: LifecycleStates[];
+  rawObject: string;
+  editingLifeCycleState: LifecycleStates;
+  filterApplications: Array<BasicAttributes>;
 
   zip: JSZip = new JSZip();
 
@@ -44,12 +52,77 @@ export class IdentityProfileManagementComponent implements OnInit {
   ) {}
 
   ngOnInit() {
+    this.rawObject = null;
     this.reset(true);
     this.getAllIdentityProfiles();
+    if (this.filterApplications == null) {
+      this.getApplicationNames();
+    }
+  }
+
+  clearRawObject() {
+    this.editingLifeCycleState = null;
+    this.rawObject = null;
+  }
+
+  async getApplicationNames() {
+    const pr = new PageResults();
+    pr.limit = 1;
+    this.filterApplications = new Array<BasicAttributes>();
+    const all = new BasicAttributes();
+    all.name = 'Loading';
+    all.value = '';
+    this.filterApplications.push(all);
+    this.idnService.getAllSourcesPaged(pr, null).subscribe(async response => {
+      const headers = response.headers;
+      pr.xTotalCount = headers.get('X-Total-Count');
+
+      if (localStorage.getItem('applicationLookup') != null) {
+        this.filterApplications = JSON.parse(
+          localStorage.getItem('applicationLookup')
+        );
+      }
+      console.log(this.filterApplications.length + ':' + pr.xTotalCount);
+      if (this.filterApplications.length >= pr.xTotalCount) {
+        console.log('No reload required lets rock');
+      } else {
+        console.log('loading applications');
+        let max = 0;
+        pr.limit = 50;
+
+        await new Promise(resolve => {
+          while (pr.totalPages >= max && max < 100) {
+            console.log('Start while:' + max);
+            this.idnService.getAllSourcesPaged(pr, null).subscribe(response => {
+              const searchResult = response.body;
+              for (let i = 0; i < searchResult.length; i++) {
+                const app = searchResult[i];
+                const basic = new BasicAttributes();
+                basic.name = app['name'];
+                basic.value = app['id'];
+                this.addSorted(basic);
+              }
+            });
+
+            max++;
+            pr.nextPage;
+            resolve;
+          }
+        });
+      }
+    });
+  }
+
+  addSorted(basic: BasicAttributes) {
+    this.filterApplications.push(basic);
+    this.filterApplications.sort((a, b) => a.name.localeCompare(b.name));
   }
 
   reset(clearMsg: boolean) {
+    this.editingLifeCycleState = null;
+    this.rawObject = null;
     this.identityProfiles = null;
+    this.lifeCycleStates = null;
     this.selectAll = false;
     this.newPriorityAll = null;
     this.searchText = null;
@@ -61,6 +134,44 @@ export class IdentityProfileManagementComponent implements OnInit {
       this.messageService.clearAll();
       this.errorMessage = null;
     }
+  }
+
+  saveEditedJson() {
+    this.editingLifeCycleState.raw = this.rawObject;
+    this.idnService
+      .updateLifcycleState(this.editingLifeCycleState)
+      .subscribe({});
+  }
+
+  editJson(input: LifecycleStates) {
+    this.editingLifeCycleState = input;
+    this.rawObject = JSON.stringify(input.raw, null, 5);
+    this.editingLifeCycleState = input;
+  }
+
+  viewJson(input: LifecycleStates, replaceAppNames: boolean) {
+    const options: JsonFormatOptions = new JsonFormatOptions();
+    options.lineNumbers = false;
+    options.quoteKeys = true;
+    let raw = JSON.stringify(input.raw, null, 5);
+
+    if (replaceAppNames) {
+      for (const each of this.filterApplications) {
+        if (each.name != 'Loading') {
+          raw = raw.replace(
+            each.value.toString(),
+            each.value.toString() + '--' + each.name.toString()
+          );
+        }
+      }
+    }
+    //raw = raw.replace("Loading","");
+    raw = JSON.parse(raw);
+
+    //https://github.com/center-key/pretty-print-json
+    const html = prettyPrintJson.toHtml(raw, options);
+    const elem = document.getElementById('jsonRaw');
+    elem.innerHTML = html;
   }
 
   getAllIdentityProfiles() {
@@ -106,6 +217,36 @@ export class IdentityProfileManagementComponent implements OnInit {
         }
 
         this.identityProfiles.push(identityProfile);
+      }
+      this.loading = false;
+    });
+  }
+
+  getLCM(input) {
+    this.loading = true;
+    this.idnService.getIdentityProfilesLCS(input).subscribe(lcmState => {
+      this.lifeCycleStates = [];
+
+      for (const each of lcmState) {
+        const lcm = new LifecycleStates();
+        lcm.profileId = input;
+        lcm.id = each.id;
+        lcm.technicalName = each.technicalName;
+        lcm.identityCount = each.identityCount;
+        lcm.identityState = each.identityState;
+        if (each.accountActions) {
+          if (each.accountActions.length > 0) {
+            const data = each.accountActions[0];
+            lcm.action = data.action;
+            lcm.sourceIds = data.sourceIds;
+            lcm.excludeSourceIds = data.excludeSourceIds;
+            lcm.allSources = data.allSources;
+          }
+        }
+
+        lcm.raw = each;
+
+        this.lifeCycleStates.push(lcm);
       }
       this.loading = false;
     });

@@ -1,7 +1,8 @@
 
 <form name="form" #f="ngForm" novalidate contactRequired>
   <div class="form-group row align-items-center mb-3">
-    <div class="col-md-10">
+
+    <div class="col-md-5">
       <div class="input-group">
         <span class="input-group-text bg-white border-end-0">
           <i class="fa fa-search"></i>
@@ -10,6 +11,13 @@
         placeholder="Type Source Name, description, cloudExternalID or type to filter the result.">
       </div>
     </div>
+
+    <div class="col-sm-2 text-end">
+      <button type="button" [disabled]="loading" (click)="search()" class="btn btn-primary btn-sm">
+        Search
+      </button>
+    </div>
+
     <div class="col-sm-2 text-end">
       <button type="button" [disabled]="loading" (click)="ngOnInit()" class="btn btn-primary btn-sm">
         Refresh

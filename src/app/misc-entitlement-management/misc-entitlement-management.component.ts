@@ -415,34 +415,54 @@ export class EntitlementManagementComponent implements OnInit {
   /**
    * Get all the application names and id numbers
    */
-  getApplicationNames() {
+  async getApplicationNames() {
     const pr = new PageResults();
-    pr.limit = 50;
+    pr.limit = 1;
     this.filterApplications = new Array<BasicAttributes>();
     const all = new BasicAttributes();
     all.name = 'ALL';
-    all.value = null;
+    all.value = '';
     this.filterApplications.push(all);
-    this.idnService.getAllSourcesPaged(pr, null).subscribe(response => {
+    this.idnService.getAllSourcesPaged(pr, null).subscribe(async response => {
       const headers = response.headers;
       pr.xTotalCount = headers.get('X-Total-Count');
+
+      if (localStorage.getItem('applicationLookup') != null) {
+        this.filterApplications = JSON.parse(
+          localStorage.getItem('applicationLookup')
+        );
+      }
+      console.log(this.filterApplications.length + ':' + pr.xTotalCount);
+      if (this.filterApplications.length >= pr.xTotalCount) {
+        console.log('No reload required lets rock');
+      } else {
+        console.log('loading applications');
+        let max = 0;
+        pr.limit = 50;
+
+        await new Promise(resolve => {
+          while (pr.totalPages >= max && max < 100) {
+            console.log('Start while:' + max);
+            this.idnService.getAllSourcesPaged(pr, null).subscribe(response => {
+              const searchResult = response.body;
+              for (let i = 0; i < searchResult.length; i++) {
+                const app = searchResult[i];
+                const basic = new BasicAttributes();
+                basic.name = app['name'];
+                basic.value = app['id'];
+                this.addSorted(basic);
+              }
+            });
+
+            max++;
+            pr.nextPage;
+            resolve;
+          }
+        });
+      }
     });
-    let max = 1;
-    while (pr.hasMorePages && max < 10) {
-      max++;
-      this.idnService.getAllSourcesPaged(pr, null).subscribe(response => {
-        const searchResult = response.body;
-        for (let i = 0; i < searchResult.length; i++) {
-          const app = searchResult[i];
-          const basic = new BasicAttributes();
-          basic.name = app['name'];
-          basic.value = app['id'];
-          this.addSorted(basic);
-        }
-      });
-      pr.nextPage;
-    }
   }
+
   addSorted(basic: BasicAttributes) {
     this.filterApplications.push(basic);
     this.filterApplications.sort((a, b) => a.name.localeCompare(b.name));

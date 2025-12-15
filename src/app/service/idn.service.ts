@@ -15,7 +15,7 @@ import { AuthenticationService } from '../service/authentication-service.service
 import { Role } from '../model/role';
 import { AccessProfile } from '../model/accessprofile';
 import { PAT } from '../model/pat';
-import { IdentityProfile } from '../model/identity-profile';
+import { IdentityProfile, LifecycleStates } from '../model/identity-profile';
 import { IdentityAttribute } from '../model/identity-attribute';
 import { Transform } from '../model/transform';
 import { PageResults } from '../model/page-results';
@@ -264,6 +264,15 @@ Supported API's
   getIdentityProfiles(): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
     const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/identity-profiles`;
+
+    return this.http
+      .get(url, this.httpOptions)
+      .pipe(catchError(this.handleError(`getAllIdentityProfilesv1`)));
+  }
+
+  getIdentityProfilesLCS(input: String): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/identity-profiles/${input}/lifecycle-states`;
 
     return this.http
       .get(url, this.httpOptions)
@@ -1827,6 +1836,27 @@ Supported API's
     );
   }
 
+  getMembership(value: string): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v2024/workgroups/${value}/members`;
+
+    const myHttpOptions = {
+      headers: new HttpHeaders({
+        'Content-Type': 'application/json',
+        'X-SailPoint-Experimental': 'true',
+      }),
+    };
+    return this.http.get(url, myHttpOptions).pipe(
+      catchError(error => {
+        if (error.status === 429) {
+          this.sleep(2000);
+          return this.getMembership(value);
+        } else {
+          catchError(this.handleError(`getMembership`));
+        }
+      })
+    );
+  }
   getRoleDetails(value: string): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
     const url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/roles/${value}`;
@@ -1980,6 +2010,12 @@ Supported API's
     const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/identity-profiles/${profileId}`;
 
     return this.http.get(url, this.httpOptions);
+  }
+  updateLifcycleState(ls: LifecycleStates): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v3/identity-profiles/${ls.profileId}/lifecycle-states/${ls.id}`;
+
+    return this.http.post(url, ls.raw, this.httpOptions);
   }
 
   getIdentityProfileLCS(profileId: string): Observable<any> {
