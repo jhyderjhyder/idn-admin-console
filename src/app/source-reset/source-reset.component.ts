@@ -4,6 +4,7 @@ import { ModalDirective } from 'ngx-bootstrap/modal';
 import { Source } from '../model/source';
 import { IDNService } from '../service/idn.service';
 import { MessageService } from '../service/message.service';
+import { PageResults } from '../model/page-results';
 
 @Component({
   selector: 'app-source-reset',
@@ -41,7 +42,7 @@ export class ResetSourceComponent implements OnInit {
 
   ngOnInit() {
     this.reset(true);
-    this.search();
+    //this.search();
   }
 
   reset(clearMsg: boolean) {
@@ -63,20 +64,21 @@ export class ResetSourceComponent implements OnInit {
 
   search() {
     this.loading = true;
-    this.idnService.getAllSources().subscribe(async allSources => {
+    this.idnService.getAllSourcesPaged(new PageResults(), this.searchText).subscribe(response => {
+      const allSources = response.body;
       this.sources = [];
 
       this.sourceCount = allSources.length;
 
       //Sort it alphabetically
-      allSources.sort((a, b) => a.name.localeCompare(b.name));
+      //allSources.sort((a, b) => a.name.localeCompare(b.name));
 
       let index = 0;
       for (const each of allSources) {
         if (index > 0 && index % 10 == 0) {
           // After processing every batch (10 sources), wait for 1 second before calling another API to avoid 429
           // Too Many Requests Error
-          await this.sleep(1000);
+          //await this.sleep(1000);
         }
         index++;
 
