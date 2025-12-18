@@ -67,6 +67,7 @@ import { ReportAttributesyncEventsComponent } from './report-attributesync-event
 import { ReportMostActiveComponent } from './report-most-active/report-most-active.component';
 import { ReportApprovalHistoryComponent } from './report-approval-history/report-approval-history.component';
 import { ReportInactiveIdentityWithActiveAccountsComponent } from './report-inactive-identity-with-active-accounts/report-inactive-identity-with-active-accounts.component';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @NgModule({
   declarations: [
@@ -132,6 +133,7 @@ import { ReportInactiveIdentityWithActiveAccountsComponent } from './report-inac
     AppRoutingModule,
     NgIdleKeepaliveModule.forRoot(),
     ModalModule.forRoot(),
+    FontAwesomeModule,
   ],
   providers: [
     { provide: HTTP_INTERCEPTORS, useClass: BasicAuthInterceptor, multi: true },
