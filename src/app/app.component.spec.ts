@@ -1,7 +1,7 @@
 import { TestBed, waitForAsync } from '@angular/core/testing';
 import { AppComponent } from './app.component';
-import { HttpClientModule } from '@angular/common/http';
-import { HttpClientTestingModule } from '@angular/common/http/testing';
+import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { FormsModule } from '@angular/forms';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { MockIDNService } from './service/idn.service.mock.spec';
@@ -15,22 +15,20 @@ import { RouterModule } from '@angular/router';
 describe('AppComponent', () => {
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-      declarations: [AppComponent, MessagesComponent],
-      providers: [
+    declarations: [AppComponent, MessagesComponent],
+    imports: [FormsModule,
+        ModalModule,
+        RouterModule],
+    providers: [
         IDNService,
         Idle,
         Keepalive,
         { provide: IdleExpiry, useClass: MockExpiry },
         { provide: IDNService, useClass: MockIDNService },
-      ],
-      imports: [
-        HttpClientModule,
-        HttpClientTestingModule,
-        FormsModule,
-        ModalModule,
-        RouterModule,
-      ],
-    }).compileComponents();
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+    ]
+}).compileComponents();
   }));
 
   it('should create the app', () => {
