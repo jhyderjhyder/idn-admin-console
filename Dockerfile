@@ -1,7 +1,7 @@
 ### STAGE 1: Build ###
 
 # Use official nginx and node tested image as the base image
-FROM node:18.15.0 AS build
+FROM node:18.20.0 AS build
 LABEL stage=builder
 # Set the working directory
 WORKDIR /usr/src/app
