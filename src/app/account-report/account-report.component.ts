@@ -190,6 +190,7 @@ export class AccountReportComponent implements OnInit {
         'serviceAccount',
         'type',
         'url',
+        'encrypt'
       ],
       nullToEmptyString: true,
     };
