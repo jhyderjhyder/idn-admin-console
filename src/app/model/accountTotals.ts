@@ -7,4 +7,5 @@ export class AccountTotals {
   type: string;
   url: string;
   serviceAccount: string;
+  encrypt: string;
 }

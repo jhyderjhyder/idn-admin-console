@@ -86,6 +86,29 @@ export class AccountReportComponent implements OnInit {
           source.name = each.name;
           source.serviceAccount = '';
           source.type = each.type;
+
+          //Encrypt section
+          source.encrypt ="NA"
+          if (each.connectorAttributes["jco.client.snc_mode"] !=null){
+            source.encrypt = each.connectorAttributes["jco.client.snc_mode"];
+          }
+          if (each.connectorAttributes.url !=null){
+            if (each.connectorAttributes.url.toString().startsWith('jdbc:sap')){
+              source.encrypt = "false";
+              if (each.connectorAttributes.url.toString().includes("encrypt=true")){
+                source.encrypt = "true";
+              }
+            }
+          }
+          if (each.connectorAttributes.genericWebServiceBaseUrl!=null){
+            source.encrypt = "false";
+            if (each.connectorAttributes.genericWebServiceBaseUrl.toString().toLowerCase().startsWith("https")){
+              source.encrypt = "true";
+            }
+
+          }
+
+          //UserName section
           if (each.connectorAttributes.user != null) {
             source.serviceAccount = 'user:' + each.connectorAttributes.user;
           }
