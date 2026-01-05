@@ -8,9 +8,10 @@ import { AuthenticationService } from '../service/authentication-service.service
 import { AngularCsv } from 'angular-csv-ext/dist/Angular-csv';
 
 @Component({
-  selector: 'app-system-monitor',
-  templateUrl: './system-monitor.component.html',
-  styleUrls: ['./system-monitor.component.css'],
+    selector: 'app-system-monitor',
+    templateUrl: './system-monitor.component.html',
+    styleUrls: ['./system-monitor.component.css'],
+    standalone: false
 })
 export class SystemMonitorComponent implements OnInit {
   cluster: VaConfig[];

@@ -6,9 +6,10 @@ import { EventSync } from '../model/event-sync';
 import { AngularCsv } from 'angular-csv-ext/dist/Angular-csv';
 
 @Component({
-  selector: 'app-report-attributesync-events',
-  templateUrl: './report-attributesync-events.component.html',
-  styleUrls: ['./report-attributesync-events.component.css'],
+    selector: 'app-report-attributesync-events',
+    templateUrl: './report-attributesync-events.component.html',
+    styleUrls: ['./report-attributesync-events.component.css'],
+    standalone: false
 })
 export class ReportAttributesyncEventsComponent implements OnInit {
   filterApplications: Array<BasicAttributes>;

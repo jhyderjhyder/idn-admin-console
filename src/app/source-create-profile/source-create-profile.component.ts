@@ -9,9 +9,10 @@ import { saveAs } from 'file-saver';
 import { AuthenticationService } from '../service/authentication-service.service';
 
 @Component({
-  selector: 'app-source-create-profile',
-  templateUrl: './source-create-profile.component.html',
-  styleUrls: ['./source-create-profile.component.css'],
+    selector: 'app-source-create-profile',
+    templateUrl: './source-create-profile.component.html',
+    styleUrls: ['./source-create-profile.component.css'],
+    standalone: false
 })
 export class SourceCreateProfileComponent implements OnInit {
   sources: Source[];

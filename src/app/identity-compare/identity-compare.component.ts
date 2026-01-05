@@ -4,9 +4,10 @@ import { DeltaRemoved, SimpleCompare } from '../model/SimpleCompare';
 import { IDNService } from '../service/idn.service';
 
 @Component({
-  selector: 'app-identity-compare',
-  templateUrl: './identity-compare.component.html',
-  styleUrls: ['./identity-compare.component.css'],
+    selector: 'app-identity-compare',
+    templateUrl: './identity-compare.component.html',
+    styleUrls: ['./identity-compare.component.css'],
+    standalone: false
 })
 export class IdentityCompareComponent implements OnInit {
   master: string;

@@ -10,9 +10,10 @@ import { SourceOwner } from '../model/source-owner';
 const RoleDescriptionMaxLength = 50;
 
 @Component({
-  selector: 'app-role-duplicate',
-  templateUrl: './role-duplicate.component.html',
-  styleUrls: ['./role-duplicate.component.css'],
+    selector: 'app-role-duplicate',
+    templateUrl: './role-duplicate.component.html',
+    styleUrls: ['./role-duplicate.component.css'],
+    standalone: false
 })
 export class DuplicateRoleComponent implements OnInit {
   private isNavigating = false;

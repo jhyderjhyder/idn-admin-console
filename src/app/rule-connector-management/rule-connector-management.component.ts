@@ -12,9 +12,10 @@ import * as JSZip from 'jszip';
 const RuleDescriptionMaxLength = 50;
 
 @Component({
-  selector: 'app-rule-connector-management',
-  templateUrl: './rule-connector-management.component.html',
-  styleUrls: ['./rule-connector-management.component.css'],
+    selector: 'app-rule-connector-management',
+    templateUrl: './rule-connector-management.component.html',
+    styleUrls: ['./rule-connector-management.component.css'],
+    standalone: false
 })
 export class ImportRuleComponent implements OnInit {
   ruleToImport: Rule;

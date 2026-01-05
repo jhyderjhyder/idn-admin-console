@@ -12,9 +12,10 @@ import { prettyPrintJson } from 'pretty-print-json';
 import { PageResults } from '../model/page-results';
 
 @Component({
-  selector: 'app-access-request-approval-forward',
-  templateUrl: './access-request-approval-forward.component.html',
-  styleUrls: ['./access-request-approval-forward.component.css'],
+    selector: 'app-access-request-approval-forward',
+    templateUrl: './access-request-approval-forward.component.html',
+    styleUrls: ['./access-request-approval-forward.component.css'],
+    standalone: false
 })
 export class AccessRequestApprovalForwardComponent implements OnInit {
   pendingApprovals: AccessRequestApprovalsPending[];

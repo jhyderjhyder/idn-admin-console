@@ -6,9 +6,10 @@ import { MessageService } from '../service/message.service';
 import { IdentityAttribute } from '../model/identity-attribute';
 
 @Component({
-  selector: 'app-identity-admin-management',
-  templateUrl: './identity-admin-management.component.html',
-  styleUrls: ['./identity-admin-management.component.css'],
+    selector: 'app-identity-admin-management',
+    templateUrl: './identity-admin-management.component.html',
+    styleUrls: ['./identity-admin-management.component.css'],
+    standalone: false
 })
 export class IdentityAdminManagementComponent implements OnInit {
   identities: IdentityAttribute[];

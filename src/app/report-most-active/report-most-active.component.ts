@@ -7,9 +7,10 @@ import { ActivityReport } from '../model/ActivityReport';
 import { AngularCsv } from 'angular-csv-ext/dist/Angular-csv';
 
 @Component({
-  selector: 'app-report-most-active',
-  templateUrl: './report-most-active.component.html',
-  styleUrls: ['./report-most-active.component.css'],
+    selector: 'app-report-most-active',
+    templateUrl: './report-most-active.component.html',
+    styleUrls: ['./report-most-active.component.css'],
+    standalone: false
 })
 export class ReportMostActiveComponent implements OnInit {
   filterApplications: Array<BasicAttributes>;

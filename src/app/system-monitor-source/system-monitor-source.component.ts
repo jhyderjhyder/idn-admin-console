@@ -6,9 +6,10 @@ import { AngularCsv } from 'angular-csv-ext/dist/Angular-csv';
 import { PageResults } from '../model/page-results';
 
 @Component({
-  selector: 'app-system-monitor-source',
-  templateUrl: './system-monitor-source.component.html',
-  styleUrls: ['./system-monitor-source.component.css'],
+    selector: 'app-system-monitor-source',
+    templateUrl: './system-monitor-source.component.html',
+    styleUrls: ['./system-monitor-source.component.css'],
+    standalone: false
 })
 export class SystemMonitorSourceComponent implements OnInit {
   hidePageOption: boolean;

@@ -4,9 +4,10 @@ import { IdnObject } from '../model/idn-object';
 import { IDNService } from '../service/idn.service';
 
 @Component({
-  selector: 'app-raw-object',
-  templateUrl: './raw-object.component.html',
-  styleUrls: ['./raw-object.component.css'],
+    selector: 'app-raw-object',
+    templateUrl: './raw-object.component.html',
+    styleUrls: ['./raw-object.component.css'],
+    standalone: false
 })
 export class RawObjectComponent implements OnInit {
   loading: boolean;

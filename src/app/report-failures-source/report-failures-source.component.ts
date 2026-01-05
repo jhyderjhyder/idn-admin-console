@@ -6,9 +6,10 @@ import { AccessRequestAuditAccountFull } from '../model/AccessRequestAudit';
 import { AngularCsv } from 'angular-csv-ext/dist/Angular-csv';
 
 @Component({
-  selector: 'app-report-failures-source',
-  templateUrl: './report-failures-source.component.html',
-  styleUrls: ['./report-failures-source.component.css'],
+    selector: 'app-report-failures-source',
+    templateUrl: './report-failures-source.component.html',
+    styleUrls: ['./report-failures-source.component.css'],
+    standalone: false
 })
 export class ReportFailuresSourceComponent implements OnInit {
   filterApplications: Array<BasicAttributes>;

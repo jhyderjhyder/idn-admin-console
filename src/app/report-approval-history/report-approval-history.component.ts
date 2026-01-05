@@ -2,9 +2,10 @@ import { Component, OnInit } from '@angular/core';
 import { IDNService } from '../service/idn.service';
 
 @Component({
-  selector: 'app-report-approval-history',
-  templateUrl: './report-approval-history.component.html',
-  styleUrls: ['./report-approval-history.component.css'],
+    selector: 'app-report-approval-history',
+    templateUrl: './report-approval-history.component.html',
+    styleUrls: ['./report-approval-history.component.css'],
+    standalone: false
 })
 export class ReportApprovalHistoryComponent implements OnInit {
   constructor(private idnService: IDNService) {}

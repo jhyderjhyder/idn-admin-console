@@ -16,9 +16,10 @@ import {
 import { from, forkJoin, throwError, of, Subscription } from 'rxjs';
 
 @Component({
-  selector: 'app-multiple-accounts-report',
-  templateUrl: './multiple-accounts-report.component.html',
-  styleUrls: ['./multiple-accounts-report.component.css'],
+    selector: 'app-multiple-accounts-report',
+    templateUrl: './multiple-accounts-report.component.html',
+    styleUrls: ['./multiple-accounts-report.component.css'],
+    standalone: false
 })
 export class MultipleAccountsComponent implements OnInit, OnDestroy {
   accounts: Account[];

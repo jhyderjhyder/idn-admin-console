@@ -13,9 +13,10 @@ import { PageResults } from '../model/page-results';
 import { AngularCsv } from 'angular-csv-ext/dist/Angular-csv';
 
 @Component({
-  selector: 'app-source-info',
-  templateUrl: './source-info.component.html',
-  styleUrls: ['./source-info.component.css'],
+    selector: 'app-source-info',
+    templateUrl: './source-info.component.html',
+    styleUrls: ['./source-info.component.css'],
+    standalone: false
 })
 export class SourceInfoComponent implements OnInit {
   hidePageOption: boolean;

@@ -4,9 +4,10 @@ import { AngularCsv } from 'angular-csv-ext/dist/Angular-csv';
 //import { forEach } from 'jszip';
 
 @Component({
-  selector: 'app-report-task-status',
-  templateUrl: './report-task-status.component.html',
-  styleUrls: ['./report-task-status.component.css'],
+    selector: 'app-report-task-status',
+    templateUrl: './report-task-status.component.html',
+    styleUrls: ['./report-task-status.component.css'],
+    standalone: false
 })
 export class ReportTaskStatusComponent implements OnInit {
   constructor(private idnService: IDNService) {}

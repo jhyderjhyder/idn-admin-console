@@ -13,9 +13,10 @@ import { SourceOwner } from '../model/source-owner';
 const RoleDescriptionMaxLength = 50;
 
 @Component({
-  selector: 'app-role-owner-update',
-  templateUrl: './role-owner-update.component.html',
-  styleUrls: ['./role-owner-update.component.css'],
+    selector: 'app-role-owner-update',
+    templateUrl: './role-owner-update.component.html',
+    styleUrls: ['./role-owner-update.component.css'],
+    standalone: false
 })
 export class ChangeRoleOwnerComponent implements OnInit {
   private isNavigating = false;

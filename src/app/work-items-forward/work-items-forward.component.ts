@@ -10,9 +10,10 @@ import { IdentityAttribute } from '../model/identity-attribute';
 import { PageResults } from '../model/page-results';
 
 @Component({
-  selector: 'app-work-items-forward',
-  templateUrl: './work-items-forward.component.html',
-  styleUrls: ['./work-items-forward.component.css'],
+    selector: 'app-work-items-forward',
+    templateUrl: './work-items-forward.component.html',
+    styleUrls: ['./work-items-forward.component.css'],
+    standalone: false
 })
 export class WorkItemsForwardComponent implements OnInit {
   pendingWorkItems: WorkItem[];

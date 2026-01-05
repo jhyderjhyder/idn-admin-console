@@ -15,9 +15,10 @@ import { saveAs } from 'file-saver';
 const AccessProfileDescriptionMaxLength = 50;
 
 @Component({
-  selector: 'app-accessprofile-management',
-  templateUrl: './accessprofile-management.component.html',
-  styleUrls: ['./accessprofile-management.component.css'],
+    selector: 'app-accessprofile-management',
+    templateUrl: './accessprofile-management.component.html',
+    styleUrls: ['./accessprofile-management.component.css'],
+    standalone: false
 })
 export class AccessProfileManagementComponent implements OnInit {
   private isNavigating = false;

@@ -11,9 +11,10 @@ import { MessageService } from '../service/message.service';
 import { AuthenticationService } from '../service/authentication-service.service';
 
 @Component({
-  selector: 'app-source-aggregation-management',
-  templateUrl: './source-aggregation-management.component.html',
-  styleUrls: ['./source-aggregation-management.component.css'],
+    selector: 'app-source-aggregation-management',
+    templateUrl: './source-aggregation-management.component.html',
+    styleUrls: ['./source-aggregation-management.component.css'],
+    standalone: false
 })
 export class AggregationManagementComponent implements OnInit {
   sources: Source[];

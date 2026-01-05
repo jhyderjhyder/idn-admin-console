@@ -15,9 +15,10 @@ import { PageResults } from '../model/page-results';
 const RoleDescriptionMaxLength = 50;
 
 @Component({
-  selector: 'app-identity-profile-management',
-  templateUrl: './identity-profile-management.component.html',
-  styleUrls: ['./identity-profile-management.component.css'],
+    selector: 'app-identity-profile-management',
+    templateUrl: './identity-profile-management.component.html',
+    styleUrls: ['./identity-profile-management.component.css'],
+    standalone: false
 })
 export class IdentityProfileManagementComponent implements OnInit {
   identityProfiles: IdentityProfile[];

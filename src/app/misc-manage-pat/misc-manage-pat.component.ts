@@ -9,9 +9,10 @@ import { AngularCsv } from 'angular-csv-ext/dist/Angular-csv';
 import { AuthenticationService } from '../service/authentication-service.service';
 
 @Component({
-  selector: 'app-misc-manage-pat',
-  templateUrl: './misc-manage-pat.component.html',
-  styleUrls: ['./misc-manage-pat.component.css'],
+    selector: 'app-misc-manage-pat',
+    templateUrl: './misc-manage-pat.component.html',
+    styleUrls: ['./misc-manage-pat.component.css'],
+    standalone: false
 })
 export class ManagePATComponent implements OnInit {
   pats: PAT[];

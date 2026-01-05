@@ -10,9 +10,10 @@ import { IdentityAttribute } from '../model/identity-attribute';
 import { AngularCsv } from 'angular-csv-ext/dist/Angular-csv';
 
 @Component({
-  selector: 'app-account-search',
-  templateUrl: './account-search.component.html',
-  styleUrls: ['./account-search.component.css'],
+    selector: 'app-account-search',
+    templateUrl: './account-search.component.html',
+    styleUrls: ['./account-search.component.css'],
+    standalone: false
 })
 export class AccountSearchComponent implements OnInit {
   loading: boolean;
