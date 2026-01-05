@@ -9,7 +9,7 @@ import { AuthenticationService } from '../service/authentication-service.service
 import { SimpleQueryCondition } from '../model/simple-query-condition';
 import { SourceOwner } from '../model/source-owner';
 import { AccessProfile } from '../model/accessprofile';
-import * as JSZip from 'jszip';
+import JSZip from 'jszip';
 import { saveAs } from 'file-saver';
 
 const AccessProfileDescriptionMaxLength = 50;

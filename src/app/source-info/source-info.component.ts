@@ -5,7 +5,7 @@ import { AggResults } from '../model/AggResults';
 import { IDNService } from '../service/idn.service';
 import { MessageService } from '../service/message.service';
 import { AuthenticationService } from '../service/authentication-service.service';
-import * as JSZip from 'jszip';
+import  JSZip from 'jszip';
 import { saveAs } from 'file-saver';
 import { prettyPrintJson } from 'pretty-print-json';
 import { JsonFormatOptions } from '../model/json-format-options';

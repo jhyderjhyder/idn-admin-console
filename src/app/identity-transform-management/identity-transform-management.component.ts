@@ -12,7 +12,7 @@ import {
   IdentityPreviewAttributes,
   IdentityPreviewTransformDefinition,
 } from '../model/identity-preview';
-import * as JSZip from 'jszip';
+import JSZip from 'jszip';
 import { AuthenticationService } from '../service/authentication-service.service';
 import { prettyPrintJson } from 'pretty-print-json';
 import { JsonFormatOptions } from '../model/json-format-options';

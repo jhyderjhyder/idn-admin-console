@@ -1,5 +1,5 @@
 
-@import './../assets/scss/abstracts/variables';
+@use './../assets/scss/abstracts/variables' as v;
 
 $navbar-height: 65px;
 $nav-item-width: 180px;
@@ -12,7 +12,7 @@ $padding-left: 60px;
     }
 
 .navbar-custom {
-    background-color: $dark-blue-background;
+    background-color: v.$dark-blue-background;
     .navbar-brand {
         margin-right: 85.4px;
         padding-top: 6px;

@@ -3,7 +3,7 @@ import { BsModalRef } from 'ngx-bootstrap/modal';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { IDNService } from '../service/idn.service';
 import { MessageService } from '../service/message.service';
-import * as JSZip from 'jszip';
+import JSZip from 'jszip';
 import { saveAs } from 'file-saver';
 import { IdentityProfile } from '../model/identity-profile';
 import { AuthenticationService } from '../service/authentication-service.service';
