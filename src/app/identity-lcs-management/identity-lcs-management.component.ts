@@ -3,15 +3,16 @@ import { BsModalRef } from 'ngx-bootstrap/modal';
 import { ModalDirective } from 'ngx-bootstrap/modal';
 import { IDNService } from '../service/idn.service';
 import { MessageService } from '../service/message.service';
-import * as JSZip from 'jszip';
+import JSZip from 'jszip';
 import { saveAs } from 'file-saver';
 import { IdentityProfile } from '../model/identity-profile';
 import { AuthenticationService } from '../service/authentication-service.service';
 
 @Component({
-  selector: 'app-identity-lcs-management',
-  templateUrl: './identity-lcs-management.component.html',
-  styleUrls: ['./identity-lcs-management.component.css'],
+    selector: 'app-identity-lcs-management',
+    templateUrl: './identity-lcs-management.component.html',
+    styleUrls: ['./identity-lcs-management.component.css'],
+    standalone: false
 })
 export class IdentityLCSComponent implements OnInit {
   identityProfiles: IdentityProfile[];

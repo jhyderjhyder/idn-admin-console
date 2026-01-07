@@ -12,16 +12,17 @@ import {
   IdentityPreviewAttributes,
   IdentityPreviewTransformDefinition,
 } from '../model/identity-preview';
-import * as JSZip from 'jszip';
+import JSZip from 'jszip';
 import { AuthenticationService } from '../service/authentication-service.service';
 import { prettyPrintJson } from 'pretty-print-json';
 import { JsonFormatOptions } from '../model/json-format-options';
 import { BasicAttributes } from '../model/basic-attributes';
 
 @Component({
-  selector: 'app-identity-transform-management',
-  templateUrl: './identity-transform-management.component.html',
-  styleUrls: ['./identity-transform-management.component.css'],
+    selector: 'app-identity-transform-management',
+    templateUrl: './identity-transform-management.component.html',
+    styleUrls: ['./identity-transform-management.component.css'],
+    standalone: false
 })
 export class IdentityTransformManagementComponent implements OnInit {
   transformToImport: Transform;

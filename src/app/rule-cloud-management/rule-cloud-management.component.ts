@@ -6,14 +6,15 @@ import { Rule } from '../model/rule';
 import { IDNService } from '../service/idn.service';
 import { MessageService } from '../service/message.service';
 import { AuthenticationService } from '../service/authentication-service.service';
-import * as JSZip from 'jszip';
+import JSZip from 'jszip';
 
 const RuleDescriptionMaxLength = 50;
 
 @Component({
-  selector: 'app-rule-cloud-management',
-  templateUrl: './rule-cloud-management.component.html',
-  styleUrls: ['./rule-cloud-management.component.css'],
+    selector: 'app-rule-cloud-management',
+    templateUrl: './rule-cloud-management.component.html',
+    styleUrls: ['./rule-cloud-management.component.css'],
+    standalone: false
 })
 export class CloudRuleComponent implements OnInit {
   rules: Rule[];

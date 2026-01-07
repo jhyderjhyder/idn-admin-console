@@ -11,9 +11,10 @@ import { MessageService } from '../service/message.service';
 import { AuthenticationService } from '../service/authentication-service.service';
 
 @Component({
-  selector: 'app-source-owner-update',
-  templateUrl: './source-owner-update.component.html',
-  styleUrls: ['./source-owner-update.component.css'],
+    selector: 'app-source-owner-update',
+    templateUrl: './source-owner-update.component.html',
+    styleUrls: ['./source-owner-update.component.css'],
+    standalone: false
 })
 export class ChangeSourceOwnerComponent implements OnInit {
   sources: Source[];

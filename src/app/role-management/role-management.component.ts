@@ -9,14 +9,15 @@ import { AuthenticationService } from '../service/authentication-service.service
 import { Role } from '../model/role';
 import { SimpleQueryCondition } from '../model/simple-query-condition';
 import { SourceOwner } from '../model/source-owner';
-import * as JSZip from 'jszip';
+import JSZip from 'jszip';
 import { saveAs } from 'file-saver';
 
 const RoleDescriptionMaxLength = 50;
 @Component({
-  selector: 'app-role-management',
-  templateUrl: './role-management.component.html',
-  styleUrls: ['./role-management.component.css'],
+    selector: 'app-role-management',
+    templateUrl: './role-management.component.html',
+    styleUrls: ['./role-management.component.css'],
+    standalone: false
 })
 export class RoleManagementComponent implements OnInit {
   private isNavigating = false;

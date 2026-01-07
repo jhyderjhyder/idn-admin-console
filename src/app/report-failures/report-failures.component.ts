@@ -4,9 +4,10 @@ import { ReportFailures } from '../model/report-failures';
 import { AngularCsv } from 'angular-csv-ext/dist/Angular-csv';
 
 @Component({
-  selector: 'app-report-failures',
-  templateUrl: './report-failures.component.html',
-  styleUrls: ['./report-failures.component.css'],
+    selector: 'app-report-failures',
+    templateUrl: './report-failures.component.html',
+    styleUrls: ['./report-failures.component.css'],
+    standalone: false
 })
 export class ReportFailuresComponent implements OnInit {
   constructor(private idnService: IDNService) {}

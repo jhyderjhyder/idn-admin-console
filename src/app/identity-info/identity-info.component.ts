@@ -22,9 +22,10 @@ import {
 } from '../model/AccessRequestAudit';
 
 @Component({
-  selector: 'app-identity-info',
-  templateUrl: './identity-info.component.html',
-  styleUrls: ['./identity-info.component.css'],
+    selector: 'app-identity-info',
+    templateUrl: './identity-info.component.html',
+    styleUrls: ['./identity-info.component.css'],
+    standalone: false
 })
 export class IdentityInfoComponent implements OnInit {
   oneRequest: AccessRequestStatus;

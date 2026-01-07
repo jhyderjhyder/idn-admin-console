@@ -10,9 +10,10 @@ import { MessageService } from '../service/message.service';
 import { PageResults } from '../model/page-results';
 
 @Component({
-  selector: 'app-source-aggregation-run',
-  templateUrl: './source-aggregation-run.component.html',
-  styleUrls: ['./source-aggregation-run.component.css'],
+    selector: 'app-source-aggregation-run',
+    templateUrl: './source-aggregation-run.component.html',
+    styleUrls: ['./source-aggregation-run.component.css'],
+    standalone: false
 })
 export class AggregateSourceComponent implements OnInit {
   sources: Source[];

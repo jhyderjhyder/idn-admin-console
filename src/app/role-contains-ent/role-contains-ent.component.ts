@@ -8,9 +8,10 @@ import { AngularCsv } from 'angular-csv-ext/dist/Angular-csv';
 import { PageResults } from '../model/page-results';
 
 @Component({
-  selector: 'app-role-contains-ent',
-  templateUrl: './role-contains-ent.component.html',
-  styleUrls: ['./role-contains-ent.component.css'],
+    selector: 'app-role-contains-ent',
+    templateUrl: './role-contains-ent.component.html',
+    styleUrls: ['./role-contains-ent.component.css'],
+    standalone: false
 })
 export class RoleContainsEntComponent implements OnInit {
   constructor(private idnService: IDNService) {}

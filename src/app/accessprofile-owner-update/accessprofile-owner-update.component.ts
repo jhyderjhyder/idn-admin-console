@@ -13,9 +13,10 @@ import { AccessProfile } from '../model/accessprofile';
 const AccessProfileDescriptionMaxLength = 50;
 
 @Component({
-  selector: 'app-accessprofile-owner-update',
-  templateUrl: './accessprofile-owner-update.component.html',
-  styleUrls: ['./accessprofile-owner-update.component.css'],
+    selector: 'app-accessprofile-owner-update',
+    templateUrl: './accessprofile-owner-update.component.html',
+    styleUrls: ['./accessprofile-owner-update.component.css'],
+    standalone: false
 })
 export class ChangeAccessProfileOwnerComponent implements OnInit {
   private isNavigating = false;

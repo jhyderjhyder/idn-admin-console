@@ -2,15 +2,16 @@ import { Component, OnInit } from '@angular/core';
 import { VaConfig } from '../model/va-config';
 //import { MessageService } from '../service/message.service';
 import { IDNService } from '../service/idn.service';
-import * as JSZip from 'jszip';
+import JSZip from 'jszip';
 import { saveAs } from 'file-saver';
 import { AuthenticationService } from '../service/authentication-service.service';
 import { AngularCsv } from 'angular-csv-ext/dist/Angular-csv';
 
 @Component({
-  selector: 'app-system-monitor',
-  templateUrl: './system-monitor.component.html',
-  styleUrls: ['./system-monitor.component.css'],
+    selector: 'app-system-monitor',
+    templateUrl: './system-monitor.component.html',
+    styleUrls: ['./system-monitor.component.css'],
+    standalone: false
 })
 export class SystemMonitorComponent implements OnInit {
   cluster: VaConfig[];

@@ -1,7 +1,7 @@
 ### STAGE 1: Build ###
 
 # Use official nginx and node tested image as the base image
-FROM node:18.20.0 AS build
+FROM node:22.21.1 AS build
 LABEL stage=builder
 # Set the working directory
 WORKDIR /usr/src/app
@@ -11,7 +11,8 @@ COPY package.json ./
 
 # Install all the dependencies
 RUN npm install
-RUN npm install -g npm@9.7.2
+RUN npm install -g npm@10.9.3
+RUN npm outdated
 # Copy Files
 COPY . .
 

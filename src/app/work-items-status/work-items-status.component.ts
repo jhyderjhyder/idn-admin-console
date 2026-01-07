@@ -8,9 +8,10 @@ import { SimpleQueryCondition } from '../model/simple-query-condition';
 import { PageResults } from '../model/page-results';
 
 @Component({
-  selector: 'app-work-items-status',
-  templateUrl: './work-items-status.component.html',
-  styleUrls: ['./work-items-status.component.css'],
+    selector: 'app-work-items-status',
+    templateUrl: './work-items-status.component.html',
+    styleUrls: ['./work-items-status.component.css'],
+    standalone: false
 })
 export class WorkItemsStatusComponent implements OnInit {
   workItemsStatuses: WorkItem[];

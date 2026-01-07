@@ -10,9 +10,10 @@ import { prettyPrintJson } from 'pretty-print-json';
 import { JsonFormatOptions } from '../model/json-format-options';
 
 @Component({
-  selector: 'app-access-request-status',
-  templateUrl: './access-request-status.component.html',
-  styleUrls: ['./access-request-status.component.css'],
+    selector: 'app-access-request-status',
+    templateUrl: './access-request-status.component.html',
+    styleUrls: ['./access-request-status.component.css'],
+    standalone: false
 })
 export class AccessRequestStatusComponent implements OnInit {
   accessRequestStatuses: AccessRequestStatus[];

@@ -3,9 +3,10 @@ import { IDNService } from '../service/idn.service';
 import { Reassignment } from '../model/reassignment';
 
 @Component({
-  selector: 'app-reassignments',
-  templateUrl: './reassignments.component.html',
-  styleUrls: ['./reassignments.component.css'],
+    selector: 'app-reassignments',
+    templateUrl: './reassignments.component.html',
+    styleUrls: ['./reassignments.component.css'],
+    standalone: false
 })
 export class ReassignmentsComponent implements OnInit {
   constructor(private idnService: IDNService) {}

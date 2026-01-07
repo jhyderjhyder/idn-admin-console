@@ -7,14 +7,15 @@ import { Rule } from '../model/rule';
 import { IDNService } from '../service/idn.service';
 import { MessageService } from '../service/message.service';
 import { AuthenticationService } from '../service/authentication-service.service';
-import * as JSZip from 'jszip';
+import JSZip from 'jszip';
 
 const RuleDescriptionMaxLength = 50;
 
 @Component({
-  selector: 'app-rule-connector-management',
-  templateUrl: './rule-connector-management.component.html',
-  styleUrls: ['./rule-connector-management.component.css'],
+    selector: 'app-rule-connector-management',
+    templateUrl: './rule-connector-management.component.html',
+    styleUrls: ['./rule-connector-management.component.css'],
+    standalone: false
 })
 export class ImportRuleComponent implements OnInit {
   ruleToImport: Rule;

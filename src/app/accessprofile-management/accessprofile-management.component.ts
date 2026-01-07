@@ -9,15 +9,16 @@ import { AuthenticationService } from '../service/authentication-service.service
 import { SimpleQueryCondition } from '../model/simple-query-condition';
 import { SourceOwner } from '../model/source-owner';
 import { AccessProfile } from '../model/accessprofile';
-import * as JSZip from 'jszip';
+import JSZip from 'jszip';
 import { saveAs } from 'file-saver';
 
 const AccessProfileDescriptionMaxLength = 50;
 
 @Component({
-  selector: 'app-accessprofile-management',
-  templateUrl: './accessprofile-management.component.html',
-  styleUrls: ['./accessprofile-management.component.css'],
+    selector: 'app-accessprofile-management',
+    templateUrl: './accessprofile-management.component.html',
+    styleUrls: ['./accessprofile-management.component.css'],
+    standalone: false
 })
 export class AccessProfileManagementComponent implements OnInit {
   private isNavigating = false;

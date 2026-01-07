@@ -5,7 +5,7 @@ import { IDNService } from '../service/idn.service';
 import { MessageService } from '../service/message.service';
 import { AuthenticationService } from '../service/authentication-service.service';
 import { IdentityProfile, LifecycleStates } from '../model/identity-profile';
-import * as JSZip from 'jszip';
+import JSZip from 'jszip';
 import { saveAs } from 'file-saver';
 import { JsonFormatOptions } from '../model/json-format-options';
 import { prettyPrintJson } from 'pretty-print-json';
@@ -15,9 +15,10 @@ import { PageResults } from '../model/page-results';
 const RoleDescriptionMaxLength = 50;
 
 @Component({
-  selector: 'app-identity-profile-management',
-  templateUrl: './identity-profile-management.component.html',
-  styleUrls: ['./identity-profile-management.component.css'],
+    selector: 'app-identity-profile-management',
+    templateUrl: './identity-profile-management.component.html',
+    styleUrls: ['./identity-profile-management.component.css'],
+    standalone: false
 })
 export class IdentityProfileManagementComponent implements OnInit {
   identityProfiles: IdentityProfile[];

@@ -6,9 +6,10 @@ import { AuthenticationService } from '../service/authentication-service.service
 import { PageResults } from '../model/page-results';
 
 @Component({
-  selector: 'app-account-report',
-  templateUrl: './account-report.component.html',
-  styleUrls: ['./account-report.component.css'],
+    selector: 'app-account-report',
+    templateUrl: './account-report.component.html',
+    styleUrls: ['./account-report.component.css'],
+    standalone: false
 })
 export class AccountReportComponent implements OnInit {
   sources: AccountTotals[];
@@ -190,6 +191,7 @@ export class AccountReportComponent implements OnInit {
         'serviceAccount',
         'type',
         'url',
+        'encrypt'
       ],
       nullToEmptyString: true,
     };

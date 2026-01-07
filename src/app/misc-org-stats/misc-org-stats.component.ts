@@ -4,9 +4,10 @@ import { IDNService } from '../service/idn.service';
 import { MessageService } from '../service/message.service';
 
 @Component({
-  selector: 'app-misc-org-stats',
-  templateUrl: './misc-org-stats.component.html',
-  styleUrls: ['./misc-org-stats.component.css'],
+    selector: 'app-misc-org-stats',
+    templateUrl: './misc-org-stats.component.html',
+    styleUrls: ['./misc-org-stats.component.css'],
+    standalone: false
 })
 export class OrgStatsComponent implements OnInit {
   loading: boolean;
