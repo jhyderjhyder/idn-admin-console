@@ -64,7 +64,7 @@
     "xml2js": "^0.5.0",
     "y18n": "^5.0.8",
     "yargs": "^17.7.1",
-    "zone.js": "^0.15.1"
+    "zone.js": "^0.15.0"
   },
   "devDependencies": {
     "@angular-eslint/builder": "19.8.1",
@@ -76,13 +76,13 @@
     "@angular/cli": "^19.2.19",
     "@angular/compiler-cli": "^19.2.17",
     "@angular/language-service": "^19.2.17",
-    "@electron/packager": "^18.3.2",
+    "@electron/packager": "^19.0.1",
     "@types/jasmine": "^4.3.1",
     "@types/jasminewd2": "^2.0.10",
     "@types/node": "^18.15.10",
     "@typescript-eslint/eslint-plugin": "^7.2.0",
     "@typescript-eslint/parser": "^7.2.0",
-    "electron": "^30.1.0",
+    "electron": "^36.9.5",
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^8.8.0",
     "eslint-plugin-import": "^2.27.5",
@@ -96,7 +96,7 @@
     "karma-coverage-istanbul-reporter": "^3.0.3",
     "karma-jasmine": "^5.1.0",
     "karma-jasmine-html-reporter": "^2.0.0",
-    "prettier": "^2.8.7",
-    "prettier-eslint": "^15.0.1"
+    "prettier": "^3.7.4",
+    "prettier-eslint": "^16.4.2"
   }
 }
