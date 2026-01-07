@@ -11,7 +11,8 @@ COPY package.json ./
 
 # Install all the dependencies
 RUN npm install
-RUN npm install -g npm@9.7.2
+RUN npm install -g npm@10.9.3
+RUN npm outdated
 # Copy Files
 COPY . .
 
