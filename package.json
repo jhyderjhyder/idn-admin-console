@@ -34,7 +34,7 @@
     "@ng-idle/core": "^12.0.4",
     "@ng-idle/keepalive": "^12.0.4",
     "@ng-select/ng-select": "^15.2.0",
-    "@ngx-env/builder": "^18.0.2",
+    "@ngx-env/builder": "^19.0.4",
     "@popperjs/core": "^2.11.7",
     "angular-csv-ext": "^1.0.5",
     "bootstrap": "^5.2.3",

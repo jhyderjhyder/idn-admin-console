@@ -142,7 +142,7 @@
         "serve": {
           "builder": "@ngx-env/builder:dev-server",
           "options": {
-            "browserTarget": "idn-admin-console:build"
+            "buildTarget": "idn-admin-console:build"
           },
           "configurations": {
             "production": {
