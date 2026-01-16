@@ -96,6 +96,7 @@ export const systemMenu = [
 ];
 
 export const reports = [
+  new MenuLink('/health-dashboard', 'Health Dashboard', null),
   new MenuLink('/account-report', 'Account Totals Report', null),
   new MenuLink(null, null, true),
   new MenuLink('/report-failures', 'Newest Provisioning/Sync Failures', null),

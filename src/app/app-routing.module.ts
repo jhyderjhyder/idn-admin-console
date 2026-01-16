@@ -52,6 +52,7 @@ import { ReportAttributesyncEventsComponent } from './report-attributesync-event
 import { ReportMostActiveComponent } from './report-most-active/report-most-active.component';
 import { ReportApprovalHistoryComponent } from './report-approval-history/report-approval-history.component';
 import { ReportInactiveIdentityWithActiveAccountsComponent } from './report-inactive-identity-with-active-accounts/report-inactive-identity-with-active-accounts.component';
+import { HealthDashboardComponent } from './health-dashboard/health-dashboard.component';
 
 const routes: Routes = [
   { path: '', redirectTo: '/identity-info', pathMatch: 'full' },
@@ -73,6 +74,11 @@ const routes: Routes = [
   {
     path: 'account-report',
     component: AccountReportComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'health-dashboard',
+    component: HealthDashboardComponent,
     canActivate: [AuthGuard],
   },
   {

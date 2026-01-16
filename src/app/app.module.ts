@@ -66,6 +66,7 @@ import { ReportFailuresSourceComponent } from './report-failures-source/report-f
 import { ReportAttributesyncEventsComponent } from './report-attributesync-events/report-attributesync-events.component';
 import { ReportMostActiveComponent } from './report-most-active/report-most-active.component';
 import { ReportApprovalHistoryComponent } from './report-approval-history/report-approval-history.component';
+import { HealthDashboardComponent} from './health-dashboard/health-dashboard.component';
 import { ReportInactiveIdentityWithActiveAccountsComponent } from './report-inactive-identity-with-active-accounts/report-inactive-identity-with-active-accounts.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
@@ -121,6 +122,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
         ReportMostActiveComponent,
         ReportApprovalHistoryComponent,
         ReportInactiveIdentityWithActiveAccountsComponent,
+        HealthDashboardComponent
     ],
     bootstrap: [AppComponent], imports: [BrowserModule,
         FormsModule,

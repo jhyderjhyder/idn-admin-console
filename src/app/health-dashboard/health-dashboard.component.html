@@ -1,0 +1,57 @@
+<p></p>
+<table class="table table-striped table-bordered">
+    <thead class="table-secondary align-middle">
+        <tr>
+            <th scope="col" colspan="2">Summary</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>VA Status</td>
+            <td>{{vaGood}} va working {{vaError}} need review</td>
+        </tr>
+        <tr>
+            <td>Delete Circuit Breaker Tripped</td>
+            <td> <span *ngFor="let s of circuitBreakerSet" >{{s}},</span></td>
+        </tr>
+        <tr>
+            <td>Aggegation Failures</td>
+            <td>SouceC, SourceX</td>
+        </tr>
+        <tr>
+            <td>Provisioning Failures Last 12 hours</td>
+            <td>5555</td>
+        </tr>
+    </tbody>
+</table>
+<p></p>
+<table class="table table-striped table-bordered">
+    <thead class="table-secondary align-middle">
+        <tr>
+            <th scope="col" colspan="2">Source Details</th>
+        </tr>
+    </thead>
+    <tbody>
+
+        <tr>
+            <td>Total Souces</td>
+            <td>150</td>
+        </tr>
+        <tr>
+            <td>Health Sources</td>
+            <td>100</td>
+        </tr>
+        <tr>
+            <td>UnHealth Sources</td>
+            <td>50</td>
+        </tr>
+        <tr>
+            <td>UnHealth Sources with ETA tag</td>
+            <td>10</td>
+        </tr>
+        <tr>
+            <td>UnHealth Sources no tags</td>
+            <td>40</td>
+        </tr>
+    </tbody>
+</table>
