@@ -1,3 +1,43 @@
+
+<p></p>
+<table class="table table-striped table-bordered mx-auto" style="width: 500px;">
+    <thead class="table-secondary align-middle">
+        <tr>
+            <th scope="col" colspan="2">Source Counts</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Delete Circuit Breaker Tripped</td>
+            <td>{{circuitBreakerSet.size}}</td>
+        </tr>
+         <tr>
+            <td>Aggegation Failures</td>
+            <td> {{failedSet.size}}</td>
+        </tr>
+        <tr>
+            <td>Total Souces</td>
+            <td>{{totalApps}}</td>
+        </tr>
+        <tr>
+            <td>Health Sources</td>
+            <td>{{workingApplication.length}}</td>
+        </tr>
+        <tr>
+            <td>UnHealth Sources</td>
+            <td>{{failingWithOutTag.length + failingWithTag.length}}</td>
+        </tr>
+        <tr>
+            <td>UnHealth Sources with Tag</td>
+            <td>{{failingWithTag.length}}</td>
+        </tr>
+        <tr>
+            <td>UnHealth Sources no Tag</td>
+            <td>{{failingWithOutTag.length}}</td>
+        </tr>
+
+    </tbody>
+</table>
 <p></p>
 <table class="table table-striped table-bordered">
     <thead class="table-secondary align-middle">
@@ -21,37 +61,6 @@
         <tr>
             <td>Provisioning Failures Last 12 hours</td>
             <td>TBD</td>
-        </tr>
-    </tbody>
-</table>
-<p></p>
-<table class="table table-striped table-bordered">
-    <thead class="table-secondary align-middle">
-        <tr>
-            <th scope="col" colspan="2">Source Counts</th>
-        </tr>
-    </thead>
-    <tbody>
-
-        <tr>
-            <td>Total Souces</td>
-            <td>{{totalApps}}</td>
-        </tr>
-        <tr>
-            <td>Health Sources</td>
-            <td>{{workingApplication.length}}</td>
-        </tr>
-        <tr>
-            <td>UnHealth Sources</td>
-            <td>{{failingWithOutTag.length + failingWithTag.length}}</td>
-        </tr>
-        <tr>
-            <td>UnHealth Sources with Tag</td>
-            <td>{{failingWithTag.length}}</td>
-        </tr>
-        <tr>
-            <td>UnHealth Sources no Tag</td>
-            <td>{{failingWithOutTag.length}}</td>
         </tr>
     </tbody>
 </table>
