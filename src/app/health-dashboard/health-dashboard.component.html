@@ -16,14 +16,46 @@
         </tr>
         <tr>
             <td>Aggegation Failures</td>
-            <td>SouceC, SourceX</td>
+            <td> <span *ngFor="let s of failedSet" >{{s}},</span></td>
         </tr>
         <tr>
             <td>Provisioning Failures Last 12 hours</td>
-            <td>5555</td>
+            <td>TBD</td>
         </tr>
     </tbody>
 </table>
+<p></p>
+<table class="table table-striped table-bordered">
+    <thead class="table-secondary align-middle">
+        <tr>
+            <th scope="col" colspan="2">Source Counts</th>
+        </tr>
+    </thead>
+    <tbody>
+
+        <tr>
+            <td>Total Souces</td>
+            <td>{{totalApps}}</td>
+        </tr>
+        <tr>
+            <td>Health Sources</td>
+            <td>{{workingApplication.length}}</td>
+        </tr>
+        <tr>
+            <td>UnHealth Sources</td>
+            <td>{{failingWithOutTag.length + failingWithTag.length}}</td>
+        </tr>
+        <tr>
+            <td>UnHealth Sources with Tag</td>
+            <td>{{failingWithTag.length}}</td>
+        </tr>
+        <tr>
+            <td>UnHealth Sources no Tag</td>
+            <td>{{failingWithOutTag.length}}</td>
+        </tr>
+    </tbody>
+</table>
+
 <p></p>
 <table class="table table-striped table-bordered">
     <thead class="table-secondary align-middle">
@@ -33,25 +65,14 @@
     </thead>
     <tbody>
 
+       
         <tr>
-            <td>Total Souces</td>
-            <td>150</td>
-        </tr>
-        <tr>
-            <td>Health Sources</td>
-            <td>100</td>
-        </tr>
-        <tr>
-            <td>UnHealth Sources</td>
-            <td>50</td>
-        </tr>
-        <tr>
-            <td>UnHealth Sources with ETA tag</td>
-            <td>10</td>
+            <td>UnHealth Sources with tag</td>
+            <td> <span *ngFor="let s of failingWithTag" >{{s.name}},</span></td>
         </tr>
         <tr>
             <td>UnHealth Sources no tags</td>
-            <td>40</td>
+            <td> <span *ngFor="let s of failingWithOutTag" >{{s.name}},</span></td>
         </tr>
     </tbody>
 </table>
