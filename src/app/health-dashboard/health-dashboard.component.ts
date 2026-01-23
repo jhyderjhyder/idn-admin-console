@@ -38,15 +38,25 @@ export class HealthDashboardComponent implements OnInit {
 
   }
   private vaHealth() {
-    this.idnService.getAllVAClusters().subscribe(async clusters => {
-      for (const each of clusters) {
-        if (each.status == 'NORMAL') {
-          this.vaGood++;
-        } else {
-          this.vaError++;
-        }
-      }
-    });
+       this.idnService.getAllVAClusters().subscribe(async clusters => {
+          for (const each of clusters) {
+            this.idnService
+              .getClusterDetails(each.id)
+              .subscribe(async clusterDetails => {
+
+                for (const d of clusterDetails.clientsStatus) {
+                  if (d.status == 'NORMAL') {
+                    this.vaGood++;
+                  } else {
+                      this.vaError++;
+                    }
+                }
+              });
+            
+          }
+    
+        });
+      
   }
   private getCBSources() {
     this.idnService.getTaskStatus("WARNING").subscribe(response => {
