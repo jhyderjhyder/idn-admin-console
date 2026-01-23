@@ -52,15 +52,11 @@
         </tr>
         <tr>
             <td>Delete Circuit Breaker Tripped</td>
-            <td> <span *ngFor="let s of circuitBreakerSet" >{{s}},</span></td>
+            <td> <span *ngFor="let i =index; let s of circuitBreakerSet" >{{i+1}}) {{s}}<br></span></td>
         </tr>
         <tr>
             <td>Aggegation Failures</td>
-            <td> <span *ngFor="let s of failedSet" >{{s}},</span></td>
-        </tr>
-        <tr>
-            <td>Provisioning Failures Last 12 hours</td>
-            <td>TBD</td>
+            <td> <span *ngFor="let i =index; let s of failedSet" >{{i+1}}) {{s}}<br></span></td>
         </tr>
     </tbody>
 </table>
@@ -77,11 +73,11 @@
        
         <tr>
             <td>UnHealth Sources with tag</td>
-            <td> <span *ngFor="let s of failingWithTag" >{{s.name}},</span></td>
+            <td> <span *ngFor="let i =index;let s of failingWithTag" >{{i+1}}) {{s.name}}<br></span></td>
         </tr>
         <tr>
             <td>UnHealth Sources no tags</td>
-            <td> <span *ngFor="let s of failingWithOutTag" >{{s.name}},</span></td>
+            <td> <span *ngFor="let i =index;let s of failingWithOutTag" >{{i+1}}) {{s.name}}<br></span></td>
         </tr>
     </tbody>
 </table>
