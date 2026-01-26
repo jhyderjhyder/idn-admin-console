@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { IDNService } from '../service/idn.service';
-import { BasicAttributes } from '../model/basic-attributes';
+import { BasicAttributes2 } from '../model/basic-attributes';
 import { PageResults } from '../model/page-results';
 
 @Component({
@@ -18,9 +18,9 @@ export class HealthDashboardComponent implements OnInit {
   circuitBreakerSet: Set<String>;
   failedSetAccount: Set<String>;
   failedSetGroup: Set<String>;
-  workingApplication: Array<BasicAttributes>;
-  failingWithTag: Array<BasicAttributes>;
-  failingWithOutTag: Array<BasicAttributes>;
+  workingApplication: Array<BasicAttributes2>;
+  failingWithTag: Array<BasicAttributes2>;
+  failingWithOutTag: Array<BasicAttributes2>;
   totalApps: Number;
   today: Date;
 
@@ -129,9 +129,9 @@ export class HealthDashboardComponent implements OnInit {
    async getApplicationNames() {
       const pr = new PageResults();
       pr.limit = 1;
-      this.workingApplication = new Array<BasicAttributes>();
-      this.failingWithOutTag = new Array<BasicAttributes>();
-      this.failingWithTag = new Array<BasicAttributes>();
+      this.workingApplication = new Array<BasicAttributes2>();
+      this.failingWithOutTag = new Array<BasicAttributes2>();
+      this.failingWithTag = new Array<BasicAttributes2>();
       
       this.idnService.getAllSourcesPaged(pr, null).subscribe(async response => {
         const headers = response.headers;
@@ -149,7 +149,7 @@ export class HealthDashboardComponent implements OnInit {
                 const searchResult = response.body;
                 for (let i = 0; i < searchResult.length; i++) {
                   const app = searchResult[i];
-                  const basic = new BasicAttributes();
+                  const basic = new BasicAttributes2();
                   basic.name = app['name'];
                   basic.value = app['id'];
                   if (app.connectorAttributes!=null && app.connectorAttributes.status!=null){
@@ -159,6 +159,7 @@ export class HealthDashboardComponent implements OnInit {
                       this.idnService.getTags('SOURCE', app.id).subscribe(myTag => {
                       if (myTag != null && myTag.tags.length>0) {
                         console.log(app.name + ":" + myTag.tags.length)
+                        basic.id = myTag.tags.join(',');
                         this.failingWithTag.push(basic);
                       } else {
                         this.failingWithOutTag.push(basic);
