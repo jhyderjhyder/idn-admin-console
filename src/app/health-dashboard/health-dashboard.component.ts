@@ -16,11 +16,13 @@ export class HealthDashboardComponent implements OnInit {
   vaGood: number;
   vaError: number;
   circuitBreakerSet: Set<String>;
-  failedSet: Set<String>;
+  failedSetAccount: Set<String>;
+  failedSetGroup: Set<String>;
   workingApplication: Array<BasicAttributes>;
   failingWithTag: Array<BasicAttributes>;
   failingWithOutTag: Array<BasicAttributes>;
   totalApps: Number;
+  today: Date;
 
   constructor(
     private idnService: IDNService,
@@ -28,15 +30,43 @@ export class HealthDashboardComponent implements OnInit {
   ngOnInit() {
     this.vaGood = 0;
     this.vaError = 0;
-    this.vaHealth();
+    this.workingApplication = [];
+    this.failingWithTag = [];
+    this.failingWithOutTag = [];
     this.circuitBreakerSet = new Set();
-    this.failedSet = new Set();
+    this.failedSetAccount = new Set();
+    this.failedSetGroup = new Set();
+
+    const maxHours = (24*60*60*1000);
+    this.today = new Date(new Date().getTime()-maxHours);
+
+    this.vaHealth();
     this.getCBSources();
     this.getFailSources();
     this.getApplicationNames();
 
 
   }
+
+  public sort(){
+   
+    const circuitBreakerArray = Array.from(this.circuitBreakerSet);
+    circuitBreakerArray.sort;
+    this.circuitBreakerSet = new Set(circuitBreakerArray);
+
+    const failedSetAccountArray = Array.from(this.failedSetAccount);
+    failedSetAccountArray.sort();
+    this.failedSetAccount = new Set(failedSetAccountArray);
+
+    const failedSetGroupArray = Array.from(this.failedSetGroup);
+    failedSetGroupArray.sort();
+    this.failedSetGroup = new Set(failedSetGroupArray);
+
+    this.workingApplication.sort((a, b) => a.name.localeCompare(b.name));
+    this.failingWithTag.sort((a, b) => a.name.localeCompare(b.name));
+    this.failingWithOutTag.sort((a, b) => a.name.localeCompare(b.name));
+  }
+
   private vaHealth() {
        this.idnService.getAllVAClusters().subscribe(async clusters => {
           for (const each of clusters) {
@@ -60,11 +90,16 @@ export class HealthDashboardComponent implements OnInit {
   }
   private getCBSources() {
     this.idnService.getTaskStatus("WARNING").subscribe(response => {
+      
       for (const each of response) {
-        if (each.messages) {
-          let data = JSON.stringify(each.messages);
-          if (data.includes("Account deletion was skipped")) {
-            this.circuitBreakerSet.add(each.target.name);
+        let created = new Date();
+        created = new Date(each.created);
+        if (created.getTime()>this.today.getTime()){
+          if (each.messages) {
+            let data = JSON.stringify(each.messages);
+            if (data.includes("Account deletion was skipped")) {
+              this.circuitBreakerSet.add(each.target.name);
+            }
           }
         }
 
@@ -74,10 +109,18 @@ export class HealthDashboardComponent implements OnInit {
   }
 
   private getFailSources() {
+
     this.idnService.getTaskStatus("ERROR").subscribe(response => {
       for (const each of response) {
-        if (each.uniqueName != null && each.uniqueName.startsWith("Cloud Account Aggregation")) {
-          this.failedSet.add(each.target.name);
+        let created = new Date();
+        created = new Date(each.created);
+        if (created.getTime()>this.today.getTime()){
+          if (each.uniqueName != null && each.uniqueName.includes("Account Aggregation")) {
+            this.failedSetAccount.add(each.target.name);
+          }
+          if (each.uniqueName != null && each.uniqueName.includes("Group Aggregation")) {
+            this.failedSetGroup.add(each.target.name);
+          }
         }
       }
       //this.tasks = response;
