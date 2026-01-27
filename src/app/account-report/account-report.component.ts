@@ -166,6 +166,12 @@ export class AccountReportComponent implements OnInit {
               const headers = response.headers;
               source.uncorrelated = headers.get('X-Total-Count');
             });
+          this.idnService
+          .countMachineAccounts(each.id)
+          .subscribe(response => {
+            const headers = response.headers;
+            source.machine = headers.get('X-Total-Count');
+          });
           this.idnService.countEntitlements(each.id).subscribe(response => {
             const headers = response.headers;
             source.entSize = headers.get('X-Total-Count');

@@ -48,8 +48,9 @@
       <tr>
         <th scope="col">Name</th>
         <th scope="col">Accounts</th>
+        <th scope="col">Machines</th>
         <th scope="col">Uncorrelated</th>
-        <th scope="col">%</th>
+        <th scope="col">%UnOwned</th>
         <th scope="col">Entitlementments</th>
         <th scope="col">ServiceAccount</th>
         <th scope="col">Type</th>
@@ -61,8 +62,9 @@
 
         <td>{{ c.name }}</td>
         <td>{{ c.accountSize }}</td>
+        <td>{{ c.machine }}</td>
         <td>{{ c.uncorrelated}}</td>
-        <td>{{ c.uncorrelated / c.accountSize | percent}}</td>
+        <td>{{ (c.uncorrelated - c.machine) / c.accountSize | percent}}</td>
         <td>{{ c.entSize }}</td> 
         <td>{{ c.serviceAccount }}</td> 
         <td>{{ c.type }}</td> 

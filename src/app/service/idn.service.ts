@@ -1074,6 +1074,35 @@ Supported API's
     );
   }
 
+  countMachineAccounts(
+    appID: String
+  ): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/v2025/machine-accounts?count=true&limit=1&filters=source.id eq "${appID}"`;
+
+  
+    const headers = new HttpHeaders({
+        'Content-Type': 'application/json',
+        'X-SailPoint-Experimental': 'true',
+    });
+    const httpOptions = {
+      headers: headers,
+      observe: 'response' as const
+    }
+    return this.http.get(url, httpOptions).pipe(
+      catchError(error => {
+        if (error.status === 429) {
+          //this.logError('Rate limited. Retrying in 2 seconds...');
+          this.sleep(2000);
+          return this.countMachineAccounts(appID);
+        } else {
+          //this.logError(`timeout getting record counts returning last 200`);
+          this.handleError(`countApplicationAccounts`);
+        }
+      })
+    );
+  }
+
   countEntitlements(appID: String): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
     const url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/entitlements?count=true&limit=1&filters=source.id eq "${appID}"`;
