@@ -21,6 +21,8 @@ export class RoleContainsEntComponent implements OnInit {
   selectedFilterTypes: string;
   entList: Array<BasicAttributes>;
   max: boolean;
+  rubyCSV: Array<rubyImport>;
+  rubyCSVsize: number;
 
   roles: Array<Role>;
 
@@ -31,6 +33,8 @@ export class RoleContainsEntComponent implements OnInit {
   }
 
   submit() {
+    this.rubyCSV = [];
+    this.rubyCSVsize=0;
     this.max = false;
     this.roles = new Array<Role>();
     const query = new SimpleQueryCondition();
@@ -66,6 +70,7 @@ export class RoleContainsEntComponent implements OnInit {
               r.description = roleRaw.description;
               r.shortDescription = app.source.name + '--' + app.name;
               this.roles.push(r);
+              
             }
           });
       }
@@ -121,6 +126,62 @@ export class RoleContainsEntComponent implements OnInit {
 
     //const fileName = `rolesContaining-${this.entName}`;
 
+
     new AngularCsv(this.roles, 'rolesContaining', options);
   }
+
+
+  async buildEntitlementList(input) {
+    this.rubyCSV = [];
+    this.rubyCSVsize=0;
+    const role = this.roles[input];
+    
+    let entPK = [];
+    await this.idnService.getRoleByName(role.name).subscribe(response => {
+      this.rubyCSVsize = response[0].entitlements.length;
+      for (const d of response[0].entitlements){
+        entPK.push[d.id];
+         this.idnService.getEntitlement(d.id).subscribe(dResponse =>{
+          let r = new rubyImport();
+          r.applicationName = dResponse.source.name;
+          r.attribute = dResponse.attribute;
+          r.sourceSchemaObjectType = dResponse.sourceSchemaObjectType;
+          r.description = dResponse.description;
+          if (r.description){
+            r.description = r.description.replace(/[\r\n]/g, '');
+          }
+          r.value = dResponse.value;
+          console.log(dResponse);
+          this.rubyCSV.push(r);
+        });
+        
+    }
+  });
 }
+
+    async saveEntitlementData(input) {
+    const options = {
+      fieldSeparator: ',',
+      quoteStrings: '"',
+      decimalseparator: '.',
+      showLabels: true,
+      useHeader: true,
+      headers: ['applicationName', 'attribute', 'value', 'description', 'sourceSchemaObjectType'],
+      nullToEmptyString: true,
+    };
+    const role = this.roles[input];
+    const fileName = `entitlementExtract-${role.name}`;
+    new AngularCsv(this.rubyCSV, 'rubyExtract-'+ fileName, options);
+    
+  };
+ 
+
+    
+  }
+      class rubyImport {
+    applicationName: string;
+    attribute:string;
+    value:string;
+    description:string;
+    sourceSchemaObjectType:string
+  } 
