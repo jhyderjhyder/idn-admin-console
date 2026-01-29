@@ -17,6 +17,7 @@ import { Transform } from '../model/transform';
 import { PageResults } from '../model/page-results';
 import { IdentityPreview } from '../model/identity-preview';
 import { RevokeRole } from '../model/revokeRole';
+import { encode } from 'punycode';
 
 @Injectable({
   providedIn: 'root',
@@ -1803,7 +1804,7 @@ Supported API's
 
   getRoleByName(name: string): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const params = '?filters=name eq "' + name + '"' + '&count=true';
+    const params = encodeURIComponent('?filters=name eq "' + name + '"' + '&count=true');
     const url =
       `https://${currentUser.tenant}.api.${currentUser.domain}/v3/roles` +
       params;
