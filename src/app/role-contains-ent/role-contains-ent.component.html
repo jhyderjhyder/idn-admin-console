@@ -87,6 +87,11 @@
               <button  type="button" (click)="saveEntitlementData(i)" class="btn btn-primary btn-sm">
                 Export
               </button>
+              </div>
+              <div *ngIf="rubyCSV.length==rubyCSVsize && rubyCSVsize!=0" class="col-sm-2 text-start">
+              <button  type="button" (click)="saveRubyData(i)" class="btn btn-primary btn-sm">
+                Ruby
+              </button>
                 </div>
             </th>
        
