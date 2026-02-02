@@ -6,6 +6,7 @@ import { SimpleQueryCondition } from '../model/simple-query-condition';
 import { Role } from '../model/role';
 import { AngularCsv } from 'angular-csv-ext/dist/Angular-csv';
 import { PageResults } from '../model/page-results';
+import { SourceOwner } from '../model/source-owner';
 
 @Component({
   selector: 'app-role-contains-ent',
@@ -66,7 +67,8 @@ export class RoleContainsEntComponent implements OnInit {
               const roleRaw = rolesDetails[ii];
               const r = new Role();
               r.name = roleRaw.name;
-              r.owner = roleRaw.owner.name;
+              r.owner = new SourceOwner();
+              r.owner.displayName = roleRaw.owner.name;
               r.description = roleRaw.description;
               r.shortDescription = app.source.name + '--' + app.name;
               this.roles.push(r);
@@ -143,9 +145,9 @@ export class RoleContainsEntComponent implements OnInit {
         entPK.push[d.id];
         this.idnService.getEntitlement(d.id).subscribe(dResponse => {
           let r = new rubyImport();
-          r.role_name = d.name;
+          r.role_name = role.name;
           r.role_description = d.description;
-          r.role_owner = d.owner;
+          r.role_owner = role.owner.displayName;
           
           r.applicationName = dResponse.source.name;
           r.attribute = dResponse.attribute;
@@ -178,6 +180,8 @@ export class RoleContainsEntComponent implements OnInit {
     const role = this.roles[input];
     const fileName = `entitlementExtract-${role.name}`;
     new AngularCsv(this.rubyCSV, 'rubyExtract-' + fileName, options);
+    this.rubyCSVsize=0;
+    this.rubyCSV = [];
 
   };
 
