@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { IDNService } from '../service/idn.service';
 import { BasicAttributes2 } from '../model/basic-attributes';
 import { PageResults } from '../model/page-results';
+import { AngularCsv } from 'angular-csv-ext/dist/Angular-csv';
+
 
 @Component({
   selector: 'app-health-dashboard',
@@ -184,4 +186,21 @@ export class HealthDashboardComponent implements OnInit {
       });
     }
 
+  public downloadUnHealthSources(){
+          const options = {
+      fieldSeparator: ',',
+      quoteStrings: '"',
+      decimalseparator: '.',
+      showLabels: true,
+      useHeader: false,
+      headers: ['name'],
+      nullToEmptyString: true,
+    };
+        let down = Array<String>();
+        for(const x of this.failingWithTag){
+          down.push(x.name.toString());
+        }
+        
+        new AngularCsv(this.failingWithTag, 'downSources.txt', options);
+  }
 }

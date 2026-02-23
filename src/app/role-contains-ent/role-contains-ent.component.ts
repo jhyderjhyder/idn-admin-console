@@ -118,7 +118,7 @@ export class RoleContainsEntComponent implements OnInit {
   saveInCsv() {
     const options = {
       fieldSeparator: ',',
-      quoteStrings: '"',
+      quoteStrings: ' ',
       decimalseparator: '.',
       showLabels: true,
       useHeader: true,
