@@ -91,7 +91,7 @@ API's to sunset #16
 
   resetSource(cloudExternalID: string, skipType: string): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v2025/sources/${cloudExternalID}/remove-accounts/`;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v2025/sources/${cloudExternalID}/remove-accounts`;
 
     const myHttpOptions = {
       headers: new HttpHeaders({
@@ -102,9 +102,6 @@ API's to sunset #16
 
     let payload = null;
 
-    if (skipType != null) {
-      payload = 'skip=' + `${skipType}`;
-    }
 
     return this.http.post(url, payload, myHttpOptions);
   }
