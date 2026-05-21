@@ -100,10 +100,10 @@ API's to sunset #16
       }),
     };
 
-    let payload = null;
+    let payload = skipType;
+    console.log(payload);
 
-
-    return this.http.post(url, payload, myHttpOptions);
+    return this.http.post(url, null, myHttpOptions);
   }
 
   resetSourceEnt(cloudExternalID: string, skipType: string): Observable<any> {
