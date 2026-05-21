@@ -110,9 +110,11 @@ can pick from
   getOwnerDetails(identityID) {
     this.idnService.searchIdentities(identityID).subscribe(response => {
       const one = response[0];
+      if (one!=null){
       this.rawIdentity = new IdentityAttribute();
       this.rawIdentity.displayName = one['displayName'];
       this.rawIdentity.name = one['name'];
+      }
       //this.rawIdentity = response;
     });
   }
@@ -162,8 +164,15 @@ Loads the dropdown for filter types
 
   getDetails(input) {
     this.rawObject = this.identityList[input];
+    this.rawIdentity = new IdentityAttribute();
     if (this.rawObject['identityId']) {
+      
       this.getOwnerDetails(this.rawObject['identityId']);
+    }
+    if (this.rawObject['ownerIdentity']){
+      this.rawIdentity.displayName = this.rawObject['ownerIdentity'].name;
+      this.rawIdentity.name = this.rawObject['ownerIdentity'].id;
+     
     }
     if (this.identityList[input].attributes) {
       this.details = new Array();
@@ -241,6 +250,7 @@ Loads the dropdown for filter types
         'disabled',
         'locked',
         'manuallyCorrelated',
+        'isMachine',
         'sourceId',
       ],
     };
@@ -248,5 +258,20 @@ Loads the dropdown for filter types
     const fileName = `accountList`;
 
     new AngularCsv(this.identityList, fileName, options);
+  }
+
+   downloadAccount() {
+    const options = {
+      fieldSeparator: ',',
+      quoteStrings: '"',
+      decimalseparator: '.',
+      showLabels: true,
+      useHeader: true,
+      nullToEmptyString: true,
+    };
+
+    const fileName = `accountDetails`;
+
+    new AngularCsv(this.details, fileName, options);
   }
 }

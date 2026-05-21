@@ -16,4 +16,5 @@ export class AccountOnly {
   name?: string;
   created?: string;
   modified?: string;
+  isMachine?: boolean;
 }
