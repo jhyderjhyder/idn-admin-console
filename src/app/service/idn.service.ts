@@ -62,10 +62,11 @@ API's to sunset #16
 
   aggregateSourceOwner(
     cloudExternalID: string,
-    payload: object
+    payload: object,
+    type: string
   ): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/sources/${cloudExternalID}/load-accounts`;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/sources/${cloudExternalID}/${type}`;
 
     const myHttpOptions = {
       headers: new HttpHeaders({}),
