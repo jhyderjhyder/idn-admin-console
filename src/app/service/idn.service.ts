@@ -551,7 +551,7 @@ Supported API's
     type: string
   ): Observable<any> {
     let apiVersion = 'v3';
-    if (type == 'attribute-sync-config') {
+    if (type == 'attribute-sync-config' || type =='correlation-config') {
       apiVersion = 'beta';
     }
     const currentUser = this.authenticationService.currentUserValue;
