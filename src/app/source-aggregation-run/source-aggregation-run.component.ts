@@ -180,17 +180,6 @@ export class AggregateSourceComponent implements OnInit {
       if (each.aggregateSourceFormData == null) {
         each.aggregateSourceFormData = new FormData();
       }
-      /* let disableOptimization = 'false';
-
-      if (each.aggSourceDisableOptimization) {
-        disableOptimization = 'true';
-      }
-      
-      const payload = {
-        disableOptimization: disableOptimization,
-      };
-      */
-
       const formData: FormData = new FormData();
 
       formData.append('disableOptimization', 'true');
@@ -202,7 +191,59 @@ export class AggregateSourceComponent implements OnInit {
       index++;
 
       this.idnService
-        .aggregateSourceOwner(each.cloudExternalID, formData)
+        .aggregateSourceOwner(each.cloudExternalID, formData, "load-accounts")
+        .subscribe(
+          searchResult => {
+            processedCount++;
+            each.aggTask = new AggregationTask();
+            each.aggTask.id = searchResult.task.id;
+            this.idnService.startAggTaskPolling(
+              each.cloudExternalID,
+              each.aggTask.id
+            );
+
+            if (processedCount == arr.length) {
+              this.closeModalDisplayMsg();
+              this.checkAggTaskStatus(arr);
+              //  this.reset(false);
+              //  this.search();
+            }
+          },
+          () => {
+            this.errorMessage =
+              'Error to send request to aggregate the source.';
+            processedCount++;
+            if (processedCount == arr.length) {
+              this.closeModalDisplayMsg();
+              this.checkAggTaskStatus(arr);
+              // this.reset(false);
+              // this.search();
+            }
+          }
+        );
+    }
+  }
+
+    async aggregateEntitlements() {
+    const arr = this.sources.filter(each => each.selected);
+    let processedCount = 0;
+    let index = 0;
+    for (const each of arr) {
+      if (each.aggregateSourceFormData == null) {
+        each.aggregateSourceFormData = new FormData();
+      }
+      const formData: FormData = new FormData();
+
+      formData.append('disableOptimization', 'true');
+      if (index > 0 && index % 10 == 0) {
+        // After processing every batch (10 sources), wait for 1 second before calling another API to avoid 429
+        // Too Many Requests Error
+        await this.sleep(1000);
+      }
+      index++;
+
+      this.idnService
+        .aggregateSourceOwner(each.cloudExternalID, formData, "load-entitlements")
         .subscribe(
           searchResult => {
             processedCount++;
