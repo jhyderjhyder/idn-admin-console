@@ -22,6 +22,7 @@ export class PolicyComponent implements OnInit {
   right: Array<PolicyRightLeft>;
   left: Array<PolicyRightLeft>;
   totalEntries: number;
+  policyName:string;
 
 
   constructor(
@@ -107,6 +108,7 @@ export class PolicyComponent implements OnInit {
 
   showDetails(input: number) {
     let data = this.policy[input];
+    this.policyName = data.name
     this.details = [];
     this.right = [];
     this.left = [];
@@ -174,7 +176,13 @@ export class PolicyComponent implements OnInit {
       showLabels: true,
       useHeader: true,
       nullToEmptyString: true,
+      headers: [
+        "side",
+        "application",
+        "entitlement"
+
+      ]
     };
-      new AngularCsv(this.details, 'policyExtract', options);
+      new AngularCsv(this.details, 'policyExtract-' + this.policyName, options);
   }
 }
