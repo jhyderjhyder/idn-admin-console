@@ -138,8 +138,10 @@ export class PolicyComponent implements OnInit {
       this.details.push(input);
       if (input.side=="left"){
         this.left.push(input);
+        this.left.sort((a,b) =>a.application.localeCompare(b.application));
       }else{
         this.right.push(input);
+        this.right.sort((a,b) =>a.application.localeCompare(b.application));
       }
     });
   }
