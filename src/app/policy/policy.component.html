@@ -29,12 +29,12 @@
   <!--Button Bars-->
   <div class="row">
     <div class="col-sm-1 text-start">
-      <button type="button" (click)="search()" class="btn btn-primary btn-sm">
+      <button *ngIf='details===null'type="button" (click)="search()" class="btn btn-primary btn-sm">
         Fetch
       </button>
     </div>
 
-     <div class="col-sm-1 text-start">
+     <div class="col-sm-2 text-start">
       <button *ngIf='details!==null' type="button" (click)="clear()" class="btn btn-primary btn-sm">
         Return to List
       </button>
