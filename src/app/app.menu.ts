@@ -49,6 +49,8 @@ export const accessMenu = [
   new MenuLink(null, null, true),
 
   new MenuLink('/entitlement-management', 'Entitlements Ownership', null),
+  new MenuLink(null, null, true),
+  new MenuLink('/policy', 'Policy Report', null),
 ];
 export const accountsMenu = [
   new MenuLink('/account-search', 'Search Details', null),

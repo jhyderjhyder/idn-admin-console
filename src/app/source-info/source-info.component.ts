@@ -338,6 +338,9 @@ export class SourceInfoComponent implements OnInit {
     if (type === 'attribute-sync-config') {
       objectType = 'attribute-sync-config';
     }
+    if (type === 'correlation-config'){
+      objectType = 'correlation-config';
+    }
     this.clearButton = true;
     for (const each of this.allSources) {
       if (each.id == input.id) {

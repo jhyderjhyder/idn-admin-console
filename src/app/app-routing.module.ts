@@ -53,12 +53,18 @@ import { ReportMostActiveComponent } from './report-most-active/report-most-acti
 import { ReportApprovalHistoryComponent } from './report-approval-history/report-approval-history.component';
 import { ReportInactiveIdentityWithActiveAccountsComponent } from './report-inactive-identity-with-active-accounts/report-inactive-identity-with-active-accounts.component';
 import { HealthDashboardComponent } from './health-dashboard/health-dashboard.component';
+import { PolicyComponent} from './policy/policy.component'
 
 const routes: Routes = [
   { path: '', redirectTo: '/identity-info', pathMatch: 'full' },
   {
     path: 'report-approval-history',
     component: ReportApprovalHistoryComponent,
+    canActivate: [AuthGuard],
+  },
+  {
+    path: 'policy',
+    component: PolicyComponent,
     canActivate: [AuthGuard],
   },
   {
