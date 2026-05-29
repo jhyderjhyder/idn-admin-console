@@ -408,6 +408,33 @@ Supported API's
     );
   }
 
+    getAllPoliciesPaged(page: PageResults, preFilter: string): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    let filter = '';
+    if (preFilter) {
+      filter = '&filters=(name co "' + preFilter + '")';
+    }
+    console.log(filter);
+    const url =
+      `https://${currentUser.tenant}.api.${currentUser.domain}/beta/sod-policies?sorters=name&count=true&limit=` +
+      page.limit +
+      '&offset=' +
+      page.offset +
+      filter;
+    console.log(url);
+    return this.http.get(url, { observe: 'response' }).pipe(
+      catchError(error => {
+        if (error.status === 429) {
+          console.warn('Rate limited. Retrying in 2 seconds...');
+          this.sleep(2000);
+          return this.getAllPoliciesPaged(page, preFilter);
+        } else {
+          catchError(this.handleError(`getAllPoliciesPaged`));
+        }
+      })
+    );
+  }
+
   getAllVAClusters(): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
     const url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/managed-clusters`;
