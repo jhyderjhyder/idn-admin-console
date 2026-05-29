@@ -4,6 +4,7 @@ export class AccountTotals {
   entSize: number;
   accountSize: number;
   uncorrelated: number;
+  machine: number;
   type: string;
   url: string;
   serviceAccount: string;

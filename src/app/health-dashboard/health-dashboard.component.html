@@ -1,0 +1,139 @@
+
+<p> <button type="button" (click)="sort()" class="btn btn-primary btn-sm">
+      Sort
+    </button> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+<button type="button" (click)="downloadUnHealthSources()" class="btn btn-primary btn-sm">
+      Download UnHealth
+    </button>
+</p>
+<table class="table table-striped table-bordered mx-auto" style="width: 500px;">
+    <thead class="table-secondary align-middle">
+        <tr>
+            <th scope="col" colspan="2">Metric Counts</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Delete Circuit Breaker Tripped</td>
+            <td>{{circuitBreakerSet.size}}</td>
+        </tr>
+         <tr>
+            <td>Account Aggegation Failures</td>
+            <td> {{failedSetAccount.size}}</td>
+        </tr>
+          <tr>
+            <td>Group Aggegation Failures</td>
+            <td> {{failedSetGroup.size}}</td>
+        </tr>
+        <tr>
+            <td>Total Souces</td>
+            <td>{{totalApps}}</td>
+        </tr>
+        <tr>
+            <td>Health Sources</td>
+            <td>{{workingApplication.length}}</td>
+        </tr>
+        <tr>
+            <td>UnHealth Sources</td>
+            <td>{{failingWithOutTag.length + failingWithTag.length}}</td>
+        </tr>
+        <tr>
+            <td>UnHealth Sources with Tag</td>
+            <td>{{failingWithTag.length}}</td>
+        </tr>
+        <tr>
+            <td>UnHealth Sources no Tag</td>
+            <td>{{failingWithOutTag.length}}</td>
+        </tr>
+
+    </tbody>
+</table>
+
+<p></p>
+<table class="table table-striped table-bordered">
+    <thead class="table-secondary align-middle">
+        <tr>
+            <th scope="col" colspan="3">Compressed</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td >VA Status</td>
+            <td scope="col" colspan="2"> {{vaGood}} Working <span *ngIf="vaError>0"> and {{vaError}} need Review </span> </td>
+        </tr>
+        <tr>
+            <td>Source Status</td>
+            <td>SUCCESS</td>
+            <td> {{workingApplication.length}}</td>
+        </tr>
+        <tr>
+            <td>Total Sources {{totalApps}}</td>
+            <td>FAILURES</td>
+            <td>{{failingWithTag.length}} Sources are Under Maintenance 
+                <p>{{failingWithOutTag.length}} need Investigation </p>
+            </td>
+        </tr>
+        <tr>
+            <td>Delete Circuit Breaker Tripped</td>
+            <td scope="col" colspan="2"><span *ngFor="let i =index; let s of circuitBreakerSet" >({{i+1}}) {{s}},</span></td>
+        </tr>
+         <tr>
+            <td>Account Aggregation Failure</td>
+            <td scope="col" colspan="2"><span *ngFor="let i =index; let s of failedSetAccount" >({{i+1}}) {{s}},</span></td>
+        </tr>
+        <tr>
+            <td>Group Aggregation Failure</td>
+            <td scope="col" colspan="2"><span *ngFor="let i =index; let s of failedSetGroup" >({{i+1}}) {{s}},</span></td>
+        </tr>
+    </tbody>
+</table>
+
+
+<p></p>
+<table class="table table-striped table-bordered">
+    <thead class="table-secondary align-middle">
+        <tr>
+            <th scope="col" colspan="2">Expanded Warnings and Errors</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>VA Status</td>
+            <td>{{vaGood}} va working {{vaError}} need review</td>
+        </tr>
+        <tr>
+            <td>Delete Circuit Breaker Tripped</td>
+            <td> <span *ngFor="let i =index; let s of circuitBreakerSet" >{{i+1}}) {{s}}<br></span></td>
+        </tr>
+        <tr>
+            <td>Account Aggegation Failures</td>
+            <td> <span *ngFor="let i =index; let s of failedSetAccount" >{{i+1}}) {{s}}<br></span></td>
+        </tr>
+        <tr>
+            <td>Group Aggegation Failures</td>
+            <td> <span *ngFor="let i =index; let s of failedSetGroup" >{{i+1}}) {{s}}<br></span></td>
+        </tr>
+    </tbody>
+</table>
+
+<p></p>
+<table class="table table-striped table-bordered">
+    <thead class="table-secondary align-middle">
+        <tr>
+            <th scope="col" colspan="2">Source Details Expanded</th>
+        </tr>
+    </thead>
+    <tbody>
+
+       
+        <tr>
+            <td>UnHealth Sources with tag</td>
+            <td> <span *ngFor="let i =index;let s of failingWithTag" >{{i+1}}) {{s.name}}  :tags: {{s.id}}<br></span></td>
+
+        </tr>
+        <tr>
+            <td>UnHealth Sources no tags</td>
+            <td> <span *ngFor="let i =index;let s of failingWithOutTag" >{{i+1}}) {{s.name}}<br></span></td>
+        </tr>
+    </tbody>
+</table>

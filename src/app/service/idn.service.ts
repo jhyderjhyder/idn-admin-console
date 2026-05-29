@@ -18,6 +18,7 @@ import { PageResults } from '../model/page-results';
 import { IdentityPreview } from '../model/identity-preview';
 import { RevokeRole } from '../model/revokeRole';
 
+
 @Injectable({
   providedIn: 'root',
 })
@@ -91,21 +92,19 @@ API's to sunset #16
 
   resetSource(cloudExternalID: string, skipType: string): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/sources/${cloudExternalID}/remove-accounts/`;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v2025/sources/${cloudExternalID}/remove-accounts`;
 
     const myHttpOptions = {
       headers: new HttpHeaders({
         'Content-Type': 'application/x-www-form-urlencoded',
+        'X-SailPoint-Experimental': 'true'
       }),
     };
 
-    let payload = null;
+    let payload = skipType;
+    console.log(payload);
 
-    if (skipType != null) {
-      payload = 'skip=' + `${skipType}`;
-    }
-
-    return this.http.post(url, payload, myHttpOptions);
+    return this.http.post(url, null, myHttpOptions);
   }
 
   resetSourceEnt(cloudExternalID: string, skipType: string): Observable<any> {
@@ -1102,6 +1101,35 @@ Supported API's
     );
   }
 
+  countMachineAccounts(
+    appID: String
+  ): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/v2025/machine-accounts?count=true&limit=1&filters=source.id eq "${appID}"`;
+
+  
+    const headers = new HttpHeaders({
+        'Content-Type': 'application/json',
+        'X-SailPoint-Experimental': 'true',
+    });
+    const httpOptions = {
+      headers: headers,
+      observe: 'response' as const
+    }
+    return this.http.get(url, httpOptions).pipe(
+      catchError(error => {
+        if (error.status === 429) {
+          //this.logError('Rate limited. Retrying in 2 seconds...');
+          this.sleep(2000);
+          return this.countMachineAccounts(appID);
+        } else {
+          //this.logError(`timeout getting record counts returning last 200`);
+          this.handleError(`countApplicationAccounts`);
+        }
+      })
+    );
+  }
+
   countEntitlements(appID: String): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
     const url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/entitlements?count=true&limit=1&filters=source.id eq "${appID}"`;
@@ -1802,7 +1830,8 @@ Supported API's
 
   getRoleByName(name: string): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    const params = '?filters=name eq "' + name + '"' + '&count=true';
+    name = encodeURIComponent(name);
+    const params = ('?filters=name eq "' + name + '"' + '&count=true');
     const url =
       `https://${currentUser.tenant}.api.${currentUser.domain}/v3/roles` +
       params;
