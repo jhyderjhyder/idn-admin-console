@@ -970,6 +970,10 @@
             </tr>
           </tbody>
           </table>
+          <h6 class="text-start">Comments</h6>
+           <ul *ngFor="let item of oneRequest.approvalDetails;">
+              <li *ngIf="item.comment!==null"><b>{{item.currentOwner.name}}:</b> {{item.comment}}</li>
+            </ul>
 
           <div *ngIf="members!=null">
             Members
@@ -978,6 +982,7 @@
             </ul>
           </div>
 
+            
         </div>
       </div>
 
