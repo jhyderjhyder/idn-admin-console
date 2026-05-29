@@ -134,7 +134,7 @@ export class PolicyComponent implements OnInit {
   getFullDetails(input: PolicyRightLeft) {
     this.idnService.getEntitlement(input.application).subscribe(data => {
       input.application = data.source.name;
-      input.entitlement = data.value;
+      input.entitlement = data.name;
       this.details.push(input);
       if (input.side=="left"){
         this.left.push(input);
