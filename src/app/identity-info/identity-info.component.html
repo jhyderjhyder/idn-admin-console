@@ -1012,10 +1012,15 @@
               <div class="col-sm-2">
                 <span>Processed {{roleDetailsEntCount}}</span>
               </div>
-              <div class="col-sm-2">
+              <div class="col-sm-1">
                 <button type="button" class="btn btn-primary btn-sm" (click)="roleDetailsCSV()">
                   Download
                 </button>
+              </div>
+              <div class="col-sm-1">
+              <button type="button" class="btn btn-primary btn-sm" (click)="showFriendlyNames()">
+                Resolve
+              </button>
               </div>
               <div class="col-sm-2">
                 <button type="button" class="btn btn-primary btn-sm" (click)="cleanFalse()">
@@ -1027,7 +1032,7 @@
               </div>
           </div>
 
-         
+       
             <table class="table table-striped table-bordered table-hover">
               <thead>
                 <tr><td>#</td><td>id</td><td>DisplayName</td><td>Found</td></tr>
