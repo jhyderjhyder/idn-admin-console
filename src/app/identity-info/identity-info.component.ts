@@ -1091,7 +1091,7 @@ export class IdentityInfoComponent implements OnInit {
 
   getEntitlementDetails(input) {
     this.idnService.getEntitlement(input).subscribe(data => {
-      window.alert(data.source.name);
+      window.alert(data.body.source.name);
     });
   }
 
@@ -1102,9 +1102,10 @@ export class IdentityInfoComponent implements OnInit {
       //EntitlementSimple
       console.log(this.roleDetailsEnt[ent]);
       let lookup = this.roleDetailsEnt[ent].id;
-       this.idnService.getEntitlement(lookup).subscribe(data => {
-      this.roleDetailsEnt[ent].id = (data.source.name);
-      this.roleDetailsEnt[ent].displayName = data.attribute + "--" + data.value;
+       this.idnService.getEntitlement(lookup).subscribe(response => {
+        const data = response.body;
+        this.roleDetailsEnt[ent].id = (data.source.name);
+        this.roleDetailsEnt[ent].displayName = data.attribute + "--" + data.value;
     });
 
     }
