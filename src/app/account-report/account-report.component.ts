@@ -6,10 +6,10 @@ import { AuthenticationService } from '../service/authentication-service.service
 import { PageResults } from '../model/page-results';
 
 @Component({
-    selector: 'app-account-report',
-    templateUrl: './account-report.component.html',
-    styleUrls: ['./account-report.component.css'],
-    standalone: false
+  selector: 'app-account-report',
+  templateUrl: './account-report.component.html',
+  styleUrls: ['./account-report.component.css'],
+  standalone: false,
 })
 export class AccountReportComponent implements OnInit {
   sources: AccountTotals[];
@@ -89,24 +89,32 @@ export class AccountReportComponent implements OnInit {
           source.type = each.type;
 
           //Encrypt section
-          source.encrypt ="NA"
-          if (each.connectorAttributes["jco.client.snc_mode"] !=null){
-            source.encrypt = each.connectorAttributes["jco.client.snc_mode"];
+          source.encrypt = 'NA';
+          if (each.connectorAttributes['jco.client.snc_mode'] != null) {
+            source.encrypt = each.connectorAttributes['jco.client.snc_mode'];
           }
-          if (each.connectorAttributes.url !=null){
-            if (each.connectorAttributes.url.toString().startsWith('jdbc:sap')){
-              source.encrypt = "false";
-              if (each.connectorAttributes.url.toString().includes("encrypt=true")){
-                source.encrypt = "true";
+          if (each.connectorAttributes.url != null) {
+            if (
+              each.connectorAttributes.url.toString().startsWith('jdbc:sap')
+            ) {
+              source.encrypt = 'false';
+              if (
+                each.connectorAttributes.url.toString().includes('encrypt=true')
+              ) {
+                source.encrypt = 'true';
               }
             }
           }
-          if (each.connectorAttributes.genericWebServiceBaseUrl!=null){
-            source.encrypt = "false";
-            if (each.connectorAttributes.genericWebServiceBaseUrl.toString().toLowerCase().startsWith("https")){
-              source.encrypt = "true";
+          if (each.connectorAttributes.genericWebServiceBaseUrl != null) {
+            source.encrypt = 'false';
+            if (
+              each.connectorAttributes.genericWebServiceBaseUrl
+                .toString()
+                .toLowerCase()
+                .startsWith('https')
+            ) {
+              source.encrypt = 'true';
             }
-
           }
 
           //UserName section
@@ -166,9 +174,7 @@ export class AccountReportComponent implements OnInit {
               const headers = response.headers;
               source.uncorrelated = headers.get('X-Total-Count');
             });
-          this.idnService
-          .countMachineAccounts(each.id)
-          .subscribe(response => {
+          this.idnService.countMachineAccounts(each.id).subscribe(response => {
             const headers = response.headers;
             source.machine = headers.get('X-Total-Count');
           });
@@ -197,7 +203,7 @@ export class AccountReportComponent implements OnInit {
         'serviceAccount',
         'type',
         'url',
-        'encrypt'
+        'encrypt',
       ],
       nullToEmptyString: true,
     };

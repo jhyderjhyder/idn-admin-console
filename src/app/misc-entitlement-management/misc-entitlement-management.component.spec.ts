@@ -1,7 +1,10 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { EntitlementManagementComponent } from './misc-entitlement-management.component';
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import {
+  provideHttpClient,
+  withInterceptorsFromDi,
+} from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { FormsModule } from '@angular/forms';
 import { ModalModule } from 'ngx-bootstrap/modal';
@@ -14,16 +17,15 @@ describe('EntitlementOwnersComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-    declarations: [EntitlementManagementComponent],
-    imports: [FormsModule,
-        ModalModule],
-    providers: [
+      declarations: [EntitlementManagementComponent],
+      imports: [FormsModule, ModalModule],
+      providers: [
         IDNService,
         { provide: IDNService, useClass: MockIDNService },
         provideHttpClient(withInterceptorsFromDi()),
         provideHttpClientTesting(),
-    ]
-}).compileComponents();
+      ],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

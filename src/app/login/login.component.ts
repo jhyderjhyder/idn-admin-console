@@ -10,9 +10,9 @@ import { User } from './../model/user';
 import { AuthenticationService } from '../service/authentication-service.service';
 
 @Component({
-    templateUrl: 'login.component.html',
-    styleUrls: ['./login.component.scss'],
-    standalone: false
+  templateUrl: 'login.component.html',
+  styleUrls: ['./login.component.scss'],
+  standalone: false,
 })
 export class LoginComponent implements OnInit {
   loginForm: UntypedFormGroup;

@@ -9,10 +9,10 @@ import { IdentityProfile } from '../model/identity-profile';
 import { AuthenticationService } from '../service/authentication-service.service';
 
 @Component({
-    selector: 'app-identity-lcs-management',
-    templateUrl: './identity-lcs-management.component.html',
-    styleUrls: ['./identity-lcs-management.component.css'],
-    standalone: false
+  selector: 'app-identity-lcs-management',
+  templateUrl: './identity-lcs-management.component.html',
+  styleUrls: ['./identity-lcs-management.component.css'],
+  standalone: false,
 })
 export class IdentityLCSComponent implements OnInit {
   identityProfiles: IdentityProfile[];

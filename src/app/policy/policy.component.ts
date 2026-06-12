@@ -2,9 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { IDNService } from '../service/idn.service';
 import { PageResults } from '../model/page-results';
 import { CommonModule } from '@angular/common';
-import { PolicyRightLeft, SimplePolicy } from '../model/policy-right-left'
+import { PolicyRightLeft, SimplePolicy } from '../model/policy-right-left';
 import { AngularCsv } from 'angular-csv-ext/dist/Angular-csv';
-
 
 @Component({
   selector: 'app-policy',
@@ -13,7 +12,6 @@ import { AngularCsv } from 'angular-csv-ext/dist/Angular-csv';
   styleUrl: './policy.component.css',
 })
 export class PolicyComponent implements OnInit {
-
   hidePageOption: boolean;
   page: PageResults;
   loading: boolean;
@@ -28,11 +26,7 @@ export class PolicyComponent implements OnInit {
 
   allPolicyResults: Array<PolicyRightLeft>;
 
-
-
-  constructor(
-    private idnService: IDNService,
-  ) { }
+  constructor(private idnService: IDNService) {}
 
   ngOnInit() {
     this.reset();
@@ -40,35 +34,36 @@ export class PolicyComponent implements OnInit {
   }
 
   all() {
-    console.log("this is going to take time");
+    console.log('this is going to take time');
     this.allReport = true;
     this.allPolicyResults = [];
     this.totalEntries = 0;
-    for (let onePolicy of this.policy) {
+    for (const onePolicy of this.policy) {
       if (onePolicy.rightleft) {
         for (const each of onePolicy.rightleft) {
           this.totalEntries++;
-          let one = new PolicyRightLeft();
+          const one = new PolicyRightLeft();
           one.policyName = onePolicy.name;
           one.side = each.side;
           one.application = each.application;
           one.entitlement = each.entitlement;
           one.name = each.name;
-          this.idnService.getEntitlement(one.application).subscribe(response => {
-            const data = response.body;
-            console.log(data);
-            one.application = data.source.name;
-            one.entitlement = data.name;
-            if (one.side == "left") {
-              one.side = "List A";
-            } else {
-              one.side = "List B";
-            }
-            this.allPolicyResults.push(one);
-          });
+          this.idnService
+            .getEntitlement(one.application)
+            .subscribe(response => {
+              const data = response.body;
+              console.log(data);
+              one.application = data.source.name;
+              one.entitlement = data.name;
+              if (one.side == 'left') {
+                one.side = 'List A';
+              } else {
+                one.side = 'List B';
+              }
+              this.allPolicyResults.push(one);
+            });
         }
       }
-
     }
   }
   reset() {
@@ -83,8 +78,6 @@ export class PolicyComponent implements OnInit {
     this.allPolicyResults = [];
   }
 
-
-
   search() {
     this.loading = true;
     this.idnService
@@ -94,12 +87,11 @@ export class PolicyComponent implements OnInit {
         const headers = response.headers;
         this.page.xTotalCount = headers.get('X-Total-Count');
 
-
         //Sort it alphabetically
         allSources.sort((a, b) => a.name.localeCompare(b.name));
         this.policy = [];
         for (const each of allSources) {
-          let p = new SimplePolicy();
+          const p = new SimplePolicy();
           p.name = each.name;
           p.description = each.description;
           p.rightleft = [];
@@ -112,8 +104,8 @@ export class PolicyComponent implements OnInit {
                 const leftList = conflict.leftCriteria.criteriaList;
                 if (leftList) {
                   for (const left of leftList) {
-                    let rl = new PolicyRightLeft();
-                    rl.side = "left";
+                    const rl = new PolicyRightLeft();
+                    rl.side = 'left';
                     rl.application = left.id;
                     rl.entitlement = left.name;
                     p.rightleft.push(rl);
@@ -127,8 +119,8 @@ export class PolicyComponent implements OnInit {
                 const rightList = conflict.rightCriteria.criteriaList;
                 if (rightList) {
                   for (const right of rightList) {
-                    let rl = new PolicyRightLeft();
-                    rl.side = "Right";
+                    const rl = new PolicyRightLeft();
+                    rl.side = 'Right';
                     rl.application = right.id;
                     rl.entitlement = right.name;
                     p.rightleft.push(rl);
@@ -136,27 +128,25 @@ export class PolicyComponent implements OnInit {
                 }
               }
             }
-
           } else {
             p.showDetails = false;
           }
           this.policy.push(p);
         }
 
-
         this.loading = false;
       });
   }
 
   showDetails(input: number) {
-    let data = this.policy[input];
-    this.policyName = data.name
+    const data = this.policy[input];
+    this.policyName = data.name;
     this.details = [];
     this.right = [];
     this.left = [];
     this.totalEntries = 0;
     for (const each of data.rightleft) {
-      let one = new PolicyRightLeft();
+      const one = new PolicyRightLeft();
       one.side = each.side;
       one.application = each.application;
       one.entitlement = each.entitlement;
@@ -167,8 +157,6 @@ export class PolicyComponent implements OnInit {
     console.log(this.details);
   }
 
-
-
   getFullDetails(input: PolicyRightLeft) {
     this.idnService.getEntitlement(input.application).subscribe(response => {
       const data = response.body;
@@ -176,17 +164,15 @@ export class PolicyComponent implements OnInit {
       input.application = data.source.name;
       input.entitlement = data.name;
       this.details.push(input);
-      if (input.side == "left") {
+      if (input.side == 'left') {
         this.left.push(input);
-        this.left.sort((a,b) =>a.application.localeCompare(b.application));
-      }else{
+        this.left.sort((a, b) => a.application.localeCompare(b.application));
+      } else {
         this.right.push(input);
-        this.right.sort((a,b) =>a.application.localeCompare(b.application));
+        this.right.sort((a, b) => a.application.localeCompare(b.application));
       }
     });
   }
-
-
 
   clear() {
     this.details = null;
@@ -195,9 +181,9 @@ export class PolicyComponent implements OnInit {
   }
 
   /**
-* Copy these three functions to any
-* page you want to have paggination
-*/
+   * Copy these three functions to any
+   * page you want to have paggination
+   */
   //Get the next page
   getNextPage() {
     this.page.nextPage;
@@ -215,8 +201,6 @@ export class PolicyComponent implements OnInit {
   }
 
   save() {
-
-
     const options = {
       fieldSeparator: ',',
       quoteStrings: '"',
@@ -224,18 +208,12 @@ export class PolicyComponent implements OnInit {
       showLabels: true,
       useHeader: true,
       nullToEmptyString: true,
-      headers: [
-        "side",
-        "application",
-        "entitlement"
-
-      ]
+      headers: ['side', 'application', 'entitlement'],
     };
     new AngularCsv(this.details, 'policyExtract-' + this.policyName, options);
   }
 
   saveAll() {
-
     const options = {
       fieldSeparator: ',',
       quoteStrings: '"',
@@ -243,13 +221,7 @@ export class PolicyComponent implements OnInit {
       showLabels: true,
       useHeader: true,
       nullToEmptyString: true,
-      headers: [
-        "policyName",
-        "side",
-        "application",
-        "entitlement"
-
-      ]
+      headers: ['policyName', 'side', 'application', 'entitlement'],
     };
     new AngularCsv(this.allPolicyResults, 'policyExtract', options);
   }

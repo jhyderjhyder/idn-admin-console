@@ -12,10 +12,10 @@ import { JsonFormatOptions } from '../model/json-format-options';
 import { AngularCsv } from 'angular-csv-ext/dist/Angular-csv';
 
 @Component({
-    selector: 'app-entitlement-management',
-    templateUrl: './misc-entitlement-management.component.html',
-    styleUrls: ['./misc-entitlement-management.component.css'],
-    standalone: false
+  selector: 'app-entitlement-management',
+  templateUrl: './misc-entitlement-management.component.html',
+  styleUrls: ['./misc-entitlement-management.component.css'],
+  standalone: false,
 })
 export class EntitlementManagementComponent implements OnInit {
   entitlementsList: Entitlement[];

@@ -6,10 +6,10 @@ import { prettyPrintJson } from 'pretty-print-json';
 import { Workflow } from '../model/workflow';
 
 @Component({
-    selector: 'app-workflows',
-    templateUrl: './workflows.component.html',
-    styleUrls: ['./workflows.component.css'],
-    standalone: false
+  selector: 'app-workflows',
+  templateUrl: './workflows.component.html',
+  styleUrls: ['./workflows.component.css'],
+  standalone: false,
 })
 export class WorkflowsComponent implements OnInit {
   page: PageResults;

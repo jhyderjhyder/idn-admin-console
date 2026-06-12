@@ -10,10 +10,10 @@ export abstract class NgbDateAdapter<D> {
 }
 
 @Component({
-    selector: 'app-fast-tag',
-    templateUrl: './fast-tag.component.html',
-    styleUrls: ['./fast-tag.component.css'],
-    standalone: false
+  selector: 'app-fast-tag',
+  templateUrl: './fast-tag.component.html',
+  styleUrls: ['./fast-tag.component.css'],
+  standalone: false,
 })
 export class FastTagComponent implements OnInit {
   constructor(

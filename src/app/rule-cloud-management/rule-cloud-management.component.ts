@@ -11,10 +11,10 @@ import JSZip from 'jszip';
 const RuleDescriptionMaxLength = 50;
 
 @Component({
-    selector: 'app-rule-cloud-management',
-    templateUrl: './rule-cloud-management.component.html',
-    styleUrls: ['./rule-cloud-management.component.css'],
-    standalone: false
+  selector: 'app-rule-cloud-management',
+  templateUrl: './rule-cloud-management.component.html',
+  styleUrls: ['./rule-cloud-management.component.css'],
+  standalone: false,
 })
 export class CloudRuleComponent implements OnInit {
   rules: Rule[];

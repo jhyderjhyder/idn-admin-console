@@ -22,10 +22,10 @@ import {
 } from '../model/AccessRequestAudit';
 
 @Component({
-    selector: 'app-identity-info',
-    templateUrl: './identity-info.component.html',
-    styleUrls: ['./identity-info.component.css'],
-    standalone: false
+  selector: 'app-identity-info',
+  templateUrl: './identity-info.component.html',
+  styleUrls: ['./identity-info.component.css'],
+  standalone: false,
 })
 export class IdentityInfoComponent implements OnInit {
   oneRequest: AccessRequestStatus;
@@ -1095,18 +1095,16 @@ export class IdentityInfoComponent implements OnInit {
     });
   }
 
-
-  
-  showFriendlyNames(){
-    for (let ent in this.roleDetailsEnt){
+  showFriendlyNames() {
+    for (const ent in this.roleDetailsEnt) {
       //EntitlementSimple
       console.log(this.roleDetailsEnt[ent]);
-      let lookup = this.roleDetailsEnt[ent].id;
-       this.idnService.getEntitlement(lookup).subscribe(data => {
-      this.roleDetailsEnt[ent].id = (data.source.name);
-      this.roleDetailsEnt[ent].displayName = data.attribute + "--" + data.value;
-    });
-
+      const lookup = this.roleDetailsEnt[ent].id;
+      this.idnService.getEntitlement(lookup).subscribe(data => {
+        this.roleDetailsEnt[ent].id = data.source.name;
+        this.roleDetailsEnt[ent].displayName =
+          data.attribute + '--' + data.value;
+      });
     }
   }
 

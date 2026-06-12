@@ -10,10 +10,10 @@ import { prettyPrintJson } from 'pretty-print-json';
 import { JsonFormatOptions } from '../model/json-format-options';
 
 @Component({
-    selector: 'app-access-request-status',
-    templateUrl: './access-request-status.component.html',
-    styleUrls: ['./access-request-status.component.css'],
-    standalone: false
+  selector: 'app-access-request-status',
+  templateUrl: './access-request-status.component.html',
+  styleUrls: ['./access-request-status.component.css'],
+  standalone: false,
 })
 export class AccessRequestStatusComponent implements OnInit {
   accessRequestStatuses: AccessRequestStatus[];
@@ -149,7 +149,7 @@ export class AccessRequestStatusComponent implements OnInit {
       this.totalRejected = results.rejected;
     });
 
-    this.idnService
+    (this.idnService
       .getAccessRequestStatusPaged(
         this.filters,
         this.searchReqID,
@@ -213,7 +213,7 @@ export class AccessRequestStatusComponent implements OnInit {
       }),
       err => {
         console.log('timeout' + err);
-      };
+      });
   }
 
   saveInCsv() {
