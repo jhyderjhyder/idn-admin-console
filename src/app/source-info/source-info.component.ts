@@ -5,7 +5,7 @@ import { AggResults } from '../model/AggResults';
 import { IDNService } from '../service/idn.service';
 import { MessageService } from '../service/message.service';
 import { AuthenticationService } from '../service/authentication-service.service';
-import  JSZip from 'jszip';
+import JSZip from 'jszip';
 import { saveAs } from 'file-saver';
 import { prettyPrintJson } from 'pretty-print-json';
 import { JsonFormatOptions } from '../model/json-format-options';
@@ -13,10 +13,10 @@ import { PageResults } from '../model/page-results';
 import { AngularCsv } from 'angular-csv-ext/dist/Angular-csv';
 
 @Component({
-    selector: 'app-source-info',
-    templateUrl: './source-info.component.html',
-    styleUrls: ['./source-info.component.css'],
-    standalone: false
+  selector: 'app-source-info',
+  templateUrl: './source-info.component.html',
+  styleUrls: ['./source-info.component.css'],
+  standalone: false,
 })
 export class SourceInfoComponent implements OnInit {
   hidePageOption: boolean;
@@ -338,7 +338,7 @@ export class SourceInfoComponent implements OnInit {
     if (type === 'attribute-sync-config') {
       objectType = 'attribute-sync-config';
     }
-    if (type === 'correlation-config'){
+    if (type === 'correlation-config') {
       objectType = 'correlation-config';
     }
     this.clearButton = true;

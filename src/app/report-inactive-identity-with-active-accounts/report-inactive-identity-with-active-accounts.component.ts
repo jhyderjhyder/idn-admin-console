@@ -7,14 +7,12 @@ import { ActivityReport } from '../model/ActivityReport';
 import { AngularCsv } from 'angular-csv-ext/dist/Angular-csv';
 
 @Component({
-    selector: 'app-report-most-active',
-    templateUrl: './report-inactive-identity-with-active-accounts.component.html',
-    styleUrls: ['./report-inactive-identity-with-active-accounts.component.css'],
-    standalone: false
+  selector: 'app-report-most-active',
+  templateUrl: './report-inactive-identity-with-active-accounts.component.html',
+  styleUrls: ['./report-inactive-identity-with-active-accounts.component.css'],
+  standalone: false,
 })
-export class ReportInactiveIdentityWithActiveAccountsComponent
-  implements OnInit
-{
+export class ReportInactiveIdentityWithActiveAccountsComponent implements OnInit {
   filterApplications: Array<BasicAttributes>;
   filterBasic: Array<BasicAttributes>;
   loading: boolean;

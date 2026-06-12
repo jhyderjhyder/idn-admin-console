@@ -1,7 +1,10 @@
 import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
 import { WorkItemsStatusComponent } from './work-items-status.component';
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import {
+  provideHttpClient,
+  withInterceptorsFromDi,
+} from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 import { FormsModule } from '@angular/forms';
 import { ModalModule } from 'ngx-bootstrap/modal';
@@ -15,16 +18,15 @@ describe('WorkItemsStatusComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-    declarations: [WorkItemsStatusComponent, SearchFilterPipe],
-    imports: [FormsModule,
-        ModalModule],
-    providers: [
+      declarations: [WorkItemsStatusComponent, SearchFilterPipe],
+      imports: [FormsModule, ModalModule],
+      providers: [
         IDNService,
         { provide: IDNService, useClass: MockIDNService },
         provideHttpClient(withInterceptorsFromDi()),
         provideHttpClientTesting(),
-    ]
-}).compileComponents();
+      ],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

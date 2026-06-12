@@ -8,9 +8,8 @@ describe('HealthDashboardComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [HealthDashboardComponent]
-    })
-    .compileComponents();
+      imports: [HealthDashboardComponent],
+    }).compileComponents();
 
     fixture = TestBed.createComponent(HealthDashboardComponent);
     component = fixture.componentInstance;

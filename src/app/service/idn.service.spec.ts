@@ -3,14 +3,21 @@ import { provideHttpClientTesting } from '@angular/common/http/testing';
 
 import { IDNService } from './idn.service';
 import { AuthenticationService } from './authentication-service.service';
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import {
+  provideHttpClient,
+  withInterceptorsFromDi,
+} from '@angular/common/http';
 
 describe('DoctorService', () => {
   beforeEach(() =>
     TestBed.configureTestingModule({
-    imports: [],
-    providers: [AuthenticationService, provideHttpClient(withInterceptorsFromDi()), provideHttpClientTesting()]
-})
+      imports: [],
+      providers: [
+        AuthenticationService,
+        provideHttpClient(withInterceptorsFromDi()),
+        provideHttpClientTesting(),
+      ],
+    })
   );
 
   it('should be created', () => {

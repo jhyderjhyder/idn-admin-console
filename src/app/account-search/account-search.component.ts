@@ -10,10 +10,10 @@ import { IdentityAttribute } from '../model/identity-attribute';
 import { AngularCsv } from 'angular-csv-ext/dist/Angular-csv';
 
 @Component({
-    selector: 'app-account-search',
-    templateUrl: './account-search.component.html',
-    styleUrls: ['./account-search.component.css'],
-    standalone: false
+  selector: 'app-account-search',
+  templateUrl: './account-search.component.html',
+  styleUrls: ['./account-search.component.css'],
+  standalone: false,
 })
 export class AccountSearchComponent implements OnInit {
   loading: boolean;
@@ -110,10 +110,10 @@ can pick from
   getOwnerDetails(identityID) {
     this.idnService.searchIdentities(identityID).subscribe(response => {
       const one = response[0];
-      if (one!=null){
-      this.rawIdentity = new IdentityAttribute();
-      this.rawIdentity.displayName = one['displayName'];
-      this.rawIdentity.name = one['name'];
+      if (one != null) {
+        this.rawIdentity = new IdentityAttribute();
+        this.rawIdentity.displayName = one['displayName'];
+        this.rawIdentity.name = one['name'];
       }
       //this.rawIdentity = response;
     });
@@ -166,13 +166,11 @@ Loads the dropdown for filter types
     this.rawObject = this.identityList[input];
     this.rawIdentity = new IdentityAttribute();
     if (this.rawObject['identityId']) {
-      
       this.getOwnerDetails(this.rawObject['identityId']);
     }
-    if (this.rawObject['ownerIdentity']){
+    if (this.rawObject['ownerIdentity']) {
       this.rawIdentity.displayName = this.rawObject['ownerIdentity'].name;
       this.rawIdentity.name = this.rawObject['ownerIdentity'].id;
-     
     }
     if (this.identityList[input].attributes) {
       this.details = new Array();
@@ -260,7 +258,7 @@ Loads the dropdown for filter types
     new AngularCsv(this.identityList, fileName, options);
   }
 
-   downloadAccount() {
+  downloadAccount() {
     const options = {
       fieldSeparator: ',',
       quoteStrings: '"',

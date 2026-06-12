@@ -10,10 +10,10 @@ import { MessageService } from '../service/message.service';
 import { PageResults } from '../model/page-results';
 
 @Component({
-    selector: 'app-source-aggregation-run',
-    templateUrl: './source-aggregation-run.component.html',
-    styleUrls: ['./source-aggregation-run.component.css'],
-    standalone: false
+  selector: 'app-source-aggregation-run',
+  templateUrl: './source-aggregation-run.component.html',
+  styleUrls: ['./source-aggregation-run.component.css'],
+  standalone: false,
 })
 export class AggregateSourceComponent implements OnInit {
   sources: Source[];
@@ -191,7 +191,7 @@ export class AggregateSourceComponent implements OnInit {
       index++;
 
       this.idnService
-        .aggregateSourceOwner(each.cloudExternalID, formData, "load-accounts")
+        .aggregateSourceOwner(each.cloudExternalID, formData, 'load-accounts')
         .subscribe(
           searchResult => {
             processedCount++;
@@ -224,7 +224,7 @@ export class AggregateSourceComponent implements OnInit {
     }
   }
 
-    async aggregateEntitlements() {
+  async aggregateEntitlements() {
     const arr = this.sources.filter(each => each.selected);
     let processedCount = 0;
     let index = 0;
@@ -243,7 +243,11 @@ export class AggregateSourceComponent implements OnInit {
       index++;
 
       this.idnService
-        .aggregateSourceOwner(each.cloudExternalID, formData, "load-entitlements")
+        .aggregateSourceOwner(
+          each.cloudExternalID,
+          formData,
+          'load-entitlements'
+        )
         .subscribe(
           searchResult => {
             processedCount++;
@@ -347,9 +351,12 @@ export class AggregateSourceComponent implements OnInit {
     let index: number = 0;
     const waitMillSeconds = 3000;
     for (const source of sources) {
-      setTimeout(() => {
-        this.pollAggTaskStatus(source);
-      }, waitMillSeconds + 1000 * index);
+      setTimeout(
+        () => {
+          this.pollAggTaskStatus(source);
+        },
+        waitMillSeconds + 1000 * index
+      );
       index++;
     }
   }

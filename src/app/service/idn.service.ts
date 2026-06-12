@@ -1,5 +1,9 @@
 import { Injectable } from '@angular/core';
-import { HttpClient, HttpHeaders, HttpUrlEncodingCodec } from '@angular/common/http';
+import {
+  HttpClient,
+  HttpHeaders,
+  HttpUrlEncodingCodec,
+} from '@angular/common/http';
 import { catchError, map } from 'rxjs/operators';
 import { Observable, of, throwError } from 'rxjs';
 import { MessageService } from './message.service';
@@ -17,7 +21,6 @@ import { Transform } from '../model/transform';
 import { PageResults } from '../model/page-results';
 import { IdentityPreview } from '../model/identity-preview';
 import { RevokeRole } from '../model/revokeRole';
-
 
 @Injectable({
   providedIn: 'root',
@@ -97,11 +100,11 @@ API's to sunset #16
     const myHttpOptions = {
       headers: new HttpHeaders({
         'Content-Type': 'application/x-www-form-urlencoded',
-        'X-SailPoint-Experimental': 'true'
+        'X-SailPoint-Experimental': 'true',
       }),
     };
 
-    let payload = skipType;
+    const payload = skipType;
     console.log(payload);
 
     return this.http.post(url, null, myHttpOptions);
@@ -407,7 +410,7 @@ Supported API's
     );
   }
 
-    getAllPoliciesPaged(page: PageResults, preFilter: string): Observable<any> {
+  getAllPoliciesPaged(page: PageResults, preFilter: string): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
     let filter = '';
     if (preFilter) {
@@ -578,7 +581,7 @@ Supported API's
     type: string
   ): Observable<any> {
     let apiVersion = 'v3';
-    if (type == 'attribute-sync-config' || type =='correlation-config') {
+    if (type == 'attribute-sync-config' || type == 'correlation-config') {
       apiVersion = 'beta';
     }
     const currentUser = this.authenticationService.currentUserValue;
@@ -882,16 +885,17 @@ Supported API's
     const currentUser = this.authenticationService.currentUserValue;
     const url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/entitlements/${input}`;
 
-     return this.http.get(url, { observe: 'response' }).pipe(
+    return this.http.get(url, { observe: 'response' }).pipe(
       catchError(error => {
-        if (error.status === 404)  {
-          return of (
-            {"body": {
-            "name": "Missing/Invalid",
-            "source": {
-              "name" : "NOT FOUND"
-            }
-          }});
+        if (error.status === 404) {
+          return of({
+            body: {
+              name: 'Missing/Invalid',
+              source: {
+                name: 'NOT FOUND',
+              },
+            },
+          });
         }
         if (error.status === 429) {
           console.warn('Rate limited. Retrying in 300ms...');
@@ -1118,21 +1122,18 @@ Supported API's
     );
   }
 
-  countMachineAccounts(
-    appID: String
-  ): Observable<any> {
+  countMachineAccounts(appID: String): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
-    let url = `https://${currentUser.tenant}.api.${currentUser.domain}/v2025/machine-accounts?count=true&limit=1&filters=source.id eq "${appID}"`;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/v2025/machine-accounts?count=true&limit=1&filters=source.id eq "${appID}"`;
 
-  
     const headers = new HttpHeaders({
-        'Content-Type': 'application/json',
-        'X-SailPoint-Experimental': 'true',
+      'Content-Type': 'application/json',
+      'X-SailPoint-Experimental': 'true',
     });
     const httpOptions = {
       headers: headers,
-      observe: 'response' as const
-    }
+      observe: 'response' as const,
+    };
     return this.http.get(url, httpOptions).pipe(
       catchError(error => {
         if (error.status === 429) {
@@ -1848,7 +1849,7 @@ Supported API's
   getRoleByName(name: string): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
     name = encodeURIComponent(name);
-    const params = ('?filters=name eq "' + name + '"' + '&count=true');
+    const params = '?filters=name eq "' + name + '"' + '&count=true';
     const url =
       `https://${currentUser.tenant}.api.${currentUser.domain}/v3/roles` +
       params;

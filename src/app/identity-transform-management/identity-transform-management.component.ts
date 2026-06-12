@@ -19,10 +19,10 @@ import { JsonFormatOptions } from '../model/json-format-options';
 import { BasicAttributes } from '../model/basic-attributes';
 
 @Component({
-    selector: 'app-identity-transform-management',
-    templateUrl: './identity-transform-management.component.html',
-    styleUrls: ['./identity-transform-management.component.css'],
-    standalone: false
+  selector: 'app-identity-transform-management',
+  templateUrl: './identity-transform-management.component.html',
+  styleUrls: ['./identity-transform-management.component.css'],
+  standalone: false,
 })
 export class IdentityTransformManagementComponent implements OnInit {
   transformToImport: Transform;
@@ -116,8 +116,8 @@ export class IdentityTransformManagementComponent implements OnInit {
         a.name.toLowerCase() < b.name.toLowerCase()
           ? -1
           : b.name.toLowerCase() > a.name.toLowerCase()
-          ? 1
-          : 0
+            ? 1
+            : 0
       );
       this.transforms = sortedTransforms;
       this.loading = false;

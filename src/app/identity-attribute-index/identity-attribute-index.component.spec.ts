@@ -5,7 +5,10 @@ import { FormsModule } from '@angular/forms';
 import { ModalModule } from 'ngx-bootstrap/modal';
 import { IDNService } from '../service/idn.service';
 import { MockIDNService } from '../service/idn.service.mock.spec';
-import { provideHttpClient, withInterceptorsFromDi } from '@angular/common/http';
+import {
+  provideHttpClient,
+  withInterceptorsFromDi,
+} from '@angular/common/http';
 import { provideHttpClientTesting } from '@angular/common/http/testing';
 
 describe('IdentityAttributeIndexComponent', () => {
@@ -14,16 +17,15 @@ describe('IdentityAttributeIndexComponent', () => {
 
   beforeEach(waitForAsync(() => {
     TestBed.configureTestingModule({
-    declarations: [IdentityAttributeIndexComponent],
-    imports: [FormsModule,
-        ModalModule],
-    providers: [
+      declarations: [IdentityAttributeIndexComponent],
+      imports: [FormsModule, ModalModule],
+      providers: [
         IDNService,
         { provide: IDNService, useClass: MockIDNService },
         provideHttpClient(withInterceptorsFromDi()),
         provideHttpClientTesting(),
-    ]
-}).compileComponents();
+      ],
+    }).compileComponents();
   }));
 
   beforeEach(() => {

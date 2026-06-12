@@ -6,10 +6,10 @@ import { MessageService } from '../service/message.service';
 import { IdentityAttribute } from '../model/identity-attribute';
 
 @Component({
-    selector: 'app-identity-attribute-index',
-    templateUrl: './identity-attribute-index.component.html',
-    styleUrls: ['./identity-attribute-index.component.css'],
-    standalone: false
+  selector: 'app-identity-attribute-index',
+  templateUrl: './identity-attribute-index.component.html',
+  styleUrls: ['./identity-attribute-index.component.css'],
+  standalone: false,
 })
 export class IdentityAttributeIndexComponent implements OnInit {
   loading: boolean;
