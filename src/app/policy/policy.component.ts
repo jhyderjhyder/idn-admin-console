@@ -61,6 +61,9 @@ export class PolicyComponent implements OnInit {
                 one.side = 'List B';
               }
               this.allPolicyResults.push(one);
+              this.allPolicyResults.sort((a, b) =>
+                a.policyName.localeCompare(b.policyName)
+              );
             });
         }
       }
@@ -79,6 +82,7 @@ export class PolicyComponent implements OnInit {
   }
 
   search() {
+    this.reset();
     this.loading = true;
     this.idnService
       .getAllPoliciesPaged(this.page, this.appSearchText)
@@ -201,6 +205,9 @@ export class PolicyComponent implements OnInit {
   }
 
   save() {
+    this.allPolicyResults.sort((a, b) =>
+      a.policyName.localeCompare(b.policyName)
+    );
     const options = {
       fieldSeparator: ',',
       quoteStrings: '"',
