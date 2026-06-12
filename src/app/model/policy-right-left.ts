@@ -4,6 +4,7 @@ export class PolicyRightLeft {
   side: string | undefined;
   entitlement: string | undefined;
   application: string | undefined;
+  policyName: string | undefined;
 }
 
 export class SimplePolicy {

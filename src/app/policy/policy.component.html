@@ -3,7 +3,7 @@
   <form name="form">
 
     <!--Start pagination Information Just change hte ngIf -->
-    <div class="row" *ngIf="policy && details===null">
+    <div class="row" *ngIf="policy && details===null ">
       <div class="col-sm-2 text-start">
         Total Records Found:
         {{page.xTotalCount}}
@@ -33,20 +33,39 @@
         Fetch
       </button>
     </div>
+    <div class="col-sm-2 text-start">
+      <button *ngIf='details===null'type="button" (click)="all()" class="btn btn-primary btn-sm">
+        Display Details For All
+      </button>
+    </div>
+
+    <div class="col-sm-2 text-start">
+      <div *ngIf='details!=null && totalEntries===details.length'>
+          <button type="button" (click)="save()" class="btn btn-success btn-sm">
+            Export
+          </button>
+        </div>
+    </div>
 
      <div class="col-sm-2 text-start">
       <button *ngIf='details!==null' type="button" (click)="clear()" class="btn btn-primary btn-sm">
         Return to List
       </button>
     </div>
-
-    <div *ngIf='details!==null' class="col-sm-2 text-start">
-     <div *ngIf='totalEntries===details.length'>
-        <button type="button" (click)="save()" class="btn btn-success btn-sm">
+    <div class="col-sm-2 text-start">
+        <div *ngIf='allPolicyResults!=null &&totalEntries===allPolicyResults.length'>
+        <button type="button" (click)="saveAll()" class="btn btn-success btn-sm">
           Export
         </button>
+        <button type="button" (click)="clear()" class="btn btn-primary btn-sm">
+        Return to List
+      </button>
       </div>
-    </div>
+      </div>
+
+  
+
+  
   </div>
   <!--End Button Bar-->
 
@@ -54,7 +73,7 @@
 
 
     <!-- Start of policy List-->
-    <div *ngIf='details ===null'>
+    <div *ngIf='details ===null && allReport==false'>
       <table class="table table-striped table-bordered table-layout:fixed">
         <thead class="table-secondary text-center align-middle">
           <tr>
@@ -81,11 +100,18 @@
 
 
     <div *ngIf='details!==null'>
-      <h1>{{policyName}}</h1>
-      Total {{totalEntries}} : Discovered {{details.length}}
+      <div class="row">
+        <div class="col-sm-8">
+            <h1>{{policyName}}</h1>
+        </div>
+        
+    </div>
+      Processed {{details.length}} of {{totalEntries}}
+      <br>
+      <br>
      
       <div class="flex-container">
-        <div class="column">LeftSide
+        <div class="column"><span class="listFormat">List A</span>
       <table class="table table-striped table-bordered table-layout:fixed">
         <thead class="table-secondary text-center align-middle">
           <tr>
@@ -103,7 +129,7 @@
         </tbody>
       </table>
       </div>
-      <div class="column">RightSide
+      <div class="column"><span class="listFormat">List B</span>
       <table class="table table-striped table-bordered table-layout:fixed">
         <thead class="table-secondary text-center align-middle">
           <tr>
@@ -124,5 +150,30 @@
       </div>
     </div>
 
+    <div *ngIf='allReport==true'>
+      <p> Processed {{allPolicyResults.length}} of {{totalEntries}}</p>
+  
+      <table class="table table-striped table-bordered table-layout:fixed">
+          <thead class="table-secondary text-center align-middle">
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">PolicyName</th>
+              <th scope="col">Application</th>
+              <th scope="col">Entitlement</th>
+              <th scope="col">Side</th>
+            </tr>
+          </thead>
+          <tbody class="text-center align-middle">
+            <tr *ngFor="let i =index; let onePR of allPolicyResults ">
+              <td>{{i+1}}</td>
+              <td>{{onePR.policyName}} </td>
+              <td>{{onePR.application}} </td>
+              <td>{{onePR.entitlement}} </td>
+              <td>{{onePR.side}} </td>
+              </tr>
+              </tbody>
+      </table>
+      </div>
+  
   </form>
 </div>

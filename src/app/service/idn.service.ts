@@ -882,9 +882,26 @@ Supported API's
     const currentUser = this.authenticationService.currentUserValue;
     const url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/entitlements/${input}`;
 
-    return this.http
-      .get(url, this.httpOptions)
-      .pipe(catchError(this.handleError(`getEntitlement`)));
+     return this.http.get(url, { observe: 'response' }).pipe(
+      catchError(error => {
+        if (error.status === 404)  {
+          return of (
+            {"body": {
+            "name": "Missing/Invalid",
+            "source": {
+              "name" : "NOT FOUND"
+            }
+          }});
+        }
+        if (error.status === 429) {
+          console.warn('Rate limited. Retrying in 300ms...');
+          this.sleep(300);
+          return this.getEntitlement(input);
+        } else {
+          catchError(this.handleError(`getEntitlement error`));
+        }
+      })
+    );
   }
 
   //Used for the reports of roles containing entitlements

@@ -1091,7 +1091,7 @@ export class IdentityInfoComponent implements OnInit {
 
   getEntitlementDetails(input) {
     this.idnService.getEntitlement(input).subscribe(data => {
-      window.alert(data.source.name);
+      window.alert(data.body.source.name);
     });
   }
 
