@@ -140,7 +140,8 @@ export class RoleContainsEntComponent implements OnInit {
       this.rubyCSVsize = response[0].entitlements.length;
       for (const d of response[0].entitlements) {
         entPK.push[d.id];
-        this.idnService.getEntitlement(d.id).subscribe(dResponse => {
+        this.idnService.getEntitlement(d.id).subscribe(entData => {
+          var dResponse = entData.body;
           const r = new rubyImport();
           r.role_name = role.name;
           r.role_description = d.description;

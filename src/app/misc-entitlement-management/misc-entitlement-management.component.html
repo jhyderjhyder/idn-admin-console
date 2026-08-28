@@ -3,6 +3,11 @@
     <span class="fw-bold">Set owners for access requests</span>
   </div>
 </div>
+<div *ngIf="!showTable">
+   <button type="button" (click)="  clearHTML()" class="btn btn-primary btn-sm">
+      Close Json
+    </button>
+</div>
 
 <pre id=jsonRaw class=json-container style="background-color: black;"></pre>
 
@@ -160,7 +165,7 @@
 <br>
 <!--Content-->
 
-<div>
+<div *ngIf="showTable">
   <table class="table table-striped table-bordered">
     <thead class="table-secondary text-center align-middle">
       <tr>
@@ -186,10 +191,17 @@
         <td *ngIf="bulkAction">
           <input type="checkbox" [(ngModel)]="e.selected">
         </td>
-        <td>     
-          <button type="button" class="btn btn-primary btn-sm" (click)="viewJson(e.id)">
-              {{ page.offset+1+i}} 
+        <td>  
+          #{{i+1}}
+          <div class="btn-group" role="group">
+          <button id="btnGroupDrop1" type="button" class="btn btn-primary btn-sm dropdown-toggle" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Select
           </button>
+          <div class="dropdown-menu" aria-labelledby="btnGroupDrop1">
+            <a class="dropdown-item" (click)="viewJson(e.id)">View Details</a>
+            <a class="dropdown-item" (click)="viewApproval(e.id)">View-Approvals</a>
+          </div>
+          </div>
          </td>
         <td>{{ e.sourceName }}</td>
         <td>{{ e.attribute }}</td>
