@@ -39,6 +39,7 @@ export class EntitlementManagementComponent implements OnInit {
   value: boolean;
   selectedEntitlements: Entitlement[];
   filterApplications: Array<BasicAttributes>;
+  showTable: boolean;
 
   public modalRef: BsModalRef;
 
@@ -68,6 +69,7 @@ export class EntitlementManagementComponent implements OnInit {
   */
 
   reset(clearMsg: boolean) {
+    this.showTable = true;
     this.entitlementsList = null;
     this.entitlementsListToShow = null;
     this.newOwnerAll = null;
@@ -135,6 +137,7 @@ export class EntitlementManagementComponent implements OnInit {
       });
     }
   }
+
 
   changeOnBulkAction($event) {
     this.resetEntitlementsToShow();
@@ -542,6 +545,7 @@ export class EntitlementManagementComponent implements OnInit {
     return new Promise(resolve => setTimeout(resolve, ms));
   }
   viewJson(id) {
+    this.showTable =false;
     for (const each of this.entitlementsList) {
       if (each.id == id) {
         const options: JsonFormatOptions = new JsonFormatOptions();
@@ -555,6 +559,25 @@ export class EntitlementManagementComponent implements OnInit {
         elem.innerHTML = html;
       }
     }
+  }
+
+  viewApproval(id) {
+      this.showTable =false;
+      const options: JsonFormatOptions = new JsonFormatOptions();
+        options.lineNumbers = false;
+        options.quoteKeys = true;
+
+       this.idnService.getEntitlementRequestConfig(id).subscribe(response => {
+          const data = response.body;
+          const html = prettyPrintJson.toHtml(data, options);
+          const elem = document.getElementById('jsonRaw');
+          elem.innerHTML = html;
+       });
+  }
+  clearHTML(){
+    this.showTable =true;
+    const elem = document.getElementById('jsonRaw');
+    elem.innerHTML = "";
   }
 
   saveInCsv() {

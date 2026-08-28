@@ -884,6 +884,17 @@ Supported API's
   getEntitlement(input: string): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;
     const url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/entitlements/${input}`;
+    return this.getEntitlementOptions(url);
+  }
+
+   getEntitlementRequestConfig(input: string): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/beta/entitlements/${input}/entitlement-request-config`;
+    return this.getEntitlementOptions(url);
+  }
+
+  getEntitlementOptions(url: string): Observable<any> {
+
 
     return this.http.get(url, { observe: 'response' }).pipe(
       catchError(error => {
@@ -900,7 +911,7 @@ Supported API's
         if (error.status === 429) {
           console.warn('Rate limited. Retrying in 300ms...');
           this.sleep(300);
-          return this.getEntitlement(input);
+          return this.getEntitlement(url);
         } else {
           catchError(this.handleError(`getEntitlement error`));
         }
