@@ -4,31 +4,10 @@
 
 This tool is build to help the community to manage SailPoint IdentityNow (IDN).
 
-## Badges
-[![Project License](https://img.shields.io/github/license/piyush-khandelwal-sp/idn-admin-console?label=License&logo=github)](https://github.com/piyush-khandelwal-sp/idn-admin-console/blob/main/License)
-
-### GitHub
-
-[![Latest Version](https://img.shields.io/github/package-json/v/piyush-khandelwal-sp/idn-admin-console?label=Version&logo=github)](https://github.com/piyush-khandelwal-sp/idn-admin-console) [![Latest Release](https://img.shields.io/github/v/release/piyush-khandelwal-sp/idn-admin-console?label=Release&logo=github)](https://github.com/piyush-khandelwal-sp/idn-admin-console/releases) [![Github Total Downloads](https://img.shields.io/github/downloads/piyush-khandelwal-sp/idn-admin-console/total.svg?label=Downloads&logo=github)](https://github.com/piyush-khandelwal-sp/idn-admin-console/releases) [![Github Repo Size](https://img.shields.io/github/repo-size/piyush-khandelwal-sp/idn-admin-console?label=Repo%20Size&logo=github)]() 
-
-[![Github Issues Open](https://img.shields.io/github/issues-raw/piyush-khandelwal-sp/idn-admin-console?label=Open%20Issues&logo=github)](https://github.com/piyush-khandelwal-sp/idn-admin-console/issues) [![Github Issues Closed](https://img.shields.io/github/issues-closed-raw/piyush-khandelwal-sp/idn-admin-console?label=Closed%20Issues&logo=github)](https://github.com/piyush-khandelwal-sp/idn-admin-console/issues?q=is%3Aclosed) [![Github PR Open](https://img.shields.io/github/issues-pr-raw/piyush-khandelwal-sp/idn-admin-console?label=Open%20PR&logo=github)](https://github.com/piyush-khandelwal-sp/idn-admin-console/pulls?q=is%3Apr+is%3Aopen+) [![Github PR Closed](https://img.shields.io/github/issues-pr-closed-raw/piyush-khandelwal-sp/idn-admin-console?label=Closed%20PR&logo=github)](https://github.com/piyush-khandelwal-sp/idn-admin-console/pulls?q=is%3Apr+is%3Aclosed+) [![Last Commit](https://img.shields.io/github/last-commit/piyush-khandelwal-sp/idn-admin-console?label=Last%20Commit&logo=github)](https://github.com/piyush-khandelwal-sp/idn-admin-console/commits/main)
-
-#### Builds
-##### Pull
-[![Build-Docker-Image](https://img.shields.io/github/actions/workflow/status/jhyderjhyder/idn-admin-console/Build-Docker-Image.yml?event=pull_request&label=Build-Docker-Image&logo=github)](https://img.shields.io/github/actions/workflow/status/piyush-khandelwal-sp/idn-admin-console/Build-Docker-Image.yml) [![Build-Mac-x64](https://img.shields.io/github/actions/workflow/status/piyush-khandelwal-sp/idn-admin-console/Build-Mac-x64.yml?event=pull_request&label=Build-Mac-x64&logo=github)](https://img.shields.io/github/actions/workflow/status/piyush-khandelwal-sp/idn-admin-console/Build-Mac-x64.yml) [![Build-Linux-x64](https://img.shields.io/github/actions/workflow/status/piyush-khandelwal-sp/idn-admin-console/Build-Linux-x64.yml?event=pull_request&label=Build-Linux-x64&logo=github)](https://img.shields.io/github/actions/workflow/status/piyush-khandelwal-sp/idn-admin-console/Build-Linux-x64.yml) [![Build-Windows-x64](https://img.shields.io/github/actions/workflow/status/piyush-khandelwal-sp/idn-admin-console/Build-Windows-x64.yml?event=pull_request&label=Build-Windows-x64&logo=github)](https://img.shields.io/github/actions/workflow/status/piyush-khandelwal-sp/idn-admin-console/Build-Windows-x64.yml)
-
-##### Release
-[![Build-Docker-Image](https://img.shields.io/github/actions/workflow/status/piyush-khandelwal-sp/idn-admin-console/Build-Docker-Image.yml?event=release&label=Build-Docker-Image&logo=github)](https://img.shields.io/github/actions/workflow/status/piyush-khandelwal-sp/idn-admin-console/Build-Docker-Image.yml) [![Build-Mac-x64](https://img.shields.io/github/actions/workflow/status/piyush-khandelwal-sp/idn-admin-console/Build-Mac-x64.yml?event=release&label=Build-Mac-x64&logo=github)](https://img.shields.io/github/actions/workflow/status/piyush-khandelwal-sp/idn-admin-console/Build-Mac-x64.yml) [![Build-Linux-x64](https://img.shields.io/github/actions/workflow/status/piyush-khandelwal-sp/idn-admin-console/Build-Linux-x64.yml?event=release&label=Build-Linux-x64&logo=github)](https://img.shields.io/github/actions/workflow/status/piyush-khandelwal-sp/idn-admin-console/Build-Linux-x64.yml) [![Build-Windows-x64](https://img.shields.io/github/actions/workflow/status/piyush-khandelwal-sp/idn-admin-console/Build-Windows-x64.yml?event=release&label=Build-Windows-x64&logo=github)](https://img.shields.io/github/actions/workflow/status/piyush-khandelwal-sp/idn-admin-console/Build-Windows-x64.yml)
-
-### Docker
-
-[![Latest Version](https://img.shields.io/docker/v/khandelwalpiyush/idn-admin-console/latest?label=Version&logo=docker)](http://hub.docker.com/r/khandelwalpiyush/idn-admin-console) [![Docker Pulls](https://img.shields.io/docker/pulls/khandelwalpiyush/idn-admin-console?label=Pulls&logo=docker)](http://hub.docker.com/r/khandelwalpiyush/idn-admin-console) [![Size](https://img.shields.io/docker/image-size/khandelwalpiyush/idn-admin-console?sort=date&label=Size&logo=docker)](http://hub.docker.com/r/khandelwalpiyush/idn-admin-console)
-
 ## Release
 
-You can download the latest Windows/Mac/Linux build from [Release](https://github.com/piyush-khandelwal-sp/idn-admin-console/releases) page
+You can download the latest Windows build from [Release](https://github.com/jhyderjhyder/idn-admin-console/releases) page
 
-Latest Docker Build can be found at [Docker Hub](http://hub.docker.com/r/khandelwalpiyush/idn-admin-console) page
 
 **NOTE:** Currently the builds are not code-singed. For Mac, please download and unzip, right click and open for the first time. Then you can open normally for subsequent uses.
 
@@ -196,4 +175,4 @@ You can define `NG_APP_IDENTITY_SEARCH` variable if you want additional attribut
 
 ## 📝 License
 
-This project is [MIT](https://github.com/piyush-khandelwal-sp/idn-admin-console/blob/main/License) licensed.
+This project is [MIT](https://github.com/jhyderjhyder/idn-admin-console/blob/main/License) licensed.
