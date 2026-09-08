@@ -4,6 +4,7 @@ export class PAT {
   scope: string[];
   created: Date;
   lastUsed: Date;
+  expirationDate: Date;
   ownerId: string;
   ownerAccountName: string;
   ownerDisplayName: string;

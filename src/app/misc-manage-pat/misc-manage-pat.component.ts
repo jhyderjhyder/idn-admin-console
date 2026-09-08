@@ -15,7 +15,7 @@ import { AuthenticationService } from '../service/authentication-service.service
   standalone: false,
 })
 export class ManagePATComponent implements OnInit {
-  pats: PAT[];
+  pats: Array<PAT>;
   errorInvokeApi: boolean;
   searchText: string;
   loading: boolean;
@@ -64,9 +64,14 @@ export class ManagePATComponent implements OnInit {
         const pat = new PAT();
         pat.id = each.id;
         pat.name = each.name;
+        if (pat.name){
+          pat.name = pat.name.replace('\r', '').replace('\n', '');
+        }
+        
         pat.scope = each.scope;
         pat.created = each.created;
         pat.lastUsed = each.lastUsed;
+        pat.expirationDate = each.expirationDate;
 
         const query = new SimpleQueryCondition();
         query.attribute = 'id';
@@ -77,6 +82,7 @@ export class ManagePATComponent implements OnInit {
             pat.ownerId = searchResult[0].id;
             pat.ownerAccountName = searchResult[0].name;
             pat.ownerDisplayName = searchResult[0].displayName;
+           
           }
         });
 
@@ -139,12 +145,25 @@ export class ManagePATComponent implements OnInit {
   }
 
   saveInCsv() {
+
+
+
     const options = {
       fieldSeparator: ',',
       quoteStrings: '"',
       decimalseparator: '.',
       showLabels: true,
       useHeader: true,
+       headers: [
+        'id',
+        'name',
+        'scope',
+        'created',
+        'lastUsed',
+        'expirationDate',
+        'ownerAccountName',
+        'ownerDisplayName',
+      ],
       nullToEmptyString: true,
     };
 
@@ -169,6 +188,6 @@ export class ManagePATComponent implements OnInit {
     const currentUser = this.authenticationService.currentUserValue;
     const fileName = `${currentUser.tenant}-patTokens`;
 
-    new AngularCsv(clean, fileName, options);
+    new AngularCsv(this.pats, fileName, options);
   }
 }
