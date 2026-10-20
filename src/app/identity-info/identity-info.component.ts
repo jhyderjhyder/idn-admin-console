@@ -69,7 +69,12 @@ export class IdentityInfoComponent implements OnInit {
 
   searchText: string;
   searchText2: string;
+  searchTextAccount: string;
+  searchTextRoleName: string;
+  searchTextAttributes:string;
+  searchTextAccessRequest:string;
   rawAccessRequest: string;
+
 
   //Visualization
   provisioningData: boolean;
@@ -95,6 +100,7 @@ export class IdentityInfoComponent implements OnInit {
   accessRequestDetails: ModalDirective;
 
   ngOnInit() {
+   
     this.auditDetails = new AccessRequestAudit();
     this.tempRevoke = new Entitlement();
     this.page = new PageResults();
@@ -377,6 +383,12 @@ export class IdentityInfoComponent implements OnInit {
   }
 
   submit() {
+    this.searchText ="";
+    this.searchText2="";
+    this.searchTextAccount="";
+    this.searchTextRoleName="";
+    this.searchTextAttributes="";
+    this.searchTextAccessRequest="";
     this.provisioningData = false;
     this.syncData = false;
     this.identityInfo = null;
@@ -931,7 +943,15 @@ export class IdentityInfoComponent implements OnInit {
         es.attribute = found;
         this.roleDetailsEnt.push(es);
       }
-      if (this.roleDetailsEnt.length == 0 && showEmpty) {
+     
+      for (const ap of data.accessProfiles){
+        const es = new EntitlementSimple();
+        es.displayName = ap.name;
+        es.attribute = ap.type;
+        es.id = ap.id;
+        this.roleDetailsEnt.push(es);
+      }
+       if (data.entitlements.length == 0 && showEmpty) {
         const es = new EntitlementSimple();
         es.displayName = 'No Direct Entitlements';
         this.roleDetailsEnt.push(es);
