@@ -54,7 +54,7 @@ export class EntitlementManagementComponent implements OnInit {
   ngOnInit() {
     this.setupPage();
     this.reset(true);
-    this.getAllEntitlements();
+    //this.getAllEntitlements();
     this.getApplicationNames();
   }
 
