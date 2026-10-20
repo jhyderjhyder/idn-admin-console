@@ -22,15 +22,18 @@
   </nav>
 </div>
 <!--End of Pagination Info-->
-  <div class="row">
+  <div class="row" *ngIf="!sources">
+    <p>Press search to return results (Filter can be empty)</p>
   </div>
   <div class="form-group row align-items-center mb-3">
 
   <div class="col-md-3">
     <div class="input-group"> 
+      
     <span class="input-group-text bg-white border-end-0">
       <i class="fa fa-search"></i>
     </span>
+
     <input (keydown.enter)="search()" class="form-control py-2 border-start-0 border" type="text" name="appNameSearch" [(ngModel)]="appSearchText" autocomplete="off" 
       placeholder="API contains Filter">
   </div>
@@ -65,17 +68,7 @@
       </button>
     </div>
   </div>
-  <div class="row">
-    <div class="col-md-8">
-      <div class="input-group"> 
-      <span class="input-group-text bg-white border-end-0">
-        <i class="fa fa-search"></i>
-      </span>
-      <input class="form-control py-2 border-start-0 border" type="text" name="search" [(ngModel)]="searchText" autocomplete="off" 
-        placeholder="OnScreen Filter: Type Source Name, health, description or type to filter the result.">
-    </div>
-  </div>
-  </div>
+  
 
   <!--Raw Edit Screen-->
   <div class="row" *ngIf="rawObject" >
@@ -121,7 +114,7 @@
     </tr>
   </thead>
   <tbody class="text-center align-middle" *ngIf="sources && !rawObjectId">
-    <tr *ngFor="let i =index; let s of sources | filter:searchText:['name', 'description', 'type', 'internalName']">
+    <tr *ngFor="let i =index; let s of sources ">
       <td>
         {{ i+1 }}
       </td>
