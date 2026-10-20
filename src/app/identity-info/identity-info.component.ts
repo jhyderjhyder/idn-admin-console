@@ -159,15 +159,7 @@ export class IdentityInfoComponent implements OnInit {
     be a simple method that you can test any search
     options you need.  
     */
-    const attributues = process.env.NG_APP_IDENTITY_SEARCH;
-    if (attributues) {
-      const split = attributues.split(',');
-      let i = 0;
-      while (split.length > i) {
-        this.filterTypes.push(split[i]);
-        i++;
-      }
-    }
+    
   }
 
   /**

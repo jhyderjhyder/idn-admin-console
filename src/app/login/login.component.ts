@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Injectable} from '@angular/core';
 import { Router, ActivatedRoute } from '@angular/router';
 import {
   UntypedFormBuilder,
@@ -8,6 +8,10 @@ import {
 
 import { User } from './../model/user';
 import { AuthenticationService } from '../service/authentication-service.service';
+
+@Injectable({
+  providedIn: 'root',
+})
 
 @Component({
   templateUrl: 'login.component.html',
@@ -51,17 +55,19 @@ export class LoginComponent implements OnInit {
     NG_APP_TENANT_NAME = TenantName
     NG_APP_CLIENT_ID = clientID
     */
-    if (process.env.NG_APP_ENV == 'true') {
-      console.table(process.env);
+   console.log(import.meta.env.NG_APP_CLIENT_ID)
+   console.table(import.meta.env);
+    if (import.meta.env.NG_APP_ENV == 'true') {
+      
       if (this.loginForm.controls.tenant.getRawValue() == '') {
-        this.loginForm.controls.tenant.setValue(process.env.NG_APP_TENANT_NAME);
+        this.loginForm.controls.tenant.setValue(import.meta.env.NG_APP_TENANT_NAME);
       }
       if (this.loginForm.controls.clientId.getRawValue() == '') {
-        this.loginForm.controls.clientId.setValue(process.env.NG_APP_CLIENT_ID);
+        this.loginForm.controls.clientId.setValue(import.meta.env.NG_APP_CLIENT_ID);
       }
       if (this.loginForm.controls.clientSecret.getRawValue() == '') {
         this.loginForm.controls.clientSecret.setValue(
-          process.env.NG_APP_CLIENT_SECRET
+          import.meta.env.NG_APP_CLIENT_SECRET
         );
         this.onSubmit();
       }
