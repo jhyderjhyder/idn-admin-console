@@ -12,7 +12,7 @@ COPY package.json ./
 # Install all the dependencies
 RUN npm install
 RUN npm install -g npm@10.9.3
-RUN npm outdated
+# RUN npm outdated
 # Copy Files
 COPY . .
 
@@ -26,7 +26,7 @@ FROM nginx:stable-alpine
 
 # Copy the build output to replace the default nginx contents.
 COPY nginx.conf /etc/nginx/nginx.conf
-COPY --from=build /usr/src/app/dist/idn-admin-console /usr/share/nginx/html
+COPY --from=build /usr/src/app/dist/idn-admin-console/browser /usr/share/nginx/html
 
 #Adding SSH for azure container
 COPY sshd_config /etc/ssh/
