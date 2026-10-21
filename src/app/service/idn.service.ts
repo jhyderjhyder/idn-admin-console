@@ -1954,6 +1954,21 @@ Supported API's
       })
     );
   }
+  getAccessProfileDetails(value: string): Observable<any> {
+    const currentUser = this.authenticationService.currentUserValue;
+    const url = `https://${currentUser.tenant}.api.${currentUser.domain}/access-profiles/v1/${value}`;
+
+    return this.http.get(url, this.httpOptions).pipe(
+      catchError(error => {
+        if (error.status === 429) {
+          this.sleep(2000);
+          return this.getAccessProfileDetails(value);
+        } else {
+          catchError(this.handleError(`getAccessProfileDetails`));
+        }
+      })
+    );
+  }
 
   getWorkItemsStatus(filters): Observable<any> {
     const currentUser = this.authenticationService.currentUserValue;

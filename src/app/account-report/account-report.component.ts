@@ -198,6 +198,7 @@ export class AccountReportComponent implements OnInit {
       headers: [
         'name',
         'accountSize',
+        'machine',
         'uncorrelated',
         'entSize',
         'serviceAccount',
