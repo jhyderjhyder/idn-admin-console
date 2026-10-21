@@ -918,6 +918,44 @@ export class IdentityInfoComponent implements OnInit {
     this.tempRevokeType = null;
     this.roleDetailsModal.hide();
   }
+  accessProfileDetails (item, apName){
+    this.roleName = apName + ":Access Profile:" + this.roleName;
+    const showEmpty = true;
+    this.roleDetailsEnt = Array();
+    this.idnService.getAccessProfileDetails(item).subscribe(data => {
+      for (const each of data.entitlements) {
+        const es = new EntitlementSimple();
+        es.id = each.id;
+        es.displayName = each.name;
+        let found = 'false';
+        //roleDetailsEnt: Array<EntitlementSimple>;
+        for (const master of this.identityInfo.entitlementArray) {
+          const data = master as EntitlementSimple;
+          if (data.id == es.id) {
+            found = 'true';
+          }
+        }
+        es.attribute = found;
+        this.roleDetailsEnt.push(es);
+      }
+     
+      for (const ap of data.accessProfiles){
+        const es = new EntitlementSimple();
+        es.displayName = ap.name;
+        es.attribute = ap.type;
+        es.id = ap.id;
+        this.roleDetailsEnt.push(es);
+      }
+       if (data.entitlements.length == 0 && showEmpty) {
+        const es = new EntitlementSimple();
+        es.displayName = 'No Direct Entitlements';
+        this.roleDetailsEnt.push(es);
+      }
+      this.roleDetailsEnt.sort((a, b) =>
+        a.displayName.localeCompare(b.displayName)
+      );
+    });
+  }
   roleDetailsSub(item, showEmpty: boolean) {
     this.idnService.getRoleDetails(item.id).subscribe(data => {
       for (const each of data.entitlements) {

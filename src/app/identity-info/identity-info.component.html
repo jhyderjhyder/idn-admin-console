@@ -1055,8 +1055,16 @@
                   </button>
                     </td>
                   <td>{{ent.displayName}}</td>
-                  <td *ngIf="ent.attribute=='true'">{{ent.attribute}}</td>
-                  <td bgcolor="red" *ngIf="ent.attribute!='true'">{{ent.attribute}}</td>
+                  <td *ngIf="ent.attribute=='true'">
+                    <span style="color:wheat; background-color: green;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ent.attribute}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>
+                  </td>
+                  <td *ngIf="ent.attribute=='false'">
+                    <span style="color:black; background-color: red;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{ent.attribute}}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span></td>
+                  <td *ngIf="ent.attribute=='ACCESS_PROFILE'">
+                    <button type="button" class="btn btn-info btn-sm" (click)="accessProfileDetails(ent.id, ent.displayName)">
+                    {{ent.attribute}}
+                  </button>
+                  </td>
                 </tr>
               </tbody>
             </table>
