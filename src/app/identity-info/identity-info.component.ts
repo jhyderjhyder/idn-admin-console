@@ -919,7 +919,7 @@ export class IdentityInfoComponent implements OnInit {
     this.roleDetailsModal.hide();
   }
   accessProfileDetails (item, apName){
-    this.roleName = apName + ":Access Profile:" + this.roleName;
+    this.roleName = "Access Profile:" + apName + " of " + this.roleName;
     const showEmpty = true;
     this.roleDetailsEnt = Array();
     this.idnService.getAccessProfileDetails(item).subscribe(data => {
