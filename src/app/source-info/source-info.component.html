@@ -209,7 +209,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 id="dialog-child-name" class="modal-title pull-left font-weight-bold">
-          Show Schedule
+          Show Schedule CST
         </h5>
       </div>
       <div class="modal-body" >
@@ -218,11 +218,12 @@
               <div *ngFor="let i =index; let s of schedules" class="col-sm-12 text-start">
                   <span class="fw-bold">Type:</span>&nbsp;{{s.type}}<br>
                   <span class="fw-bold">CronExpression:</span>&nbsp;{{s.cronExpression}}<br>
+                  <span class="fw-bold">Schedule:</span>&nbsp;{{s.cronString}}<br>
               </div>
             </div>
             <div *ngIf="!schedules">
               <div class="col-sm-12 text-start">
-                <span class="fw-bold">None Defined</span>
+                <span class="fw-bold">Fetching</span>
               </div>
             </div>
             <div class="col-sm-4 text-start">

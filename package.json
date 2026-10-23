@@ -38,6 +38,7 @@
     "angular-csv-ext": "^1.0.5",
     "bootstrap": "^5.3.8",
     "cron-validate": "^1.5.3",
+    "cronstrue": "^3.38.0",
     "engine.io": "^6.6.9",
     "file-saver": "^2.0.5",
     "follow-redirects": "^1.16.0",

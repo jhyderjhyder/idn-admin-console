@@ -11,6 +11,8 @@ import { prettyPrintJson } from 'pretty-print-json';
 import { JsonFormatOptions } from '../model/json-format-options';
 import { PageResults } from '../model/page-results';
 import { AngularCsv } from 'angular-csv-ext/dist/Angular-csv';
+import { CronSched} from '../model/CronSched'
+import cronstrue from 'cronstrue';
 
 @Component({
   selector: 'app-source-info',
@@ -263,9 +265,25 @@ export class SourceInfoComponent implements OnInit {
     this.tagSource = input;
     this.schedules = null;
     this.idnService.getSchedules(input.id).subscribe(result => {
-      this.schedules = result;
+      this.schedules = new Array;
+      
+      for (var entry of result){
+        var cs = new CronSched();
+        cs.applicationName = input.name;
+        cs.type = entry.type;
+        cs.cronExpression = entry.cronExpression;
+        cs.cronString =cronstrue.toString(entry.cronExpression, {tzOffset: -6});
+        this.schedules.push(cs);
+      }
+         
+      
       if (this.schedules.length == 0) {
-        this.schedules = null;
+        var cs = new CronSched();
+        cs.applicationName = input.name;
+        cs.type = "ACCOUNT_AGGREGATION";
+        cs.cronExpression = ("");
+        cs.cronString = "NONE";
+        this.schedules.push(cs);
       }
     });
     this.showSchedule.show();
